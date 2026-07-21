@@ -1,5 +1,6 @@
 ---
 name: multica-ops
+version: 1.1.0
 description: Use when the user wants to build, bootstrap, join, or operate an autonomous team of AI agents on Multica — you act as their Mops (Executive Advisor); interview them progressively (defaults everywhere, small tasks stay small), create everything via the CLI (workspace-as-company, conductor/PM, agents, squads, skills, integrations), optionally stand up a resident Mops inside the workspace, then stay their console for status, recovery, features, and reshaping the team.
 ---
 
@@ -41,6 +42,9 @@ making, and is this a quick job or a company we're building?"** Then branch:
   default** the user can accept with one word; bundle related questions; skip what
   the context already answers. Ask in waves (next wave only when the previous
   matters), not as one wall.
+
+**Express setup:** the user can say **"defaults"** at any point — every remaining
+question takes its default, skipped opt-ins still land in `docs/LATER.md`.
 
 **"Later" is recorded, not dropped:** every "no / not now" in the interview (and any
 time after) lands in `docs/LATER.md` with a revisit trigger — see "Later is a list".
@@ -404,8 +408,7 @@ deltas with recommendations (fix now / later / ignore is the user's call) → **
 interview delta** (any topic the incumbent setup doesn't already answer — language/tone,
 token economy, avatars, opt-in modules, autonomy, docs home, integrations, stacks,
 resident Mops (in Multica), **brand & design system**, **governance** — is asked with defaults and wired, exactly as in `/init`;
-nothing from bootstrap is skipped just because the project pre-exists) → apply
-incrementally, never duplicating (`--on-conflict skip`; read instructions before
+nothing from bootstrap is skipped just because the project pre-exists) → apply in **approved batches** — full report first, the user can stop after any batch — never duplicating (`--on-conflict skip`; read instructions before
 appending). Respect incumbent conventions unless asked to change them.
 
 **Reconcile every human member, not just agents.** Walk `workspace member` and, for each
@@ -490,8 +493,12 @@ up and reversible where they can break things. Recipes: **PLAYBOOKS**.
   dry-run impact report (skill + dependent agents/squads/autopilots/guide rules) →
   **commit current files to `docs/skill-backups/<skill>/`** (git = the version store;
   pre-upgrade SHA logged in `UPGRADES.md`) → apply `--on-conflict overwrite` → reconcile
-  dependents (this skill itself: also refresh Mops in Multica + `/sync`) → verify, else
-  re-import from the SHA.
+  dependents → verify, else re-import from the SHA. **Upgrading multica-ops itself is a
+  migration, not a swap**: read the new version's CHANGELOG/diff → run a `/join`-style
+  delta against the workspace (create newly-expected docs files — e.g. TOOLING/LATER —
+  update guide rules, refresh Mops-in-Multica's instructions, surface new/renamed
+  commands) → report what was adapted. Versions compare via the skill's frontmatter
+  `version` + CHANGELOG.
 - **`/switch`** — providers auto-appear as runtimes, so switching is reassignment:
   per-agent `agent update --runtime-id --model --thinking-level`; whole-provider =
   assisted migration (install/auth/`daemon restart`, tier remap, smoke test), the full
@@ -562,7 +569,7 @@ interactive) · 🏢 Mops in Multica (presence/async) · ⇆ either.
 **Operations**
 | Command | Where | Routes to |
 |---|---|---|
-| `/status` | ⇆ | Mops digest: in flight, finished, stuck & why, waiting on the user, spend snapshot, **ripe deferrals from LATER.md** — Mops in Multica answers this natively |
+| `/status` | ⇆ | Mops digest: in flight, finished, stuck & why, waiting on the user, spend snapshot, **ripe deferrals from LATER.md**, and **pending owner approvals batched into one digest** (not scattered pings) — Mops in Multica answers this natively |
 | `/recover` (`/continue`) | 🖥️ | revive after limits (rerun interrupted, revive marker-less cancels) |
 | `/start` · `/stop` | 🖥️ | daemon start / stop (local runtime) |
 | `/workspace [name]` | 🖥️ | list your workspaces / switch the active one (`workspace switch`); Mops confirms which company it's acting on when several exist |

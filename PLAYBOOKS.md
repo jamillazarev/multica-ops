@@ -152,6 +152,9 @@ future hires at once, and Mops in Multica reports hires made while in auto.
 3. Apply: `multica skill import --url <src> --on-conflict overwrite` → rewrite affected
    instructions/autopilots/guide. For multica-ops itself: refresh the Mops agent + `/sync`.
 4. Verify (agents keep skills, autopilots intact); breakage → re-import from the SHA.
+5. **multica-ops itself?** Migrate: read new CHANGELOG/diff → `/join`-style delta
+   (create newly-expected docs files, update guide rules, refresh the Mops agent's
+   instructions + `/sync`) → report the adaptations.
 
 ## Provider switch (`/switch`)
 

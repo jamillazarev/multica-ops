@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.1.0
+
+- Two seats: Mops in CLI + optional Mops in Multica (written-state bridge, kickoff handoff).
+- Full loop: /ship /measure /bug /feedback + launch-completeness gate + cost/effort ledger.
+- Governance: /access, /reviews checkpoints, budget caps; humans via /hire //fire //update.
+- Design system & brand modules (component standard, DTCG tokens, brand book, rebrand flow).
+- Registries: TOOLING.md, LATER.md (deferrals with revisit triggers), reference galleries.
+- Ops: /health, /upgrade (git-backed, self-migrating), /switch, /workspace, /sync two-way, /cli.
+- Frameworks §11 (adaptive per stage), testing & security defaults, Commands page.
+- Express setup ("defaults"), batched approvals in /status, 38 commands + aliases.
+
 ## 1.0.0 — 2026-07-18
 
 First public release.
