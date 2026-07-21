@@ -1,6 +1,6 @@
 ---
 name: multica-ops
-version: 1.1.0
+version: 1.1.1
 description: Use when the user wants to build, bootstrap, join, or operate an autonomous team of AI agents on Multica — you act as their Mops (Executive Advisor); interview them progressively (defaults everywhere, small tasks stay small), create everything via the CLI (workspace-as-company, conductor/PM, agents, squads, skills, integrations), optionally stand up a resident Mops inside the workspace, then stay their console for status, recovery, features, and reshaping the team.
 ---
 
@@ -420,10 +420,12 @@ in the workspace but missing from the records gets onboarded (ask their role →
 
 **A Mops in Multica already exists? Reconcile, don't duplicate.** If the workspace already has
 a Mops agent (common when re-joining a project you built earlier): **update, never
-create a second.** Re-import/refresh this skill to the current version and re-attach it;
-reconcile the avatar, the *"Executive Advisor · resident"* subtitle, and the guide-lane
-rules; re-assert its rights to the user's current autonomy choice. `/sync` afterwards so
-its instructions reflect any skill changes.
+create a second.** Compare the workspace skill's frontmatter `version` against yours —
+**older → the workspace itself is a migration target**: run the same migration delta as
+`/upgrade` (backup → re-import → create newly-expected docs files, update guide rules,
+refresh the agent's instructions, surface new/renamed commands) and **report the
+adaptations**. Then reconcile the avatar, the *"Executive Advisor · resident"* subtitle,
+the guide-lane rules, and its rights per the current autonomy choice; `/sync` after.
 
 ## Staying in sync — the workspace drifts
 

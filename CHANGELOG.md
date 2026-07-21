@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.1
+
+- /join into a workspace stood up by an older skill version now runs the same
+  migration delta as /upgrade (files, guide rules, commands) and reports adaptations.
+
 ## 1.1.0
 
 - Two seats: Mops in CLI + optional Mops in Multica (written-state bridge, kickoff handoff).
