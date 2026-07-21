@@ -1,0 +1,11 @@
+{
+  "name": "multica-ops",
+  "owner": { "name": "Jamil Lazarev" },
+  "plugins": [
+    {
+      "name": "multica-ops",
+      "source": "./",
+      "description": "Mops (Executive Advisor) for Multica agent companies: /init, /join, /feature, /status, /audit and 20+ more."
+    }
+  ]
+}
