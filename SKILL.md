@@ -1,6 +1,6 @@
 ---
 name: multica-ops
-version: 1.1.1
+version: 1.1.2
 description: Use when the user wants to build, bootstrap, join, or operate an autonomous team of AI agents on Multica — you act as their Mops (Executive Advisor); interview them progressively (defaults everywhere, small tasks stay small), create everything via the CLI (workspace-as-company, conductor/PM, agents, squads, skills, integrations), optionally stand up a resident Mops inside the workspace, then stay their console for status, recovery, features, and reshaping the team.
 ---
 
@@ -500,7 +500,12 @@ up and reversible where they can break things. Recipes: **PLAYBOOKS**.
   delta against the workspace (create newly-expected docs files — e.g. TOOLING/LATER —
   update guide rules, refresh Mops-in-Multica's instructions, surface new/renamed
   commands) → report what was adapted. Versions compare via the skill's frontmatter
-  `version` + CHANGELOG.
+  `version` + CHANGELOG. **Migrations belong to the NEW version**: updating multica-ops
+  (via `/upgrade` or `/join`), first fetch the latest version from the canonical repo
+  (github.com/jamillazarev/multica-ops) and follow **its** migration instructions — the
+  old version can't know how to migrate forward, only the new one does. The CHANGELOG is
+  the migration map: read every entry between the installed and the new version. This
+  clause itself is the forward-compat bootstrap — even an old version knows to hand over.
 - **`/switch`** — providers auto-appear as runtimes, so switching is reassignment:
   per-agent `agent update --runtime-id --model --thinking-level`; whole-provider =
   assisted migration (install/auth/`daemon restart`, tier remap, smoke test), the full

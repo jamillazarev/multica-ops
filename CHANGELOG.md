@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.2
+
+- Migrations belong to the new version: update flows fetch the latest skill first and
+  follow its instructions (forward-compat bootstrap); CHANGELOG = the migration map.
+- CI: weekly watcher opens an issue when a new multica CLI ships (REFERENCE §10 regen).
+
 ## 1.1.1
 
 - /join into a workspace stood up by an older skill version now runs the same
