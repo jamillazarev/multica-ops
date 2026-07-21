@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/mops.png" alt="Mops — your Executive Advisor" width="200">
+  <img src="assets/mops.png" alt="Mops — your Executive Advisor" width="250">
 </p>
 
 <h1 align="center">multica-ops</h1>
