@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.9.0
+
+- **Epistemic protocol**: every substantive claim is labelled **verified** (checked now,
+  with a source), **recalled** (from training, may be stale) or **unknown** — recalled is
+  never dressed up as verified, and gaps are never filled with a confident guess.
+  **Reads are free** (looking things up needs no permission — asking is the dispatcher
+  trap in miniature); **permission is asked when it costs or changes configuration** —
+  attaching a skill/MCP server, a paid source, or a research run heavy enough to eat the
+  shared limit. Dead end → say so, name what's missing, offer `/connect`, the
+  role-builder, or `LATER.md`.
+- **preflight**: detects CLI drift (installed vs pinned) and adds **`--regen-cli`** —
+  verifies §10 against the installed CLI, re-pins only when the surface matches and the
+  CLI is newer, and lists what changed otherwise. **Never rewrites the pin silently** —
+  a bumped version over a stale §10 would be a false claim of currency.
+
 ## 1.8.0
 
 - **"Assume incompleteness" promoted to the first principle** — the frame for everything

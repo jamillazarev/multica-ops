@@ -6,6 +6,32 @@
 set -uo pipefail
 cd "$(git rev-parse --show-toplevel)" || exit 1
 
+# --regen-cli : verify REFERENCE §10 against the installed CLI, re-pin when the surface
+# matches, and list what changed when it doesn't. Explicit action — never silent.
+if [ "${1:-}" = "--regen-cli" ]; then
+  command -v multica >/dev/null || { echo "multica CLI not installed"; exit 1; }
+  local_v=$(multica --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
+  pinned=$(grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' REFERENCE.md | head -1 | sed 's/^v//')
+  echo "installed=$local_v pinned=$pinned"
+  sec=$(awk '/## 10\./{f=1} f{print}' REFERENCE.md); diff=0
+  for g in $(multica --help 2>&1 | sed -n '/COMMANDS/,/FLAGS/p' | grep -E '^\s+[a-z]' | awk '{print $1}' | tr -d ':'); do
+    echo "$sec" | grep -qE "\`$g\`" || { echo "  + group missing from §10: $g"; diff=1; }
+    for s in $(multica "$g" --help 2>&1 | sed -n '/COMMANDS/,/FLAGS/p' | grep -E '^\s+[a-z]' | awk '{print $1}' | tr -d ':'); do
+      echo "$sec" | grep -q "\b$s\b" || { echo "  + subcommand missing from §10: $g $s"; diff=1; }
+    done
+  done
+  if [ $diff -eq 1 ]; then
+    echo "→ surface changed: edit REFERENCE §10 by hand, then re-run"; exit 1
+  fi
+  [ "$local_v" = "$pinned" ] && { echo "  ✓ §10 matches, pin already current"; exit 0; }
+  newest=$(printf '%s\n%s\n' "$local_v" "$pinned" | sort -V | tail -1)
+  if [ "$newest" = "$pinned" ]; then
+    echo "  ✓ §10 matches; your CLI (v$local_v) is behind the pin (v$pinned) — nothing to re-pin, update your CLI"; exit 0
+  fi
+  sed -i.bak "s/v${pinned}/v${local_v}/g" REFERENCE.md README.md && rm -f REFERENCE.md.bak README.md.bak
+  echo "  ✓ surface unchanged — re-pinned v${pinned} → v${local_v} (review and commit)"; exit 0
+fi
+
 if [ "${1:-}" = "--install" ]; then
   printf '#!/usr/bin/env bash\nexec bash scripts/preflight.sh\n' > .git/hooks/pre-commit
   chmod +x .git/hooks/pre-commit
@@ -46,7 +72,15 @@ for c in $(grep -oE '^\| `/[a-z-]+' COMMANDS.md | tr -d '| `/'); do
   [ -f "commands/$c.md" ] || say_fail "command /$c has no commands/$c.md"
 done
 
-# 7 · reminders that cannot be verified from this repo
+# 7 · CLI drift — warn, never rewrite silently (a bumped pin with a stale §10 would be
+#     a false claim of currency, worse than visibly stale)
+if command -v multica >/dev/null 2>&1; then
+  lv=$(multica --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
+  pv=$(grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' REFERENCE.md | head -1 | sed 's/^v//')
+  [ -n "$lv" ] && [ "$lv" != "$pv" ] && say_warn "installed CLI v$lv ≠ pinned v$pv — run: bash scripts/preflight.sh --regen-cli"
+fi
+
+# 8 · reminders that cannot be verified from this repo
 git diff --cached --name-only 2>/dev/null | grep -qE '\.md$' && \
   echo "  → docs site: regenerate + deploy (python3 scripts/generate.py <repo> in the ai repo)"
 
