@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.7.0
+
+- **Role-builder now hires the whole package** — skills **and tooling and resources**:
+  `awesome-{craft}` alongside skills.sh, **MCP registries first** for the role's
+  instruments (obeying the selection ladder), and reference galleries/standards as the
+  sources it must consult; everything registered in `TOOLING.md` and `TEAM.md`.
+- **Empty search is no longer a dead end**: an explicit broadening ladder — rephrase into
+  the industry's own words → parent domain → adjacent crafts → decompose into tasks →
+  only then draft a skill, logging the gap in `LATER.md`.
+- **Baseline kit made explicit** — every agent, whatever the role, gets the guide skill,
+  find-skills, handoff, caveman (lite), Context7 where version-sensitive, and the docs it
+  must know (ROADMAP · TEAM · TOOLING · LATER + brand/design-system when on).
+
 ## 1.6.0
 
 - **Token economy documented with real numbers** (REFERENCE §12): on a live workspace

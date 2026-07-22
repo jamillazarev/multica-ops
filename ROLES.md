@@ -98,19 +98,58 @@ multica autopilot trigger-add <id> --cron "0 9 * * 1-5" --timezone <tz>
 Useful ones: a nightly sweep that reruns stalled issues; a GitHub-webhook trigger on
 merged PRs.
 
+## Baseline kit — what every agent gets, whatever the role
+
+Before any role-specific skill, every agent is given the same floor:
+
+- **The project guide skill** — language/tone, DoD, handoff = @mention, escalation,
+  docs-follow-decisions, system-follows-solutions, brand voice, limit/cancel conventions,
+  which modules exist. (This is the **cached prefix** — batch its edits, see REFERENCE §12.)
+- **find-skills** — so the agent can close its own capability gaps instead of stalling.
+- **handoff** — compact the context before a session dies; cheap insurance for everyone.
+- **caveman** (lite) — terse reasoning/output; token economy is measurable, not cosmetic.
+- **Context7** — for any role that writes version-sensitive code or config: current
+  library/SDK/OS docs instead of a frozen training cutoff.
+- **The docs it must know**: `ROADMAP.md` · `TEAM.md` · `TOOLING.md` (tools, access,
+  target versions) · `LATER.md`, plus `brand/` and `design-system/` when those modules
+  are on. Referenced from the guide, not copy-pasted into instructions.
+
 ## Any role from conversation — the role-builder
 
-The catalog above is a seed, not a ceiling. For any role the interview names that
-isn't here (pastry chef, accountant, scrum master, hardware engineer…):
-1. **Research current best practices** for the craft (web search; 2–3 sources).
-2. **Find skills**: search skills.sh / find-skills; import what fits; if nothing
-   fits, draft a small skill with skill-creator.
-3. **Collect resources** the role needs to consult (standards, docs, datasets, APIs)
-   and put the links into its instructions; wire data access via `mcp_config`.
-4. Propose the package (model tier, skills, resources) → create on approval.
+The catalog above is a seed, not a ceiling. For any role the interview names that isn't
+here (pastry chef, accountant, scrum master, hardware engineer…), build the **whole
+package — skills · tooling · resources**, not just skills:
+
+1. **Research the craft.** Current best practices, 2–3 sources; what a competent
+   practitioner actually does day to day, and what they'd be blamed for missing.
+2. **Skills.** `multica skill search` (clawhub/skills.sh) · `find-skills` ·
+   **`awesome-{craft}`** on GitHub.
+3. **Tooling.** The role's instruments, not just its knowledge: check the **MCP
+   registries first** (mcpservers.org · mcp.so · awesome-mcp-servers; mcpmarket
+   leaderboards for the maintained ones), then CLIs/APIs. Wire via `mcp_config` /
+   `custom-env`, register in `docs/TOOLING.md` — and obey the **selection ladder**
+   (free → OSS → self-host → in-repo → agent-drivable).
+4. **Resources.** What the role must consult: standards bodies, official docs, datasets,
+   and the **reference galleries in STACKS** (design/brand/UX). Links go into its
+   instructions; data access via `mcp_config`.
+5. **Propose the package** (model tier · skills · tooling · resources · squad) → create
+   on approval → record in `TEAM.md` and `TOOLING.md`.
+
+**Search came back empty? Broaden — don't give up at the first miss:**
+1. **Rephrase into the industry's own words** — what practitioners call it, in English
+   ("видеомонтажёр" → *video editing · post-production*; "продажник" → *sales
+   development · outbound*).
+2. **Go one level up** to the parent domain (`awesome-{parent}`), then scan its sections.
+3. **Adjacent crafts** that share tools (a pastry chef ↔ food safety, recipe development,
+   kitchen ops).
+4. **Decompose the role into tasks** and search per task — tooling usually exists per
+   task even when the job title has no list.
+5. Only then **draft a small skill with skill-creator** from step 1's research — and log
+   the gap in `LATER.md` so it gets revisited when the ecosystem catches up.
+
 Designers and engineers join from the first decisions (discovery, spec review) — not
-only at their build stage. Bake "tokens / design system / Storybook" style practices
-in via step 1's research, not by hardcoding this file.
+only at their build stage. Bake "tokens / design system / Storybook" style practices in
+via step 1's research, not by hardcoding this file.
 
 ## Experts squad (opt-in, composition per project)
 

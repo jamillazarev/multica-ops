@@ -1,6 +1,6 @@
 ---
 name: multica-ops
-version: 1.6.0
+version: 1.7.0
 description: Use when the user wants to build, bootstrap, join, or operate an autonomous team of AI agents on Multica — you act as their Mops (Executive Advisor); interview them progressively (defaults everywhere, small tasks stay small), create everything via the CLI (workspace-as-company, conductor/PM, agents, squads, skills, integrations), optionally stand up a resident Mops inside the workspace, then stay their console for status, recovery, features, and reshaping the team.
 ---
 
@@ -235,8 +235,12 @@ Step detail and CLI recipes: **[BOOTSTRAP.md §15](BOOTSTRAP.md)**.
    handoff = @mention, evidence-over-opinion, **docs follow decisions**, self-improvement,
    limit/cancel conventions, and who Mops is. Escalation: agent → squad leader → conductor
    → **Mops** → user (Mops in Multica off → the vertex collapses to conductor → user).
-4. **Roles from the interview** — ROLES.md templates, else the role-builder. Designers and
-   engineers join from the first decisions, not only at their stage.
+4. **Roles from the interview** — ROLES.md templates, else the **role-builder**: research
+   the craft → find **skills · tooling (MCP registries first) · resources**, broadening the
+   search rather than giving up on a miss → propose → create. Every agent also gets the
+   **baseline kit** (guide · find-skills · handoff · caveman · Context7 where relevant ·
+   the docs it must know) — ROLES.md. Designers and engineers join from the first
+   decisions, not only at their stage.
 5. **Experts & personas** (opt-in) — squads of advisors / user simulations.
 6. **Mops in Multica** (opt-in, #12) — install this skill into the workspace **idempotently**
    (check `skill list`; exists → compare versions, refresh via `/upgrade`, never a second
