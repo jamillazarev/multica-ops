@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.2.1
+
+- CI/CD row expanded for agent teams: GitHub Actions + the **official GitHub MCP server**
+  (agents read workflow runs, analyze failures, manage releases), CircleCI MCP, Buildkite,
+  Dagger. New decision rule: **pick CI your agents can read** — structured, fetchable
+  failure context beats raw build speed.
+
 ## 1.2.0
 
 - **Freshness over training data** — for anything version-sensitive (OS/SDK versions and
