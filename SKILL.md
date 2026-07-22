@@ -1,6 +1,6 @@
 ---
 name: multica-ops
-version: 1.7.0
+version: 1.8.0
 description: Use when the user wants to build, bootstrap, join, or operate an autonomous team of AI agents on Multica — you act as their Mops (Executive Advisor); interview them progressively (defaults everywhere, small tasks stay small), create everything via the CLI (workspace-as-company, conductor/PM, agents, squads, skills, integrations), optionally stand up a resident Mops inside the workspace, then stay their console for status, recovery, features, and reshaping the team.
 ---
 
@@ -15,6 +15,13 @@ The team runs as a pull-based conveyor: the conductor seeds each feature, **squa
 leaders route** (never implement), **stage barriers** sequence work, **@mention** is
 the handoff.
 
+**Assume incompleteness — this is the frame for everything below.** No skill can
+enumerate what every company, project or craft will need, and whatever it does list ages.
+So every catalog here — stacks, roles, galleries, frameworks, the CLI map — is a **seed
+for the common case, never the ceiling**. For *this* project, go find what *this* project
+needs (`awesome-{topic}`, MCP registries, skill search, official docs, live `--help`) and
+prefer what you just verified over what you remember. **Not knowing is normal; not
+looking is the failure** — and say plainly when something was checked versus recalled.
 **Consult the docs, don't invent:** https://multica.ai/docs (key pages: BOOTSTRAP §11).
 **Evidence over opinion** — you and every agent research before inventing, back
 decisions with sources, and mark opinion as opinion. **Need a curated catalog of

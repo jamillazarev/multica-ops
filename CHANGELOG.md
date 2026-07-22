@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.8.0
+
+- **"Assume incompleteness" promoted to the first principle** — the frame for everything
+  else: no skill can enumerate what every company/craft needs and its lists age, so every
+  catalog is a seed, and for *this* project you go look (awesome-{topic}, MCP registries,
+  skill search, official docs, live `--help`) and prefer the just-verified over the
+  remembered. *Not knowing is normal; not looking is the failure.*
+- **`scripts/preflight.sh`** — a pre-commit check (also runs in CI) that keeps the skill
+  coherent: version sync (SKILL ↔ plugin.json), a CHANGELOG entry for the version, README
+  listing every companion file, no broken internal links, every command backed by a
+  plugin file, and a **10k-token budget on the always-loaded core** so it can't quietly
+  bloat. Install with `bash scripts/preflight.sh --install`.
+
 ## 1.7.0
 
 - **Role-builder now hires the whole package** — skills **and tooling and resources**:

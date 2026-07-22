@@ -1,0 +1,9 @@
+# Same checks as the local pre-commit hook, enforced on every push/PR.
+name: preflight
+on: [push, pull_request]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash scripts/preflight.sh

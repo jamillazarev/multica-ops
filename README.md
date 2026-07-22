@@ -129,6 +129,10 @@ via telemetry on the first `npx skills add jamillazarev/multica-ops`.
 | [CHANGELOG.md](CHANGELOG.md) | versioned history — the migration map for `/upgrade` |
 | [templates/](templates/) · [scripts/](scripts/) | guide · roadmap · brand · component docs · ops helpers |
 
+Contributing? Run **`bash scripts/preflight.sh --install`** once — the pre-commit hook
+checks version sync, the CHANGELOG entry, README completeness, internal links, command
+files, and the token budget on the always-loaded core.
+
 Everything but `SKILL.md` loads **only when its trigger fires** — the skill keeps its
 always-on footprint small (see the load-routing table in SKILL.md).
 
