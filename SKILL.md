@@ -1,6 +1,6 @@
 ---
 name: multica-ops
-version: 1.11.0
+version: 1.12.0
 description: Use when the user wants to build, bootstrap, join, or operate an autonomous team of AI agents on Multica — you act as their Mops (Executive Advisor); interview them progressively (defaults everywhere, small tasks stay small), create everything via the CLI (workspace-as-company, conductor/PM, agents, squads, skills, integrations), optionally stand up a resident Mops inside the workspace, then stay their console for status, recovery, features, and reshaping the team.
 ---
 
@@ -329,7 +329,8 @@ benchmarks), **brainstorms with the team**, and returns a proposal for approval:
   mandatory and continuously updated.
 - After approval the conductor writes the spec into the repo (proposal / design /
   specs / tasks — e.g. OpenSpec), gets sign-off, then decomposes into staged
-  sub-issues. Gates run in parallel inside the Review rung (code review and design
+  sub-issues — **decomposed for width**: anything genuinely independent goes on the *same*
+  stage so it runs concurrently; only real dependencies become the next stage. Gates run in parallel inside the Review rung (code review and design
   review catch different failures); the Build DoD must produce evidence
   (screenshots/recordings of every state) or the design gate has nothing to review.
 
@@ -416,14 +417,19 @@ changes the spec/roadmap/guide is written into that doc **in the same task** (do
 current state; the thread = history).
 
 **Right-size the work, then fan it out.** Two levers, both cheap:
-- **Size the model to the task, not to the title.** Role tiers are the default, but a
-  one-off heavy job can borrow a stronger model/thinking level, and a trivial one should
-  drop to a cheap tier — `agent update --model --thinking-level`, or route it to a
-  lower-grade agent. Overkill costs money; underkill costs rework.
-- **Parallelism is the stage, not a thread pool.** Independent sub-issues on the *same*
-  `--stage` run concurrently — that *is* the worker pool. Widen a stage to go faster;
-  don't invent a second scheduler. A genuinely one-off specialist is create → use →
-  **archive** (reversible — see the talent pool in ROLES.md), not a permanent hire.
+- **Size the model by *routing*, not by rewriting.** Model and thinking-level are
+  properties of the **agent**, not of a task — `issue assign` cannot pick a model. So the
+  working lever is **grades**: keep a cheap-tier and a top-tier agent in the crafts where
+  both kinds of work exist, and route each task to the right one (that's what the
+  fit-check hands up and down for). Changing `agent update --model/--thinking-level` is a
+  deliberate exception for a genuinely exceptional job — it affects *every* later task of
+  that agent and invalidates its cached prefix, so **note it and set it back**.
+- **Parallelism is the stage — automatic in dispatch, manual in width.** Sub-issues on
+  the *same* `--stage` are released together and run concurrently (capped by runtime
+  concurrency): that *is* the worker pool, and it needs no scheduling from you. But the
+  **width comes from the decomposition** — the conductor should put everything genuinely
+  independent on one stage instead of chaining it, and only serialize what truly depends.
+  A one-off specialist is create → use → **archive** (reversible — talent pool, ROLES.md).
 
 **Token economy — the cache is the lever.** In a real workspace **~89% of all tokens are
 cache *reads*** (10× cheaper than input), so the thing that actually moves cost is
@@ -478,13 +484,17 @@ up and reversible where they can break things. Recipes: **PLAYBOOKS**.
 - **`/health`** — full-circle sweep of what fails silently: runtimes (+ **which agents
   sit on a degraded one**), integrations/MCP probes (**the probe list = `docs/TOOLING.md`**), API tokens/secrets, **free-tier headroom** (usage vs the ceiling recorded per service), daemon, limits.
   Output: component → status → who it blocks → fix. `/audit` pulls it in.
-- **Version checks are proactive, not on request.** At `/status` (weekly at most) and
-  before any major `/ship`, compare the installed multica-ops and each imported skill
-  against its source; something newer → say **what changed and what it would touch**, and
+- **Version checks cover three layers, not one**: **multica-ops** itself, every
+  **imported skill**, and the **tooling** registered in `docs/TOOLING.md` (MCP servers,
+  CLIs — their own releases and breaking changes). Proactively at `/status` (weekly at
+  most) and before any major `/ship`, compare each against its source; something newer → say **what changed and what it would touch**, and
   offer `/upgrade`. Never upgrade unasked.
 - **Rollback is a normal outcome, not a failure.** Upgrades and migrations do break
   things; that's why every one commits a restore point first (`docs/skill-backups/` +
-  the pre-upgrade SHA in `UPGRADES.md`). If behaviour regresses after an upgrade — say
+  the pre-upgrade SHA in `UPGRADES.md`) — **including a snapshot of agent instructions and
+  config**, which live in Multica, not in git, and which the migration itself rewrites.
+  Without that snapshot a git rollback restores the skill but leaves the agents rewritten.
+  If behaviour regresses after an upgrade — say
   so, re-import from that SHA, and log what broke so the next attempt is informed.
 - **`/upgrade [skill|all]`** — skills have **no workspace-side version history**, so:
   dry-run impact report (skill + dependent agents/squads/autopilots/guide rules) →

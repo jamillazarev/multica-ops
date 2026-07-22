@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.12.0
+
+- **Model sizing corrected to how Multica actually works**: model and thinking-level are
+  properties of the **agent**, and `issue assign` cannot choose one — so the lever is
+  **routing between graded agents**, not rewriting a config per task. Changing an agent's
+  model is an exception that affects all its later tasks and invalidates its cached
+  prefix: note it and set it back.
+- **Rollback gap closed**: upgrades now snapshot **agent instructions and config** (they
+  live in Multica, not git, and the migration rewrites them) alongside the skill files.
+  A git-only rollback restored the skill but left agents rewritten.
+- **Updates cover three layers**: multica-ops, imported skills, **and the tooling in
+  `docs/TOOLING.md`** (MCP servers and CLIs — a tool that changes its interface breaks
+  agents silently, like a stale CLI pin).
+- **Parallelism made explicit**: dispatch is automatic (same-stage sub-issues run
+  concurrently, capped by runtime concurrency) but **width is a decomposition decision** —
+  the conductor puts everything genuinely independent on one stage.
+- **Control level**: stated when it's set (`/init`, re-asked in the `/join` delta) and how
+  fast it changes — `/reviews` immediately, `/autonomy` boundary-safe, `/stop` immediate.
+
 ## 1.11.0
 
 - **Sourced arguments**: every substantive claim, comparison or recommendation carries

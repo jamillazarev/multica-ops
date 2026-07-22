@@ -146,9 +146,15 @@ future hires at once, and Mops in Multica reports hires made while in auto.
 
 1. Dry-run: fetch new version, diff, and list dependents (agents carrying it, squads/
    autopilots/guide rules built on its behavior). Nothing changes until a yes.
-2. Backup: mirror current files → `docs/skill-backups/<skill>/` (stable path,
-   overwritten), `git commit`; append `UPGRADES.md`: date · source/version ·
-   pre-upgrade SHA · impact line.
+2. Backup — **two halves, both required**:
+   a. *Skill files*: mirror → `docs/skill-backups/<skill>/` (stable path, overwritten).
+   b. *Workspace state the migration will rewrite*: snapshot agent config **before**
+      touching anything —
+      `for id in $(multica agent list --output json | jq -r '.[].id'); do multica agent get "$id" --output json; done > docs/skill-backups/agents-$(date -u +%F).json`
+      (captures instructions, skills, model, tier). Autopilots likewise via
+      `multica autopilot list --output json`.
+   Then `git commit`; append `UPGRADES.md`: date · source/version · **pre-upgrade SHA** ·
+   impact line.
 3. Apply: `multica skill import --url <src> --on-conflict overwrite` → rewrite affected
    instructions/autopilots/guide. For multica-ops itself: refresh the Mops agent + `/sync`.
 4. Verify (agents keep skills, autopilots intact); breakage → re-import from the SHA.
@@ -207,6 +213,9 @@ per autonomy choice → kickoff (pinned issue + first message = decisions summar
 
 1. Name what regressed (behaviour, not vibes) and when it started.
 2. Find the restore point: `docs/skill-backups/UPGRADES.md` → the **pre-upgrade SHA**.
+   Remember there are two things to restore: the **skill files** and the **agent
+   instructions/config** from that date's `agents-*.json` snapshot
+   (`multica agent update <id> --instructions … --model …`).
 3. `git show <sha>:docs/skill-backups/<skill>/…` → re-import that content
    (`multica skill import --url … --on-conflict overwrite`, or `--file` from the checkout).
 4. `/sync` so agent instructions match the restored version; verify the regression is gone.
@@ -216,5 +225,8 @@ per autonomy choice → kickoff (pinned issue + first message = decisions summar
 
 1. multica-ops: compare `version:` in the workspace skill against the canonical repo.
 2. Imported skills: compare each against its source (`skill get` vs the origin URL).
+2b. **Tooling** from `docs/TOOLING.md`: for each MCP server / CLI, check its release feed
+   for a newer version and for breaking changes; a tool that changed its interface breaks
+   agents silently, exactly like a stale CLI pin.
 3. Newer? Summarize **what changed and what it would touch** (agents carrying it, guide
    rules, commands) and offer `/upgrade` — never upgrade unasked.
