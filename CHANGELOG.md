@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.3.0
+
+- **Audio & DSP stack** added: frameworks (JUCE · iPlug2 · DPF · HISE · NIH-plug) with
+  **licence-first** decision rule, formats (CLAP/VST3/AU/AAX/LV2 — CLAP via
+  clap-juce-extensions until JUCE 9), permissive DSP libraries and primitives (FFT,
+  resampling, libebur128), FAUST/Cmajor prototyping, **pluginval + auval** validation,
+  **RTSan** realtime safety, distribution/notarization.
+
 ## 1.2.2
 
 - **Free tier first — and name the ceiling**: proposing a service now states where its

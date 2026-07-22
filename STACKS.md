@@ -80,6 +80,26 @@ APIs, so agents code against today's versions, not a frozen training cutoff.
 Rule of thumb: deviate from these only when the project itself dictates (a DSP app
 is C/Swift no matter what LLMs prefer) — and record the deviation in the guide.
 
+## Audio & DSP (plugins, instruments, audio apps)
+
+**License first — it shapes the product.** In audio the framework's licence decides
+whether you can ship closed source at all; migrating frameworks later is expensive, so
+settle this before the first line of DSP.
+
+| Need | Options | Notes |
+|---|---|---|
+| **Plugin / app framework** | **JUCE** (GPLv3 **or** paid commercial) · **iPlug2** (permissive, MIT-style) · **DPF** (ISC, minimal core) · **HISE** (GPLv3 or commercial; samplers/instruments) · **NIH-plug** (Rust) | JUCE = biggest ecosystem, tutorials, hosts battle-tested — pay or go GPL. iPlug2/DPF = full control, closed-source-friendly, leaner |
+| **Formats** | **CLAP** (MIT, open) · VST3 (GPLv3 or proprietary) · AU/AUv3 (Apple) · AAX (Avid, NDA) · LV2 | CLAP is native in iPlug2 · DPF · NIH-plug; **JUCE has no native CLAP yet — use [clap-juce-extensions](https://github.com/free-audio/clap-juce-extensions)** until JUCE 9 ships it |
+| **DSP libraries** (permissive) | Airwindows (MIT) · chowdsp_utils · DaisySP · Maximilian · q | pick MIT/BSD when the product must stay closed |
+| **Primitives** | FFT: pffft · KissFFT · Apple **vDSP** · resampling: libsamplerate · r8brain · loudness: **libebur128** (EBU R128) | the pieces a broadcast chain actually needs |
+| **Prototyping / codegen** | **FAUST** (functional DSP → JUCE/VST/CLAP targets) · Cmajor · Elementary Audio | design the algorithm, generate the plugin scaffold |
+| **Validation & testing** | **pluginval** (Tracktion, free — the de-facto validator) · `auval` (Apple AU) · a host matrix (REAPER, Live, Logic) | plugin QA gate; pairs with the Testing section below |
+| **Realtime safety** | **RTSan** (Clang RealtimeSanitizer) · lock-free queues (farbot, moodycamel) | catches allocations/locks on the audio thread — the classic killer |
+| **Distribution** | macOS notarization · Packages · Inno Setup (Windows) | feeds the launch checklist |
+
+Deeper catalogs live in `awesome-musicdsp` (github.com/olilarkin/awesome-musicdsp) — the
+usual seeds-then-awesome-search rule.
+
 ## Testing — every stage of the loop, per platform
 
 Free/OSS-first defaults; as always, seeds not a closed menu.
