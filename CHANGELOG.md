@@ -1,5 +1,29 @@
 # Changelog
 
+## 1.11.0
+
+- **Sourced arguments**: every substantive claim, comparison or recommendation carries
+  its origin — link, doc section, command output, metric. No source → label it a
+  judgement call and say what would settle it. Applies to agents in issues and reviews.
+- **Right-size then fan out**: size the model to the *task* (a one-off heavy job borrows
+  a stronger tier, trivia drops to a cheap one), and parallelize by **widening a stage** —
+  independent sub-issues on the same `--stage` *are* the worker pool. One-off specialists
+  are create → use → **archive**, not permanent hires.
+- **Grades + fit-check**: roles carry junior/mid/senior; before starting, an agent checks
+  craft and grade — wrong craft hands back, above-grade escalates, below-grade hands down.
+- **Talent pool**: `agent archive` is reversible, so quiet roles are **parked with a
+  re-hire note in TEAM.md**, not deleted; utilization review (in `/audit`) routes through
+  the squad leader first, and flags bottlenecks as well as idlers.
+- **Control & expertise interview**: how much the owner wants to be in the loop
+  (hands-on / checkpoints / hands-off, global or per flow) **and what they're expert in**
+  — consulted as an expert there, taught-and-recommended elsewhere. Agents apply the same
+  when writing across squads.
+- **Proactive version checks + rollback as a normal outcome**: versions are compared at
+  `/status` and before a major `/ship` with "what changed and what it touches"; a bad
+  upgrade is rolled back from the recorded pre-upgrade SHA and the breakage logged.
+- **Dashboards** in STACKS: Metabase/Grafana (OSS) or the analytics tool's boards —
+  product metrics *and* team metrics (throughput, cycle time, cost per feature).
+
 ## 1.10.0
 
 - **"Useful over agreeable"** added as a core principle and pushed into the team guide:

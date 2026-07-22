@@ -188,3 +188,33 @@ present: compare versions — same → skip, older → the Skill-upgrade recipe 
 second copy. Then `agent create` (name **Mops**) → `agent skills` attach (+ find-skills)
 → `agent avatar` per chosen library → subtitle "Executive Advisor · resident" → rights
 per autonomy choice → kickoff (pinned issue + first message = decisions summary).
+
+
+## Utilization review (in `/audit`, or on a leader's request)
+
+1. `multica agent list` → for each: `multica agent tasks <id>` (count, statuses, span)
+   and `runtime usage` for the tokens it actually burned.
+2. Classify: **loaded** (steady tasks) · **bottleneck** (work queues behind it) ·
+   **idle** (no tasks this period).
+3. Route the proposal: idle → **ask its squad leader first** ("waiting on a stage, or
+   genuinely unused?") → if unused, propose `agent archive` **with a re-hire note in
+   `TEAM.md`** (what would bring it back). Bottleneck → propose splitting the role or a
+   second agent at the same grade.
+4. Only archiving or a spend change goes to the owner. Restoring later:
+   `multica agent restore <id>` — configuration, skills and tier come back intact.
+
+## Rollback after a bad upgrade
+
+1. Name what regressed (behaviour, not vibes) and when it started.
+2. Find the restore point: `docs/skill-backups/UPGRADES.md` → the **pre-upgrade SHA**.
+3. `git show <sha>:docs/skill-backups/<skill>/…` → re-import that content
+   (`multica skill import --url … --on-conflict overwrite`, or `--file` from the checkout).
+4. `/sync` so agent instructions match the restored version; verify the regression is gone.
+5. Log what broke in `UPGRADES.md` next to that entry — the next attempt starts informed.
+
+## Version check (proactive, at `/status` or before a major `/ship`)
+
+1. multica-ops: compare `version:` in the workspace skill against the canonical repo.
+2. Imported skills: compare each against its source (`skill get` vs the origin URL).
+3. Newer? Summarize **what changed and what it would touch** (agents carrying it, guide
+   rules, commands) and offer `/upgrade` — never upgrade unasked.

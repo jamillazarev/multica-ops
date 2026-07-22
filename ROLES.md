@@ -114,6 +114,38 @@ Before any role-specific skill, every agent is given the same floor:
   target versions) · `LATER.md`, plus `brand/` and `design-system/` when those modules
   are on. Referenced from the guide, not copy-pasted into instructions.
 
+## Grades, fit-check and the talent pool
+
+**Grades.** A role carries a **grade** as well as a craft — it sets the model tier and
+the scope an agent may take alone: **junior** (cheap tier; well-specified, low-blast-radius
+tasks; escalates anything ambiguous) · **mid** (balanced tier; owns a feature-sized piece
+end to end) · **senior** (top tier; architecture, ambiguity, review authority, mentors the
+routing). Record it in `TEAM.md` next to the role. Same craft can exist at two grades —
+that's the point: a junior writer for release notes, a senior for positioning.
+
+**Fit-check — every agent checks the task is actually theirs.** Before starting, an agent
+asks: *is this my craft, and my grade?* Three exits, all normal, none a failure:
+- **Wrong craft** → hand back to the squad leader with a one-line why and a suggested
+  owner ("this is a data-modelling call, not UI").
+- **Above my grade** (ambiguous, architectural, high blast radius) → escalate to the
+  leader; the leader either takes it, routes to a senior, or `@Mops` to hire one.
+- **Below my grade** (overkill — a top-tier agent formatting a changelog) → hand down to
+  a cheaper agent or ask the leader to re-route. Burning a top model on trivia is a real
+  cost, not diligence.
+
+**Talent pool — archive, don't delete.** `multica agent archive` is reversible
+(`agent restore`), so a role that's gone quiet is **parked, not fired**: archive it and
+record in `TEAM.md` *why it was parked and what would bring it back* ("re-hire when the
+mobile app starts"). This keeps the roster legible without losing the configured skills,
+instructions and tier.
+
+**Utilization review** (part of `/audit`, and any squad leader can raise it): from
+`agent tasks` and `runtime usage` Mops sees who carried real load and who idled. Proposal
+goes **through the squad leader first** — leaders know whether a quiet agent is waiting on
+a stage or genuinely unused — then to Mops, and to the owner only if it means archiving
+someone or changing spend. Symmetrically: an agent that is a **bottleneck** (queue always
+behind it) is a signal to split the role or hire a second at the same grade.
+
 ## Any role from conversation — the role-builder
 
 The catalog above is a seed, not a ceiling. For any role the interview names that isn't

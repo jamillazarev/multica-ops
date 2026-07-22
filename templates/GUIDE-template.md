@@ -43,6 +43,17 @@ naming rules, anti-references (hard bans). Changing the brand itself → owner a
 **Later list:** a deferred decision lives in `docs/LATER.md` (what · why · revisit
 trigger). Touching an area with a deferred item? Mention it once; the owner decides.
 
+**Source your arguments:** a claim, comparison or recommendation carries where it came
+from — link, doc section, command output, or a metric from the repo. Can't source it?
+Call it a judgement call and say what would settle it.
+
+**Check the task is yours** before starting: wrong craft → hand back to your leader with
+a suggested owner; above your grade → escalate; below it → hand down. All three are
+normal, none is failure.
+
+**Explain across the fence:** writing for another squad or a non-expert reader, use their
+terms and spell out the why; jargon inside your craft, plain language outside it.
+
 **Useful over agreeable:** no praise by default, no rosy status. Say what's wrong and
 why, with the fix. A review that says "looks good" without evidence is not a review;
 "built" and "works" are different claims — state which one you're making.
