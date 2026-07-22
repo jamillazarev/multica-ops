@@ -202,3 +202,60 @@ integration. Offer at setup; connect any time later.
   `docs/` opens as an Obsidian vault (plain markdown + Mermaid; GitHub renders the
   same files). Notion, when requested, is a mirror — the repo stays the source of
   truth. Split repos only for separate deploy/access/open-source boundaries.
+
+
+## 15. Stand-up order (detail)
+
+1. **Workspace = company.** One workspace per company/owner; projects = directions
+   (app, site, marketing…); agents are shared across projects — that's the point.
+   Create or rename it, fill **workspace details** (description, logo as avatar) via
+   `workspace update`; you and the agents keep them current (rebrand → new logo).
+2. **Conductor** — create first, make it the **project lead**. Give it git/GitHub
+   rights. Several directions may each get their own PM as that project's lead; Mops
+   (Mops in Multica if present, else the console) coordinates across them.
+3. **Guide skill + find-skills on every agent** — language/tone first line; incremental
+   commits; DoD; handoff = @mention; evidence-over-opinion; **docs follow decisions**:
+   when a discussion (issue thread, brainstorm, review) lands on a decision that changes
+   the spec/roadmap/guide, the agent who owns the change updates the affected doc **in the
+   same task** — docs carry current state only (no "was/changed to" history; the comment
+   thread *is* the history), and a decision that isn't written into the doc doesn't exist
+   for the next agent; the self-improvement rule
+   (a routine repeated twice → shape it into a skill via skill-creator → conductor
+   attaches it); limit/cancel conventions; **who Mops is**: the owner's
+   representative, first after the user. Escalation runs agent → squad leader →
+   conductor → **Mops (Executive Advisor)** → user; agents bring blockers and questions to
+   Mops, and only Mops (or a destructive-action rule) escalates to the user. **If the
+   Mops in Multica is off**, the vertex collapses to conductor → user, and the console/owner covers
+   the advisor role when open.
+4. **Roles from the interview** — ROLES.md templates where they fit; for any role not
+   in the catalog (pastry chef, accountant, scrum master…) run the **role-builder**:
+   research current best practices, find/import skills, collect the sources the role
+   needs, propose, create. Designers and engineers join **from the first decisions**
+   (discovery, spec review), not only at their stage.
+5. **Experts & personas (opt-in)** — composition depends on the project; propose 2–4
+   experts relevant to the domain (e.g. domain specialist, market/growth, architect)
+   as an **Experts squad**; user-simulation personas (built from the PM/UX research)
+   as a **Personas squad** used in usability passes. Only Mops in Multica stays squadless. The user may decline both.
+6. **Stand up Mops in Multica (opt-in — checklist #12)** — if enabled: install this skill
+   into the workspace and assign it **only to the Mops agent** (other agents carry the
+   *guide* skill, not this one — multica-ops is Mops's brain), so Mops in Multica *is* the
+   same Mops:
+   - **Install idempotently, never blindly.** First `multica skill list` — if `multica-ops`
+     isn't there, `multica skill import --url github.com/jamillazarev/multica-ops`. If it
+     **already exists** (re-run, or a teammate imported it), **compare versions**: same →
+     skip; older → refresh through `/upgrade` (backup current to `docs/skill-backups/` →
+     `import --on-conflict overwrite`), **never a second copy**. (`import` supports
+     github/skills.sh/clawhub URLs.) Then `multica agent create` the agent named
+     **Mops**, `multica agent skills` to attach the imported skill (+ find-skills),
+     `multica agent avatar` matching the chosen library, subtitle *"Executive Advisor ·
+     resident"*. Grant rights per the user's autonomy choice (advisor-only → narrow;
+     ongoing operator → CLI + admin in its `custom-env`).
+   - Seed the **kickoff**: pinned "Project kickoff" issue + Mops-in-Multica's first message =
+     the decisions summary (see "Two seats of Mops"). Tell the user: *"from here you can
+     talk to Mops inside Multica — chat, issues, any device; I remain in the CLI for the
+     heavy work."*
+   - If declined: skip; Mops lives in the console only, and `/help` says so.
+7. **Labels** (discipline/type; never the stage) and **docs skeleton**: `docs/ROADMAP.md`,
+   `docs/TEAM.md` (who owns what — essential once several humans join), `docs/TOOLING.md`
+   (every tool: what · for what · access · wiring · conventions). The cloud holds
+   issues/comments; code and keys stay on members' machines.

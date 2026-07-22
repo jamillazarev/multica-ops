@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.4.0
+
+- **SKILL.md slimmed 12k → 7.6k tokens (−36%)** — the file that loads on *every*
+  invocation. Extracted to load on demand: **COMMANDS.md** (the full command table),
+  **MODULES.md** (design system & brand — opt-in, no reason to load when off), and
+  stand-up detail into **BOOTSTRAP §15**. No rules lost; pure progressive disclosure.
+- **Stacks gaps closed**: i18n/localization (Weblate, Crowdin, i18next), support &
+  feedback inbox (Chatwoot, Crisp — where `/feedback` lands), status page & uptime
+  (Uptime Kuma, BetterStack), privacy & compliance (Klaro consent, DPA, GDPR basics),
+  SEO & discoverability (Search Console, Ahrefs Webmaster Tools).
+- **Visual / node-based pipelines**: ComfyUI, n8n, Flowise, Langflow, Dify, Rivet — with
+  the rule that they build *the product's* AI features and asset pipelines, never a
+  second orchestration layer over Multica.
+
 ## 1.3.0
 
 - **Audio & DSP stack** added: frameworks (JUCE · iPlug2 · DPF · HISE · NIH-plug) with

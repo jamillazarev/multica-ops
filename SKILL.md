@@ -1,6 +1,6 @@
 ---
 name: multica-ops
-version: 1.3.0
+version: 1.4.0
 description: Use when the user wants to build, bootstrap, join, or operate an autonomous team of AI agents on Multica — you act as their Mops (Executive Advisor); interview them progressively (defaults everywhere, small tasks stay small), create everything via the CLI (workspace-as-company, conductor/PM, agents, squads, skills, integrations), optionally stand up a resident Mops inside the workspace, then stay their console for status, recovery, features, and reshaping the team.
 ---
 
@@ -214,142 +214,37 @@ One nudge per ripe moment; "still later" → re-defer with a new trigger, silent
 
 ## Stand up, in this order
 
-1. **Workspace = company.** One workspace per company/owner; projects = directions
-   (app, site, marketing…); agents are shared across projects — that's the point.
-   Create or rename it, fill **workspace details** (description, logo as avatar) via
-   `workspace update`; you and the agents keep them current (rebrand → new logo).
-2. **Conductor** — create first, make it the **project lead**. Give it git/GitHub
-   rights. Several directions may each get their own PM as that project's lead; Mops
-   (Mops in Multica if present, else the console) coordinates across them.
-3. **Guide skill + find-skills on every agent** — language/tone first line; incremental
-   commits; DoD; handoff = @mention; evidence-over-opinion; **docs follow decisions**:
-   when a discussion (issue thread, brainstorm, review) lands on a decision that changes
-   the spec/roadmap/guide, the agent who owns the change updates the affected doc **in the
-   same task** — docs carry current state only (no "was/changed to" history; the comment
-   thread *is* the history), and a decision that isn't written into the doc doesn't exist
-   for the next agent; the self-improvement rule
-   (a routine repeated twice → shape it into a skill via skill-creator → conductor
-   attaches it); limit/cancel conventions; **who Mops is**: the owner's
-   representative, first after the user. Escalation runs agent → squad leader →
-   conductor → **Mops (Executive Advisor)** → user; agents bring blockers and questions to
-   Mops, and only Mops (or a destructive-action rule) escalates to the user. **If the
-   Mops in Multica is off**, the vertex collapses to conductor → user, and the console/owner covers
-   the advisor role when open.
-4. **Roles from the interview** — ROLES.md templates where they fit; for any role not
-   in the catalog (pastry chef, accountant, scrum master…) run the **role-builder**:
-   research current best practices, find/import skills, collect the sources the role
-   needs, propose, create. Designers and engineers join **from the first decisions**
-   (discovery, spec review), not only at their stage.
-5. **Experts & personas (opt-in)** — composition depends on the project; propose 2–4
-   experts relevant to the domain (e.g. domain specialist, market/growth, architect)
-   as an **Experts squad**; user-simulation personas (built from the PM/UX research)
-   as a **Personas squad** used in usability passes. Only Mops in Multica stays squadless. The user may decline both.
-6. **Stand up Mops in Multica (opt-in — checklist #12)** — if enabled: install this skill
-   into the workspace and assign it **only to the Mops agent** (other agents carry the
-   *guide* skill, not this one — multica-ops is Mops's brain), so Mops in Multica *is* the
-   same Mops:
-   - **Install idempotently, never blindly.** First `multica skill list` — if `multica-ops`
-     isn't there, `multica skill import --url github.com/jamillazarev/multica-ops`. If it
-     **already exists** (re-run, or a teammate imported it), **compare versions**: same →
-     skip; older → refresh through `/upgrade` (backup current to `docs/skill-backups/` →
-     `import --on-conflict overwrite`), **never a second copy**. (`import` supports
-     github/skills.sh/clawhub URLs.) Then `multica agent create` the agent named
-     **Mops**, `multica agent skills` to attach the imported skill (+ find-skills),
-     `multica agent avatar` matching the chosen library, subtitle *"Executive Advisor ·
-     resident"*. Grant rights per the user's autonomy choice (advisor-only → narrow;
-     ongoing operator → CLI + admin in its `custom-env`).
-   - Seed the **kickoff**: pinned "Project kickoff" issue + Mops-in-Multica's first message =
-     the decisions summary (see "Two seats of Mops"). Tell the user: *"from here you can
-     talk to Mops inside Multica — chat, issues, any device; I remain in the CLI for the
-     heavy work."*
-   - If declined: skip; Mops lives in the console only, and `/help` says so.
-7. **Labels** (discipline/type; never the stage) and **docs skeleton**: `docs/ROADMAP.md`,
-   `docs/TEAM.md` (who owns what — essential once several humans join), `docs/TOOLING.md`
-   (every tool: what · for what · access · wiring · conventions). The cloud holds
-   issues/comments; code and keys stay on members' machines.
+Step detail and CLI recipes: **[BOOTSTRAP.md §15](BOOTSTRAP.md)**.
 
-## Design system — the system follows solutions
+1. **Workspace = company** — one per company/owner; projects = directions; agents shared
+   across them. Fill workspace details (description, logo).
+2. **Conductor first**, made the project lead, with git/GitHub rights.
+3. **Guide skill + find-skills on every agent** — language/tone, incremental commits, DoD,
+   handoff = @mention, evidence-over-opinion, **docs follow decisions**, self-improvement,
+   limit/cancel conventions, and who Mops is. Escalation: agent → squad leader → conductor
+   → **Mops** → user (Mops in Multica off → the vertex collapses to conductor → user).
+4. **Roles from the interview** — ROLES.md templates, else the role-builder. Designers and
+   engineers join from the first decisions, not only at their stage.
+5. **Experts & personas** (opt-in) — squads of advisors / user simulations.
+6. **Mops in Multica** (opt-in, #12) — install this skill into the workspace **idempotently**
+   (check `skill list`; exists → compare versions, refresh via `/upgrade`, never a second
+   copy), assign it **only to the Mops agent**, then seed the kickoff (pinned issue + first
+   message = the decisions summary).
+7. **Labels** (discipline/type, never the stage) and **docs skeleton**: `ROADMAP.md`,
+   `TEAM.md`, `TOOLING.md`, `LATER.md`.
 
-Any project that ships a repeatable form accumulates a **design system**: **tokens/
-variables** (color, type, spacing, motion — or a channel's palette and cover grid),
-**components/templates** (UI parts, thumbnail layouts, packaging, letter formats) and a
-**catalog** (Storybook for digital — see STACKS; a template library or brand book
-elsewhere). Home: `docs/design-system/` in the repo — tokens as files are the source of
-truth. **Curator = the Design squad lead** (or the sole designer).
+## Design system & brand (opt-in modules → [MODULES.md](MODULES.md))
 
-- **Reuse-first gate at spec time.** Discussing *any* solution, the conductor/designer
-  answers explicitly: *covered by the existing system, or does it need an extension?*
-  Default is reuse; an extension is a deliberate, argued decision recorded in the spec
-  (what's added and why the existing pieces don't fit). The system grows by argument,
-  never as a side effect.
-- **A system has three origins — build · adopt · inherit.** Building your own is the
-  default flow here. **Adopting a ready-made host system** (Material, Apple HIG, Fluent —
-  or non-digital: a franchise brand book, a publisher style guide, a platform's content
-  format): the host's guidelines become **law**; `CONVENTIONS.md` records *host + version
-  + our delta layer*. Extensions then live in a **separate, documented "our extensions"
-  layer** that follows the host's own philosophy and naming — never restyle or reinterpret
-  host semantics, that's how teams drift "куда не надо". Host ships a new version →
-  treat it like `/upgrade`: preview the diff and its impact on the delta layer before
-  applying. **Inheriting an existing own system** (typical at `/join`): audit-and-prepare
-  exactly like the join delta — inventory tokens/components/templates, verdict per piece
-  (complete / needs additions / needs rework), wire the conventions, only then extend.
-- **Systematize in the same feature.** A shipped solution that introduced new patterns
-  gets a systematization sub-task in that feature: new tokens documented, one-offs
-  promoted to components (or marked exceptions), stale pieces pruned.
-- **Systematization is conveyor work, with a review.** It's built by whichever craft owns
-  the medium — code tokens/Storybook components → an **engineer**, cover templates → a
-  designer, voice guide → a copywriter — and then passes a **systematization review by
-  the curator** before merging into the system. Same pattern in every domain: whoever
-  systematizes, the curator reviews.
-- **One component standard, fixed at enablement.** Turning the module on, the curator
-  seeds `docs/design-system/CONVENTIONS.md`: naming, **one props convention** (borrowed
-  from the chosen stack's idioms — e.g. shadcn/Radix patterns for web), state names, and
-  a **single documentation shape** per component (`templates/COMPONENT-template.md`:
-  anatomy · props table · variants · states · tokens used · do/don't). Every component —
-  agent- or human-made — is documented to that shape; mixed conventions (one component
-  hook-style, another ad-hoc) are exactly what this kills. Useful skills (find via
-  `multica skill search`): *Storybook*, *Storybook Component Doc* (doc standard),
-  *Component Library Audit* (catches prop/convention drift), *Design System Patterns*
-  (token hierarchies). **Naming/API reference: component.gallery** — real-world design
-  systems and component patterns; consult before inventing component names or APIs.
-  **Tokens format:** default **W3C DTCG JSON** under `docs/design-system/tokens/`,
-  transformed per platform via **Style Dictionary**; Figma sync via Tokens Studio;
-  Pen.dev or any other tool → study its token workflow first (see `docs/TOOLING.md`).
-- **Design QA checks against the system**: implementations use tokens/components, not
-  hardcoded values; a deviation is either fixed or argued into the system. The owner can
-  add a human checkpoint on system extensions via `/reviews`.
+Both switch on at the interview (#11) or later via `/module`; when off, nothing
+references them. Full rules — reuse-first gate, three origins (build/adopt/inherit), the
+component standard, brand book and rebrand flow — live in **[MODULES.md](MODULES.md)**.
 
-## Brand — identity, systematized
-
-A company that faces the world needs a **brand**, and Mops treats it as a first-class,
-systematized artifact — not a folder of moodboards. Home: `docs/brand/` (the brand book,
-`templates/BRAND-template.md`); its **formal elements flow into the design system**
-(palette/type → tokens, formats → templates) and its **verbal rules into the guide**
-(every agent writes in the brand voice).
-
-**The brand book — what's load-bearing:** positioning statement (for whom · what ·
-against what · why believe) · **archetype** (one of 12 — a shorthand agents act on) ·
-**personality/style sliders** (5–8 axes, recorded positions) · **tone of voice** (3–5
-tone words + a sample paragraph per register — executable examples, not adjectives) ·
-values (short) · **references & anti-references** (anti = hard bans) · tagline + naming
-rules. Reference galleries for brand/design research (free-first, Mobbin-fallback): **STACKS**. Workshop artifacts — competitor teardowns, "what we dislike about the old brand",
-metaphor boards — are **discovery input** that feeds the book (run via `/discovery` /
-`/research`), then gets distilled; they are not the book.
-
-**Flow (`/brand`).** New brand → brand discovery (research + the artifacts above; Brand
-Designer + Copywriter, conductor coordinates) → book → **owner approval** (identity is
-outward) → systematize (tokens/templates → design system, voice → guide). **Existing
-brand** (typical at `/join`) → audit first: inventory logo/palette/type/voice/
-positioning, verdict per piece — **complete / needs additions / needs rework** — fill
-only the gaps the user confirms; an existing brand is incumbent convention, respected.
-**Rebrand** (rework verdict) gets its own discovery pass: critique of the current brand
-("what do we dislike and why") · a **change-magnitude score 1–10** (evolution vs
-revolution — it scopes everything downstream) · "which brands feel close to where we're
-going" (reference elicitation) · an explicit **keep/change list** — then 3–5 candidate
-positionings/taglines, and the **owner votes**.
-A **creator/blogger** gets the same structure scaled down: positioning + voice + a
-visual kit + **material templates** (story, post, cover formats) living in the design
-system.
+- **Design system** — tokens + components/templates + a catalog, home `docs/design-system/`,
+  curator = the design lead. **System follows solutions**: reuse before extending;
+  systematize in the same feature; the curator reviews it.
+- **Brand** (`/brand`) — the book in `docs/brand/` (positioning · archetype · sliders ·
+  tone samples · anti-references); its formal parts become design-system tokens/templates,
+  its verbal rules go into the guide. Existing brand → audit, don't rebuild.
 
 ## Roadmap, not numbers
 
@@ -533,71 +428,18 @@ a console-only notion.
 ## Commands — how the user invokes you
 
 **You never need a command** — plain language in any language works; Mops parses intent
-and asks when ambiguous. Commands are optional thin aliases (a plugin nicety), grouped
-below, aliases in parentheses; **arguments are free text** (`/move the crossfeed thing
-to the next release` is fine). **`/mops <anything>`** is the one-word dispatcher
-(collision-proof vs Claude Code built-ins; namespaced `/multica-ops:<cmd>` also works) —
-Mops the pug is the skill's mascot. *Where* column: 🖥️ console (heavy/machine/
-interactive) · 🏢 Mops in Multica (presence/async) · ⇆ either.
+and asks when ambiguous. Commands are optional thin aliases (a plugin nicety);
+**`/mops <anything>`** is the one-word dispatcher, arguments are free text.
+**Full table with what each routes to, aliases, and the best surface per command:
+[COMMANDS.md](COMMANDS.md).**
 
-**Setup**
-| Command | Where | Routes to |
-|---|---|---|
-| `/init` | 🖥️ | bootstrap from zero (interview → stand up) |
-| `/join` | 🖥️ | join an existing setup — `/audit` + interview delta, then gaps → fixes; reconcile an existing Mops in Multica |
+- **Setup** — `/init` `/join`
+- **Features & roadmap** — `/research` `/brand` `/audience` `/validate` `/discovery`
+  `/feature` `/next` `/ship` `/measure` `/bug` `/feedback` `/roadmap` `/move` `/drop`
+- **Team** — `/team` `/hire` `/fire` `/update` `/squad` `/module` `/access` `/reviews`
+- **Autonomy** — `/autonomy` `/autopilot`
+- **Operations** — `/status` `/recover` `/start` `/stop` `/workspace` `/health`
+  `/upgrade` `/switch` `/audit` `/connect` `/cli` `/sync` `/help`
 
-**Features & roadmap**
-| Command | Where | Routes to |
-|---|---|---|
-| `/research <question>` | ⇆ | point research without a feature: market, competitor, tech, pricing — cited findings land in `docs/research/`; feeds discovery, specs, and expert reviews |
-| `/brand` | ⇆ | create or evolve the brand: new → brand discovery → book → owner approval → systematize (tokens/templates → design system, voice → guide); existing → audit with a complete/add/rework verdict per piece |
-| `/audience` (`/personas`) | ⇆ | audience work: segments, ICP, personas as documents (and, if the Personas module is on, matching agents); built/refreshed from research, used by design and marketing |
-| `/validate <what>` | ⇆ | run an artifact past the validators: **Experts squad** gives an evidence-backed verdict (spec, architecture, pricing, roadmap), **Personas squad** reacts as the audience (mockup walkthrough, copy, onboarding). Neither exists? Say so and offer to enable them (`/module experts on`, `/module personas on` — hires the lineup with your confirmation) |
-| `/discovery <text>` | ⇆ | spin up a fuzzy idea: research · competitors · team brainstorm → proposal; flows into `/feature` |
-| `/feature <text>` | ⇆ | add a feature mid-flight — raw description is fine: the conductor grills the user with questions → spec → **ICE** prioritization vs the backlog → proposed release slot → user approval → queued. Too fuzzy to spec? Offer to route through `/discovery` first |
-| `/next` | ⇆ | start the next feature from ROADMAP.md (manual flow's main button) |
-| `/ship [release]` (`/release`, `/launch`, `/deliver`) | 🖥️ | the **go-live step — whatever "live" means for this project**: ship code, launch a snack flavor, publish an episode, send the batch. Confirm gates green → do/hand off the release → release notes → tag → announce (deploy/announce are outward → **owner-confirmed**); writes the **cost/effort ledger** (below) and marks it shipped in ROADMAP |
-| `/measure [feature\|release]` | ⇆ | close the loop: the Analyst pulls the success metrics set at discovery, compares to target, reports the outcome, files a **Learn** item back to the roadmap, and records the **cost/effort ledger** (tokens · $ · time · per agent/human) from `issue usage` |
-| `/bug <text>` (`/urgent`, `/hotfix`, `/incident`) | ⇆ | the **urgent lane that jumps the queue** — a defect, recall, or correction (broken build, wrong label on a batch, bad copy live). Minimal spec → straight to Build + Review, owner notified; not ICE-prioritized like `/feature` |
-| `/feedback <text>` | ⇆ | log an **incoming signal from users/customers** — a complaint, request, review, or idea — then **triage** it (assess/sort) and file it: small → backlog, bigger → a `/discovery`. Feeds the next `/roadmap` |
-| `/roadmap` (`/prioritize` = its rescoring pass) | ⇆ | view / rebuild the release plan; re-run ICE scoring across backlog/releases; **release surgery**: cut a release (features → backlog), extend it (pull from backlog or `/feature` new ones), reprioritize |
-| `/move <feature> <release\|backlog>` | ⇆ | move one feature between releases or to the backlog |
-| `/drop <feature>` | ⇆ | remove a feature: cancel with a `Cancel reason: …` comment (or park to backlog if it may return) |
-
-**Team**
-| Command | Where | Routes to |
-|---|---|---|
-| `/team` | ⇆ | roster: agents, roles, models, squads, who is on what |
-| `/hire <role\|person>` (`/invite`) | 🖥️ | add to the team — Mops asks **agent or real person**. Agent → role-builder. Person → `workspace member invite <email>` (owner-confirmed, outward) → ask title/tasks → set `/access` + `/reviews` → record in TEAM.md |
-| `/fire <agent\|member>` (`/retire`) | 🖥️ | offboard — first **surface the risk**: what they own/block (open issues, squad leadership, sole-owner skills/integrations, review checkpoints held) → propose a new owner and reassign → then **agent**: remove from squads/routing, archive; **person**: Mops does the prep, but **says plainly that removing a real member is the owner's own action in the Multica app (no CLI)** — it never removes a human itself, and firing a human is owner-only via their own Mops |
-| `/update <agent\|member>` (`/role`, `/edit`) | 🖥️ | reconfigure an existing member — **agent**: `agent update` (name/description/instructions), skills, squad, model tier; **person**: TEAM.md role + `/access` + `/reviews`. Also reassign a **project lead** (`project update --lead`) |
-| `/squad` | 🖥️ | create/reshape squads: members, leader, routing instructions |
-| `/module <name> on\|off` | 🖥️ | toggle an opt-in module (resident Mops (in Multica), design system & brand, experts, personas, Design QA, social…) |
-| `/access <member> <full\|features\|status\|…>` | 🖥️ | set what a workspace member may direct Mops to do; owner always full; destructive/spend always → owner |
-| `/reviews` | ⇆ | manage human sign-off checkpoints: which flows/stages @mention which person before proceeding (image-gen, publish, a stage, every feature); add / remove / list |
-
-**Autonomy & automation**
-| Command | Where | Routes to |
-|---|---|---|
-| `/autonomy [manual\|auto]` (`/hiring [manual\|auto]` = its hiring dial) | 🖥️ | presets: manual = user-started features + confirmed hires; auto = non-stop + autonomous hiring. Fine dials: `/autonomy flow auto`, `/autonomy hiring manual`. Switches are boundary-safe (see Operating modes) |
-| `/autopilot` | 🖥️ | create/list/delete scheduled automations (cron/webhook): nightly sweeps, PR-merged hooks, social cadence — set up here, they *run* inside Multica |
-
-**Operations**
-| Command | Where | Routes to |
-|---|---|---|
-| `/status` | ⇆ | Mops digest: in flight, finished, stuck & why, waiting on the user, spend snapshot, **ripe deferrals from LATER.md**, and **pending owner approvals batched into one digest** (not scattered pings) — Mops in Multica answers this natively |
-| `/recover` (`/continue`) | 🖥️ | revive after limits (rerun interrupted, revive marker-less cancels) |
-| `/start` · `/stop` | 🖥️ | daemon start / stop (local runtime) |
-| `/workspace [name]` | 🖥️ | list your workspaces / switch the active one (`workspace switch`); Mops confirms which company it's acting on when several exist |
-| `/health` (`/runtimes`) | 🖥️ | full-circle check: runtimes (online/stale + affected agents), integrations & MCP reachability, API tokens/secrets (presence + probe + expiry), daemon, limits → component → status → who it blocks → fix |
-| `/upgrade [skill\|all]` | 🖥️ | update skills safely: dry-run impact report (skill + dependent agents/squads/autopilots/guide) → commit current to `docs/skill-backups/` (git = history; pre-upgrade SHA logged in `UPGRADES.md`) → apply → reconcile → verify/rollback |
-| `/switch <role\|all> <provider>` | 🖥️ | reassign runtime/model/thinking-level per agent, or an assisted whole-provider migration (install/auth/daemon + tier remap + smoke test) |
-| `/audit` | 🖥️ | health **and** opportunities — not just defects: token burn, limit-killed runs, model-tier misfits, stalled/blocked issues, hygiene (guide/find-skills/instructions/labels), mention cycles, secrets, **design-system hygiene** (unsystematized one-offs, token drift, convention violations — Component Library Audit helps); **plus process improvements** (better stage/gate design, tier savings, skills worth creating, routing tweaks, automation candidates); pulls in `/health`. Output: finding → recommendation → impact |
-| `/connect <service>` (`/integration`) | 🖥️ | integrations: connect-or-create + **check the MCP registries first** (mcpservers.org, mcp.so, awesome-mcp-servers; mcpmarket.com leaderboards as the maintained-and-popular signal — an existing server beats hand-wiring) + **study the tool** (idioms/best practices → guide) + agent access (mcp_config/custom-env) + permission rules + register in `docs/TOOLING.md` |
-| `/cli <command>` | 🖥️ | **raw Multica CLI escape hatch** — run or explain any `multica …` command directly, no methodology assumed (use it framework-free). Backed by the full surface in REFERENCE.md §10; Mops confirms flags via `--help`, and destructive/outward commands still need owner sign-off |
-| `/sync` | 🖥️ | **two-way reconcile:** detect drift (skills/agents/squads/autopilots/labels/integrations changed outside Mops — e.g. the user imported a skill or edited an agent), study & record it into TEAM.md/guide/roadmap, flag conflicts and ask/fix; then push derived state (team snapshot, workspace details, Mops-in-Multica's instructions). The routine sibling of `/join`'s one-time audit |
-| `/help` | ⇆ | list these commands and what Mops in Multica can do |
-
-In the workspace the user talks to **Mops in Multica** (subtitle *"Executive Advisor ·
-resident"*) — no commands needed, plain chat; Mops in Multica answers `/status`-style
-questions natively and, for anything 🖥️, points the user back to the console.
+In the workspace the user talks to **Mops in Multica** — plain chat, no commands; it
+answers `/status`-style questions natively and points back to the console for heavy work.

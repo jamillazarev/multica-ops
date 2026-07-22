@@ -29,6 +29,12 @@ stay) on it; `—` means usage- or purchase-priced from the first call.
 | **Product docs & API reference** | repo-first docs site (VitePress et al.) · **Mintlify** (managed, free tier) · **Scalar** (free OpenAPI API reference) | user/product documentation and a live API reference; repo stays the source of truth, managed hosting is the mirror | ✅ |
 | **Short links & attribution** | **Dub** (OSS, free tier) · short.io | campaign/marketing links with UTM + click analytics; feeds `/measure` alongside product metrics | ✅ |
 | **Design system catalog** | Storybook | living catalog of UI components + their states; tokens live as files in the repo (CSS vars / style-dictionary) and Storybook renders them; native apps → SwiftUI Previews / a catalog target; non-digital → template library or brand book in `docs/design-system/`; **official Storybook MCP** (github.com/storybookjs/mcp) lets agents drive the catalog directly | ✅ |
+| **i18n / localization** | **Weblate** (OSS, self-host) · Crowdin / Lokalise (free tiers) · i18next / ICU MessageFormat in code | translation workflow + the library that actually formats plurals/dates; agents translate, humans review via `/reviews`; string extraction belongs to the build, not to copy-paste |
+| **Support & feedback inbox** | **Chatwoot** (OSS, self-host) · Crisp (free tier) | where `/feedback` signal physically arrives — chat/email/social in one inbox; wire an autopilot to triage it into the backlog |
+| **Status page & uptime** | **Uptime Kuma** (OSS, self-host) · BetterStack / Instatus (free tiers) | post-launch essentials: synthetic checks on key flows + a public status page; failures feed `/measure` and `/health` |
+| **Privacy & compliance** | **Klaro** (OSS cookie consent) · policy generators · a DPA template; PostHog/Plausible self-host when data must stay yours | GDPR-style basics for anything public: consent, privacy policy, data-processing agreements, retention. Legal Counsel owns the texts, Security the implementation |
+| **SEO & discoverability** | Google Search Console (free) · Ahrefs Webmaster Tools (free) · sitemap + schema.org in the build | complements the `seo-audit` skill with actual measurement; run before and after `/ship` |
+| **Visual / node-based pipelines** | **ComfyUI** (OSS — image/video generation graphs) · **n8n** (fair-code, automation with AI steps) · **Flowise** · **Langflow** · **Dify** (OSS LLM apps + RAG + observability) · **Rivet** (OSS, local, embeddable agent graphs) | two distinct uses: (a) an **asset pipeline** the design squad runs (ComfyUI for brand/marketing imagery at volume), (b) **AI features inside the product you're building**. All self-hostable and free |
 | **AI gateway** | OpenRouter | one API to 400+ models / 70+ providers, OpenAI-SDK-compatible; fallbacks when a provider is down; per-model data policies; credit-based | — |
 
 Decision rules the assistant applies:
@@ -51,6 +57,12 @@ Decision rules the assistant applies:
   edge — throttle, hard stop, or auto-charge. Record the chosen plan + that ceiling in
   `docs/TOOLING.md`; `/health` watches headroom and `/audit` flags what's close. Crossing
   into paid is **spend** — owner-gated like any other, never a silent upgrade.
+- **Node-based tools build the product, not the team.** ComfyUI/Rivet/Flowise/Dify are
+  for **asset pipelines and the AI features you ship** — never a second orchestration
+  layer over Multica. Multica *is* the agent framework here (agent = model + skills +
+  instructions + runtime; orchestration = squads + stage barriers + @mentions); wiring a
+  visual flow engine on top would create a competing source of truth, the same
+  anti-pattern as a second memory store. Product-side, they're a normal stack choice.
 - **Pick CI your agents can read.** For an agent team the decisive feature isn't build
   speed, it's whether failures come back as **structured, fetchable context** (an MCP
   server or a clean logs API). A pipeline agents can't read turns every red build into a
