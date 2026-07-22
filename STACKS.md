@@ -4,6 +4,8 @@ Seeds with generous free tiers, not a closed menu — **every choice accepts "ot
 (the user names it, you research and wire it). Per service: connect-or-create
 (BOOTSTRAP §12), access via `mcp_config`/`custom-env`, destructive/outward actions
 still gated by the owner. Offer only what the interview's needs actually name.
+**Free tier is the default plan** — a ✅ means the project can genuinely start (and often
+stay) on it; `—` means usage- or purchase-priced from the first call.
 
 ## Services by need
 
@@ -14,7 +16,7 @@ still gated by the owner. Offer only what the interview's needs actually name.
 | **All-in-one client DB** | InstantDB | Firebase-alternative: realtime relational DB + auth + presence + storage; CLI-first, built for AI agents to drive without dashboards; offline-first multiplayer UIs | ✅ |
 | **Offline-first sync** | PowerSync | syncs Postgres/MongoDB/MySQL/SQL Server into in-app SQLite; kills hand-rolled state-over-API plumbing; web, RN/Expo, Flutter, Swift, Kotlin | ✅ |
 | **Deploy / hosting** | Vercel (web) · **Railway** (backends/workers/DBs) | web apps & sites with preview deploys per PR (Design QA loves them), edge functions, cron; Railway when you need long-running services, queues, or a hosted Postgres/Redis beyond serverless | ✅ |
-| **CI/CD & release automation** | **GitHub Actions** + the **official GitHub MCP server** | build/test/deploy on push/PR — and, via MCP, agents **read workflow runs, analyze build failures, manage releases** (the feedback loop that lets the QA gate fix its own red builds). Alternatives with agent-readable CI: **CircleCI** (official MCP — pipeline graph, build history, failure logs, artifacts) · **Buildkite** (heavy parallelism, managed Anthropic model provider) · **Dagger** (containerized pipelines that run identically locally and in CI, so an agent reproduces a failure on its own machine). Publishing: **Fastlane** (OSS, store submission/signing) · **EAS Build/Submit** (Expo) · Xcode Cloud · electron-builder / tauri-action + notarization (desktop). Versioning: Changesets or semantic-release. Gates the launch checklist | ✅ |
+| **CI/CD & release automation** | **GitHub Actions** + the **official GitHub MCP server** | build/test/deploy on push/PR — and, via MCP, agents **read workflow runs, analyze build failures, manage releases** (the feedback loop that lets the QA gate fix its own red builds). Alternatives with agent-readable CI: **CircleCI** (official MCP — pipeline graph, build history, failure logs, artifacts) · **Buildkite** (heavy parallelism, managed Anthropic model provider) · **Dagger** (containerized pipelines that run identically locally and in CI, so an agent reproduces a failure on its own machine). Publishing: **Fastlane** (OSS, store submission/signing) · **EAS Build/Submit** (Expo) · Xcode Cloud · electron-builder / tauri-action + notarization (desktop). Versioning: Changesets or semantic-release. Gates the launch checklist | ✅ (free for public repos; private repos are build-minute capped — the ceiling that bites first) |
 | **Domains** | Namecheap | buy domains cheap; DNS can stay here or move | — |
 | **DNS** | Vercel DNS *or* Cloudflare | if the site lives on Vercel, its DNS is simplest (per-subdomain, zero config); Cloudflare when you want a proxy/WAF/workers in front or many non-Vercel services | ✅ |
 | **Payments** | Stripe | cards/subscriptions/invoices, full control (needs your own tax handling); for solo digital products a Merchant-of-Record may fit better (MoR handles VAT): **Polar** (dev-first, OSS-friendly) · Lemon Squeezy · Paddle; pricing/entitlements layer over Stripe → **Autumn** (useautumn.com) | — |
@@ -43,6 +45,12 @@ Decision rules the assistant applies:
 - **Need an API or a free tier?** Check **public-apis** (github.com/public-apis/public-apis)
   for a ready data/API source and **free-for.dev** for free-tier services before paying —
   both pair with the free-first rule here.
+- **Free tier first — and name the ceiling.** Default to the free plan, and when
+  proposing a service **say where its free tier ends** in the unit that will actually bite
+  (build minutes, MAU, rows/storage, events, seats, emails/day) and what happens at that
+  edge — throttle, hard stop, or auto-charge. Record the chosen plan + that ceiling in
+  `docs/TOOLING.md`; `/health` watches headroom and `/audit` flags what's close. Crossing
+  into paid is **spend** — owner-gated like any other, never a silent upgrade.
 - **Pick CI your agents can read.** For an agent team the decisive feature isn't build
   speed, it's whether failures come back as **structured, fetchable context** (an MCP
   server or a clean logs API). A pipeline agents can't read turns every red build into a

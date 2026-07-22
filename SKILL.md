@@ -1,6 +1,6 @@
 ---
 name: multica-ops
-version: 1.2.1
+version: 1.2.2
 description: Use when the user wants to build, bootstrap, join, or operate an autonomous team of AI agents on Multica — you act as their Mops (Executive Advisor); interview them progressively (defaults everywhere, small tasks stay small), create everything via the CLI (workspace-as-company, conductor/PM, agents, squads, skills, integrations), optionally stand up a resident Mops inside the workspace, then stay their console for status, recovery, features, and reshaping the team.
 ---
 
@@ -64,7 +64,7 @@ wire it the same way (MCP/env for access, a guide rule for conventions). **Wirin
 includes studying**: for any tool that enters the project — named by you or the user —
 research how to work with it *well* (its idioms, token/asset workflow, best practices),
 record the resulting conventions in the guide, and register it in **`docs/TOOLING.md`**
-(what · for what · who has access · how wired · conventions link). Options in
+(what · for what · who has access · how wired · **plan + free-tier ceiling** · conventions link). Options in
 this file are seeds, never a closed menu.
 
 Full checklist (each with its default):
@@ -498,7 +498,7 @@ All three are **preview-first** (blast radius reported before anything changes),
 up and reversible where they can break things. Recipes: **PLAYBOOKS**.
 
 - **`/health`** — full-circle sweep of what fails silently: runtimes (+ **which agents
-  sit on a degraded one**), integrations/MCP probes (**the probe list = `docs/TOOLING.md`**), API tokens/secrets, daemon, limits.
+  sit on a degraded one**), integrations/MCP probes (**the probe list = `docs/TOOLING.md`**), API tokens/secrets, **free-tier headroom** (usage vs the ceiling recorded per service), daemon, limits.
   Output: component → status → who it blocks → fix. `/audit` pulls it in.
 - **`/upgrade [skill|all]`** — skills have **no workspace-side version history**, so:
   dry-run impact report (skill + dependent agents/squads/autopilots/guide rules) →

@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.2
+
+- **Free tier first — and name the ceiling**: proposing a service now states where its
+  free tier ends (build minutes, MAU, rows, events, seats) and what happens there;
+  the plan + ceiling are recorded in `docs/TOOLING.md`, `/health` watches headroom,
+  `/audit` flags what's close, and crossing into paid is owner-gated spend.
+- Honest CI/CD free-tier note (free for public repos; private repos minute-capped).
+
 ## 1.2.1
 
 - CI/CD row expanded for agent teams: GitHub Actions + the **official GitHub MCP server**
