@@ -1,6 +1,6 @@
 ---
 name: multica-ops
-version: 1.4.0
+version: 1.5.0
 description: Use when the user wants to build, bootstrap, join, or operate an autonomous team of AI agents on Multica — you act as their Mops (Executive Advisor); interview them progressively (defaults everywhere, small tasks stay small), create everything via the CLI (workspace-as-company, conductor/PM, agents, squads, skills, integrations), optionally stand up a resident Mops inside the workspace, then stay their console for status, recovery, features, and reshaping the team.
 ---
 
@@ -33,12 +33,21 @@ fetch it — don't trust the cutoff.**
 **Advise unprompted** — at every step, name what the project is missing (no brand?
 no analytics? no app icon? no legal pages?) and recommend; the user decides.
 
-- Zero-to-team CLI recipes, capacity levers, traps: **[BOOTSTRAP.md](BOOTSTRAP.md)**
-- Role catalog + generic role-builder + experts/personas: **[ROLES.md](ROLES.md)**
-- Daily operations, copy-paste: **[PLAYBOOKS.md](PLAYBOOKS.md)** — use whenever the
-  user asks "how do I…" or wants a standard operation done
-- Object model, anti-patterns, **full Multica CLI command surface** (§10): [REFERENCE.md](REFERENCE.md) · [scripts/](scripts/)
-- Process diagrams (bootstrap, conveyor, escalation, limits): [WORKFLOW.md](WORKFLOW.md)
+**This file is the always-loaded core — everything else loads only when its trigger
+fires.** Read the matching file *before* acting; don't reconstruct its content from
+memory.
+
+| Load… | …when |
+|---|---|
+| **[BOOTSTRAP.md](BOOTSTRAP.md)** | standing a team up (`/init`), capacity/limit levers, CLI traps, the stand-up detail (§15) |
+| **[ROLES.md](ROLES.md)** | hiring or reshaping anyone (`/hire` `/update` `/squad`), skill packs, experts/personas, avatars |
+| **[STACKS.md](STACKS.md)** | choosing any tool/service/library — services, AI-fluent libraries, audio & DSP, testing, security, reference galleries |
+| **[MODULES.md](MODULES.md)** | the design-system or brand module is on (`/brand`, design work, systematization) |
+| **[COMMANDS.md](COMMANDS.md)** | the user asks what commands exist (`/help`) or you need a command's exact scope |
+| **[PLAYBOOKS.md](PLAYBOOKS.md)** | running a standard operation — "how do I…", `/health` `/upgrade` `/switch`, onboarding, the cost ledger |
+| **[REFERENCE.md](REFERENCE.md)** | object model, anti-patterns, **full CLI surface (§10)**, **frameworks per stage (§11)** |
+| **[WORKFLOW.md](WORKFLOW.md)** | explaining the process visually (bootstrap, two seats, conveyor, escalation, limits) |
+| [templates/](templates/) · [scripts/](scripts/) | writing a guide/roadmap/brand/component doc · ops helpers |
 
 ## Interview progressively — small things must stay small
 
@@ -63,6 +72,9 @@ door — the user can name any tool/format/provider not listed; you research it 
 wire it the same way (MCP/env for access, a guide rule for conventions). **Wiring
 includes studying**: for any tool that enters the project — named by you or the user —
 research how to work with it *well* (its idioms, token/asset workflow, best practices),
+**Default preference order** when several options fit: **free → open source →
+self-hostable/local → embeddable in the repo → agent-drivable (MCP, CLI, or API)** — the
+managed/paid option must earn its place with a reason. Full ladder: STACKS. Then
 record the resulting conventions in the guide, and register it in **`docs/TOOLING.md`**
 (what · for what · who has access · how wired · **plan + free-tier ceiling** · conventions link). Options in
 this file are seeds, never a closed menu.

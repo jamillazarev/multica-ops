@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.5.0
+
+- **Selection ladder** made explicit: free → open source → self-hostable/local →
+  embeddable in the repo → agent-drivable (MCP/CLI/API); a paid or managed option must
+  **earn the exception** with a stated reason recorded in `docs/TOOLING.md`.
+- **Load-routing table** replaces the old file list: every companion file now has an
+  explicit trigger ("load X when Y"), and the index finally includes STACKS, MODULES and
+  COMMANDS — progressive disclosure is now stated, not assumed.
+
 ## 1.4.0
 
 - **SKILL.md slimmed 12k → 7.6k tokens (−36%)** — the file that loads on *every*

@@ -37,6 +37,22 @@ stay) on it; `—` means usage- or purchase-priced from the first call.
 | **Visual / node-based pipelines** | **ComfyUI** (OSS — image/video generation graphs) · **n8n** (fair-code, automation with AI steps) · **Flowise** · **Langflow** · **Dify** (OSS LLM apps + RAG + observability) · **Rivet** (OSS, local, embeddable agent graphs) | two distinct uses: (a) an **asset pipeline** the design squad runs (ComfyUI for brand/marketing imagery at volume), (b) **AI features inside the product you're building**. All self-hostable and free |
 | **AI gateway** | OpenRouter | one API to 400+ models / 70+ providers, OpenAI-SDK-compatible; fallbacks when a provider is down; per-model data policies; credit-based | — |
 
+**Selection ladder — the default preference order.** When several options cover the
+need, prefer in this order, and say out loud when you skip a rung:
+
+1. **Free** — no card, no ceiling surprise (then: name the ceiling, below).
+2. **Open source** — inspectable, forkable, no vendor exit tax.
+3. **Self-hostable / local** — runs on the owner's machine or box; no third party in the
+   loop, nothing to leak.
+4. **Embeddable in the repo** — config/tokens/templates live as files under git, so the
+   repo stays the source of truth and everything is versioned and reviewable.
+5. **Agent-drivable** — an **MCP server**, a clean CLI, or a documented API, so agents
+   operate it without a human clicking a dashboard.
+
+A managed or paid option is fine — it just has to **earn the exception** with a stated
+reason (the free/OSS one can't do it, ops burden outweighs control, compliance demands
+it). Record the reason in `docs/TOOLING.md` next to the tool.
+
 Decision rules the assistant applies:
 - **Fewest services that cover the need** — Supabase already gives auth/storage/
   pgvector; add Clerk/Pinecone only when its specific strength is needed.
