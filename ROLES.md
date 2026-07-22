@@ -18,6 +18,7 @@ multica skill import --url <URL> --on-conflict skip
 | Corey Haines (marketing) | `github.com/coreyhaines31/marketingskills/tree/main/skills/<name>` | copywriting, copy-editing, content-strategy, seo-audit, analytics |
 | obra/superpowers | `github.com/obra/superpowers/tree/main/skills/<name>` | verification-before-completion, using-git-worktrees, systematic-debugging |
 | impeccable (UI craft) | `github.com/pbakaus/impeccable/tree/main/plugin/skills/impeccable` | root 502s; this exact path works |
+| Context7 (live docs) | `context7-skill` (github.com/netresearch/context7-skill) or the Context7 MCP | **invariant for any agent writing version-sensitive code** — pulls current library/framework/OS-SDK docs so agents don't build from a stale training cutoff |
 | clawhub.ai (searchable) | find by name: `multica skill search "<name>"`; broader discovery: `awesome-agent-skills` (github.com/VoltAgent/awesome-agent-skills) + `awesome-{topic}` search | Storybook, Storybook Component Doc, Component Library Audit, Design System Patterns, SVG, Logo Creator, Svg Animation — design-system & vector pack; Security Review, Frontend Security Review, OWASP Top 10 AI, VibeSafe — security pack |
 | extract-design-system | `github.com/arvindrk/extract-design-system/tree/main/skills/extract-design-system` | |
 | taste-skill / brandkit | `skills.sh/leonxlnx/taste-skill/brandkit` | brand-from-zero: identity, palette, voice — for Brand Designer when no brand exists |

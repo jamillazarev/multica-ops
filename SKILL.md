@@ -1,6 +1,6 @@
 ---
 name: multica-ops
-version: 1.1.2
+version: 1.2.0
 description: Use when the user wants to build, bootstrap, join, or operate an autonomous team of AI agents on Multica — you act as their Mops (Executive Advisor); interview them progressively (defaults everywhere, small tasks stay small), create everything via the CLI (workspace-as-company, conductor/PM, agents, squads, skills, integrations), optionally stand up a resident Mops inside the workspace, then stay their console for status, recovery, features, and reshaping the team.
 ---
 
@@ -21,6 +21,15 @@ decisions with sources, and mark opinion as opinion. **Need a curated catalog of
 anything** (fonts, MCP servers, skills, libraries, tools)? Search **`awesome-{topic}`**
 on GitHub first (master index: `sindresorhus/awesome`) — the registries baked into this
 skill are seeds for the common cases; the awesome ecosystem covers the tail.
+**Freshness over training data** — a model's dataset is frozen at its cutoff, so for
+**anything version-sensitive** (OS/SDK versions and their APIs, framework/library APIs,
+platform store rules, pricing, "latest best practice") agents **must verify against live
+sources**, never build from memory: **Context7** (`context7` MCP / skill — current
+library & framework docs), official platform docs, and the tool's own `--help`. Record
+the **target versions** the project builds against (OS, SDKs, frameworks) in
+`docs/TOOLING.md` so everyone builds to the same current target; re-check them at
+`/audit` and before a major `/ship`. This generalizes: **when data is time-sensitive,
+fetch it — don't trust the cutoff.**
 **Advise unprompted** — at every step, name what the project is missing (no brand?
 no analytics? no app icon? no legal pages?) and recommend; the user decides.
 

@@ -14,6 +14,7 @@ still gated by the owner. Offer only what the interview's needs actually name.
 | **All-in-one client DB** | InstantDB | Firebase-alternative: realtime relational DB + auth + presence + storage; CLI-first, built for AI agents to drive without dashboards; offline-first multiplayer UIs | ✅ |
 | **Offline-first sync** | PowerSync | syncs Postgres/MongoDB/MySQL/SQL Server into in-app SQLite; kills hand-rolled state-over-API plumbing; web, RN/Expo, Flutter, Swift, Kotlin | ✅ |
 | **Deploy / hosting** | Vercel (web) · **Railway** (backends/workers/DBs) | web apps & sites with preview deploys per PR (Design QA loves them), edge functions, cron; Railway when you need long-running services, queues, or a hosted Postgres/Redis beyond serverless | ✅ |
+| **CI/CD & release automation** | **GitHub Actions** (free tier) | build/test/deploy pipelines on push/PR; **web** → Vercel/Netlify auto-deploy; **mobile** → **Fastlane** (OSS, store submission/signing) · **EAS Build/Submit** (Expo) · Xcode Cloud; **desktop** → electron-builder / tauri-action + notarization; **versioning/releases** → Changesets or semantic-release. Gates the launch checklist |
 | **Domains** | Namecheap | buy domains cheap; DNS can stay here or move | — |
 | **DNS** | Vercel DNS *or* Cloudflare | if the site lives on Vercel, its DNS is simplest (per-subdomain, zero config); Cloudflare when you want a proxy/WAF/workers in front or many non-Vercel services | ✅ |
 | **Payments** | Stripe | cards/subscriptions/invoices, full control (needs your own tax handling); for solo digital products a Merchant-of-Record may fit better (MoR handles VAT): **Polar** (dev-first, OSS-friendly) · Lemon Squeezy · Paddle; pricing/entitlements layer over Stripe → **Autumn** (useautumn.com) | — |
@@ -60,6 +61,9 @@ cuts hallucinated APIs and review churn. Defaults (override any via interview):
 | **API / backend** | TypeScript (Next.js API/Hono/Fastify) or Python (FastAPI) | both are LLM home turf; match the team's main language |
 | **CLI / tooling** | TypeScript (commander) or Go | distribution ease vs single-binary |
 | **AI features** | Vercel AI SDK (+ OpenRouter as the gateway) | streaming/tool-calling glue LLMs know well |
+
+**Always pair with live docs — Context7** (MCP/skill) for current library/framework/OS-SDK
+APIs, so agents code against today's versions, not a frozen training cutoff.
 
 Rule of thumb: deviate from these only when the project itself dictates (a DSP app
 is C/Swift no matter what LLMs prefer) — and record the deviation in the guide.
