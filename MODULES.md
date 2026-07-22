@@ -22,7 +22,7 @@ truth. **Curator = the Design squad lead** (or the sole designer).
   format): the host's guidelines become **law**; `CONVENTIONS.md` records *host + version
   + our delta layer*. Extensions then live in a **separate, documented "our extensions"
   layer** that follows the host's own philosophy and naming — never restyle or reinterpret
-  host semantics, that's how teams drift "куда не надо". Host ships a new version →
+  host semantics, that is exactly how teams drift away from the host. Host ships a new version →
   treat it like `/upgrade`: preview the diff and its impact on the delta layer before
   applying. **Inheriting an existing own system** (typical at `/join`): audit-and-prepare
   exactly like the join delta — inventory tokens/components/templates, verdict per piece

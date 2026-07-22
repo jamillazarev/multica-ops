@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.10.0
+
+- **"Useful over agreeable"** added as a core principle and pushed into the team guide:
+  no praise by default, disagree when the evidence disagrees (with an alternative), no
+  rosy digests, *"built"* ≠ *"works"*, and kill what isn't working — the scoreboard is
+  the product and its metrics, not the owner's mood.
+- **English-only repo enforced**: removed a stray Russian phrase from MODULES, reframed
+  the non-English job-title example in ROLES as the deliberate illustration it is, and
+  **fixed `scripts/resume.sh`**, which matched hard-coded Russian cancel markers instead
+  of the documented English `Cancel reason:` — localized teams now extend it via
+  `CANCEL_MARKERS`.
+
 ## 1.9.0
 
 - **Epistemic protocol**: every substantive claim is labelled **verified** (checked now,

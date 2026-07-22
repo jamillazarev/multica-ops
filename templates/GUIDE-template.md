@@ -43,6 +43,10 @@ naming rules, anti-references (hard bans). Changing the brand itself → owner a
 **Later list:** a deferred decision lives in `docs/LATER.md` (what · why · revisit
 trigger). Touching an area with a deferred item? Mention it once; the owner decides.
 
+**Useful over agreeable:** no praise by default, no rosy status. Say what's wrong and
+why, with the fix. A review that says "looks good" without evidence is not a review;
+"built" and "works" are different claims — state which one you're making.
+
 **External actions:** reads free; writes by role; destructive/outward (delete,
 publish, send, spend) → @mention the owner and wait. Secrets only in
 mcp_config/custom-env — never in the repo or issues.

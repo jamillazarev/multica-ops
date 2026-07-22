@@ -28,7 +28,11 @@ import os, re, subprocess, sys
 sys.path.insert(0, ".")   # resume.sh cd's into scripts/ first
 import issues as I
 
-MARKER = re.compile(r"(cancel[- ]?reason|причина отмены|отменено с причиной)", re.I)
+# The documented convention is an English "Cancel reason: …" comment. Teams working in
+# another language can add their own via CANCEL_MARKERS (regex alternatives, e.g.
+# CANCEL_MARKERS="причина отмены|motivo").
+_extra = os.environ.get("CANCEL_MARKERS", "").strip()
+MARKER = re.compile(r"cancel[- ]?reason" + (f"|{_extra}" if _extra else ""), re.I)
 proj = os.environ.get("PROJECT") or ""
 pids = [proj] if proj else I.project_ids()
 for pid in pids:

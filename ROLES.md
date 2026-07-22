@@ -136,9 +136,10 @@ package — skills · tooling · resources**, not just skills:
    on approval → record in `TEAM.md` and `TOOLING.md`.
 
 **Search came back empty? Broaden — don't give up at the first miss:**
-1. **Rephrase into the industry's own words** — what practitioners call it, in English
-   ("видеомонтажёр" → *video editing · post-production*; "продажник" → *sales
-   development · outbound*).
+1. **Rephrase into the industry's own words** — practitioners' terms, in English, since
+   that is where the catalogs are. This matters most when the working language isn't
+   English: a title like *видеомонтажёр* finds nothing, *video editing · post-production*
+   finds everything; likewise *продажник* → *sales development · outbound*.
 2. **Go one level up** to the parent domain (`awesome-{parent}`), then scan its sections.
 3. **Adjacent crafts** that share tools (a pastry chef ↔ food safety, recipe development,
    kitchen ops).
