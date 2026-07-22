@@ -117,13 +117,19 @@ via telemetry on the first `npx skills add jamillazarev/multica-ops`.
 
 | File | Purpose |
 |---|---|
-| [SKILL.md](SKILL.md) | the operating model: interview → stand up → conveyor → console |
+| [SKILL.md](SKILL.md) | **the always-loaded core** — interview → stand up → conveyor → console |
+| [COMMANDS.md](COMMANDS.md) | every command, its aliases and the surface it runs best on |
+| [STACKS.md](STACKS.md) | services, libraries, audio/DSP, testing, security, reference galleries |
+| [MODULES.md](MODULES.md) | opt-in modules: design system & brand |
 | [BOOTSTRAP.md](BOOTSTRAP.md) | zero-to-team CLI recipes, capacity levers, real-hours traps |
 | [ROLES.md](ROLES.md) | role catalog with curated skill packs + generic role-builder |
 | [PLAYBOOKS.md](PLAYBOOKS.md) | daily operations, copy-paste ready |
-| [REFERENCE.md](REFERENCE.md) | object model, anti-patterns, **full Multica CLI command surface (§10)** |
+| [REFERENCE.md](REFERENCE.md) | object model, anti-patterns, **CLI surface (§10)**, **frameworks (§11)** |
 | [WORKFLOW.md](WORKFLOW.md) | Mermaid diagrams of the whole process |
-| [templates/](templates/) | team guide, roadmap, discovery documents |
-| [scripts/](scripts/) | status / resume / health helpers (pagination-safe) |
+| [CHANGELOG.md](CHANGELOG.md) | versioned history — the migration map for `/upgrade` |
+| [templates/](templates/) · [scripts/](scripts/) | guide · roadmap · brand · component docs · ops helpers |
 
-Verified with `multica` CLI v0.4.4. MIT.
+Everything but `SKILL.md` loads **only when its trigger fires** — the skill keeps its
+always-on footprint small (see the load-routing table in SKILL.md).
+
+Verified with `multica` CLI v0.4.8. MIT.

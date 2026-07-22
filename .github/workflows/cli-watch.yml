@@ -17,8 +17,8 @@ jobs:
       - name: Compare CLI versions
         env: {GH_TOKEN: "${{ github.token }}"}
         run: |
-          latest=$(gh api repos/multica-ai/multica-cli/releases/latest --jq .tag_name 2>/dev/null | sed 's/^v//')
-          [ -z "$latest" ] && echo "no release info" && exit 0
+          latest=$(gh api repos/multica-ai/multica/releases/latest --jq .tag_name | sed 's/^v//')
+          if [ -z "$latest" ]; then echo "::error::could not read latest CLI release — check the repo path"; exit 1; fi
           pinned=$(grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' REFERENCE.md | head -1 | sed 's/^v//')
           echo "latest=$latest pinned=$pinned"
           [ "$latest" = "$pinned" ] && exit 0

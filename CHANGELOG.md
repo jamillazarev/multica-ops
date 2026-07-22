@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.5.1
+
+- **Fixed a broken CI watcher**: it polled `multica-ai/multica-cli` (404 — releases live
+  in `multica-ai/multica`) and, silenced by `2>/dev/null`, would never have fired. Now it
+  reads the right repo and **fails loudly** instead of exiting quietly.
+- CLI surface re-verified against the current release and re-pinned **v0.4.4 → v0.4.8**
+  (no command-surface changes — only the version was stale).
+- README's "What's inside" listed 6 of 12 files — now complete, with a note that
+  everything but `SKILL.md` loads on demand.
+- Docs site: overview now mentions stacks/audio/i18n and links Stacks and Modules.
+
 ## 1.5.0
 
 - **Selection ladder** made explicit: free → open source → self-hostable/local →
