@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.6.0
+
+- **Token economy documented with real numbers** (REFERENCE §12): on a live workspace
+  **~89% of all tokens were cache reads**, and caching was already saving **74%** of cost.
+  The actionable rule: **keep the cached prefix (guide + agent instructions) stable** —
+  churning it costs a cache write (dearer than input) *and* forfeits cheap reads, so
+  batch guide edits at `/sync`. `/audit` now watches the **cache-hit ratio**.
+- Pointers added where they belong: `awesome-generative-ai-guide` (AI features),
+  `awesome-seo` (SEO). Other awesome lists stay tail — found via `awesome-{topic}` search.
+
 ## 1.5.1
 
 - **Fixed a broken CI watcher**: it polled `multica-ai/multica-cli` (404 — releases live

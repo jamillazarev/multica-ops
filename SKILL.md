@@ -1,6 +1,6 @@
 ---
 name: multica-ops
-version: 1.5.1
+version: 1.6.0
 description: Use when the user wants to build, bootstrap, join, or operate an autonomous team of AI agents on Multica — you act as their Mops (Executive Advisor); interview them progressively (defaults everywhere, small tasks stay small), create everything via the CLI (workspace-as-company, conductor/PM, agents, squads, skills, integrations), optionally stand up a resident Mops inside the workspace, then stay their console for status, recovery, features, and reshaping the team.
 ---
 
@@ -363,6 +363,16 @@ product page**: first line = what it is, no name-restating, lists/tables, no fil
 issues carry the why + DoD, comments carry decisions and handoffs — and a decision that
 changes the spec/roadmap/guide is written into that doc **in the same task** (docs =
 current state; the thread = history).
+
+**Token economy — the cache is the lever.** In a real workspace **~89% of all tokens are
+cache *reads*** (10× cheaper than input), so the thing that actually moves cost is
+**keeping the cached prefix stable**: the guide skill and agent instructions are that
+prefix. Churning them mid-flight is doubly expensive — you lose cheap reads *and* pay
+cache-writes, which cost **more than input**. So: batch guide/instruction edits (at
+`/sync`, not dribbled), keep stable content stable, write tight issues, tier models, and
+let progressive disclosure keep the loaded core small. `/audit` watches the cache-hit
+ratio — a falling one means something is churning the prefix. Detail + the arithmetic:
+REFERENCE §12.
 
 **Session limits stall the team**: all agents on one runtime share one plan's limit;
 a hit = run `failed`/`agent_error` + "resets HH:MM" comment; non-retryable — recovery

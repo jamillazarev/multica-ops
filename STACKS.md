@@ -33,7 +33,7 @@ stay) on it; `—` means usage- or purchase-priced from the first call.
 | **Support & feedback inbox** | **Chatwoot** (OSS, self-host) · Crisp (free tier) | where `/feedback` signal physically arrives — chat/email/social in one inbox; wire an autopilot to triage it into the backlog |
 | **Status page & uptime** | **Uptime Kuma** (OSS, self-host) · BetterStack / Instatus (free tiers) | post-launch essentials: synthetic checks on key flows + a public status page; failures feed `/measure` and `/health` |
 | **Privacy & compliance** | **Klaro** (OSS cookie consent) · policy generators · a DPA template; PostHog/Plausible self-host when data must stay yours | GDPR-style basics for anything public: consent, privacy policy, data-processing agreements, retention. Legal Counsel owns the texts, Security the implementation |
-| **SEO & discoverability** | Google Search Console (free) · Ahrefs Webmaster Tools (free) · sitemap + schema.org in the build | complements the `seo-audit` skill with actual measurement; run before and after `/ship` |
+| **SEO & discoverability** | Google Search Console (free) · Ahrefs Webmaster Tools (free) · sitemap + schema.org in the build; deeper tactics: `awesome-seo` | complements the `seo-audit` skill with actual measurement; run before and after `/ship` |
 | **Visual / node-based pipelines** | **ComfyUI** (OSS — image/video generation graphs) · **n8n** (fair-code, automation with AI steps) · **Flowise** · **Langflow** · **Dify** (OSS LLM apps + RAG + observability) · **Rivet** (OSS, local, embeddable agent graphs) | two distinct uses: (a) an **asset pipeline** the design squad runs (ComfyUI for brand/marketing imagery at volume), (b) **AI features inside the product you're building**. All self-hostable and free |
 | **AI gateway** | OpenRouter | one API to 400+ models / 70+ providers, OpenAI-SDK-compatible; fallbacks when a provider is down; per-model data policies; credit-based | — |
 
@@ -100,7 +100,7 @@ cuts hallucinated APIs and review churn. Defaults (override any via interview):
 | **Desktop** | Tauri (light, Rust shell + web UI) · Electron (max ecosystem) · SwiftUI/AppKit (macOS-native) | pick by footprint vs ecosystem vs nativeness |
 | **API / backend** | TypeScript (Next.js API/Hono/Fastify) or Python (FastAPI) | both are LLM home turf; match the team's main language |
 | **CLI / tooling** | TypeScript (commander) or Go | distribution ease vs single-binary |
-| **AI features** | Vercel AI SDK (+ OpenRouter as the gateway) | streaming/tool-calling glue LLMs know well |
+| **AI features** | Vercel AI SDK (+ OpenRouter as the gateway) | streaming/tool-calling glue LLMs know well; patterns & evals reference: `awesome-generative-ai-guide` |
 
 **Always pair with live docs — Context7** (MCP/skill) for current library/framework/OS-SDK
 APIs, so agents code against today's versions, not a frozen training cutoff.

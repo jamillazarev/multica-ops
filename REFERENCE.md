@@ -184,3 +184,38 @@ defaults below, alternatives when the context demands, the choice recorded in th
 
 Frameworks are seeds too — an unlisted one the user names gets researched and applied
 the same way.
+
+## 12. Token economy — what actually moves the needle
+
+Measured on a live workspace (30 days, one runtime, Opus-class model):
+
+| | tokens | share |
+|---|---|---|
+| cache **reads** | 15,449,964 | **88.7%** |
+| cache writes | 1,592,037 | 9.1% |
+| output | 244,480 | 1.4% |
+| input | 140,677 | 0.8% |
+
+Cost with caching **$24.49**; priced as if those reads were plain input, **$94.02** —
+caching was already saving **74%**. Per-million list prices make the mechanics obvious
+(Opus-class): input `$5` · output `$25` · **cache read `$0.50`** · **cache write `$6.25`**.
+
+**Consequences, in order of impact:**
+
+1. **Keep the cached prefix stable.** The guide skill + agent instructions are what gets
+   cached. Every edit invalidates it: you pay a cache *write* (dearer than input) and lose
+   cheap reads until it warms again. **Batch guide/instruction changes** — apply them at
+   `/sync` or a module toggle, never as a dribble of small edits mid-flight.
+2. **Progressive disclosure.** Only `SKILL.md` is always loaded; companions load on
+   trigger (see the routing table). Adding to a companion is nearly free; adding to the
+   core is paid on every run, by every agent.
+3. **Model tiering.** Top tier for reasoning roles (conductor, QA, security), mid for
+   build, cheap/text for translation and boilerplate.
+4. **Terse by default.** The `caveman` skill (lite mode) on every agent; issues and
+   comments written like a product page — first line is the point, lists over prose.
+5. **Don't re-derive.** Read the file you need rather than reconstructing it from memory,
+   and commit incrementally so a rerun resumes from the repo instead of redoing work.
+
+**Not our layer:** *model* compression (quantization, pruning, distillation) applies to
+teams that host their own models. Consuming an API or a subscription, the lever is
+**context economy**, not model weights.
