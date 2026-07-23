@@ -62,6 +62,65 @@ for l in $(grep -rohE '\]\([A-Za-z0-9_.-]+\.md\)' ./*.md templates/*.md 2>/dev/n
   [ -f "$l" ] || say_fail "broken link: $l"
 done
 
+# 5a · official guidance: SKILL.md body under 500 lines
+lines=$(wc -l < SKILL.md | tr -d ' ')
+[ "$lines" -gt 500 ] && say_fail "SKILL.md $lines lines — over Anthropic's 500-line guidance"
+
+# 5b · reference files >100 lines need a table of contents (partial reads otherwise miss scope)
+# SKILL.md is exempt: its load-routing table already serves as the table of contents.
+for f in $(ls *.md | grep -vE '^(README|CHANGELOG|SKILL)\.md$'); do
+  n=$(wc -l < "$f" | tr -d ' ')
+  [ "$n" -gt 100 ] && ! grep -qE '^## Contents' "$f" && say_warn "$f is $n lines with no '## Contents'"
+done
+
+# 5d · cross-references to interview items must name the item they point at.
+# Inserting a checklist item silently shifts every "#N" elsewhere; requiring the title
+# makes the drift detectable instead of invisible.
+ref_bad=$(python3 - <<'PYEOF'
+import re,glob,sys
+sec=re.search(r"## 16\. Interview checklist.*?\n(.*?)(?=\n## |\Z)", open("BOOTSTRAP.md").read(), re.S)
+items={}
+if sec:
+    for m in re.finditer(r"^(\d+)\.\s+\*\*(.+?)\*\*", sec.group(1), re.M):
+        items[int(m.group(1))]=m.group(2)
+bad=[]
+for f in glob.glob("*.md")+glob.glob("templates/*.md"):
+    for m in re.finditer(r"checklist #(\d+)(?:\s*·\s*([^)\n]+?))?\s*\)", open(f).read()):
+        n=int(m.group(1)); title=(m.group(2) or "").strip()
+        if n not in items: bad.append(f"{f}: #{n} has no such interview item"); continue
+        if not title: bad.append(f"{f}: #{n} must name the item (checklist #{n} · {items[n]})"); continue
+        a=re.sub(r"[^a-z]","",title.lower()); b=re.sub(r"[^a-z]","",items[n].lower())
+        if a not in b and b not in a:
+            bad.append(f"{f}: #{n} says '{title}' but item {n} is '{items[n]}'")
+print("\n".join(bad))
+PYEOF
+)
+[ -n "$ref_bad" ] && while IFS= read -r l; do say_fail "$l"; done <<< "$ref_bad"
+
+# 5e · prose cross-references ("STACKS → skill screening") must hit something real.
+# A silently no-op edit leaves the pointer dangling; links are checked, prose was not.
+xref_bad=$(python3 - <<'PYEOF'
+import re,glob
+bad=[]
+for f in glob.glob("*.md")+glob.glob("templates/*.md"):
+    for m in re.finditer(r"\b(SKILL|ROLES|STACKS|PLAYBOOKS|FLOWS|REFERENCE|BOOTSTRAP|COMMANDS|MODULES|EXAMPLES|USE-CASES) → ([A-Za-z][A-Za-z0-9 &'/-]*)", open(f).read()):
+        tgt, sect = m.group(1)+".md", m.group(2).strip().rstrip(".,;)")
+        try: body=open(tgt).read()
+        except OSError: bad.append(f"{f}: points at {tgt}, which does not exist"); continue
+        hay=re.sub(r"[^a-z]","",body.lower())
+        if re.sub(r"[^a-z]","",sect.lower()) not in hay:
+            bad.append(f"{f}: '{m.group(1)} → {sect}' matches nothing in {tgt}")
+print("\n".join(bad))
+PYEOF
+)
+[ -n "$xref_bad" ] && while IFS= read -r l; do say_fail "$l"; done <<< "$xref_bad"
+
+# 5c · references must stay one level deep from SKILL.md
+for f in $(ls *.md | grep -vE '^(SKILL|README|CHANGELOG|AGENTS)\.md$'); do
+  nested=$(grep -ohE '\]\([A-Z][A-Za-z-]*\.md' "$f" 2>/dev/null | head -1)
+  [ -n "$nested" ] && say_warn "$f links to another companion — keep references one level deep from SKILL.md"
+done
+
 # 5 · always-loaded core stays lean (it is paid on every run, by every agent)
 chars=$(wc -c < SKILL.md | tr -d ' '); tok=$((chars/4))
 [ "$tok" -gt 10000 ] && say_fail "SKILL.md ~${tok} tokens — over the 10k budget; move detail to a companion file"
@@ -71,6 +130,10 @@ chars=$(wc -c < SKILL.md | tr -d ' '); tok=$((chars/4))
 for c in $(grep -oE '^\| `/[a-z-]+' COMMANDS.md | tr -d '| `/'); do
   [ -f "commands/$c.md" ] || say_fail "command /$c has no commands/$c.md"
 done
+
+# 6b · official checklist: at least three evaluations
+n=$(grep -c '^## [0-9]' evals/README.md 2>/dev/null || echo 0)
+[ "$n" -lt 3 ] && say_warn "evals/README.md has $n scenarios — the official checklist asks for 3+"
 
 # 7 · docs coverage — a new command with no use case is a doc gap, not a bug
 missing=""
@@ -87,7 +150,17 @@ if command -v multica >/dev/null 2>&1; then
   [ -n "$lv" ] && [ "$lv" != "$pv" ] && say_warn "installed CLI v$lv ≠ pinned v$pv — run: bash scripts/preflight.sh --regen-cli"
 fi
 
-# 9 · reminders that cannot be verified from this repo
+# 9 · coherence — a new capability must be reachable from every entry point, or it is
+#     invisible in practice. Warn per missing surface rather than guessing intent.
+for c in $(grep -oE '^\| `/[a-z-]+' COMMANDS.md | tr -d '| `/'); do
+  gaps=""
+  grep -q "/$c" SKILL.md || gaps="$gaps SKILL"
+  grep -qE "(^|[^a-z-])$c([^a-z-]|$)" commands/mops.md || gaps="$gaps /mops-dispatcher"
+  [ -n "$gaps" ] && say_warn "/$c not reachable from:$gaps"
+done
+grep -q "control & expertise" SKILL.md && grep -q "budget" SKILL.md || say_warn "interview delta in /join may be missing newer topics"
+
+# 10 · reminders that cannot be verified from this repo
 git diff --cached --name-only 2>/dev/null | grep -qE '\.md$' && \
   echo "  → docs site: regenerate + deploy (python3 scripts/generate.py <repo> in the ai repo)"
 

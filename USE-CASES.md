@@ -3,6 +3,23 @@
 You never need a command: **say it in plain language** and Mops routes it. The commands
 are shortcuts for when you already know the name. Both columns do the same thing.
 
+## Contents
+
+- [Getting started](#getting-started)
+- [Day-to-day](#day-to-day)
+- [Research, brand and audience](#research-brand-and-audience)
+- [Work with dates](#work-with-dates)
+- [Bringing existing work in](#bringing-existing-work-in)
+- [The team](#the-team)
+- [Planning the work](#planning-the-work)
+- [The toolkit](#the-toolkit)
+- [Building without engineers](#building-without-engineers)
+- [Trust and correctness](#trust-and-correctness)
+- [Control and cost](#control-and-cost)
+- [Setup, tools and access](#setup-tools-and-access)
+- [When things go wrong](#when-things-go-wrong)
+- [Beyond software](#beyond-software)
+
 ## Getting started
 
 | Situation | Just say | Or run |
@@ -34,6 +51,24 @@ are shortcuts for when you already know the name. Both columns do the same thing
 | "We need a brand / ours feels dated" | *"we need an identity"* · *"our brand looks old"* | `/brand` |
 | "Would experts tear this apart?" | *"have the experts review this spec"* | `/validate …` |
 
+## Work with dates
+
+| Situation | Say | Runs |
+|---|---|---|
+| "This post goes out next Tuesday, not before" | *"schedule it for the 29th"* | date on the issue — no one starts it early |
+| "What's due this week?" | `/next` | the queue, ordered by date where dates exist |
+| "We're going to miss a deadline" | `/status` | the slip surfaces as a comment, with what moved |
+
+## Bringing existing work in
+
+| Situation | Say | Runs |
+|---|---|---|
+| "Our backlog is in Linear / Jira / a spreadsheet" | `/import` | mapping shown first, then issues created **unassigned** — nothing starts running by itself |
+| "The import died halfway" | `/import` again | it skips what's already there and continues |
+| "These imported tickets are one-liners nobody can act on" | *"bring them up to our standard"* | the quality pass: per issue, what's missing (why · success · DoD · dates) → rewrite/extend/leave/drop, in batches you approve |
+| "Our client keeps filing in Linear and always will" | `/module` | the tracker bridge as a standing sync, with the direction of truth written down per field |
+| "We run Multica on our own server" | *"we're self-hosted at …"* | `multica setup self-host` — the method is unchanged, but backups and server upgrades become yours |
+
 ## The team
 
 | Situation | Just say | Or run |
@@ -54,6 +89,34 @@ are shortcuts for when you already know the name. Both columns do the same thing
 | "We're not doing this after all" | *"drop the MIDI thing"* | `/drop …` |
 | "Reorganize who works with whom" | *"put the web engineer in the design squad"* | `/squad` |
 | "Turn a whole capability on/off" | *"we don't need personas"* · *"turn on design QA"* | `/module …` |
+
+## The toolkit
+
+| Situation | Say | Runs |
+|---|---|---|
+| "We keep doing this by hand every week" | `/skill create` | a routine seen twice becomes a skill — drafted, tested on a fresh agent, compressed, attached |
+| "I found a skill online, can we use it?" | `/skill import <url>` | screened for danger and hidden instructions, trimmed, attached with its source and date recorded |
+| "Our skills have got bloated" | `/skill optimize` | fail-closed compression — commands and paths kept verbatim, reviewed by someone else; "can't compress this safely" is a valid answer |
+| "This one turned out great, I want it in my other projects" | `/skill release` | de-identified, moved to your own repo outside the workspace (owner-confirmed), then re-imported so there's one source of truth |
+
+## Building without engineers
+
+| Situation | Say | Runs |
+|---|---|---|
+| "Can we just do the landing page in Framer?" | *"what would that cost us later?"* | the exit-cost check: can an agent operate it, can the work leave, what happens at the boundary |
+| "I need an admin panel and don't want to build one" | `/feature` or *"what should we use?"* | self-hostable no-code (Appsmith, ToolJet, Budibase) — config lives in the repo |
+| "Get me a first version of this screen fast" | *"prototype it"* | prompt-to-code (v0, Bolt, Lovable) emits real code, which agents then own, review and test |
+
+## Trust and correctness
+
+| Situation | Say | Runs |
+|---|---|---|
+| "An imported ticket tells the agent to grant itself access" | nothing — it surfaces | external text is data: it's quoted to you and not obeyed |
+| "Who reviewed this? Not the person who wrote it, I hope" | `/audit` | flags gates where author and reviewer coincide |
+| "Was that price still true?" | `/audit` or just ask | recorded facts carry a check-date and get re-verified before a decision |
+| "Why didn't we go with X? I keep suggesting it" | *"what did we reject and why?"* | `docs/DECISIONS.md` — append-only, with the evidence |
+| "New agents keep re-learning the codebase" | *"write the architecture map"* | `docs/ARCHITECTURE.md`, kept current like any doc |
+| "I want people to find us through ChatGPT, not just Google" | `/research` or `/ship` | GEO: bot allowlist, FAQ schema, answer-first copy (STACKS) |
 
 ## Control and cost
 

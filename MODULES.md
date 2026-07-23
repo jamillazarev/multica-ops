@@ -1,6 +1,12 @@
-# Opt-in modules — design system & brand
+# Opt-in modules
 
-Enabled at the interview (checklist #11) or later via `/module`.
+Enabled at the interview or later via `/module`. **Design system & brand** come from
+checklist #12 · Design system & brand; the **external tracker bridge** is offered only when
+work already lives somewhere else.
+
+## Contents
+
+Design system · Brand · External tracker bridge (with the post-import quality pass)
 
 ## Design system — the system follows solutions
 
@@ -84,3 +90,53 @@ positionings/taglines, and the **owner votes**.
 A **creator/blogger** gets the same structure scaled down: positioning + voice + a
 visual kit + **material templates** (story, post, cover formats) living in the design
 system.
+
+
+## External tracker bridge (opt-in — offered only if you already use one)
+
+Most companies don't need this, so it is **not part of the skill's floor** — nothing
+references it until you turn it on. Turn it on when a backlog, a roadmap or an intake queue
+lives in Linear (or Jira, or GitHub Issues) and will keep living there.
+
+**Wiring.** The vendor's **MCP server** is the cheapest path: registered in `mcp_config`
+with a token that lives there and nowhere else, granted to the conductor and to Mops rather
+than to everyone — a tracker connection is an access change, so it follows the same gate as
+any other (owner-confirmed). Registered in `docs/TOOLING.md` with its runbook. For a large
+one-off migration, prefer the GraphQL API over the MCP: it paginates, and it doesn't spend
+an agent's context on every ticket.
+
+**Two shapes, and they behave differently:**
+
+- **One-off migration** — the backlog moves here and the old tracker is archived. This is
+  `/import`, it ends, and afterwards there is one source of truth.
+- **Standing bridge** — the tracker stays authoritative for some slice (a client files
+  tickets there; marketing plans there). Then decide the **direction of truth per field**
+  and write it down: who owns status, who owns the description, what happens when both
+  change. A bridge without that written down produces two half-true boards, and the team
+  stops trusting either. Sync runs on an autopilot; conflicts become an issue for the
+  conductor, never a silent overwrite.
+
+### After an import, the work is not yet ours
+
+Tickets arrive written to **someone else's standard** — often a title and a sentence. Left
+alone they propagate that standard: agents pick them up, ask nothing, and produce work
+nobody can accept or reject. So an import is followed by a **quality pass**, in batches:
+
+Mops reads the imported issues against the bar the company actually holds (EXAMPLES.md) and
+reports, per issue, which of these is missing — **the why** (what problem, for whom, with
+what evidence), **a success predicate** in one sentence, **what does not count**, a **DoD**,
+**dates** the source carried but didn't map, and a **rewrite** where the title describes a
+solution rather than a problem. Then it proposes: *rewrite · extend · leave · drop*.
+
+Three rules keep this from becoming vandalism:
+
+- **Never silently rewrite someone's ticket.** The proposal is shown, the owner approves in
+  batches, and the original text survives in `source_url` metadata — the source is the
+  archive.
+- **Triage before polish.** A dead backlog doesn't deserve a rewrite; the first question is
+  *does this still matter*, and dropping is a legitimate answer that costs nothing.
+- **Fix what blocks work, not what offends taste.** An issue an agent can start on is done
+  being edited. Rewriting for elegance burns budget and changes nothing.
+
+Run it right after `/import`, and again on anything imported that reaches `todo` without
+having been through the pass — that is the moment it actually starts costing money.

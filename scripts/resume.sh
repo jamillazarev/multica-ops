@@ -29,8 +29,8 @@ sys.path.insert(0, ".")   # resume.sh cd's into scripts/ first
 import issues as I
 
 # The documented convention is an English "Cancel reason: …" comment. Teams working in
-# another language can add their own via CANCEL_MARKERS (regex alternatives, e.g.
-# CANCEL_MARKERS="причина отмены|motivo").
+# another language add their own marker via CANCEL_MARKERS, as regex alternatives
+# (e.g. CANCEL_MARKERS="motivo de cancelacion|annullingsgrund").
 _extra = os.environ.get("CANCEL_MARKERS", "").strip()
 MARKER = re.compile(r"cancel[- ]?reason" + (f"|{_extra}" if _extra else ""), re.I)
 proj = os.environ.get("PROJECT") or ""

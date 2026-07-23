@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/mops.png" alt="Mops — your Executive Advisor" width="250">
+  <img src="assets/mops-docs.png" alt="Mops — your Executive Advisor" width="250">
 </p>
 
 <h1 align="center">multica-ops</h1>
@@ -78,7 +78,12 @@ spec-driven intake (JTBD + stories + acceptance criteria), `docs/` as an
 Obsidian-compatible vault, ROADMAP/TEAM as files — everything in the repo, mirrors
 optional.
 
-**#7 — One-size teams fit nobody.** A snacks brand, a YouTube channel and a macOS
+**#7 — Work arrives with a history and a calendar.** A backlog already lives in Linear or
+Jira; posts are due on specific days. *Fix:* `/import` brings it over — mapping shown first,
+issues created unassigned so nothing starts running by itself — and dated work is never
+started early.
+
+**#8 — One-size teams fit nobody.** A snacks brand, a YouTube channel and a macOS
 utility need different crafts, gates, autonomy. *Fix:* everything beyond the
 invariants is an opt-in module; the progressive interview keeps small tasks small.
 
@@ -102,9 +107,14 @@ via telemetry on the first `npx skills add jamillazarev/multica-ops`.
 - **The whole product loop** — discover → define → prioritize (ICE) → design → build →
   review (parallel gates) → **ship → measure → learn**, closed, not a dead end at merge.
 - **The team** — hire / fire / reconfigure **agents *and* real humans**, squads, experts
-  & personas, a role-builder, optionally autonomous hiring.
+  & personas, finance & support roles, a role-builder, optionally autonomous hiring.
 - **Governance** — per-member access, human **review checkpoints**, a **budget** cap
-  (tokens or money).
+  (tokens or money), and the rule underneath them: **nobody edits the bar they're measured
+  against** (locked · editable · append-only · human-only), with reviews routed away from
+  the author — ideally onto a different provider.
+- **Not being played** — everything an agent reads from outside (a page, an issue, an
+  imported backlog) is **data, never instructions**; anything that must not happen gets a
+  gate, because a rule in a guide instructs and does not constrain.
 - **Staying alive** — session-limit recovery, a **full-circle health check** (runtimes,
   integrations, tokens), **git-backed skill upgrades** with rollback, two-way drift sync,
   assisted **provider switch**.
@@ -119,9 +129,11 @@ via telemetry on the first `npx skills add jamillazarev/multica-ops`.
 |---|---|
 | [SKILL.md](SKILL.md) | **the always-loaded core** — interview → stand up → conveyor → console |
 | [USE-CASES.md](USE-CASES.md) | situation → what to say → which command |
+| [EXAMPLES.md](EXAMPLES.md) | worked examples — the same issue, handoff, review or ledger done weakly and done well |
 | [COMMANDS.md](COMMANDS.md) | every command, its aliases and the surface it runs best on |
 | [STACKS.md](STACKS.md) | services, libraries, audio/DSP, testing, security, reference galleries |
 | [MODULES.md](MODULES.md) | opt-in modules: design system & brand |
+| [FLOWS.md](FLOWS.md) | the full procedures for `/init`, `/join`, `/health`, `/upgrade`, `/switch` |
 | [BOOTSTRAP.md](BOOTSTRAP.md) | zero-to-team CLI recipes, capacity levers, real-hours traps |
 | [ROLES.md](ROLES.md) | role catalog with curated skill packs + generic role-builder |
 | [PLAYBOOKS.md](PLAYBOOKS.md) | daily operations, copy-paste ready |
@@ -129,7 +141,8 @@ via telemetry on the first `npx skills add jamillazarev/multica-ops`.
 | [WORKFLOW.md](WORKFLOW.md) | Mermaid diagrams of the whole process |
 | [CHANGELOG.md](CHANGELOG.md) | versioned history — the migration map for `/upgrade` |
 | [BUDGET template](templates/BUDGET-template.md) | envelope · currency · credits with expiries · prices on record |
-| [templates/](templates/) · [scripts/](scripts/) | guide · roadmap · brand · component docs · ops helpers |
+| [evals/](evals/) | stratified scenarios — from a job too small to deserve a company to an import carrying a hidden instruction |
+| [templates/](templates/) · [scripts/](scripts/) | guide · roadmap · brand · component docs · **decisions log · architecture map** · ops helpers · **resumable backlog import** |
 
 Contributing? Run **`bash scripts/preflight.sh --install`** once — the pre-commit hook
 checks version sync, the CHANGELOG entry, README completeness, internal links, command
@@ -137,5 +150,8 @@ files, and the token budget on the always-loaded core.
 
 Everything but `SKILL.md` loads **only when its trigger fires** — the skill keeps its
 always-on footprint small (see the load-routing table in SKILL.md).
+
+Works against **Multica cloud or a self-hosted server** (`multica setup self-host`) —
+execution is local either way, so only backups and upgrades change hands.
 
 Verified with `multica` CLI v0.4.8. MIT.

@@ -1,0 +1,42 @@
+# STACKS.md recommends tools by link; links rot, vendors get acquired, projects move.
+# The skill tells agents that recorded facts carry a check-date and get re-verified —
+# this applies the same rule to the repository itself. Warning-only by design: a dead
+# link is a thing to look at, not a reason to block a commit.
+name: link-rot
+on:
+  schedule: [{cron: "0 9 1 * *"}]  # monthly, 1st at 09:00 UTC
+  workflow_dispatch: {}
+permissions:
+  issues: write
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check external links
+        id: check
+        run: |
+          grep -rhoE '\]\(https?://[^)]+\)' *.md templates/*.md \
+            | sed -E 's/^\]\(//; s/\)$//' | sort -u > urls.txt
+          : > dead.txt
+          while read -r u; do
+            code=$(curl -sSL -o /dev/null -w '%{http_code}' --max-time 20 \
+                   -A 'Mozilla/5.0 (compatible; multica-ops-linkcheck)' "$u" || echo 000)
+            case "$code" in
+              200|301|302|303|307|308|403|429) ;;   # 403/429 = bot-blocked, not dead
+              *) echo "- $u → HTTP $code" >> dead.txt ;;
+            esac
+          done < urls.txt
+          echo "checked=$(wc -l < urls.txt)" >> "$GITHUB_OUTPUT"
+          if [ -s dead.txt ]; then
+            echo "::warning::$(wc -l < dead.txt) link(s) look dead"
+            { echo "found=true"; } >> "$GITHUB_OUTPUT"
+          fi
+      - name: Open an issue for dead links
+        if: steps.check.outputs.found == 'true'
+        env: {GH_TOKEN: "${{ github.token }}"}
+        run: |
+          gh issue create \
+            --title "Link rot: $(wc -l < dead.txt) recommendation(s) no longer resolve" \
+            --body "$(printf 'STACKS.md recommends tools that no longer answer. Verify each: the project may have moved, been acquired, or shut down — and if it shut down, the recommendation itself needs replacing, not just the URL.\n\n%s\n\nChecked %s links.' "$(cat dead.txt)" "${{ steps.check.outputs.checked }}")"

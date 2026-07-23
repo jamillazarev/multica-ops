@@ -1,7 +1,7 @@
 {
   "name": "multica-ops",
-  "description": "Mops (Executive Advisor) for Multica: builds and runs an autonomous company of AI agents \u2014 interview, bootstrap, conveyor, console.",
-  "version": "2.0.0",
+  "description": "Mops (Executive Advisor) for Multica: builds and runs an autonomous company of AI agents — interview, bootstrap, conveyor, console.",
+  "version": "2.1.0",
   "author": {
     "name": "Jamil Lazarev",
     "url": "https://github.com/jamillazarev"

@@ -9,5 +9,5 @@ flow: `status`, `next`, `feature <…>`, `discovery <…>`, `research <…>`, `b
 `drop <…>`, `team`, `hire <…>`, `fire <…>`, `update <…>`, `squad`, `module <…>`,
 `access <…>`, `reviews`, `autonomy <…>`, `autopilot`, `recover`, `start`, `stop`,
 `workspace <…>`, `health`, `upgrade <…>`, `switch <…>`, `audit`, `connect <…>`,
-`cli <…>`, `sync`, `help`, `init`, `join`. Ambiguous → ask one clarifying question.
+`cli <…>`, `sync`, `import <tracker>`, `skill <create|import|optimize|release>`, `help`, `init`, `join`. Ambiguous → ask one clarifying question.
 Args: $ARGUMENTS

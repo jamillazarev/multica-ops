@@ -2,6 +2,11 @@
 
 Mermaid renders on GitHub, in Obsidian, and on the docs site.
 
+## Contents
+
+Bootstrap · Two seats of Mops · One feature through the conveyor · Escalation & control ·
+Session limits · The skill lifecycle
+
 ## Bootstrap — from a sentence to a working company
 
 ```mermaid
@@ -50,7 +55,13 @@ flowchart TD
     MEAS --> LEARN["Learn<br/>→ ROADMAP.md"]
     LEARN -->|non-stop mode| NEXT["Next feature<br/>from ROADMAP.md"]
     S3 -->|request changes| S2
+    S3 -->|same point, 3rd round| CND["Conductor settles<br/>what 'done' means"]
+    CND --> S2
 ```
+
+> A stage is a **barrier, not a queue**: everything genuinely independent goes on the *same*
+> stage and runs concurrently — the numbers order dependencies, not tasks. And width is only
+> real on a `github_repo` project; a `local_directory` serializes everything regardless.
 
 ## Escalation & control
 
@@ -73,3 +84,32 @@ flowchart TD
     CHK -->|no| DIAG["Read run error<br/>+ daemon logs"]
     RERUN --> OK["Work resumes<br/>from repo state"]
 ```
+
+## The skill lifecycle — gates, not ceremony
+
+```mermaid
+flowchart TD
+    subgraph CREATE["Create"]
+        R1["Routine seen twice"] --> DRAFT["skill-creator draft"]
+        DRAFT --> TEST["Tested on a fresh agent<br/>that never saw the routine"]
+    end
+    subgraph IMPORT["Import"]
+        FIND["find-skills / search"] --> SCAN{"Screen:<br/>commands · exfiltration ·<br/>endpoints · grants · injection"}
+        SCAN -->|critical| REJ["Rejected<br/>→ DECISIONS.md"]
+        SCAN -->|broad access| HUM["Conductor + security reviewer<br/>never auto-approved"]
+        SCAN -->|clean| READ["Someone still reads<br/>what it instructs"]
+        HUM --> READ
+        READ --> TRIM["Trim to what this company needs"]
+    end
+    TEST --> OPT
+    TRIM --> OPT{"Optimize<br/>fail-closed"}
+    OPT -->|"commands · paths · numbers<br/>survive verbatim"| REV["Independent reviewer<br/>confirms meaning held"]
+    OPT -->|NOT_COMPRESSIBLE| ATT
+    REV --> ATT["Attach with provenance<br/>source · version · date · approver"]
+    ATT --> USE["In use"]
+    USE -->|"upgrade available"| SCAN
+    USE -->|"proved across 2 projects"| REL["Release:<br/>de-identify → owner's own repo<br/>owner-confirmed → re-import as external"]
+```
+
+> The loop back to **Screen** on upgrade is the point most setups miss: a version you vetted
+> is not the version you are about to install.

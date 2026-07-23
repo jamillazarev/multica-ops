@@ -8,7 +8,11 @@ propose an update to this skill.
 from the user interview (SKILL.md → Step 1). Only the **invariants** are fixed: the
 **conductor** (agent = project lead), the **guide skill on everyone**, **find-skills
 on everyone**, and the stage/mention mechanics. Roles below are call templates, not a
-staffing plan — see [ROLES.md](ROLES.md).
+staffing plan — see `ROLES.md`.
+
+## Contents
+
+Prerequisites · Project · Agents · Squads · Skills · Labels · Issues & stages · Capacity and session limits · CLI traps · Ops scripts · Launch checklist · Multica docs · External services · Slack/Lark · Workspace = company · Stand-up order · Interview checklist
 
 ## 0. Prerequisites
 
@@ -20,6 +24,46 @@ multica daemon status         # the daemon executes tasks; --output json → act
 **The runtime is where agents actually execute.** A desktop app may run its own
 profile daemon (`--profile …`) separate from the CLI daemon: check whose
 `active_task_count` grows — that one is the executor.
+
+### Cloud or self-hosted — ask once, it changes almost nothing
+
+Multica runs as **cloud** (`api.multica.ai`) or **self-hosted** — Docker Compose, or the
+Helm chart `oci://ghcr.io/multica-ai/charts/multica` for k8s; the server is a Go backend +
+Next.js frontend on **PostgreSQL 17 with pgvector**. Point the CLI with a first-class
+command, not by hand:
+
+```sh
+multica setup cloud
+multica setup self-host                                   # localhost:8080 / :3000
+multica setup self-host --server-url https://api.internal.co --app-url https://app.internal.co
+multica setup self-host --server-url … --callback-host <ip>   # CLI on a different machine than the server
+```
+
+It writes `server_url` / `app_url` into `~/.multica/config.json` (also settable via
+`config set`, or `MULTICA_SERVER_URL` / `MULTICA_APP_URL`), authenticates and starts the
+daemon.
+
+**Why this barely touches the methodology: execution is already local either way.**
+`runtime list` shows `MODE=local` — the daemon runs on **your machine**, and your agent
+CLIs, model subscriptions, keys and code stay there. Self-hosting moves the **control
+plane** (issues, board, orchestration, the web app), not the work. So everything in this
+skill holds unchanged; what does change is operational and worth stating at `/init`:
+
+- **You own uptime and backups now** — Postgres is the company's memory. Add it to
+  `/health` and put a restore drill in the launch checklist.
+- **Upgrades are yours to run** (`docker compose pull && up -d`; pin `MULTICA_IMAGE_TAG`).
+  `/cli` still checks the CLI, but the **server version is a separate thing to track** —
+  and CLI/server skew is a real failure mode, so upgrade the server first.
+- **Email**: verification codes need `RESEND_API_KEY`, otherwise codes come from backend
+  logs. Fine for a solo instance, a blocker the moment you invite someone.
+- **Signup controls** (`ALLOW_SIGNUP`, `DISABLE_WORKSPACE_CREATION`) are the on-prem
+  equivalent of workspace access — set them before the instance is reachable.
+- **Never set `MULTICA_DEV_VERIFICATION_CODE`** on anything publicly reachable.
+- Self-hosting changes **nothing about model spend** — that's still your provider
+  subscriptions. It changes where *data* lives, which is usually the reason to do it.
+
+Mops records which mode a workspace is in (fingerprint + `docs/TOOLING.md`), because it
+changes who to call when the board is down: the vendor, or you.
 
 ## 1. Project
 
@@ -41,6 +85,25 @@ multica agent update <agent-id> --model <…> --instructions "<…>"
 - **Profession-style names** ("QA Engineer", "Product Manager") — clearer in mentions.
 - **Model tiering is mandatory** — see §7: not every role needs the top model.
 - `agent update` takes a **UUID**, not a name.
+
+**What belongs in `--instructions` — and what must not.** These load on every run this agent
+makes, so they are the most expensive text you write per role. Six short blocks, no prose:
+
+1. **Craft and scope** — what this role does, in one line.
+2. **Owns / doesn't own** — the boundary the fit-check tests against. Being explicit here is
+   what makes "this isn't mine, handing back" a normal move rather than a confession.
+3. **Grade** — junior · mid · senior, and what it implies about escalating up or handing down.
+4. **DoD specifics for this craft** — the general shape lives in the guide; here go the parts
+   only this craft can state (what evidence a design gate needs, what a test must cover).
+5. **Next hop** — who receives the handoff, who is the escalation target.
+6. **Tools this role drives**, if any are role-specific — with a pointer to the runbook, not
+   the runbook itself.
+
+**Never** restate the guide (it is attached to everyone and is the cached prefix — duplicating
+it doubles the cost and creates two versions to keep in sync), and never restate native
+platform behaviour: leader routing, mention triggers, stage barriers and project-lead
+accountability all work without being described (REFERENCE §6). If an instruction would apply
+to every role, it belongs in the guide; if it applies to one task, it belongs in the issue.
 
 ## 3. Squads (routing)
 
@@ -66,7 +129,7 @@ multica agent skills set <agent-id> --skill-ids <ids>        # replace all (no r
 **Trap:** for multi-skill repositories the URL must point at the **folder containing
 `SKILL.md`**, not the repo root. The root returns 502 while the CLI prints "service
 temporarily unavailable" — run `--debug` to see the real cause. Curated packs and
-working URLs: [ROLES.md](ROLES.md).
+working URLs: `ROLES.md`.
 
 ## 5. Labels
 
@@ -236,7 +299,7 @@ integration. Offer at setup; connect any time later.
    experts relevant to the domain (e.g. domain specialist, market/growth, architect)
    as an **Experts squad**; user-simulation personas (built from the PM/UX research)
    as a **Personas squad** used in usability passes. Only Mops in Multica stays squadless. The user may decline both.
-6. **Stand up Mops in Multica (opt-in — checklist #12)** — if enabled: install this skill
+6. **Stand up Mops in Multica (opt-in — checklist #13 · Resident Mops)** — if enabled: install this skill
    into the workspace and assign it **only to the Mops agent** (other agents carry the
    *guide* skill, not this one — multica-ops is Mops's brain), so Mops in Multica *is* the
    same Mops:
@@ -257,8 +320,13 @@ integration. Offer at setup; connect any time later.
    - If declined: skip; Mops lives in the console only, and `/help` says so.
 7. **Labels** (discipline/type; never the stage) and **docs skeleton**: `docs/ROADMAP.md`,
    `docs/TEAM.md` (who owns what — essential once several humans join), `docs/TOOLING.md`
-   (every tool: what · for what · access · wiring · conventions). The cloud holds
-   issues/comments; code and keys stay on members' machines.
+   (every tool: what · for what · access · wiring · conventions), `docs/DECISIONS.md`
+   (**append-only**: what was tried or proposed and rejected, with the evidence — so the
+   same idea isn't rediscovered every quarter) and, once there's code, `docs/ARCHITECTURE.md`
+   (what lives where, entry points — every task starts in a fresh worktree, so an unwritten
+   map is re-derived by every agent on every run). The cloud holds issues/comments; code and
+   keys stay on members' machines. **Start each of these from `templates/`** rather than
+   improvising the shape — a doc nobody can predict the shape of gets skimmed, not used.
 
 
 ## 16. Interview checklist (detail)
@@ -273,42 +341,45 @@ Each item with its default, as walked in `/init` and re-asked in the `/join` del
    mockup-fidelity + a11y for design, fact-check for content).
 4. **Stage ladder** — default Build → Review → Accept; prepend Design when design
    precedes build; parallel gates inside Review.
-5. **Capacity & models** — audit `runtime list` (runtimes are **local**: auto-detected
+5. **Where Multica itself runs** — **cloud by default**; ask once, because on a
+   self-hosted server backups, upgrades, email and signup controls become the owner's
+   (§0). Record the answer — it changes who to call when the board is down.
+6. **Capacity & models** — audit `runtime list` (runtimes are **local**: auto-detected
    from PATH on each member's machine; several machines can serve one workspace);
    propose per-role tiers, confirm. Missing tool → install + `daemon restart`.
-6. **Integrations inventory** — "what already exists?" (GitHub/GitLab, Figma,
+7. **Integrations inventory** — "what already exists?" (GitHub/GitLab, Figma,
    analytics, Mobbin, image-gen APIs…). Per service: **connect-or-create** (exists →
    connect; missing → create). Access via `mcp_config` / `custom-env` (BOOTSTRAP §12). For digital products,
-   default service & library picks live in **[STACKS.md](STACKS.md)** — offer the
+   default service & library picks live in **`STACKS.md`** — offer the
    matching seeds, accept "other" as always.
-7. **Docs home** — default **local-first markdown in the repo**: `docs/` is designed
+8. **Docs home** — default **local-first markdown in the repo**: `docs/` is designed
    to open as an **Obsidian vault** (plain relative links + Mermaid — readable on
    GitHub and in Obsidian alike; roadmap, team, specs all browsable). Options: Notion
    mirror (via MCP; repo stays the source of truth), Figma (cloud) vs Pen (pen.dev, local)
    for design — or both. As everywhere: the user may name any other tool — research and connect it.
-8. **Assets home** (when the project accumulates media — images, video, 3D):
+9. **Assets home** (when the project accumulates media — images, video, 3D):
    small volumes → in the repo (Git LFS); large → **research the best current
    provider for the project's actual needs** (object storage, media CDN, or an
    all-in-one backend) and propose — never keep a hardcoded provider list, the
    market moves. Wire the chosen one via `mcp_config`/`custom-env`; generated
    assets still pass the usual review gates.
-9. **Avatars** — default DiceBear (one seed per agent name); or user's images.
-10. **Experts & personas** — offer, per project, both opt-in (see below). Default: none.
-11. **Design system & brand** — opt-in (see the two sections below). Ask: does the
+10. **Avatars** — default DiceBear (one seed per agent name); or user's images.
+11. **Experts & personas** — offer, per project, both opt-in (see below). Default: none.
+12. **Design system & brand** — opt-in (see the two sections below). Ask: does the
     project produce a repeatable form (UI, covers, packaging, letters)? Default: **on
     when a design discipline exists**. And: does it face the world — is there a brand
     (existing / to create / not needed)? Existing → audit, don't rebuild. Homes:
     `docs/design-system/` (tokens as files) and `docs/brand/` (the brand book).
-12. **Resident Mops (Mops in Multica)** — opt-in (see "Two seats of Mops"). Default: **on** for a
+13. **Resident Mops (Mops in Multica)** — opt-in (see "Two seats of Mops"). Default: **on** for a
     company (a running team needs an in-workspace advisor + escalation vertex when the
     user is away); **off** for a quick job. Declining means Mops lives in the console
     only.
-13. **Operating mode** — see next section. Default: per-feature.
-14. **Autopilots / Slack / Lark** — default "later"; connect on request (BOOTSTRAP §13).
-15. **Language & tone** — confirm the chat language as the working language; artifacts
+14. **Operating mode** — see next section. Default: per-feature.
+15. **Autopilots / Slack / Lark** — default "later"; connect on request (BOOTSTRAP §13).
+16. **Language & tone** — confirm the chat language as the working language; artifacts
     in it or English? Tone (business / friendly / terse-technical)? Both go into the
     guide skill, first line, absolute — including every agent's first greeting.
-16. **Control & expertise** — two questions that shape every later interaction.
+17. **Control & expertise** — two questions that shape every later interaction.
     **(a) How much do you want to be in the loop?** *hands-on* (approve each feature) ·
     **checkpoints** (approve at named gates — default) · *hands-off* (only
     destructive/spend, plus a digest). Set globally or per flow; it maps onto `/autonomy`
@@ -317,7 +388,7 @@ Each item with its default, as walked in `/init` and re-asked in the `/join` del
     decisions routed to you; outside them Mops **explains and recommends** with tradeoffs
     instead of dumping a choice on you. The same courtesy governs agents talking across
     squads: explain in the other craft's terms, don't fling jargon over the fence.
-17. **Governance** (see below) — who can direct Mops (default: all members full; owner
+18. **Governance** (see below) — who can direct Mops (default: all members full; owner
     always full; destructive/spend always → owner) and which flows need a named human's
     sign-off (default: none beyond the destructive gate; ask what the user wants to
     review — image-gen, publishing, every feature…). Multiple human members are normal.

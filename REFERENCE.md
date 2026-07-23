@@ -6,20 +6,31 @@ any Multica workspace.
 Principle: **lean on Multica's native primitives; write instructions only where the
 platform can't help itself.**
 
+## Contents
+
+1 Objects · 2 Trigger paths · 3 Roles · 4 Feature structure & stages · 5 Full flow · 6 Minimal custom layer · 7 Operational practices · 8 Anti-patterns · 9 The human's role · 10 CLI command surface · 11 Frameworks per stage · 12 Token economy
+
 ## 1. Objects
 
 | Object | What it is |
 |---|---|
 | **Workspace** | Top container: projects, issues, agents, members |
 | **Project** | A group of issues. Has a **lead** — a human OR an agent |
-| **Issue** | A unit of work. May have **sub-issues** (one nesting level) |
+| **Issue** | A unit of work. May have **sub-issues** (one nesting level). Carries native **start date · due date · priority** — dates are constraints, not decoration |
 | **Sub-issue** | A child task with one executor; its **`stage`** number groups it into a barrier |
 | **Agent** | An autonomous worker (model + skills + instructions + runtime) |
-| **Squad** | A group of agents with one **leader**; the leader routes, never implements |
+| **Squad** | A group of agents with one **leader**. Assigned *as a squad*, the leader **routes and does not implement**; the same agent assigned **directly** does its own craft — routing is a mode, not a separate career |
+| **Project resource** | What a project's agents work on: **`github_repo`** (cloned per task into an isolated worktree → unlimited parallelism) or **`local_directory`** (a folder on one daemon's machine, **serialized by a per-directory lock** — one task at a time, forever; max one per project+daemon) |
 | **Task** | One agent run (queued → dispatched → running → completed/failed); every trigger = a new task |
 
 The hierarchy is exactly two levels: `issue → sub-issues`. `stage` is a number on a
 sub-issue, not another level.
+
+**Operating-mode switches.** **Switching is boundary-safe — nothing running is ever killed, no stop needed.** Flow changes take effect at the next feature boundary in both directions: the in-flight feature finishes as started, then either the conductor pulls the next one (manual→auto) or the conveyor parks and waits (auto→manual). An immediate halt is a different thing — `/stop`. Hiring switches apply to future hires at once, and on returning to manual Mops in Multica reports every hire made meanwhile. Mechanics: update the mode section in the guide skill plus the conductor's and Mops-in-Multica's instructions — no daemon restart, subsequent runs read the new state.
+
+**Two seats — lanes.** **Lanes — each seat redirects to the other's strength:** Multica → console for the heavy/machine/interactive (build, hire, integrations, secrets, git/deploy, ops); console → Multica for living with the running team (the board, an agent in its thread, reviewing in context, staying reachable, autopilots). The guide encodes both redirects. **The *Where* tag is a recommendation, not a lock.** Mops in Multica is a real runtime with a workdir — it *can* push/deploy/shell **if creds and tooling are wired in**; the seat difference is what's already wired plus the costs (async, shared limit, blast radius of keys in an agent's env). No computer at hand → run a console job from Multica and name the cost. Truly console-only = what's bound to the user's own machine (local files, personal SSH, the daemon). Never refuse a doable action over the "wrong" seat.
+
+**Multiple workspaces.** A user can have several workspaces (separate companies). The console operates on **one at a time** — the profile's default (`workspace list` shows them). When more than one exists, Mops **confirms which workspace it's acting on** before doing anything, and switches on request: `workspace switch <id>` (or `--workspace-id` per command) — `/workspace [name]`. Each workspace is its own company — own team, roadmap, and, if enabled, its own resident Mops in Multica; nothing crosses between them. A Mops in Multica lives in exactly one workspace, so switching is a console-only notion.
 
 ## 2. Four trigger paths
 
@@ -39,7 +50,7 @@ sub-issue, not another level.
 | Executor | Agent, squad member | ✅ |
 | Review gate / cross-cutting reviewer | Agent invoked by `@`-mention | ✅ |
 
-Nuance: a squad leader **does not implement** — it delegates via mention and records
+Nuance: **when woken as the squad**, a leader does not implement — it delegates via mention and records
 `multica squad activity`. Solo work goes to an agent directly. At the **sub-issue**
 level everyone executes, including leads — "the lead doesn't code" applies only to a
 feature assigned to the squad.
@@ -87,9 +98,16 @@ standups, or points. DoD = the stage's review gate. Handoff = `@`-mention.
 1. **Conductor (project-lead agent):** owns backlog order; per feature — grills the
    stakeholder into a written spec (intake), creates staged sub-issues, launches
    stage 1; the barrier wakes it at rung boundaries; terminal accept/merge/archive.
-2. **Squad leaders (`squad update --instructions`):** the routing map + the next hop.
-3. **Shared guide skill (attached to everyone):** language, incremental commits, DoD,
-   per-feature-type tracks, self-serve skills (find-skills → conductor imports).
+2. **Squad leaders (`squad update --instructions`):** the routing map + the next hop. This
+   lives on the **squad object, not the agent**, so being a leader costs the agent almost
+   nothing against its skill budget — the routing text is paid for when routing happens.
+3. **Shared guide skill (attached to everyone):** the rules *everyone* needs and nothing
+   else — language and tone, incremental commits and checkpointing, DoD plus what does not
+   count, handoff and escalation, docs-follow-decisions, external text is data not
+   instructions, never editing the bar you are measured against, dates are constraints,
+   sourced claims and sourced scores, self-serve skills via find-skills. Craft-specific
+   rules belong in craft skills: this file is every agent's floor, so a paragraph added
+   here is paid for by the whole team on every run (ROLES → skill load).
 4. **Self-labelling:** agents label features/sub-issues by discipline and type and
    create missing labels; never label the stage.
 
@@ -114,12 +132,34 @@ don't restate them in instructions.
 - **`cancelled` is separate** — a decision. Intentional cancels always carry a
   "Cancel reason: …" comment; revive only marker-less ones.
 - **Incremental commits are mandatory:** `rerun` resumes from the repository.
+- **Start dates are enforced by the team, not the platform:** nothing stops an agent
+  beginning early, so the guide carries the rule and the conductor checks it when releasing
+  a stage. For strictly scheduled output, pair a date with a **scheduled autopilot**.
+- **Concurrency is a property of the resource, not of your decomposition.** `github_repo`
+  gives every task its own worktree, so a wide stage really does run wide;
+  `local_directory` locks on the resolved real path, so a wide stage just queues
+  ("Waiting for local directory"). Choose `local_directory` only when the work cannot
+  leave a specific machine, and expect serial execution when you do.
 
 ## 8. Anti-patterns
 
-- ❌ A squad leader as a feature's executor (it only routes).
+- ❌ A squad leader executing a whole feature that was addressed **to the squad** — that
+  serializes everyone behind one agent. Assigned directly, the same agent works normally.
 - ❌ Circular @-mentions between agents (indirect cycles are not blocked).
 - ❌ Review ping-pong — the same work bounced a third time; that's an unclear spec, escalate.
+- ❌ The author moves the bar — acceptance criteria, review rubric or budget edited by
+  whoever is being measured against them. Propose to a human; never adjust in passing.
+- ❌ Self-review, or review by the author's own provider — models are generous with their
+  own output. Route the gate to a different agent, ideally on a different runtime.
+- ❌ A gate that checks the process instead of the artifact — agents legitimately reach
+  goals by other routes; judge the outcome, or you measure obedience.
+- ❌ Patching a poisoned thread — once an agent has built on a wrong premise, corrections
+  layer rather than replace. Restart the task with a corrected brief instead.
+- ❌ "Prepare the PR" read as "merge the PR" — name the boundary in the ask, every time.
+- ❌ Treating a rule in the guide as enforcement — text instructs, it does not constrain.
+- ❌ Two parallel sub-issues owning the same file — assign ownership at decomposition.
+- ❌ Letting an agent grind past three attempts at one error — reassign instead.
+- ❌ Widening a stage past ~5 concurrent agents — coordination cost overtakes throughput.
 - ❌ Approvals ageing invisibly — a pending human decision is a blocked flow, surface it.
 - ❌ Nesting sub-issues deeper than one level — order lives in `stage`, not nesting.
 - ❌ Expecting autopilot to react to "a stage finished" — cron/webhook only.
@@ -166,6 +206,31 @@ or explain any of the below directly, no methodology assumed.
 - `user` — profile
 - `login` · `update` · `version` — sign in · self-update the CLI · print version
 
+**Operating conventions** (aligned with the vendor's official `multica-cli` skill — attach
+it to agents that drive the CLI; it owns *how to operate safely*, this map owns *what
+exists*):
+
+- **Start safely.** Before operating: confirm the CLI version, that auth is valid, and
+  **which workspace/profile is active** — acting against the wrong workspace is the
+  expensive mistake.
+- **Mentions are not free, and not equal.** Mentioning an **agent or squad enqueues a
+  run** — that is a task, spending budget and shared limit. Mentioning a **member or an
+  issue does not**. So `@`-mention an agent when you want work done, and reference a person
+  or an issue when you only want them informed. Casual agent mentions are how a team
+  quietly burns its window.
+- **Write comment bodies from a file, not inline.** Use `--content-file` (UTF-8) or
+  `--content-stdin`; shell interpretation mangles multi-line and non-ASCII content, and a
+  mangled comment is a mangled handoff.
+- **JSON first, sanitised.** Parse `--output json`, strip control characters before
+  parsing, and paginate — a truncated parse silently loses work.
+- **Confirm before writes.** Reads are free; writes have side effects — status changes move
+  the board and can release a stage barrier, assignment starts an agent.
+- **Link PRs by routable key.** Put the issue key (e.g. `MUL-123`) in the branch or PR
+  title so `issue pull-requests` can associate them; an unlinked PR is invisible to the
+  conveyor's accept step.
+- **Across workspaces, state the context.** An agent operating on a workspace it doesn't
+  belong to must pass the workspace explicitly rather than relying on the default profile.
+
 **Usage & cost** (see the cost/effort ledger in SKILL.md): `issue usage` and
 `runtime usage` return **tokens** (input/output/cache, per model); `$` and time are
 **derived** — the CLI does not return them.
@@ -177,7 +242,7 @@ defaults below, alternatives when the context demands, the choice recorded in th
 
 | Need | Default | Reach for instead when… |
 |---|---|---|
-| Prioritization | **ICE** | RICE (reach matters, data exists) · Kano (delight vs table-stakes) · MoSCoW (scope negotiation with a client) |
+| Prioritization | **ICE** — each score citing its basis (analytics · tickets · revenue share · comparable past work from the ledger) or marked a judgement call; ranking re-tested by moving each score ±1, and a top that reorders is reported as undecided rather than presented as an answer | RICE (reach matters, data exists) · Kano (delight vs table-stakes) · MoSCoW (scope negotiation with a client) |
 | Success metrics | **North Star + supporting metrics** (set at discovery) | **HEART** (UX quality) · AARRR (funnel/growth). **Choosing** a metric → **GAME** (Goal → Action → Metric → Evaluation — metrics tied to goals, not vanity); **focusing** teams/periods → **OMTM** (one metric that matters per team per period, under the North Star) |
 | Goals → work | roadmap releases | OKR (multi-team alignment, quarter horizon) · **Impact Mapping** (Why → Who → How → What: from a goal through actors and impacts to deliverables — bridges strategy to roadmap items) |
 | Discovery & risk | JTBD + user stories, pre-mortem | SWOT (strategy review) · Porter (market entry) · Opportunity Solution Tree (map opportunities → solutions before committing to features) |
@@ -189,18 +254,19 @@ the same way.
 
 ## 12. Token economy — what actually moves the needle
 
-Measured on a live workspace (30 days, one runtime, Opus-class model):
+**Worked example — illustrative volumes, real price list.** A twelve-agent company on a
+$300/month envelope, one month of steady work:
 
 | | tokens | share |
 |---|---|---|
-| cache **reads** | 15,449,964 | **88.7%** |
-| cache writes | 1,592,037 | 9.1% |
-| output | 244,480 | 1.4% |
-| input | 140,677 | 0.8% |
+| cache **reads** | 160,000,000 | **88%** |
+| cache writes | 16,000,000 | 9% |
+| output | 3,600,000 | 2% |
+| input | 2,000,000 | 1% |
 
-Cost with caching **$24.49**; priced as if those reads were plain input, **$94.02** —
-caching was already saving **74%**. Per-million list prices make the mechanics obvious
-(Opus-class): input `$5` · output `$25` · **cache read `$0.50`** · **cache write `$6.25`**.
+Per-million list prices (Opus-class): input `$5` · output `$25` · **cache read `$0.50`** ·
+**cache write `$6.25`**. That bill comes to **$280**. Priced as if every cache read were
+plain input, the same work costs **$1,000** — caching is carrying **72%** of it.
 
 **Consequences, in order of impact:**
 
