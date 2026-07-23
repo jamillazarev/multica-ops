@@ -144,9 +144,16 @@ via telemetry on the first `npx skills add jamillazarev/multica-ops`.
 | [evals/](evals/) | stratified scenarios — from a job too small to deserve a company to an import carrying a hidden instruction |
 | [templates/](templates/) · [scripts/](scripts/) | guide · roadmap · brand · component docs · **decisions log · architecture map · tooling register · team roster** · ops helpers · **resumable backlog import** |
 
-Contributing? Run **`bash scripts/preflight.sh --install`** once — the pre-commit hook
-checks version sync, the CHANGELOG entry, README completeness, internal links, command
-files, and the token budget on the always-loaded core.
+Contributing? Run **`bash scripts/preflight.sh --install`** once. The pre-commit hook holds
+the invariants that this repo has actually broken before: version sync, the CHANGELOG entry
+(it is the migration map for `/upgrade`), README completeness, internal links, one-level-deep
+references, the token budget on the always-loaded core, command↔file↔dispatcher coherence,
+use-case coverage, and — via **`scripts/check-structure.py`** — table column counts, list
+indentation, words a reflow tool broke across lines, counts that no longer match their list,
+mermaid blocks that don't close, skeleton files with no template, repeated sentences, and
+every `multica …` command the docs promise actually existing in the installed CLI.
+
+It cannot check whether a paragraph is still *true* — that stays a reading job.
 
 Everything but `SKILL.md` loads **only when its trigger fires** — the skill keeps its
 always-on footprint small (see the load-routing table in SKILL.md).

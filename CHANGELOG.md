@@ -1,5 +1,25 @@
 # Changelog
 
+## 2.1.3 — the checks the last audit should have left behind
+
+The 2.1.1/2.1.2 audits found defects with throwaway scripts and did not institutionalize
+them, which is how the same class comes back. **`scripts/check-structure.py`** now runs in
+the pre-commit hook, and every check in it exists because that exact defect shipped once:
+
+- **table rows** whose cell count no longer matches the header (fifteen STACKS rows had
+  silently lost their free-tier column)
+- **list continuations** that lost their indent and render as stray paragraphs
+- **words broken across a line by a hyphen** — the damage a reflow tool does
+- **"Three loops:" followed by five of them** — a count that outlived its list
+- **mermaid blocks** with unbalanced brackets or a subgraph missing its `end`
+- **a docs-skeleton file with no template**, when the stand-up says to start from one
+- **the same long sentence twice in one file** — a copy-paste that will drift apart
+- **`multica …` commands the docs promise** that the installed CLI does not have (this one
+  caught `AGENTS.md`; it skips cleanly where the CLI isn't installed, as in CI)
+
+Deterministic classes fail the commit; heuristic ones warn. What the hook still cannot do is
+tell whether a paragraph is *true* — staleness of meaning stays a reading job.
+
 ## 2.1.2 — the introduction caught up, and three more things it can check itself
 
 - **The docs-site introduction was still describing 1.x.** Rewritten: the security posture,

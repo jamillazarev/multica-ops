@@ -162,6 +162,17 @@ PYEOF
 )
 [ -n "$gt_bad" ] && say_warn "$gt_bad"
 
+# 5i · structural integrity — eight classes of defect that each shipped once.
+# Deterministic ones fail, heuristic ones warn. See scripts/check-structure.py.
+if [ -f scripts/check-structure.py ]; then
+  while IFS= read -r line; do
+    case "$line" in
+      FAIL:*) say_fail "${line#FAIL:}" ;;
+      WARN:*) say_warn "${line#WARN:}" ;;
+    esac
+  done <<< "$(python3 scripts/check-structure.py 2>/dev/null)"
+fi
+
 # 5c · references must stay one level deep from SKILL.md
 for f in $(ls *.md | grep -vE '^(SKILL|README|CHANGELOG|AGENTS)\.md$'); do
   nested=$(grep -ohE '\]\([A-Z][A-Za-z-]*\.md' "$f" 2>/dev/null | head -1)
