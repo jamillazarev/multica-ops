@@ -167,6 +167,25 @@ don't restate them in instructions.
   that is a feature request worth filing rather than a limitation to design around.
   Choose `local_directory` only when the work genuinely cannot leave one machine.
 
+**Heartbeat on long runs.** A run that goes quiet for minutes reads as a crash. Two homes:
+in the **CLI**, before a long operation state the expected duration and how to check, then
+poll (`issue run-messages`, the board, `daemon status active_task_count`) and print a
+progress line as each sub-issue finishes — not a silent wait for the whole thing. When the
+**console is closed**, the resident Mops carries it: `/status` on demand plus issue comments
+as stages complete, and a nightly sweep so nothing sits unseen. The status digest agents
+already produce *after* work (the board + what each shipped) is exactly what to stream
+*during* it.
+
+**The stage ladder is per issue *type*, not per project.** A feature runs discovery → build
+→ review → ship; an article runs brief → draft → edit → publish; a bug jumps to build+review.
+They coexist on **one board** — the type (a label) selects the ladder and the DoD, not a
+separate project. So a **site with features *and* content** is normally one project with two
+issue types, not two projects: content is an issue with a content DoD (fact-check, brand
+voice, SEO) and a due date, no build stage. Split into two projects only when content is a
+stream with its own team and cadence (a real editorial calendar), the same "is this a stream
+or a one-off" call as everything else. Ongoing upkeep — a living feature, a forever
+calendar — is just recurring issues or an autopilot; the format already holds it.
+
 ## 8. Anti-patterns
 
 - ❌ A squad leader executing a whole feature that was addressed **to the squad** — that

@@ -47,8 +47,9 @@ flowchart LR
     subgraph CREW["/crew — a crew"]
         C1["executors + gates"] --> C2["owner assigns"] --> C3["owner also holds:<br/>accept · skill screening ·<br/>dates · 3rd-round"]
     end
-    subgraph QJ["quick job"]
-        J1["1–2 agents"] --> J2["build → review"] --> J3["no docs skeleton,<br/>no ledger, no modules"]
+    subgraph QJ["quick job — the whole thing"]
+        J1["1–2 agents · build → review · done"]
+        J2["<i>and deliberately none of the machinery:<br/>no docs skeleton, no ledger, no modules</i>"]
     end
     subgraph JOIN["/join — inherit"]
         N1["audit first"] --> N2["interview delta"] --> N3["fix in approved batches"]
@@ -121,7 +122,7 @@ flowchart TD
 ```mermaid
 flowchart TD
     GO["/upgrade"] --> L1{"Is this skill's copy<br/>on your machine current?"}
-    L1 -->|"behind"| YOU["<b>You run one line</b> —<br/>claude plugin update, or npx skills add.<br/><i>A skill cannot replace its own plugin</i>"]
+    L1 -->|"behind"| YOU["<b>Mops runs the update</b> (it has the shell);<br/>you approve, then <b>restart Claude Code</b>.<br/><i>A skill can fetch new bytes but cannot<br/>apply them to its own running self</i>"]
     YOU --> L2
     L1 -->|"current"| L2["Read the NEW version's CHANGELOG<br/>— it is the migration map"]
     L2 --> BK["Back up both halves:<br/>skill files + agent config snapshot<br/>+ pre-upgrade SHA in UPGRADES.md"]

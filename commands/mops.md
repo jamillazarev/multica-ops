@@ -16,7 +16,7 @@ offering the two or three real options rather than a command list. Same for a va
 With an argument, interpret it as the intent and run the matching flow: `status`, `next`, `feature <…>`, `discovery <…>`, `research <…>`, `brand <…>`, `audience`, `budget <…>`,
 `ship`, `measure`, `bug <…>`, `feedback <…>`, `validate <…>`, `roadmap`, `move <…>`,
 `drop <…>`, `team`, `hire <…>`, `fire <…>`, `update <…>`, `squad`, `module <…>`,
-`access <…>`, `reviews`, `autonomy <…>`, `autopilot`, `recover`, `start`, `stop`,
+`access <…>`, `reviews`, `autonomy <…>`, `pace <…>`, `autopilot`, `recover`, `start`, `stop`,
 `workspace <…>`, `health`, `upgrade <…>`, `switch <…>`, `audit`, `connect <…>`,
-`cli <…>`, `sync`, `import <tracker>`, `crew`, `skill <create|import|optimize|release>`, `help`, `init`, `join`. Ambiguous → say which flow you'd pick and why in one line, then run it; ask only when a wrong guess would cost something.
+`cli <…>`, `sync`, `import <tracker>`, `whatsnew`, `process`, `crew`, `skill <create|import|optimize|release>`, `help`, `init`, `join`. Ambiguous → say which flow you'd pick and why in one line, then run it; ask only when a wrong guess would cost something.
 Args: $ARGUMENTS

@@ -148,8 +148,23 @@ role genuinely doesn't need it. Confusing the two is how a floor quietly triples
 the scope an agent may take alone: **junior** (cheap tier; well-specified, low-blast-radius
 tasks; escalates anything ambiguous) · **mid** (balanced tier; owns a feature-sized piece
 end to end) · **senior** (top tier; architecture, ambiguity, review authority, mentors the
-routing). Record it in `TEAM.md` next to the role. Same craft can exist at two grades —
+routing). Record it in `TEAM.md` next to the role. **Present tiers to the owner in outcome terms**
+(stronger = best but slower/pricier · medium · light = fast/cheap for routine), then map onto
+the runtime's real models — the owner picks by result-and-speed, not by a model name they may
+not recognise (BOOTSTRAP §16). Same craft can exist at two grades —
 that's the point: a junior writer for release notes, a senior for positioning.
+
+**Star lays the foundation, routine fans out below it.** A hard feature is not one grade's
+job start to finish. The pattern: a **top-tier agent designs the concept and the load-bearing
+core** — the architecture, the hero screen, the tricky algorithm — and the **repetitive rest
+goes to a cheaper grade as separate sub-issues**: the empty states, the CRUD screens, the
+boilerplate. This is decomposition, not a new mode — the star's sub-issue is stage 1, the
+routine ones depend on it and run stage 2, parallel where the resource allows (a
+`local_directory` still serialises them). It is how you get a top model on the 20% that needs
+it without paying top-tier for the 80% that doesn't — the owner who "uses a strong model for
+hard work and a cheap one for routine" gets exactly that, per feature. The conductor decides
+the split at decomposition; the star's output (the design system, the interfaces) is what the
+routine agents build against.
 
 **Cascade when unsure.** The fit-check is judgement *before* the work; cascading is the
 correction *after* it. If a task's difficulty is genuinely unclear, give it to the lower

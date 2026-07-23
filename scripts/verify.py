@@ -126,6 +126,37 @@ def check_live():
                  f"the flows read this with json.loads")
     print(f"  live: {len(SMOKE)} read-only calls")
 
+
+# ── the fingerprint must hash every structural object the CLI exposes ───────────
+# Drift detection is only as complete as this list. When Multica gains an object type,
+# the fingerprint is blind to it until someone adds it — so verify the recipe covers
+# every structural group, and flag any new CLI group to be classified.
+STRUCTURAL = {"agent", "squad", "skill", "label", "autopilot", "project", "runtime",
+              "property"}                       # workspace shape; not the volatile issue/chat
+IGNORE = {"issue", "chat", "attachment", "auth", "config", "daemon", "setup", "update",
+          "user", "version", "login", "repo", "workspace", "completion", "help"}
+def check_fingerprint():
+    if not shutil.which("multica"):
+        return
+    try:
+        recipe = open("PLAYBOOKS.md", encoding="utf-8").read()
+    except OSError:
+        return
+    m = re.search(r"for k in ([a-z ]+); do", recipe)          # the fingerprint loop
+    hashed = set(m.group(1).split()) if m else set()
+    hashed |= {"member", "project resource"} if "member list" in recipe else set()
+    for grp in sorted(STRUCTURAL):
+        if grp not in hashed and grp not in recipe:
+            fail(f"fingerprint recipe (PLAYBOOKS) does not hash `{grp}` — drift in it goes unseen")
+    # a CLI group that is neither hashed nor knowingly ignored is unclassified
+    top = subprocess.run(["multica", "--help"], capture_output=True, text=True).stdout
+    groups = set(re.findall(r"^  ([a-z][a-z-]+):", top, re.M))
+    for g in sorted(groups - STRUCTURAL - IGNORE - hashed):
+        warn(f"CLI group `{g}` is new — decide if it is workspace structure the fingerprint "
+             f"should hash, then add it or add it to IGNORE")
+    print(f"  fingerprint: {len(STRUCTURAL)} structural classes covered")
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--sources", action="store_true", help="resolve every documented URL")
@@ -134,6 +165,7 @@ if __name__ == "__main__":
 
     print("verify — multica-ops")
     check_recipes()
+    check_fingerprint()
     check_pin()
     if a.sources: check_sources()
     if a.live: check_live()

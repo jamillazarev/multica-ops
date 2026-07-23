@@ -122,6 +122,17 @@ try:
 except OSError:
     pass
 
+# f3 · /help must derive its command list from COMMANDS.md, not carry a frozen copy that
+# drifts. A help file that names commands without pointing at the table is the stale-list
+# failure the reverse-command check can't see.
+try:
+    h = open("commands/help.md", encoding="utf-8").read()
+    if "COMMANDS.md" not in h:
+        warn("commands/help.md should read the command surface from COMMANDS.md, "
+             "not list commands itself — a frozen list is a stale list")
+except OSError:
+    pass
+
 # g · every docs file the stand-up creates needs a template, or an explicit exemption.
 EXEMPT = {"LATER", "ECONOMICS", "analytics"}
 try:

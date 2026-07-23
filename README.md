@@ -16,10 +16,11 @@
 </p>
 
 **Your Executive Advisor for [Multica](https://multica.ai)** — a skill that builds and
-runs an autonomous company of AI agents: interviews you progressively (small tasks
-stay small), stands up the workspace-as-company via the CLI (conductor/PM, squads,
-skills, integrations), optionally stands up a resident Mops inside Multica, and stays
-your console — status, recovery after limits, features, roadmap, hiring.
+runs an autonomous company of AI agents: meets you at whatever you have — a blank slate, a live workspace, a Linear backlog, or just
+a list of tasks — and routes you without making you pick a command. It shapes the work before
+staffing it, runs a full company (conductor/PM, squads, skills, gates) **or** a plain crew
+with no manager when that's all you want, and stays your console: status, recovery after
+limits, features, roadmap, hiring, upgrades.
 
 ## Install
 
@@ -46,6 +47,34 @@ Then just say what you need. In Claude Code you also get slash commands — name
 your own config; `rm ~/.claude/commands/mops.md` removes it). Everywhere else — Cursor,
 Codex, Windsurf and the rest — there are no slash commands and none are needed: plain
 language reaches every flow.
+
+### First run — you don't need to know a command
+
+Say what you're making, or just type **`/mops`** on its own (or "hi", or "where do I
+start?"). That is the front door, not an error: Mops checks your setup — installed · signed
+in · a workspace · daemon up · runtimes — reports it as one list with the fixes, then asks
+three questions and routes you itself. Nobody picks a command.
+
+The four ways in, if you like to see them:
+
+| You have | You want | You get |
+|---|---|---|
+| nothing yet | a team | **`/init`** — the work is shaped first, then staffed |
+| a Multica workspace | it continued | **`/join`** — audit, then fixes in batches you approve |
+| a backlog in Linear/Jira | it moved here | **`/import`**, then crew mode |
+| a list of tasks, no tracker | them done, you set the order | **crew mode** — executors, no PM layer |
+| one job, no team | it done | a **quick job** — three questions, no machinery |
+
+### Updating
+
+Ask Mops **"is there a new version?"** or run **`/upgrade`**. Mops fetches the new bytes
+itself (it has your shell) and asks you to **restart Claude Code** — that restart is the
+only manual step, because a running skill can't replace its own plugin under itself. After
+the restart it migrates your workspace, re-screens imported skills, and offers the CLI
+update **only when the team is idle**. *Update* = new bytes arrive; *upgrade* = your
+workspace moves onto them.
+
+## What's inside
 
 **Manual (any agent that reads files):**
 ```sh
@@ -145,6 +174,7 @@ via telemetry on the first `npx skills add jamillazarev/multica-ops`.
 | [PLAYBOOKS.md](PLAYBOOKS.md) | daily operations, copy-paste ready |
 | [REFERENCE.md](REFERENCE.md) | object model, anti-patterns, **CLI surface (§10)**, **frameworks (§11)** |
 | [WORKFLOW.md](WORKFLOW.md) | Mermaid diagrams of the whole process |
+| [BACKLOG.md](BACKLOG.md) | ideas past the current version — dogfooding the skill on itself, and open questions |
 | [CHANGELOG.md](CHANGELOG.md) | versioned history — the migration map for `/upgrade` |
 | [BUDGET template](templates/BUDGET-template.md) | envelope · currency · credits with expiries · prices on record |
 | [evals/](evals/) | stratified scenarios — from a job too small to deserve a company to an import carrying a hidden instruction |

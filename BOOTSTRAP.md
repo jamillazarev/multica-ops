@@ -465,8 +465,20 @@ Each item with its default, as walked in `/init` and re-asked in the `/join` del
    self-hosted server backups, upgrades, email and signup controls become the owner's
    (§0). Record the answer — it changes who to call when the board is down.
 8. **Capacity & models** — audit `runtime list` (runtimes are **local**: auto-detected
-   from PATH on each member's machine; several machines can serve one workspace);
-   propose per-role tiers, confirm. Missing tool → install + `daemon restart`.
+   from PATH on each member's machine; several machines can serve one workspace).
+   **Ask preference in plain outcomes, not model names** — the owner may not know which model
+   is which. Offer tiers by what they *do*: **stronger** (best results, slower, pricier — for
+   the hard core) · **medium** (the everyday default) · **light** (fast and cheap — for
+   routine and bulk). Name the trade the owner actually feels: **quality *and* speed**, since
+   a top model can be the wrong pick for a screen that just needs to be fast. Then map those
+   tiers onto **this runtime's** actual models and say which is which (the catalogue differs
+   per provider), so the owner chooses by outcome. **The tiers are a prompt, never a menu** —
+   the owner can always answer freely ("all top", "Sonnet for everything except the core",
+   "you pick"), and Mops honours the free answer over the three buckets. A squad that is all
+   one tier because nobody asked is the bug Ruslan hit. In Multica a model is bound to
+   the agent (per-role), so the preference shapes who is created at which tier; a task can't
+   pick a model at assign time, only the graded agent can (REFERENCE §7). Missing tool →
+   install + `daemon restart`.
 9. **Anything you already want used** — before proposing anything, ask outright: *are there
    skills, MCP servers or tools you already use and want this team to have?* People arrive
    with favourites and with things already wired; discovering them on day three means the

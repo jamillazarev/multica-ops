@@ -1,5 +1,91 @@
 # Changelog
 
+## 2.3.0 — it finds the process, not just the tool
+
+Built on a first outsider's run (Ruslan's), which produced a beautiful discovery doc and then
+**gradient-placeholder garbage for the design** — because it searched skills for "designer",
+found nothing usable, and hand-drew HTML for 2–5 minutes a screen. Everything here traces back
+to that.
+
+### One decision loop, named once
+Every real decision now runs the same shape — team and Mops alike: **frame** (what would make
+one option better) → **search, don't recall** → **compare, each claim sourced** → **choose and
+say why, then check it survives being wrong** → **record in `DECISIONS.md`** → **act.**
+Process-discovery, the role-builder, the stack ladder and prioritisation are all instances of
+it, so the method is followed, not reinvented per decision.
+
+### Find the process before the tools (`/process`) — the flagship
+"Method over encyclopedia" now applies to *how work is done*, not only which tool to pick.
+Given a task whose process isn't obvious, Mops **researches how the craft actually works**,
+drafts the steps each with a why, lets the owner cut/add, then finds a **skill or MCP per step
+by function** — broadening on empty instead of giving up. A literal "designer" misses Mobbin's
+flow library; "map the user journeys" finds it. The skill carries the *method*, so its own
+checklists are examples, never the only process. Applies everywhere there's a "how", not just
+design.
+
+### Design stops producing garbage
+- **Where design is drawn** is now a real stack row with the ladder: **Pen.dev** (repo-embedded,
+  a full MCP, components + importable libraries) · **Penpot** (OSS) · Figma (cloud, MCP) · plain
+  HTML (free, but no affordances — this is what produced the placeholders). **Compose from a
+  component library, don't hand-write screens.**
+- **Structure before pixels**: `/process` for a UI surfaces IA → flows → low-fi → **owner
+  approves** → high-fi, discovered not hardcoded. Low-fi first because approving structure on
+  cheap artifacts saves redrawing finished screens.
+- **Design intake is asked, never guessed**: style, colour, references, anti-references.
+- **The design gate rejects bad work; Mops never signs off design itself** — the owner does.
+
+### The interview adapts, and stops running hands-off by accident
+The bug: an agent ran a whole project hands-off because it never established the control level.
+Now the interview is a **source of topics, not a script**; **control & expertise and governance
+are hard gates** that propagate to every checkpoint (checkpoints ⇒ the owner signs the design
+before high-fi); options offered are **a prompt, not a menu** — free answers win. **"You decide"**
+is a first-class answer: Mops proposes a full reasoned config for the owner to confirm or edit,
+without delegating the owner-gated floor. **Model preference is asked in plain outcomes**
+(stronger / medium / light — quality *and* speed), mapped onto the runtime's real models, so a
+squad isn't all one tier because nobody asked.
+
+### Speed, pace, and a heartbeat
+- **`/pace`** (careful · balanced · fast) dials parallelism on the fly — honestly capped at
+  ~3–5 concurrent, and doing nothing on a `local_directory`, which serialises regardless.
+- **Star lays the foundation, routine fans out below it** — a top agent on the hard 20%, a
+  cheaper grade on the repetitive 80%, per feature.
+- **Nothing runs silently**: before a long operation Mops states the duration and emits a
+  progress line per completion — silence during a 20-minute run reads as a hang.
+
+### Shapes and slices
+- The front door now separates **three entrances** (init/join/import, by what you have) from the
+  **shape** chosen inside (company / crew / quick job) — quick job has no command **on purpose**.
+- **Owning a slice**: a frontender on one feature, a designer on one surface — crew narrowed to a
+  part, laid over any route.
+- **A site with features *and* content** is one project with two issue *types* (the stage ladder
+  follows the type, not the project), two projects only when content is its own stream.
+
+### Guards that never forget
+`verify.py` now checks the **fingerprint hashes every structural object the CLI exposes** — a new
+object type raises a warning instead of becoming a silent blind spot. The `/join` delta and
+command reachability were already guarded. A tidy **mermaid theme** on the docs site; the
+quick-job diagram redrawn; the examples page's last example given its missing takeaway.
+
+## 2.2.1 — the update path a human can actually walk
+
+A follow-up to 2.2.0, from the first question every user asked after it: *how do I get the
+new version?*
+
+- **Mops runs the update itself.** It has your shell, so with a yes it fetches the new bytes
+  (`claude plugin marketplace update` + `plugin update`, or `npx skills add`) — the one
+  manual step is **restarting Claude Code**, because a running skill can't replace its own
+  plugin under itself. Then it migrates the workspace, re-screens imported skills, and
+  offers the CLI update only when the team is idle. The README and docs site now open with
+  a **First run** and an **Updating** section instead of leaving it to be discovered.
+- **`/whatsnew`** — Mops onboards you into a release: it reads the changelog between your old
+  and new version and explains, in your terms, what changed, why it helps, and what to do
+  differently (usually nothing — it says so). Offered automatically after `/upgrade`.
+- **`/help` reads the live command table** instead of carrying a frozen list, and a hook
+  check keeps it that way — a help that lists commands from memory is a help that goes stale.
+- **BACKLOG.md** captures the two ideas worth doing next: running the skill on itself inside
+  Multica (with the five preconditions that make it safe), and re-checking whether persona
+  simulation still earns its cost on current models.
+
 ## 2.2.0 — a front door, a team you can size, and gates that are real
 
 Built on what first users actually hit, then hardened by four independent audit passes over

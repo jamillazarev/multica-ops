@@ -180,3 +180,5 @@ Six weeks later somebody proposes it again, and the argument is re-run from memo
 > **Would revisit if:** the library passes ~50k recordings per account, or non-Latin
 > search becomes a requirement.
 > **Decided by:** conductor, with the backend engineer · **Where:** issue #211
+
+Every field earns its place: **what was considered**, so the alternatives aren't re-argued; **the evidence**, priced and dated, not "it felt cleaner"; and **the revisit trigger**, so the decision is provisional on the thing that would change it — not a permanent verdict nobody remembers the reason for. That is the difference between a decision log and a graveyard of opinions.

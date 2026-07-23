@@ -12,6 +12,7 @@ are shortcuts for when you already know the name. Both columns do the same thing
 - [Bringing existing work in](#bringing-existing-work-in)
 - [The team](#the-team)
 - [Planning the work](#planning-the-work)
+- [Getting a process right](#getting-a-process-right)
 - [The toolkit](#the-toolkit)
 - [Building without engineers](#building-without-engineers)
 - [Trust and correctness](#trust-and-correctness)
@@ -34,7 +35,8 @@ are shortcuts for when you already know the name. Both columns do the same thing
 | "I have an idea and no team yet" | *"I want to build a macOS app for X — set up a team"* | `/init` |
 | "I already have a Multica workspace" | *"take over this workspace, see what's missing"* | `/join` |
 | "Small job, I don't want a whole company" | *"quick job: a landing page, that's all"* | `/init` → answer *quick job* |
-| "Just use sensible defaults, don't interview me" | *"defaults"* | — |
+| "Just use sensible defaults" | *"defaults"* | accepts the static defaults for what's left |
+| "I'm tired of questions — you decide" | *"you decide"* | Mops proposes a full reasoned config as one list; you confirm or tweak; the owner-gated floor still waits at execution |
 
 ## Day-to-day
 
@@ -64,6 +66,7 @@ are shortcuts for when you already know the name. Both columns do the same thing
 |---|---|---|
 | "This post goes out next Tuesday, not before" | *"schedule it for the 29th"* | date on the issue — no one starts it early |
 | "What's due this week?" | `/next` | the queue, ordered by date where dates exist |
+| "Make it faster" / "slow down, be careful" | `/pace fast` / `/pace careful` | fans work out more or less across agents — honest that a local-directory project can't parallelise regardless |
 | "We're going to miss a deadline" | `/status` | the slip surfaces as a comment, with what moved |
 
 ## Bringing existing work in
@@ -72,6 +75,7 @@ are shortcuts for when you already know the name. Both columns do the same thing
 |---|---|---|
 | "Our backlog is in Linear / Jira / a spreadsheet" | `/import` | mapping shown first, then issues created **unassigned** — nothing starts running by itself |
 | "I imported my backlog and want to keep working exactly as before" | *"don't change anything, just execute"* | crew mode, offered by default after an import |
+| "What actually changed in this update?" | `/whatsnew` | a plain-language tour from the changelog — what changed, why it helps, what to do differently; offered automatically after `/upgrade` |
 | "How do I get the new version?" | `/upgrade` | four layers: it tells you the one line *you* run to update the plugin, then migrates the workspace, re-screens imported skills, and offers the CLI update **only when the team is idle** |
 | "The import died halfway" | `/import` again | it skips what's already there and continues |
 | "These imported tickets are one-liners nobody can act on" | *"bring them up to our standard"* | the quality pass: per issue, what's missing (why · success · DoD · dates) → rewrite/extend/leave/drop, in batches you approve |
@@ -98,6 +102,14 @@ are shortcuts for when you already know the name. Both columns do the same thing
 | "We're not doing this after all" | *"drop the MIDI thing"* | `/drop …` |
 | "Reorganize who works with whom" | *"put the web engineer in the design squad"* | `/squad` |
 | "Turn a whole capability on/off" | *"we don't need personas"* · *"turn on design QA"* | `/module …` |
+
+## Getting a process right
+
+| Situation | Say | Runs |
+|---|---|---|
+| "Design my app" (and you want it done properly, not guessed) | `/process` or just ask | discover IA → flows → low-fi → approve → high-fi, then find the tool for each step |
+| "How should we run this kind of work?" | `/process <the work>` | the craft's real process, shown for you to cut/add, then tooled step by step |
+| "It just improvised and it's bad" | `/process` on the redo | names the steps and the tool each needs, instead of one agent winging it |
 
 ## The toolkit
 

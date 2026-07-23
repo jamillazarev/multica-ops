@@ -139,6 +139,14 @@ stops an agent beginning early), and **settling a third review round on the same
 crew mode all four sit with the **owner** by default — say so at stand-up and write it into the
 guide, because an unnamed duty is an unperformed one.
 
+**Owning a slice, not the whole thing.** A frontender who imported one feature, a designer
+on one surface, anyone responsible for a *part* — this is crew mode narrowed to a slice, laid
+over any route, not a fifth entrance. Say what the slice is (a feature, a layer, a directory)
+and everything narrows to it: the board shows only that slice's issues, shaping sizes only its
+crafts, permissions and gates cover only its files. The rest of the project may not even exist
+in this workspace — the owner works their part and hands off at its edge. `/crew` with a named
+scope is the shape; adding the rest of the project later is an expansion, not a redo.
+
 **Where it stops being right:** when the owner starts asking *what* should be next rather
 than telling. That is the moment to offer a conductor, once, with the reason.
 
@@ -209,7 +217,7 @@ anything that costs or restarts:
 
 | Layer | What it is | Who does it |
 |---|---|---|
-| **1. This skill's bytes** | the plugin or skills.sh copy on *your* machine | **you** — a skill cannot replace its own plugin. Mops detects it's behind and prints the exact line: `claude plugin update multica-ops@multica-ops`, or `npx skills add jamillazarev/multica-ops` |
+| **1. This skill's bytes** | the plugin or skills.sh copy on *your* machine | **Mops runs it, you restart.** Mops in CLI has the shell, so it detects the lag and — with a yes — runs `claude plugin marketplace update multica-ops && claude plugin update multica-ops@multica-ops` (or `npx skills add jamillazarev/multica-ops`) itself. What it *cannot* do is apply the new bytes to its own running self: **Claude Code must restart**, and it says so. So the whole user cost is: say yes, restart, come back. |
 | **2. The workspace** | docs skeleton, guide rules, agent instructions, new/renamed commands | **Mops** — the migration proper, from the **new** version's CHANGELOG |
 | **3. Imported skills** | third-party skills each against its source | **Mops**, re-screening every one before applying |
 | **4. The CLI** | `multica` itself, locally and on each runtime | **Mops proposes, you approve** — see the drain rule below |
@@ -230,6 +238,11 @@ Never update mid-flight. If work is running, **say what's in flight and offer to
 `/stop` first if the owner wants it now and accepts the interruption, otherwise queue the
 update for the next idle window. A CLI updated under a running agent produces failures that
 look like the agent's fault.
+
+**Then offer the tour.** A successful upgrade ends with *"want to hear what's new?"* —
+`/whatsnew` reads the changelog between the old and new version and explains it in the owner's
+terms. A migration nobody understands is a migration nobody trusts; this is how the new
+version onboards the person, not just the workspace.
 
 **Hashes and deltas run at the end, not the start.** An upgrade changes agents, skills and
 labels, so the fingerprint written before it is stale by definition: recompute

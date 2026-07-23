@@ -6,9 +6,40 @@ work already lives somewhere else.
 
 ## Contents
 
+- [Design work — structure before pixels, and a gate that catches garbage](#design-work-structure-before-pixels-and-a-gate-that-catches-garbage)
 - [Design system — the system follows solutions](#design-system-the-system-follows-solutions)
 - [Brand — identity, systematized](#brand-identity-systematized)
 - [External tracker bridge (opt-in — offered only if you already use one)](#external-tracker-bridge-opt-in-offered-only-if-you-already-use-one)
+
+## Design work — structure before pixels, and a gate that catches garbage
+
+**The failure this exists to stop:** asked to design an app, an agent went straight to
+high-fidelity HTML and produced gradient placeholders — because it skipped the structure and
+skipped the real tools. Two rules fix it.
+
+**Run `/process` before drawing anything.** Design is the clearest case for
+process-discovery (PLAYBOOKS): for a UI it typically surfaces **information architecture →
+user flows & journeys → low-fi wireframes → owner approves the structure → high-fi → design
+system** — but Mops discovers that per project rather than hardcoding it, and the owner cuts
+or adds steps. **Low-fi comes first on purpose:** approving structure on cheap artifacts
+saves the tokens and days that redrawing finished screens costs, and it is where the owner's
+taste enters before it is expensive to change.
+
+**Ask the design intake up front — never guess it.** Before a pixel: *style and mood ·
+colour direction · references the owner likes · anti-references (hard no)*. An agent that
+asks only "what stack?" and starts drawing has skipped the questions that decide whether the
+output is theirs or generic. This is part of the control level (SKILL → interview): at
+*checkpoints* or *hands-on*, the owner sees and signs the structure before high-fi begins.
+
+**Compose, don't hand-draw.** Screens are assembled from a **component library** (Pen.dev,
+Shadcn — STACKS → where design is drawn), not written as one-off HTML. Hand-written screens
+are both slower (2–5 min each) and worse; a library makes a screen composition, not
+generation.
+
+**The design gate rejects, it doesn't rubber-stamp.** A review that passes bad design is not
+a review. The gate checks the work against the **approved structure, the intake and the
+design system** — mismatch fails it — and **Mops never signs off design itself**: the owner
+does, at the checkpoint their control level set. "It rendered" is not "it's good."
 
 ## Design system — the system follows solutions
 
