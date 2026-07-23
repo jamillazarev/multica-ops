@@ -72,7 +72,14 @@ for c in $(grep -oE '^\| `/[a-z-]+' COMMANDS.md | tr -d '| `/'); do
   [ -f "commands/$c.md" ] || say_fail "command /$c has no commands/$c.md"
 done
 
-# 7 · CLI drift — warn, never rewrite silently (a bumped pin with a stale §10 would be
+# 7 · docs coverage — a new command with no use case is a doc gap, not a bug
+missing=""
+for c in $(grep -oE '^\| `/[a-z-]+' COMMANDS.md | tr -d '| `/'); do
+  grep -q "/$c" USE-CASES.md || missing="$missing /$c"
+done
+[ -n "$missing" ] && say_warn "USE-CASES.md covers no situation for:$missing — add one or decide it's internal"
+
+# 8 · CLI drift — warn, never rewrite silently (a bumped pin with a stale §10 would be
 #     a false claim of currency, worse than visibly stale)
 if command -v multica >/dev/null 2>&1; then
   lv=$(multica --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
@@ -80,7 +87,7 @@ if command -v multica >/dev/null 2>&1; then
   [ -n "$lv" ] && [ "$lv" != "$pv" ] && say_warn "installed CLI v$lv ≠ pinned v$pv — run: bash scripts/preflight.sh --regen-cli"
 fi
 
-# 8 · reminders that cannot be verified from this repo
+# 9 · reminders that cannot be verified from this repo
 git diff --cached --name-only 2>/dev/null | grep -qE '\.md$' && \
   echo "  → docs site: regenerate + deploy (python3 scripts/generate.py <repo> in the ai repo)"
 

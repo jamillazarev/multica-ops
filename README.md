@@ -118,6 +118,7 @@ via telemetry on the first `npx skills add jamillazarev/multica-ops`.
 | File | Purpose |
 |---|---|
 | [SKILL.md](SKILL.md) | **the always-loaded core** — interview → stand up → conveyor → console |
+| [USE-CASES.md](USE-CASES.md) | situation → what to say → which command |
 | [COMMANDS.md](COMMANDS.md) | every command, its aliases and the surface it runs best on |
 | [STACKS.md](STACKS.md) | services, libraries, audio/DSP, testing, security, reference galleries |
 | [MODULES.md](MODULES.md) | opt-in modules: design system & brand |
@@ -127,6 +128,7 @@ via telemetry on the first `npx skills add jamillazarev/multica-ops`.
 | [REFERENCE.md](REFERENCE.md) | object model, anti-patterns, **CLI surface (§10)**, **frameworks (§11)** |
 | [WORKFLOW.md](WORKFLOW.md) | Mermaid diagrams of the whole process |
 | [CHANGELOG.md](CHANGELOG.md) | versioned history — the migration map for `/upgrade` |
+| [BUDGET template](templates/BUDGET-template.md) | envelope · currency · credits with expiries · prices on record |
 | [templates/](templates/) · [scripts/](scripts/) | guide · roadmap · brand · component docs · ops helpers |
 
 Contributing? Run **`bash scripts/preflight.sh --install`** once — the pre-commit hook

@@ -230,3 +230,75 @@ per autonomy choice → kickoff (pinned issue + first message = decisions summar
    agents silently, exactly like a stale CLI pin.
 3. Newer? Summarize **what changed and what it would touch** (agents carrying it, guide
    rules, commands) and offer `/upgrade` — never upgrade unasked.
+
+
+## Workspace fingerprint (drift detection)
+
+Write after any state-changing operation, compare on wake:
+
+```sh
+for k in agent squad skill label autopilot; do
+  printf '%s %s\n' "$k" "$(multica $k list --output json | shasum -a 256 | cut -c1-16)"
+done
+multica workspace member list --output json | shasum -a 256 | cut -c1-16   # members
+git rev-parse HEAD                                                        # repo pointer
+```
+
+Store as `docs/.workspace-state.json` (`{class: hash}` + `head` + `taken_at`). On wake,
+recompute and diff. Something moved that Mops didn't move → **attribute first**
+(`agent tasks` initiator/originator · issue comments · `git log`), then ask the person who
+made the change for the *why*, and write that reason into `TOOLING.md` / `TEAM.md` / the
+guide. Wire the same check as a nightly autopilot so unexplained drift opens an issue
+instead of ageing quietly.
+
+## Economics — what the company actually costs
+
+The cost/effort ledger covers **model spend**; the company also pays for **services**.
+Keep a rolling `docs/ECONOMICS.md`, refreshed monthly (autopilot) and at each `/ship`:
+
+| Line | Source |
+|---|---|
+| Model spend, by agent and by feature | `issue usage` · `runtime usage` + the ledger formula (REFERENCE §12) |
+| Service spend, by tool | the plan recorded per tool in `docs/TOOLING.md` |
+| Free-tier headroom | usage vs the **ceiling** recorded with each tool — what will bite first |
+| Cost per shipped feature | model + service share ÷ features shipped that period |
+| Trend | this period vs the last two — direction matters more than the number |
+
+Surface it in `/status` (one line), on the dashboard, and whenever a budget cap is
+approached. A tool crossing its free tier is **spend** — owner-gated, never silent.
+
+
+## Tool knowledge — where it goes (and where it must not)
+
+Wiring a tool produces knowledge. Put each part where only its users pay for it:
+
+| What | Home | Who reads it |
+|---|---|---|
+| It exists, why, access, plan + ceiling | `docs/TOOLING.md` | Mops, `/health`, `/audit` |
+| **How to operate it** — purge a cache, add a region, rotate a key, read its errors | **`docs/tooling/<tool>.md`** (runbook) | whoever is about to use it |
+| A reusable procedure worth teaching | a **skill** (skill-creator) | **only agents attached to that tool** |
+| That runbooks exist at all | one line in the team guide | everyone (cheap) |
+
+**Never** put tool operations in the guide: it is the cached prefix every agent loads on
+every run, so a CDN's purge procedure would be paid for by the copywriter and the
+accountant too — and editing it churns the cache (REFERENCE §12).
+
+Writing it: the agent that wires the tool starts the runbook with what it just learned
+(`/connect` step "study the tool"); anyone who later hits an operation or a failure mode
+adds it — **docs follow decisions** applies here as much as to specs. A procedure that
+repeats across projects graduates into a skill, and the runbook links to it.
+
+## Launch checklist — what "done" requires, per medium
+
+Researched before the first release and re-verified at each `/ship` (requirements change;
+check the platform's current docs rather than recalling them).
+
+- **Any digital product**: legal pages · OG/social images · analytics wired · error
+  tracking · status/uptime · privacy consent where applicable.
+- **App stores**: app icons + every required size · screenshots per device class ·
+  listing copy · age rating · privacy nutrition labels · signing & notarization.
+- **Web**: favicon set · sitemap + robots · schema.org · redirects from old URLs.
+- **Episode / video**: thumbnail · title & description · subtitles · chapters · end cards.
+- **Physical batch**: labels · barcodes · compliance marks · shipping docs.
+
+Anything the team can't do yet → find-skills or the role-builder, before ship day.

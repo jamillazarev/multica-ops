@@ -43,6 +43,10 @@ naming rules, anti-references (hard bans). Changing the brand itself → owner a
 **Later list:** a deferred decision lives in `docs/LATER.md` (what · why · revisit
 trigger). Touching an area with a deferred item? Mention it once; the owner decides.
 
+**Tools have runbooks:** before operating any tool from `docs/TOOLING.md`, read its
+runbook at `docs/tooling/<tool>.md` — routine operations and failure modes live there,
+not in this guide. Learned something new about a tool? Add it to that runbook.
+
 **Source your arguments:** a claim, comparison or recommendation carries where it came
 from — link, doc section, command output, or a metric from the repo. Can't source it?
 Call it a judgement call and say what would settle it.

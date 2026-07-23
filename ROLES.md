@@ -133,6 +133,19 @@ asks: *is this my craft, and my grade?* Three exits, all normal, none a failure:
   a cheaper agent or ask the leader to re-route. Burning a top model on trivia is a real
   cost, not diligence.
 
+**Grade is not a dial.** Set the model at creation; after that, **don't demote an agent
+to make it cheap** — its task history and its line in the cost ledger become
+unreadable ("was this done by a senior or by the same agent after we downgraded it?").
+Need cheaper work done? Route it to a junior agent or hire one — exactly what you'd do
+with people. Promotion happens, but it is a recorded event: note it in `TEAM.md` with the
+date and the reason.
+
+**Mark temporary agents.** A hire for one task or one experiment gets **`(temp)` in its
+name** and a description starting `TEMP — <purpose>, archive after <event>`, so
+`agent list` stays readable and nobody mistakes it for a permanent role. It goes into
+`TEAM.md` the same way, and **archiving it is part of finishing the task** — an
+un-archived temp is roster debt that `/audit` will flag.
+
 **Talent pool — archive, don't delete.** `multica agent archive` is reversible
 (`agent restore`), so a role that's gone quiet is **parked, not fired**: archive it and
 record in `TEAM.md` *why it was parked and what would bring it back* ("re-hire when the

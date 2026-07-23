@@ -259,3 +259,65 @@ integration. Offer at setup; connect any time later.
    `docs/TEAM.md` (who owns what — essential once several humans join), `docs/TOOLING.md`
    (every tool: what · for what · access · wiring · conventions). The cloud holds
    issues/comments; code and keys stay on members' machines.
+
+
+## 16. Interview checklist (detail)
+
+Each item with its default, as walked in `/init` and re-asked in the `/join` delta.
+
+1. **Deliverable & repo** — monorepo by default (repo = company; `apps/ site/
+   marketing/ docs/` = projects); separate repos only for separate deploy/access.
+2. **Disciplines & depth** — only crafts the project names; ≥2 specialists → squad
+   with a routing leader, solo → lone agent.
+3. **DoD per discipline** — objective gates (default: tests/review for code,
+   mockup-fidelity + a11y for design, fact-check for content).
+4. **Stage ladder** — default Build → Review → Accept; prepend Design when design
+   precedes build; parallel gates inside Review.
+5. **Capacity & models** — audit `runtime list` (runtimes are **local**: auto-detected
+   from PATH on each member's machine; several machines can serve one workspace);
+   propose per-role tiers, confirm. Missing tool → install + `daemon restart`.
+6. **Integrations inventory** — "what already exists?" (GitHub/GitLab, Figma,
+   analytics, Mobbin, image-gen APIs…). Per service: **connect-or-create** (exists →
+   connect; missing → create). Access via `mcp_config` / `custom-env` (BOOTSTRAP §12). For digital products,
+   default service & library picks live in **[STACKS.md](STACKS.md)** — offer the
+   matching seeds, accept "other" as always.
+7. **Docs home** — default **local-first markdown in the repo**: `docs/` is designed
+   to open as an **Obsidian vault** (plain relative links + Mermaid — readable on
+   GitHub and in Obsidian alike; roadmap, team, specs all browsable). Options: Notion
+   mirror (via MCP; repo stays the source of truth), Figma (cloud) vs Pen (pen.dev, local)
+   for design — or both. As everywhere: the user may name any other tool — research and connect it.
+8. **Assets home** (when the project accumulates media — images, video, 3D):
+   small volumes → in the repo (Git LFS); large → **research the best current
+   provider for the project's actual needs** (object storage, media CDN, or an
+   all-in-one backend) and propose — never keep a hardcoded provider list, the
+   market moves. Wire the chosen one via `mcp_config`/`custom-env`; generated
+   assets still pass the usual review gates.
+9. **Avatars** — default DiceBear (one seed per agent name); or user's images.
+10. **Experts & personas** — offer, per project, both opt-in (see below). Default: none.
+11. **Design system & brand** — opt-in (see the two sections below). Ask: does the
+    project produce a repeatable form (UI, covers, packaging, letters)? Default: **on
+    when a design discipline exists**. And: does it face the world — is there a brand
+    (existing / to create / not needed)? Existing → audit, don't rebuild. Homes:
+    `docs/design-system/` (tokens as files) and `docs/brand/` (the brand book).
+12. **Resident Mops (Mops in Multica)** — opt-in (see "Two seats of Mops"). Default: **on** for a
+    company (a running team needs an in-workspace advisor + escalation vertex when the
+    user is away); **off** for a quick job. Declining means Mops lives in the console
+    only.
+13. **Operating mode** — see next section. Default: per-feature.
+14. **Autopilots / Slack / Lark** — default "later"; connect on request (BOOTSTRAP §13).
+15. **Language & tone** — confirm the chat language as the working language; artifacts
+    in it or English? Tone (business / friendly / terse-technical)? Both go into the
+    guide skill, first line, absolute — including every agent's first greeting.
+16. **Control & expertise** — two questions that shape every later interaction.
+    **(a) How much do you want to be in the loop?** *hands-on* (approve each feature) ·
+    **checkpoints** (approve at named gates — default) · *hands-off* (only
+    destructive/spend, plus a digest). Set globally or per flow; it maps onto `/autonomy`
+    and `/reviews`. **(b) What are you actually expert in?** Record it in `TEAM.md`:
+    inside those areas you are **consulted as an expert** — terse, technical, real
+    decisions routed to you; outside them Mops **explains and recommends** with tradeoffs
+    instead of dumping a choice on you. The same courtesy governs agents talking across
+    squads: explain in the other craft's terms, don't fling jargon over the fence.
+17. **Governance** (see below) — who can direct Mops (default: all members full; owner
+    always full; destructive/spend always → owner) and which flows need a named human's
+    sign-off (default: none beyond the destructive gate; ask what the user wants to
+    review — image-gen, publishing, every feature…). Multiple human members are normal.

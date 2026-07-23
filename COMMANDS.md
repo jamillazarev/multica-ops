@@ -41,6 +41,7 @@ interactive) · 🏢 Mops in Multica (presence/async) · ⇆ either.
 | `/update <agent\|member>` (`/role`, `/edit`) | 🖥️ | reconfigure an existing member — **agent**: `agent update` (name/description/instructions), skills, squad, model tier; **person**: TEAM.md role + `/access` + `/reviews`. Also reassign a **project lead** (`project update --lead`) |
 | `/squad` | 🖥️ | create/reshape squads: members, leader, routing instructions |
 | `/module <name> on\|off` | 🖥️ | toggle an opt-in module (resident Mops (in Multica), design system & brand, experts, personas, Design QA, social…) |
+| `/budget [amount/period]` | 🖥️ | set or show the envelope: amount + period, currency (USD default), credits/grants with expiries, what counts; reports burn, runway and cost per shipped feature, and re-proposes the stack if the number changes |
 | `/access <member> <full\|features\|status\|…>` | 🖥️ | set what a workspace member may direct Mops to do; owner always full; destructive/spend always → owner |
 | `/reviews` | ⇆ | manage human sign-off checkpoints: which flows/stages @mention which person before proceeding (image-gen, publish, a stage, every feature); add / remove / list |
 

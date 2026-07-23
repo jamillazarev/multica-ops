@@ -119,6 +119,8 @@ don't restate them in instructions.
 
 - ❌ A squad leader as a feature's executor (it only routes).
 - ❌ Circular @-mentions between agents (indirect cycles are not blocked).
+- ❌ Review ping-pong — the same work bounced a third time; that's an unclear spec, escalate.
+- ❌ Approvals ageing invisibly — a pending human decision is a blocked flow, surface it.
 - ❌ Nesting sub-issues deeper than one level — order lives in `stage`, not nesting.
 - ❌ Expecting autopilot to react to "a stage finished" — cron/webhook only.
 - ❌ Restating native behaviour in instructions.

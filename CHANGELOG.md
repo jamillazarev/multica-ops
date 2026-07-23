@@ -1,5 +1,87 @@
 # Changelog
 
+## 2.0.0 — the company, end to end
+
+1.x stood a team up. 2.0 runs a company: it ships, measures, budgets, keeps itself
+honest, and knows what it doesn't know. Upgrading from any 1.x is automatic via
+`/upgrade` or `/join` — the new version fetches itself and migrates the workspace.
+
+### How Mops thinks
+- **Assume incompleteness** — no skill enumerates what every company needs and its lists
+  age; catalogs are seeds, and for *this* project you go and look. *Not knowing is
+  normal; not looking is the failure.*
+- **Say what you know, and how**: claims labelled **verified · recalled · unknown**;
+  reads are free (never ask permission to look something up), but attaching a skill/MCP,
+  a paid source or a heavy run is asked first.
+- **An argument without a source is an opinion** — link, doc section, command output or
+  a metric, or it's labelled a judgement call.
+- **Useful over agreeable** — no praise by default, disagreement with an alternative,
+  no rosy digests, *"built" ≠ "works"*, kill what isn't working. The scoreboard is the
+  product, not the owner's mood.
+- **Freshness over training data**, and **prices never from memory** — fetched live, for
+  the owner's billing location, recorded with date and source.
+
+### Two seats
+Mops in CLI (machine, instant, own quota) + an **optional** Mops in Multica (resident,
+async, shared limit). No shared memory — the bridge is **written state**, so bootstrap
+ends with a kickoff handoff and the project must rebuild from repo + workspace alone.
+
+### The loop closes
+`/ship` · `/measure` · `/bug` · `/feedback` — discover → build → review → **ship →
+measure → learn**, with a **launch-completeness gate** and a **cost/effort ledger**
+(tokens · $ · time · per agent and per human) in git and on the issue.
+
+### Money
+`/budget` — an envelope per day/month/project, currency (USD default), **credits and
+grants with expiries** (runway, not income), subscription-vs-metered kept apart. Free
+tier is the default plan and every proposal **names the ceiling**. `docs/ECONOMICS.md`
+rolls up model + service spend, headroom, cost per shipped feature and the trend.
+**A shrinking budget re-proposes the stack, not just an alarm.**
+
+### People
+Agents **and real humans** through `/hire` · `/fire` · `/update`. **Grades**
+(junior/mid/senior) are identity, not a dial — never demote, route or hire instead;
+promotion is recorded. Every agent runs a **fit-check** (wrong craft hands back, above
+grade escalates, below grade hands down), temporary agents are marked `(temp)`, and quiet
+ones are **parked in a talent pool** (`agent archive` is reversible) with a re-hire note.
+
+### Control
+`/access` (owner always full; destructive & spend always route to the owner), `/reviews`
+(a **named human** signs off on chosen flows), and a **control & expertise** interview:
+how much you want to be in the loop, and **what you're actually expert in** — consulted
+as an expert there, taught elsewhere. `/reviews` changes land immediately, `/autonomy` is
+boundary-safe. **Nothing waits silently**: ageing approvals surface, review ping-pong
+stops at the third round.
+
+### Staying alive
+`/health` (runtimes · integrations · tokens · free-tier headroom), `/upgrade` (dry-run
+impact → backup of **skill files *and* agent config** → apply → verify → rollback from a
+recorded SHA), `/switch` (assisted provider migration), `/sync` two-way, `/workspace`,
+`/cli`. **Drift is detected by fingerprint**, not by remembering to run `/sync`, and Mops
+**attributes before asking** — then writes the reason down.
+
+### Knowledge, placed by scope
+`docs/TOOLING.md` (registry, plans, ceilings, target versions) · **`docs/tooling/<tool>.md`
+runbooks** (purge a cache, rotate a key) read only by whoever uses the tool · skills
+attached only to the agents that need them · **one pointer line** in the guide, never the
+content — because the guide is every agent's cached prefix.
+
+### Modules & stacks
+Design system (reuse-first, three origins, one component standard, DTCG tokens) and brand
+(book, archetype, tone samples, rebrand flow) as **opt-in modules**. Stacks now cover
+services, AI-fluent libraries, **audio & DSP**, testing per platform × stage, security
+(OWASP + the classic vibe-coding misses), CI/CD **your agents can read**, i18n, support,
+status, privacy, SEO, CDN, dashboards, node-based pipelines — under a **selection
+ladder**: free → open source → self-hostable → in-repo → agent-drivable.
+
+### The skill itself
+Core trimmed to **~9.7k tokens** with everything else **loaded on trigger** (routing
+table); **`scripts/preflight.sh`** guards version sync, the CHANGELOG, README, links,
+command files, **use-case coverage** and the core's token budget; a weekly watcher tracks
+CLI releases. Token economy is measured, not assumed: **~89% of tokens are cache reads,
+caching saves ~74%** — so the cached prefix stays stable and guide edits are batched.
+
+
 ## 1.12.0
 
 - **Model sizing corrected to how Multica actually works**: model and thinking-level are

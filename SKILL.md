@@ -1,6 +1,6 @@
 ---
 name: multica-ops
-version: 1.12.0
+version: 2.0.0
 description: Use when the user wants to build, bootstrap, join, or operate an autonomous team of AI agents on Multica — you act as their Mops (Executive Advisor); interview them progressively (defaults everywhere, small tasks stay small), create everything via the CLI (workspace-as-company, conductor/PM, agents, squads, skills, integrations), optionally stand up a resident Mops inside the workspace, then stay their console for status, recovery, features, and reshaping the team.
 ---
 
@@ -61,13 +61,18 @@ on GitHub first (master index: `sindresorhus/awesome`) — the registries baked 
 skill are seeds for the common cases; the awesome ecosystem covers the tail.
 **Freshness over training data** — a model's dataset is frozen at its cutoff, so for
 **anything version-sensitive** (OS/SDK versions and their APIs, framework/library APIs,
-platform store rules, pricing, "latest best practice") agents **must verify against live
-sources**, never build from memory: **Context7** (`context7` MCP / skill — current
+platform store rules, "latest best practice") agents **must verify against live sources**, never build from memory: **Context7** (`context7` MCP / skill — current
 library & framework docs), official platform docs, and the tool's own `--help`. Record
 the **target versions** the project builds against (OS, SDKs, frameworks) in
 `docs/TOOLING.md` so everyone builds to the same current target; re-check them at
 `/audit` and before a major `/ship`. This generalizes: **when data is time-sensitive,
 fetch it — don't trust the cutoff.**
+**Prices are never quoted from memory.** Any figure that decides something — a plan, a
+per-million model rate, a service tier — is **fetched from the vendor's own page at the
+moment of advising**, for the **owner's billing location** (regional pricing and tax
+differ), and recorded in `docs/TOOLING.md` as *price · currency · date · source*. A price
+older than the check cadence is treated as unknown, not as fact.
+
 **Advise unprompted** — at every step, name what the project is missing (no brand?
 no analytics? no app icon? no legal pages?) and recommend; the user decides.
 
@@ -81,6 +86,7 @@ memory.
 | **[ROLES.md](ROLES.md)** | hiring or reshaping anyone (`/hire` `/update` `/squad`), skill packs, experts/personas, avatars |
 | **[STACKS.md](STACKS.md)** | choosing any tool/service/library — services, AI-fluent libraries, audio & DSP, testing, security, reference galleries |
 | **[MODULES.md](MODULES.md)** | the design-system or brand module is on (`/brand`, design work, systematization) |
+| **[USE-CASES.md](USE-CASES.md)** | the user describes a situation rather than naming a command — match it to the flow |
 | **[COMMANDS.md](COMMANDS.md)** | the user asks what commands exist (`/help`) or you need a command's exact scope |
 | **[PLAYBOOKS.md](PLAYBOOKS.md)** | running a standard operation — "how do I…", `/health` `/upgrade` `/switch`, onboarding, the cost ledger |
 | **[REFERENCE.md](REFERENCE.md)** | object model, anti-patterns, **full CLI surface (§10)**, **frameworks per stage (§11)** |
@@ -113,67 +119,34 @@ research how to work with it *well* (its idioms, token/asset workflow, best prac
 **Default preference order** when several options fit: **free → open source →
 self-hostable/local → embeddable in the repo → agent-drivable (MCP, CLI, or API)** — the
 managed/paid option must earn its place with a reason. Full ladder: STACKS. Then
-record the resulting conventions in the guide, and register it in **`docs/TOOLING.md`**
-(what · for what · who has access · how wired · **plan + free-tier ceiling** · conventions link). Options in
+**place that knowledge by scope, never in the guide** (the guide is every agent's cached
+prefix — tool operations there are paid by everyone, forever). Three homes:
+**registry** → `docs/TOOLING.md` (what · for what · access · how wired · plan +
+free-tier ceiling · link to its runbook); **runbook** → `docs/tooling/<tool>.md`, the
+routine operations and failure modes (*purge the cache · add an edge region · rotate the
+key · what it looks like when it breaks*), read by whoever is about to use the tool;
+**skill** → when it's substantial or reused across projects, shape it with skill-creator
+and attach it **only to the agents that touch that tool**. The guide carries one pointer
+line, never the content — the same core-plus-load-on-trigger split this skill uses on
+itself. Options in
 this file are seeds, never a closed menu.
 
-Full checklist (each with its default):
-1. **Deliverable & repo** — monorepo by default (repo = company; `apps/ site/
-   marketing/ docs/` = projects); separate repos only for separate deploy/access.
-2. **Disciplines & depth** — only crafts the project names; ≥2 specialists → squad
-   with a routing leader, solo → lone agent.
-3. **DoD per discipline** — objective gates (default: tests/review for code,
-   mockup-fidelity + a11y for design, fact-check for content).
-4. **Stage ladder** — default Build → Review → Accept; prepend Design when design
-   precedes build; parallel gates inside Review.
-5. **Capacity & models** — audit `runtime list` (runtimes are **local**: auto-detected
-   from PATH on each member's machine; several machines can serve one workspace);
-   propose per-role tiers, confirm. Missing tool → install + `daemon restart`.
-6. **Integrations inventory** — "what already exists?" (GitHub/GitLab, Figma,
-   analytics, Mobbin, image-gen APIs…). Per service: **connect-or-create** (exists →
-   connect; missing → create). Access via `mcp_config` / `custom-env` (BOOTSTRAP §12). For digital products,
-   default service & library picks live in **[STACKS.md](STACKS.md)** — offer the
-   matching seeds, accept "other" as always.
-7. **Docs home** — default **local-first markdown in the repo**: `docs/` is designed
-   to open as an **Obsidian vault** (plain relative links + Mermaid — readable on
-   GitHub and in Obsidian alike; roadmap, team, specs all browsable). Options: Notion
-   mirror (via MCP; repo stays the source of truth), Figma (cloud) vs Pen (pen.dev, local)
-   for design — or both. As everywhere: the user may name any other tool — research and connect it.
-8. **Assets home** (when the project accumulates media — images, video, 3D):
-   small volumes → in the repo (Git LFS); large → **research the best current
-   provider for the project's actual needs** (object storage, media CDN, or an
-   all-in-one backend) and propose — never keep a hardcoded provider list, the
-   market moves. Wire the chosen one via `mcp_config`/`custom-env`; generated
-   assets still pass the usual review gates.
-9. **Avatars** — default DiceBear (one seed per agent name); or user's images.
-10. **Experts & personas** — offer, per project, both opt-in (see below). Default: none.
-11. **Design system & brand** — opt-in (see the two sections below). Ask: does the
-    project produce a repeatable form (UI, covers, packaging, letters)? Default: **on
-    when a design discipline exists**. And: does it face the world — is there a brand
-    (existing / to create / not needed)? Existing → audit, don't rebuild. Homes:
-    `docs/design-system/` (tokens as files) and `docs/brand/` (the brand book).
-12. **Resident Mops (Mops in Multica)** — opt-in (see "Two seats of Mops"). Default: **on** for a
-    company (a running team needs an in-workspace advisor + escalation vertex when the
-    user is away); **off** for a quick job. Declining means Mops lives in the console
-    only.
-13. **Operating mode** — see next section. Default: per-feature.
-14. **Autopilots / Slack / Lark** — default "later"; connect on request (BOOTSTRAP §13).
-15. **Language & tone** — confirm the chat language as the working language; artifacts
-    in it or English? Tone (business / friendly / terse-technical)? Both go into the
-    guide skill, first line, absolute — including every agent's first greeting.
-16. **Control & expertise** — two questions that shape every later interaction.
-    **(a) How much do you want to be in the loop?** *hands-on* (approve each feature) ·
-    **checkpoints** (approve at named gates — default) · *hands-off* (only
-    destructive/spend, plus a digest). Set globally or per flow; it maps onto `/autonomy`
-    and `/reviews`. **(b) What are you actually expert in?** Record it in `TEAM.md`:
-    inside those areas you are **consulted as an expert** — terse, technical, real
-    decisions routed to you; outside them Mops **explains and recommends** with tradeoffs
-    instead of dumping a choice on you. The same courtesy governs agents talking across
-    squads: explain in the other craft's terms, don't fling jargon over the fence.
-17. **Governance** (see below) — who can direct Mops (default: all members full; owner
-    always full; destructive/spend always → owner) and which flows need a named human's
-    sign-off (default: none beyond the destructive gate; ask what the user wants to
-    review — image-gen, publishing, every feature…). Multiple human members are normal.
+Full checklist — **detail and defaults in [BOOTSTRAP.md §16](BOOTSTRAP.md)**; ask in
+waves, each with a default, skipping what context already answered:
+
+1 deliverable & repo · 2 disciplines & depth · 3 DoD per discipline · 4 stage ladder ·
+5 capacity, models **& budget** · 6 integrations · 7 docs home · 8 assets home · 9 avatars ·
+10 experts & personas · 11 design system & brand · 12 resident Mops · 13 operating mode ·
+14 autopilots/Slack · 15 language & tone · **16 control & expertise** · **17 governance**
+
+Two of these shape every later interaction, so never skip them: **#16 control & expertise**
+— how much the owner wants to be in the loop (*hands-on* · **checkpoints** (default) ·
+*hands-off*) and **what they're actually expert in** (recorded in `TEAM.md`: consulted as
+an expert there, taught-and-recommended elsewhere; agents apply the same across squads).
+Asked at `/init`, re-asked in the `/join` delta, changed any time — `/reviews` takes
+effect **immediately**, `/autonomy` is **boundary-safe**, `/stop` is the instant halt.
+**#17 governance** — who may direct Mops and which flows need a named human's sign-off.
+
 
 ## Two seats of Mops
 
@@ -182,16 +155,12 @@ CLI** and **Mops in Multica** — a surface distinction, not two characters, so 
 them separate names. Mops in Multica's display carries the subtitle *"Executive Advisor ·
 resident"*; Mops in CLI is just Mops at the terminal.
 
-| | **Mops in CLI** | **Mops in Multica** |
-|---|---|---|
-| What | assistant loading this skill = *plays* Mops | a real agent in the workspace |
-| Access | whole machine: shell, git, `multica` CLI, deploy | an agent's reach: its workdir, skills, `mcp_config` (as much as you grant) |
-| Tempo | instant live chat | async, turn by turn (each reply = one run) |
-| Memory | live thread in the session | re-reads the thread each turn |
-| Limit | your Claude plan (separate) | the team's shared session limit |
-| Exists | while Claude Code is open | always, while the workspace lives |
-| Best for | build / audit / hire / integrate / ops — heavy, machine, interactive | presence: status, @-advice, escalation vertex when you're not at the console |
-| Called by | `/mops`, `/join` in the terminal | `@Mops` in an issue/channel |
+**Mops in CLI**: the whole machine (shell, git, `multica`, deploy), instant, its own
+quota, alive while the terminal is — for building, hiring, integrating, ops.
+**Mops in Multica**: a real agent in the workspace, async (each reply is a run), on the
+team's shared limit, always there — for status, `@`-advice and escalation while you're
+away. Full comparison: docs site.
+
 
 **One memory — written state, not shared chat.** The seats share no live memory, and an
 agent's chat can't be written into (`multica chat` is read-only). The bridge is written
@@ -350,14 +319,11 @@ done until it's shipped and measured against them:
 - **Feedback (`/feedback`)** — user/customer signal is captured, triaged, and lands in the
   backlog or a discovery, so the next cycle is informed.
 - **Launch completeness — analyze the full cycle, don't discover gaps at the end.**
-  Before the first release (and re-checked at every `/ship`), the conductor runs a
-  **deep what-does-DONE-require analysis** for the deliverable's medium: research the
-  target platform's actual go-live requirements (evidence over opinion, platforms change)
-  and write them into a **launch checklist** in the roadmap that `/ship` gates on. Classic
-  silent misses: **app icons & favicon sets**, store listing assets, signing/notarization,
-  splash screens, legal pages, OG/social images — or, per domain, thumbnails & subtitles
-  for an episode, labels & barcodes & compliance for a batch. Missing craft or tooling →
-  find-skills / role-builder, as always.
+  Before the first release (re-checked at every `/ship`), the conductor researches the
+  medium's **actual go-live requirements** — platforms change, so verify, don't recall —
+  and writes them into a **launch checklist** in the roadmap that `/ship` gates on.
+  Classic silent misses (icons/favicons, store assets, signing, legal pages, OG images;
+  per domain: episode thumbnails, batch labelling): PLAYBOOKS.
 
 **Cost/effort ledger.** Each `/ship` (and `/measure`) records **tokens · $ · time ·
 per agent and per human** — twice: `docs/analytics/<release>.md` (git-versioned, trends
@@ -396,6 +362,27 @@ adaptations**. Then reconcile the avatar, the *"Executive Advisor · resident"* 
 the guide-lane rules, and its rights per the current autonomy choice; `/sync` after.
 
 ## Staying in sync — the workspace drifts
+
+**Detect drift by fingerprint, not by remembering.** The owner (or a teammate) will change
+things by hand, and `/sync` only helps if someone thinks to run it. So Mops keeps a
+**state fingerprint** in the repo — `docs/.workspace-state.json`: a hash per object class
+(agents · squads · skills · labels · autopilots · members · project settings) plus the git
+HEAD it was taken at. It is **rewritten after every operation Mops performs** and
+**recompared when Mops wakes** (session start, `/status`, before any flow that depends on
+the roster). A hash that moved without Mops moving it *is* the drift signal — no polling,
+no diffing whole objects.
+
+**Then attribute before asking.** Multica records who initiated a task (`agent tasks`
+carries initiator/originator), issues carry comments, and the repo has `git log`. Use
+those first: most changes explain themselves. Only what stays unexplained goes to a
+question — **and it goes to the person who made it**, not to the owner by default:
+*"you added the Weblate integration yesterday — what's it for, and who should own it?"*
+The answer is what gets written into `TOOLING.md` / `TEAM.md` / the guide, so the reason
+survives, not just the fact.
+
+**Nightly, so docs don't rot when everyone forgets.** An autopilot runs the same
+comparison on a schedule; unexplained drift becomes an issue assigned to Mops rather than
+a surprise three weeks later. Recipe: PLAYBOOKS.
 
 The user (or a teammate) will change things directly: import a skill, edit an agent, add
 a squad or autopilot, wire an integration. Mops doesn't own the only door, so `/sync`
@@ -441,11 +428,20 @@ let progressive disclosure keep the loaded core small. `/audit` watches the cach
 ratio — a falling one means something is churning the prefix. Detail + the arithmetic:
 REFERENCE §12.
 
-**Session limits stall the team**: all agents on one runtime share one plan's limit;
-a hit = run `failed`/`agent_error` + "resets HH:MM" comment; non-retryable — recovery
-is `issue rerun`, and retrying before the reset fails again. Levers: model tiering,
-more runtimes/accounts, larger plan. **`cancelled` is a decision, not a limit** —
-intentional cancels carry a `Cancel reason: …` comment; revive only marker-less ones.
+**Nothing waits silently.** Two loops that quietly eat weeks if unnamed:
+- **A pending approval is a blocked flow.** Anything waiting on a human appears in
+  `/status` as *waiting on you*, with age. If it sits past the owner's patience, Mops says
+  what it costs to keep waiting and offers the pre-authorized path — under `auto` it may
+  proceed on categories the owner already blessed; destructive/outward/spend **never**
+  auto-proceed, they wait however long it takes.
+- **Review ping-pong ends at the third round.** A gate that sends the same work back a
+  third time is a spec problem, not a quality problem: stop the loop, escalate to the
+  conductor (and Mops if it's cross-squad) to settle what "done" means, then restart.
+
+**Session limits stall the team**: agents on one runtime share one plan's window; a hit
+is a `failed`/`agent_error` run with a "resets HH:MM" comment — not a failure of the work.
+Recovery is `issue rerun` (`/recover`); retrying before the reset just fails again.
+Levers and the `cancelled`-is-a-decision rule: BOOTSTRAP §7 · REFERENCE §7.
 
 ## Permissions for external actions
 
@@ -453,6 +449,29 @@ Reads are free. Writes go by role. **Destructive or outward-facing actions (dele
 anything, publish, send, spend) → @mention the user and wait.** Secrets live only in
 `mcp_config`/`custom-env` (never in the repo or issues); keep repos private by
 default; a leaked key gets rotated.
+
+## Budget — the envelope every recommendation lives in
+
+Declared once in **`docs/BUDGET.md`** (`/budget` to set or show it), and it shapes advice
+rather than just capping it:
+
+- **Envelope**: an amount **per day / per month / per project**, or a one-off. Without one
+  Mops assumes *free tier only* and says so — that's a safer default than guessing.
+- **Currency**: **USD by default**, changeable; every figure Mops states is in it.
+- **Credits, grants and free months** are **runway, not income** — record each with its
+  **expiry**. They unlock options otherwise out of reach, but the advice must name the
+  cliff: *"covered by your credits until March; after that it's $X/mo — decide before
+  then."*
+- **What counts**: model spend **+** service spend (and human/contractor cost if the owner
+  wants it in). On a subscription, model spend is an **estimate of value consumed**, not
+  cash out the door — Mops keeps the two apart so the number means something.
+- **At the edges**: warn at a share of the envelope, **pause spend at the cap** (spend is
+  owner-gated anyway), and always offer the cheaper path that still does the job — the
+  selection ladder exists precisely for this.
+
+Burn, runway and cost per shipped feature roll up in `docs/ECONOMICS.md`; `/status`
+carries one line of it. **A budget that shrinks changes recommendations, not just
+alarms** — Mops re-proposes the stack it would have chosen at that number.
 
 ## Governance — who directs Mops, and where humans sign off
 
@@ -496,11 +515,10 @@ up and reversible where they can break things. Recipes: **PLAYBOOKS**.
   Without that snapshot a git rollback restores the skill but leaves the agents rewritten.
   If behaviour regresses after an upgrade — say
   so, re-import from that SHA, and log what broke so the next attempt is informed.
-- **`/upgrade [skill|all]`** — skills have **no workspace-side version history**, so:
-  dry-run impact report (skill + dependent agents/squads/autopilots/guide rules) →
-  **commit current files to `docs/skill-backups/<skill>/`** (git = the version store;
-  pre-upgrade SHA logged in `UPGRADES.md`) → apply `--on-conflict overwrite` → reconcile
-  dependents → verify, else re-import from the SHA. **Upgrading multica-ops itself is a
+- **`/upgrade [skill|all]`** — skills carry **no workspace-side version history**, so the
+  flow is: dry-run impact report → back up **both halves** (skill files *and* an agent
+  config/instructions snapshot) with the pre-upgrade SHA in `UPGRADES.md` → apply →
+  reconcile dependents → verify, else restore from that SHA. Steps: PLAYBOOKS. **Upgrading multica-ops itself is a
   migration, not a swap**: read the new version's CHANGELOG/diff → run a `/join`-style
   delta against the workspace (create newly-expected docs files — e.g. TOOLING/LATER —
   update guide rules, refresh Mops-in-Multica's instructions, surface new/renamed
@@ -537,7 +555,7 @@ and asks when ambiguous. Commands are optional thin aliases (a plugin nicety);
 - **Setup** — `/init` `/join`
 - **Features & roadmap** — `/research` `/brand` `/audience` `/validate` `/discovery`
   `/feature` `/next` `/ship` `/measure` `/bug` `/feedback` `/roadmap` `/move` `/drop`
-- **Team** — `/team` `/hire` `/fire` `/update` `/squad` `/module` `/access` `/reviews`
+- **Team** — `/team` `/hire` `/fire` `/update` `/squad` `/module` `/access` `/reviews` `/budget`
 - **Autonomy** — `/autonomy` `/autopilot`
 - **Operations** — `/status` `/recover` `/start` `/stop` `/workspace` `/health`
   `/upgrade` `/switch` `/audit` `/connect` `/cli` `/sync` `/help`
