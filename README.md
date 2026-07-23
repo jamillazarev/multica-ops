@@ -132,7 +132,7 @@ via telemetry on the first `npx skills add jamillazarev/multica-ops`.
 | [EXAMPLES.md](EXAMPLES.md) | worked examples — the same issue, handoff, review or ledger done weakly and done well |
 | [COMMANDS.md](COMMANDS.md) | every command, its aliases and the surface it runs best on |
 | [STACKS.md](STACKS.md) | services, libraries, audio/DSP, testing, security, reference galleries |
-| [MODULES.md](MODULES.md) | opt-in modules: design system & brand |
+| [MODULES.md](MODULES.md) | opt-in modules: design system · brand · external tracker bridge |
 | [FLOWS.md](FLOWS.md) | the full procedures for `/init`, `/join`, `/health`, `/upgrade`, `/switch` |
 | [BOOTSTRAP.md](BOOTSTRAP.md) | zero-to-team CLI recipes, capacity levers, real-hours traps |
 | [ROLES.md](ROLES.md) | role catalog with curated skill packs + generic role-builder |

@@ -1,5 +1,24 @@
 # Changelog
 
+## 2.1.2 — the introduction caught up, and three more things it can check itself
+
+- **The docs-site introduction was still describing 1.x.** Rewritten: the security posture,
+  the bar nobody edits, the skill lifecycle and its budget, dated work, imported backlogs,
+  sourced ICE, GEO and no-code all now appear where a first-time reader looks — and the
+  Examples and Flows pages, which existed but were unreachable from it, are linked.
+- **`scripts/issues.py` was undocumented** — a paginated, corruption-tolerant board listing
+  that exists precisely to survive two CLI traps the skill documents, and nothing pointed at
+  it. Now in the ops-scripts list alongside the import script, with a check that fails the
+  next time a script arrives without a mention.
+- **The skill quoted its own guide template at ~1.7k tokens** after the template had grown to
+  ~1.8k. Small, and exactly the failure the skill warns everyone else about — so preflight
+  now re-measures the file and complains when the quoted figure drifts.
+- **`AGENTS.md` told agents to run `multica setup`**, which prints configuration rather than
+  performing it; it now names `setup cloud` and `setup self-host`.
+- **A sixth evaluation**: a company that ships no code. All five others were software-shaped,
+  so the domain-neutrality claim — a channel, a calendar, a batch — was the one claim no
+  scenario tested.
+
 ## 2.1.1 — audit fixes
 
 Two full passes over every paragraph. Nothing new, only what was wrong:

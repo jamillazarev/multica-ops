@@ -140,6 +140,28 @@ PYEOF
 )
 [ -n "$toc_bad" ] && while IFS= read -r l; do say_fail "$l"; done <<< "$toc_bad"
 
+# 5g · a script nobody documents is a script nobody runs.
+for f in scripts/*; do
+  b=$(basename "$f")
+  [ "$b" = "preflight.sh" ] && continue
+  grep -rql -- "$b" ./*.md 2>/dev/null || say_warn "scripts/$b is not mentioned in any doc"
+done
+
+# 5h · the guide-template weight quoted in ROLES must match the file it describes.
+# The skill tells everyone that recorded facts expire; this is that rule turned inward.
+gt_bad=$(python3 - <<'PYEOF'
+import re
+try:
+    actual = len(open("templates/GUIDE-template.md").read()) / 4 / 1000
+except OSError:
+    raise SystemExit
+m = re.search(r"GUIDE-template[^~]*~([\d.]+)k tokens", open("ROLES.md").read())
+if m and abs(float(m.group(1)) - actual) > 0.25:
+    print("ROLES quotes the guide template at ~%sk tokens; it is ~%.1fk" % (m.group(1), actual))
+PYEOF
+)
+[ -n "$gt_bad" ] && say_warn "$gt_bad"
+
 # 5c · references must stay one level deep from SKILL.md
 for f in $(ls *.md | grep -vE '^(SKILL|README|CHANGELOG|AGENTS)\.md$'); do
   nested=$(grep -ohE '\]\([A-Z][A-Za-z-]*\.md' "$f" 2>/dev/null | head -1)

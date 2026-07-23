@@ -9,4 +9,5 @@ Slash commands are a Claude Code plugin convenience; every flow works from natur
 language in any agent — "set up my team", "join this project", "status", "add a
 feature: …".
 
-Requires the `multica` CLI (`multica setup`) on the machine.
+Requires the `multica` CLI on the machine, pointed at a workspace:
+`multica setup cloud`, or `multica setup self-host --server-url …` for your own server.

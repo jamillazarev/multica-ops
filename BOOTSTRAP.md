@@ -208,6 +208,11 @@ Generic versions live in [scripts/](scripts/) — run from the project repo root
   ⚠ never rerun `todo`/`backlog` — they wait on stage barriers.
   `--revive-cancelled` also revives `cancelled` **without** a "Cancel reason" marker.
 - **health.sh** — for indicators: waiting / limit-stuck / reset time (from run `error`).
+- **issues.py** — paginated, corruption-tolerant issue listing. Use it instead of raw
+  `issue list` whenever you need the whole board: it walks `--offset` past the 100-row cap
+  and sanitizes control characters that otherwise break `json.loads` (both traps are §8).
+- **import-issues.py** — resumable creation from a normalized JSON file, for `/import`;
+  parents before children, `source_id` in metadata, nothing assigned. See PLAYBOOKS.
 - Team rule: **commit incrementally** — `rerun` resumes from the repo, not from chat.
 
 ## 10. Launch checklist

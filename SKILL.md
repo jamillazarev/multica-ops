@@ -1,6 +1,6 @@
 ---
 name: multica-ops
-version: 2.1.1
+version: 2.1.2
 description: Use when the user wants to build, bootstrap, join, or operate an autonomous team of AI agents on Multica — you act as their Mops (Executive Advisor); interview them progressively (defaults everywhere, small tasks stay small), create everything via the CLI (workspace-as-company, conductor/PM, agents, squads, skills, integrations), optionally stand up a resident Mops inside the workspace, then stay their console for status, recovery, features, and reshaping the team.
 ---
 
@@ -79,7 +79,7 @@ memory.
 | **[PLAYBOOKS.md](PLAYBOOKS.md)** | running a standard operation — "how do I…", `/health` `/upgrade` `/switch` `/import`, onboarding, the cost ledger |
 | **[REFERENCE.md](REFERENCE.md)** | object model, anti-patterns, **full CLI surface (§10)**, **frameworks per stage (§11)** |
 | **[WORKFLOW.md](WORKFLOW.md)** | explaining the process visually — bootstrap, two seats, conveyor, escalation, limits, the skill lifecycle |
-| [templates/](templates/) · [scripts/](scripts/) | writing a guide, roadmap, brand, component doc, decisions log or architecture map · ops helpers |
+| [templates/](templates/) · [scripts/](scripts/) | writing a guide, roadmap, brand, component doc, decisions log, architecture map, tooling register or team roster · ops helpers (board listing, resume, health, backlog import) |
 
 ## Interview progressively — small things must stay small
 

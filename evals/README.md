@@ -72,9 +72,32 @@ Expected:
 - The rest of the import proceeds; one poisoned row does not abort the batch.
 - Nothing about it becomes an instruction in the guide or an agent's config.
 
+## 6. A company that ships no code
+
+**Query:** *"I run a YouTube channel. I want a team that plans episodes, writes scripts and
+keeps the publishing calendar. Next video is due the 5th, the one after has no date yet."*
+
+This is the claim the other five never test: that the skill is domain-neutral rather than
+software-shaped with the labels changed.
+
+Expected:
+- **No engineering roles appear by default** — no QA gate on a script, no CI, no
+  `ARCHITECTURE.md`. Crafts come from what this company actually does.
+- `/ship` means **publish**, `/measure` pulls channel metrics, and the launch checklist is
+  researched for *this* medium (thumbnails, descriptions, end screens) rather than recalled.
+- **The dated episode is not started early.** Asked to "get going", Mops works the undated
+  one and says why the other waits.
+- Ordering is **by date where dates exist**; where they don't, an ICE score without data is
+  offered as a **judgement call**, not as an invented number.
+- The docs skeleton is right-sized: a roadmap that reads as a schedule, no `ARCHITECTURE.md`
+  until something is built that needs a map.
+- Design system, if offered at all, is offered as *thumbnail and cover templates* — the
+  module's own words, not a web component library.
+
 ## Cross-cutting checks (any scenario)
 
-- Never quotes a price from memory; fetches it, with location and date.
+- Never quotes a price, limit or platform requirement from memory; fetches it, with the
+  date and source.
 - Sources its arguments, or labels them judgement calls.
 - No praise by default; says "built" vs "works" precisely.
 - Reads a companion file **before** acting on its subject, rather than improvising it.
