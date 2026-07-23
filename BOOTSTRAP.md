@@ -249,7 +249,7 @@ Inventory first ("what already exists?"), then per service:
   for GitLab, analytics, image-gen (3D/upscale/vectorize) — any provider.
 - **Agent access**: MCP servers via the agent's `mcp_config`
   (`multica agent update <id> --mcp-config-file <json>` — file mode 0600), plain API
-  keys via `custom-env` (`--custom-env-file`). Both are stored by Multica as secret
+  keys via `custom-env` — at creation with `--custom-env-file`, afterwards via `agent env set` (owner/admin only, audited, and it replaces the whole map). Both are stored by Multica as secret
   material and never enter the repo.
 - **Generated artifacts** (images, 3D, vectors) go through the same review gates as
   any work — a designer reviews a generated logo like QA reviews code.
@@ -349,7 +349,9 @@ integration. Offer at setup; connect any time later.
    map is re-derived by every agent on every run). The cloud holds issues/comments; code and
    keys stay on members' machines. **Start each from its template in `templates/`** rather than
    improvising the shape — a doc nobody can predict the shape of gets skimmed, not used.
-   `LATER.md` and `ECONOMICS.md` are the two without one: their shape is stated where they
+   Then **install the docs guard** — `templates/company-preflight.sh` as the repo's
+   pre-commit hook (PLAYBOOKS): a skeleton is only useful while it stays true.
+   `LATER.md` and `ECONOMICS.md` are the two without a template: their shape is stated where they
    are defined (a deferral is *what · why · revisit trigger*; economics is the ledger
    rolled up — PLAYBOOKS).
 

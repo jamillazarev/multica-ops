@@ -142,7 +142,7 @@ via telemetry on the first `npx skills add jamillazarev/multica-ops`.
 | [CHANGELOG.md](CHANGELOG.md) | versioned history — the migration map for `/upgrade` |
 | [BUDGET template](templates/BUDGET-template.md) | envelope · currency · credits with expiries · prices on record |
 | [evals/](evals/) | stratified scenarios — from a job too small to deserve a company to an import carrying a hidden instruction |
-| [templates/](templates/) · [scripts/](scripts/) | guide · roadmap · brand · component docs · **decisions log · architecture map · tooling register · team roster** · ops helpers · **resumable backlog import** |
+| [templates/](templates/) · [scripts/](scripts/) | guide · roadmap · brand · component docs · **decisions log · architecture map · tooling register · team roster** · **a docs guard for the companies Mops builds** · ops helpers · **resumable backlog import** |
 
 Contributing? Run **`bash scripts/preflight.sh --install`** once. The pre-commit hook holds
 the invariants that this repo has actually broken before: version sync, the CHANGELOG entry
@@ -153,7 +153,19 @@ indentation, words a reflow tool broke across lines, counts that no longer match
 mermaid blocks that don't close, skeleton files with no template, repeated sentences, and
 every `multica …` command the docs promise actually existing in the installed CLI.
 
-It cannot check whether a paragraph is still *true* — that stays a reading job.
+What the hook cannot do is check whether a claim is still **true**. That is
+**`scripts/verify.py`**, run against the world rather than the text:
+
+```sh
+python3 scripts/verify.py             # every documented command + flag exists in the CLI
+python3 scripts/verify.py --sources   # every URL and skill-pack source still resolves
+python3 scripts/verify.py --live      # the read-only CLI surface actually runs and parses
+```
+
+`--live` executes reads only — never a create, update, assign or delete — so it is safe to
+run against a real workspace, and it is where a changed output format or a broken pagination
+assumption shows up before a user finds it. Whether a *paragraph* is still true stays a
+reading job; these two scripts remove the mechanical excuses for it going stale.
 
 Everything but `SKILL.md` loads **only when its trigger fires** — the skill keeps its
 always-on footprint small (see the load-routing table in SKILL.md).

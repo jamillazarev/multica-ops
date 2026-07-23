@@ -1,5 +1,38 @@
 # Changelog
 
+## 2.2.0 — verification, and the habit passed on
+
+### A broken recipe nobody could have noticed
+`multica agent update --custom-env-file …` appears in the "connect a service" playbook. That
+flag does not exist on `agent update` — environment variables live behind their own audited
+command, **`agent env get` / `agent env set`**, which is owner/admin-only and **replaces the
+whole map** (a value of `****` preserves an existing entry). Anyone who copied that line got
+an error; anyone who guessed the fix could have wiped an agent's environment. Fixed, with
+both traps written down.
+
+### `scripts/verify.py` — checking the docs against the world, not against themselves
+The pre-commit hook asks whether the docs are well-formed. This asks whether they are still
+**true**, and it found the bug above:
+
+- **every command and flag in every code block** exists in the installed CLI — 70 recipes,
+  98 flags, resolved at the correct subcommand depth (`agent skills add` is three levels)
+- **`--sources`**: every URL *and* every skill-pack prefix resolves — the hiring packs in
+  ROLES had never been checked, and a moved repository breaks hiring silently
+- **`--live`**: the read-only CLI surface the flows depend on is executed for real and its
+  JSON parsed. Reads only — never a create, update, assign or delete — so it is safe against
+  a live workspace, and it is where a changed output format surfaces before a user finds it
+
+### The companies inherit the habit
+Until now the guard protected *this* repository while the companies Mops builds were asked
+to keep their docs honest by good intentions. `templates/company-preflight.sh` installs into
+the company's own repo and holds five things: the docs the guide promises **exist**,
+`DECISIONS.md` stays **append-only** (a rewritten rejection is how a dead idea returns),
+`TOOLING.md` entries carry a **check-date** and stale ones surface, `ARCHITECTURE.md`
+**mentions every top-level directory**, and an obvious **credential shape fails the commit**.
+
+Kept deliberately small: a hook that cries wolf is bypassed with `--no-verify`, and then
+none of it is enforced. The real secret scan stays in CI where it belongs.
+
 ## 2.1.3 — the checks the last audit should have left behind
 
 The 2.1.1/2.1.2 audits found defects with throwaway scripts and did not institutionalize

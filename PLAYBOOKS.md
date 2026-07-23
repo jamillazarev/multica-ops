@@ -22,6 +22,7 @@ control characters that break `json.loads` — sanitize with
 - [Switch operating mode](#switch-operating-mode)
 - [Import a backlog from another tracker (/import)](#import-a-backlog-from-another-tracker-import)
 - [The skill lifecycle (/skill)](#the-skill-lifecycle-skill)
+- [The company guards its own docs](#the-company-guards-its-own-docs)
 - [Health sweep (/health)](#health-sweep-health)
 - [Skill upgrade (/upgrade)](#skill-upgrade-upgrade)
 - [Provider switch (/switch)](#provider-switch-switch)
@@ -142,11 +143,16 @@ plan → API runtime (pay-per-token, no session cap) → lower concurrency
 ```sh
 # MCP (e.g. Figma): json {"mcpServers":{...}} in a 0600 file
 multica agent update <agent-id> --mcp-config-file /path/figma-mcp.json
-# plain API key (e.g. image-gen)
-multica agent update <agent-id> --custom-env-file /path/env.json
+# plain API key (e.g. image-gen) — env lives behind its own audited command,
+# not on `agent update`, and `set` REPLACES the whole map
+multica agent env get <agent-id>                                    # read what's there
+multica agent env set <agent-id> --custom-env-file /path/env.json   # owner/admin only
 ```
-Exists → connect; missing → create it first (BOOTSTRAP §12). Destructive/outward
-actions still require the user's yes.
+Exists → connect; missing → create it first (BOOTSTRAP §12). Destructive/outward actions
+still require the user's yes. Two traps in that last line: `env set` **replaces the entire
+map**, so read it first and re-send the keys you're keeping (a value of `****` preserves an
+existing entry), and it is **workspace owner/admin only and audited** — an agent cannot
+quietly widen its own environment.
 
 ## Kick off discovery from one sentence
 
@@ -318,6 +324,38 @@ extra clarifying round is a loss, not a win.
 4. **Re-import it as an external skill** so there is exactly one source of truth; the
    in-workspace copy is deleted, not left to drift. From then on it upgrades like any other
    third-party skill, and other companies of yours can import the same URL.
+
+## The company guards its own docs
+
+This methodology asks a company to keep a roadmap current, record what it rejected, note
+when a fact was last checked and keep a map of its own code. **Every one of those decays
+silently**, and a rule that lives only in the guide is one an agent drifts away from without
+anyone noticing — the guide instructs, only a gate constrains.
+
+So the stand-up installs a **pre-commit hook in the company's own repo**, from
+`templates/company-preflight.sh`:
+
+```sh
+cp <skill>/templates/company-preflight.sh scripts/preflight.sh
+bash scripts/preflight.sh --install
+```
+
+| Guard | The failure it prevents |
+|---|---|
+| The docs the guide promises **exist** | an agent told to read a missing file improvises, and improvisation is how conventions drift |
+| `docs/DECISIONS.md` is **append-only** | rewriting it is how a rejected idea returns next quarter with nobody able to say why it lost |
+| `docs/TOOLING.md` entries carry a **check-date**, stale ones surface | a price or version quoted from a year ago is unknown, not fact — the skill's own freshness rule, enforced instead of hoped for |
+| `docs/ARCHITECTURE.md` **mentions every top-level directory** | every task starts in a fresh worktree; an unmapped area is re-derived by every agent, every run |
+| An obvious credential shape **fails the commit** | a secret in history means rewriting history *and* rotating the key — cheaper to stop at the door |
+
+**Keep it this small.** A hook that cries wolf is a hook people bypass with `--no-verify`,
+and then none of it is enforced. The real secret scan belongs in CI (gitleaks — STACKS);
+this is a last line, not a scanner. Add a company-specific guard only once that company has
+broken the same thing twice — the same evidence bar as making a skill.
+
+**Adapt it, don't preserve it.** A company with no code drops the architecture check; one
+whose truth lives in Notion points the existence check there. The one guard not to drop is
+append-only: it is the only one protecting knowledge that cannot be reconstructed.
 
 ## Health sweep (`/health`)
 
