@@ -1,6 +1,7 @@
 # Playbooks — standard operations, copy-paste ready
 
-Verified against `multica` CLI v0.4.2. Every listing below survives the two CLI traps:
+Recipes are re-checked against your installed CLI by `scripts/verify.py`; the pinned
+version lives in REFERENCE §10. Every listing below survives the two CLI traps:
 pages are capped at 100 (`--offset` + `has_more`) and descriptions may contain raw
 control characters that break `json.loads` — sanitize with
 `re.sub(r'[\x00-\x1f]',' ', out)` first (see BOOTSTRAP §8).
@@ -29,6 +30,7 @@ control characters that break `json.loads` — sanitize with
 - [Human onboarding / offboarding](#human-onboarding-offboarding)
 - [Cost/effort ledger (at /ship and /measure)](#costeffort-ledger-at-ship-and-measure)
 - [Resident Mops — install / refresh](#resident-mops-install-refresh)
+- [Fixing an agent that keeps getting it wrong](#fixing-an-agent-that-keeps-getting-it-wrong)
 - [Skill load per agent (in /audit)](#skill-load-per-agent-in-audit)
 - [Utilization review (in /audit, or on a leader's request)](#utilization-review-in-audit-or-on-a-leaders-request)
 - [Rollback after a bad upgrade](#rollback-after-a-bad-upgrade)
@@ -265,10 +267,20 @@ enters an agent's context and becomes something that agent believes. So:
    integration is usually fine, and a clean report is not a guarantee.
 2. **Read what it actually instructs.** Anything telling an agent to ignore its guide,
    contact an address, or widen its own access is a rejection, not a finding to weigh.
-3. **Trim it to what this company needs** — imported skills carry generic scaffolding,
+3. **Run it through the optimizer, then trim** (below) — an imported skill is compressed by
+   the same fail-closed pass as your own. Imported skills carry generic scaffolding,
    alternative platforms and examples that will sit in the cached prefix forever.
 4. **Attach with provenance**: source URL, version or commit, date screened, who approved.
    Without it, `/upgrade` can't tell what it's updating and `/audit` can't tell what's old.
+
+**Repairing an over-compressed skill — restore, don't rewrite.** Compression is lossy: you
+cannot recover prose from its own compressed output, and asking a model to "expand it back"
+invents plausible text that was never there. If a skill has been squeezed into unreadable
+notation, the only honest repair is **restore the pre-compression copy from
+`docs/skill-backups/` and run the pass again under the readability rules above** — that is
+what the backup is for. No backup? Then say so plainly and treat re-writing it as new work
+with a human reviewing the result, not as a restoration. Worth a sweep at `/upgrade`: an
+upgrade is when someone is already looking at every skill.
 
 **Upgrade — screening is not a one-time event.** The version you vetted is not the version
 you're about to install. Before applying any skill update: diff the new release against the
@@ -303,8 +315,9 @@ their author's world: a hardcoded personal path, a company's conventions, exampl
 another domain. Trim those in the same pass; they're not malicious, they're just permanent
 weight in the cached prefix.
 
-**Optimize — compression that is allowed to say no.** Run the compressor on your own and
-imported skills alike, and hold it to three rules: **commands, tool names, paths, numbers,
+**Optimize — compression that is allowed to say no.** Run the compressor on your own skills,
+imported ones **and agent instructions** — all three are always-loaded text and the same rules
+apply, and hold it to three rules: **commands, tool names, paths, numbers,
 exact error strings and security rules survive verbatim** (paraphrase one and the skill
 still reads well while doing something else); an **independent reviewer** — not the agent
 that compressed it — confirms the meaning held, reported as judgement with evidence rather
@@ -312,6 +325,30 @@ than a guarantee; and **nothing is written until it's approved**, with the origi
 up. `NOT_COMPRESSIBLE` is a valid, honest result. **Never compress twice** — repeated
 passes compound loss silently. And measure the right thing: fewer bytes that cause one
 extra clarifying round is a loss, not a win.
+
+**A skill a human can't read is a broken gate, not a compressed one.** People open skills in
+Multica's UI — to screen an import, to approve a change, to work out why an agent behaves as
+it does. Every one of those is a control this methodology leans on, and all of them fail
+against a wall of clipped fragments. So the output stays **prose a person reads at normal
+speed**: whole sentences, headings intact, examples kept. What compression removes is
+**repetition, hedging and scaffolding** — not connective tissue, not the "why" behind a rule,
+not the one example that makes an abstract instruction concrete.
+
+**Compress the body, leave the references alone.** Only the always-loaded part is paid on
+every run; a reference behind a trigger costs nothing until it fires, so squeezing it buys
+nothing and costs readability. If a pass cannot hit its target without turning prose into
+notation, the answer is `NOT_COMPRESSIBLE` — same as if meaning were at risk, because a
+control nobody can exercise has the same value as a rule nobody can follow.
+
+**Versions are a release act, not an edit act.** A skill living inside the workspace carries
+**no version number** — it carries a date and a line in `DECISIONS.md` saying what changed
+and why. Numbers appear only when a skill leaves for its own repository, because that is the
+only moment a version answers a real question: *which of the copies out there is this?*
+Without this rule agents bump a patch number on every wording tweak, producing a changelog
+that records typing rather than change, and an `/upgrade` that fires for nothing. When a
+released skill does change: **patch** for a fix that alters no instruction, **minor** for a
+new capability, **major** when existing companies must do something differently — and the
+CHANGELOG entry says which, because it is the migration map.
 
 **Release — a skill that proved itself leaves home.**
 1. **Evidence, not enthusiasm**: it earned its keep across at least two projects (or two
@@ -419,9 +456,32 @@ comment on the issue (`issue comment add`).
 `multica skill list` → absent: `skill import --url github.com/jamillazarev/multica-ops`;
 present: compare versions — same → skip, older → the Skill-upgrade recipe above. Never a
 second copy. Then `agent create` (name **Mops**) → `agent skills` attach (+ find-skills)
-→ `agent avatar` per chosen library → subtitle "Executive Advisor · resident" → rights
+→ `agent avatar` per chosen library (Mops in Multica keeps `assets/mops-avatar.png`) → subtitle "Executive Advisor · resident" → rights
 per autonomy choice → kickoff (pinned issue + first message = decisions summary).
 
+
+## Fixing an agent that keeps getting it wrong
+
+A repeated failure is a defect in the setup, not in the agent's character — and the fix goes
+in at the **lowest rung that expresses it**, because every rung above costs more and reaches
+further than the problem:
+
+1. **The issue** — was the task workable? Missing why, DoD or a success predicate explains
+   most "bad output" without touching anything permanent.
+2. **The agent's instructions** — `agent update --instructions`. Right when the gap is *this
+   role's*: a boundary it keeps crossing, a hand-off it keeps skipping. Mops proposes the
+   edit with the evidence (the three runs that failed the same way), the owner approves, and
+   it is **batched at `/sync`** rather than dribbled — instructions are a cached prefix and
+   churning them costs twice.
+3. **A skill** — when the gap is a *capability* rather than a boundary, and the routine
+   recurs: create or import one (`/skill`).
+4. **The gate** — when the failure keeps reaching review, the review is doing its job and the
+   spec isn't: fix the DoD.
+5. **The role** — when none of the above fits, the role is wrong-shaped: split it, or hire.
+
+Never rewrite instructions to make an agent "try harder" — that is the one edit that reliably
+costs tokens and changes nothing. And record the change: an instruction edited without a note
+in `DECISIONS.md` is a mystery to the next person reading a suddenly-different agent.
 
 ## Skill load per agent (in `/audit`)
 
@@ -453,7 +513,7 @@ finds agents doing too little, the other finds agents asked to be too much.
 ## Rollback after a bad upgrade
 
 1. Name what regressed (behaviour, not vibes) and when it started.
-2. Find the restore point: `docs/skill-backups/UPGRADES.md` → the **pre-upgrade SHA**.
+2. Find the restore point: `UPGRADES.md` (next to the backups in `docs/skill-backups/`) → the **pre-upgrade SHA**.
    Remember there are two things to restore: the **skill files** and the **agent
    instructions/config** from that date's `agents-*.json` snapshot
    (`multica agent update <id> --instructions … --model …`).
@@ -478,14 +538,22 @@ finds agents doing too little, the other finds agents asked to be too much.
 Write after any state-changing operation, compare on wake:
 
 ```sh
-for k in agent squad skill label autopilot; do
+for k in agent squad skill label autopilot project runtime property; do
   printf '%s %s\n' "$k" "$(multica $k list --output json | shasum -a 256 | cut -c1-16)"
 done
 multica workspace member list --output json | shasum -a 256 | cut -c1-16   # members
+# Project resources decide whether the team can work in parallel at all — a switch from
+# github_repo to local_directory silently serialises everything, and it is exactly the
+# kind of change someone makes by hand in the app.
+for p in $(multica project list --output json | python3 -c 'import json,sys;[print(x["id"]) for x in json.load(sys.stdin)]'); do
+  multica project resource list "$p" --output json | shasum -a 256 | cut -c1-16
+done
 git rev-parse HEAD                                                        # repo pointer
 ```
 
-Store as `docs/.workspace-state.json` (`{class: hash}` + `head` + `taken_at`). On wake,
+**Eight classes plus members, resources and the repo pointer — and the list grows with the
+platform.** When Multica gains an object type, the fingerprint is blind to it until someone
+adds it here; a class nobody hashes is drift nobody sees. Store as `docs/.workspace-state.json` (`{class: hash}` + `head` + `taken_at`). On wake,
 recompute and diff. Something moved that Mops didn't move → **attribute first**
 (`agent tasks` initiator/originator · issue comments · `git log`), then ask the person who
 made the change for the *why*, and write that reason into `TOOLING.md` / `TEAM.md` / the

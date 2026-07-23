@@ -6,7 +6,7 @@
 
 <p align="center">
   Meet <b>Mops</b> 🐶 — the pug behind the ops. One word gets you everything:<br>
-  <code>/mops status</code> · <code>/mops next</code> · <code>/mops add a feature: …</code>
+  just say what you need — or <code>/multica-ops:mops status</code>
 </p>
 
 <p align="center">
@@ -40,6 +40,12 @@ claude plugin install multica-ops@multica-ops
 ```sh
 multica skill import --url github.com/jamillazarev/multica-ops
 ```
+
+Then just say what you need. In Claude Code you also get slash commands — namespaced as
+`/multica-ops:mops`, plus a short **`/mops`** the plugin installs on first run (one file in
+your own config; `rm ~/.claude/commands/mops.md` removes it). Everywhere else — Cursor,
+Codex, Windsurf and the rest — there are no slash commands and none are needed: plain
+language reaches every flow.
 
 **Manual (any agent that reads files):**
 ```sh
@@ -93,7 +99,7 @@ invariants is an opt-in module; the progressive interview keeps small tasks smal
 The skill is plain **SKILL.md + markdown** — the Agent Skills convention. The
 [skills.sh](https://skills.sh) installer puts it into 18+ harnesses (Claude Code,
 Cursor, Codex, Windsurf, Gemini CLI, Copilot, …); `AGENTS.md` routes any agent that
-lands in the repo. Slash commands are a Claude Code plugin bonus — everywhere else,
+lands in the repo. Slash commands are a Claude Code plugin bonus (namespaced: `/multica-ops:mops …`) — everywhere else,
 natural language runs the same flows. Listing on skills.sh is automatic: it appears
 via telemetry on the first `npx skills add jamillazarev/multica-ops`.
 

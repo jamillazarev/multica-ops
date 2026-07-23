@@ -24,7 +24,7 @@ done
 
 if [ "$REVIVE" = 1 ]; then
   PROJECT="$PROJECT" python3 - <<'PY'
-import os, re, subprocess, sys
+import json, os, re, subprocess, sys
 sys.path.insert(0, ".")   # resume.sh cd's into scripts/ first
 import issues as I
 
@@ -34,6 +34,7 @@ import issues as I
 _extra = os.environ.get("CANCEL_MARKERS", "").strip()
 MARKER = re.compile(r"cancel[- ]?reason" + (f"|{_extra}" if _extra else ""), re.I)
 proj = os.environ.get("PROJECT") or ""
+revived = []
 pids = [proj] if proj else I.project_ids()
 for pid in pids:
     for it in I.all_issues(pid):
@@ -41,12 +42,37 @@ for pid in pids:
             continue
         raw = I._run(["issue", "comment", "list", it["id"], "--output", "json"])
         title = (it.get("title") or "")[:70]
-        if MARKER.search(raw or ""):
+        # Search the comment BODIES, not the raw JSON: an imported ticket or a quoted
+        # external snippet containing the phrase would otherwise immunise an issue
+        # from recovery forever.
+        try:
+            comments = json.loads(raw or "[]")
+            bodies = " ".join(
+                (c.get("body") or c.get("content") or "")
+                for c in (comments if isinstance(comments, list) else comments.get("comments", []))
+            )
+        except Exception:
+            # Unparseable comments (a stray control character is the documented cause) must
+            # NOT fall back to the raw blob — that reopens the hole this fix closed, where a
+            # quoted "Cancel reason" anywhere in the JSON immunises an issue forever. Skip
+            # instead: leaving a cancelled issue alone is safe, reviving one wrongly is not.
+            print(f"  skip (comments unreadable, not judging): {title}")
+            continue
+        if MARKER.search(bodies):
             print(f"  skip (intentional cancel): {title}")
         else:
             subprocess.run(["multica", "issue", "status", it["id"], "todo"],
                            stdin=subprocess.DEVNULL, capture_output=True)
-            print(f"  revived (no reason = accidental/limit): {title}")
+            revived.append(title)
+            print(f"  revived to todo (no reason found): {title}")
+
+if revived:
+    # Honest reporting: these are NOT restarted here. They sit in `todo`, where a stage
+    # barrier or the conductor picks them up — the rerun loop below only touches
+    # in_progress/in_review, and rerunning `todo` is explicitly forbidden.
+    print(f"  → {len(revived)} revived to todo; they are queued, not restarted.")
+    print("  → A cancel made by a person in the Multica app carries no marker, so it")
+    print("    looks accidental to this script. Check the list above before walking away.")
 PY
 fi
 

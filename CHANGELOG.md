@@ -1,5 +1,153 @@
 # Changelog
 
+## 2.2.0 — a front door, a team you can size, and gates that are real
+
+Built on what first users actually hit, then hardened by four independent audit passes over
+the result. Several of these were defects in things this skill told people to do.
+
+Built on what first users actually hit. Three of these were bugs in things this skill told
+people to do.
+
+### ⚠ Fixes worth knowing about
+- **`/mops` was never a real command.** Claude Code namespaces plugin commands, so it is
+  `/multica-ops:mops` — and the docs advertised the form that produces *"Unknown command"*.
+  A **short `/mops` now installs itself** on first run (one file in your own Claude config,
+  removed with `rm ~/.claude/commands/mops.md`); it never overwrites an existing one and
+  never comes back if you delete it. Outside Claude Code there are no slash commands at all,
+  and the skill now says so instead of quoting one you don't have.
+- **Nothing said who creates the repository.** Mops improvised and created one on a user's
+  **work** GitHub. Where the code lives is now the **first** interview question, in three
+  parts — does one exist, do you want one and *where*, do you want a remote at all — and
+  creating a repo on the owner's account is owner-confirmed **naming the account it lands
+  in**. A local git repo with no remote is a legitimate end state.
+- **The `local_directory` explanation was wrong.** Serialisation is not a property of local
+  git — `git worktree` parallelises it fine, and Multica does exactly that for `github_repo`.
+  What `local_directory` does is run the agent in that exact path with no worktree. Say it
+  that way: it is an implementation choice worth filing a feature request about, not a law.
+
+### One front door — and a bare `/mops` is the door
+
+Nobody should have to pick a command, and the most natural thing a lost user types is
+`/mops` on its own. That used to produce *"what do you want?"* — the worst possible answer to
+someone who asked precisely because they don't know. Now a bare `/mops`, a "hi" or a vague
+"help" runs **day zero** (installed · current · signed in · workspace · daemon · runtimes,
+reported as one ladder with its fixes, not six prompts) and then three questions — what
+exists · what you want · who runs the work — that route to init, join, import, crew or a
+quick job.
+Nobody should have to pick a command. First contact is **day zero** — installed · current ·
+signed in · a workspace · daemon up · runtimes present, reported as **one ladder with its
+fixes** rather than six prompts — then three questions (what exists · what you want · who
+runs the work) that route to init, join, import or a quick job.
+
+### Shape the work before you staff it
+A company is sized to a plan, not to a sentence. Hiring off *"a macOS app"* produces the team
+that sentence suggests, which is a guess. Before anything is created: what it is, who for,
+**what is hard about it** (uncertainty is staffing information), what the work is made of —
+in *this* domain's words — rough size, and only then a proposed team **with its reasoning
+attached**, which the owner can argue with. Re-runnable when scope moves; skipped entirely
+for a quick job.
+
+### Crew mode — a team without a management layer
+
+Not everyone wants a company. A developer with a list of tasks **is** the product manager, and
+the machinery for deciding *what* to do is overhead. `/crew` is executors and gates with no
+conductor, no discovery, no roadmap ceremony — the **default offer after `/import`**, because
+someone who just moved their backlog has already decided what the work is.
+
+**And it names what the conductor used to hold.** Removing the planner does not remove four
+duties that are not planning: accepting finished work and merging, approving an imported
+skill, holding start dates, and settling a third review round. In crew mode all four sit with
+the owner, said out loud at stand-up and written into the guide — because an unnamed duty is
+an unperformed one.
+### "How do I get the new version?" now has one answer
+It used to have four, and no command that covered them. **`/upgrade` is the one command**, and
+the vocabulary is fixed: *update* means **new bytes arrive** (a newer plugin, a newer CLI),
+*upgrade* means **your workspace moves to them** (docs files, guide rules, agent instructions,
+renamed commands). New bytes without a migration is how a company ends up running half of one
+version and half of another.
+
+It walks four layers: **this skill's copy on your machine** — where Mops prints the one line
+*you* run, because a skill cannot replace its own plugin — then the **workspace migration**
+from the *new* version's changelog, then **imported skills** each re-screened, then **the CLI**
+locally and on every runtime (`runtime update` exists for exactly that and we were barely using
+it). The fingerprint is recomputed **after** reconciling, not before, because an upgrade
+changes the very objects it hashes.
+
+**And the CLI update waits for idle.** The daemon executes tasks, `daemon stop` has no drain
+flag, and replacing the binary under a running agent produces failures that look like the
+agent's fault. So `active_task_count` must be 0 and nothing `in_progress`; otherwise Mops says
+what is in flight and offers to wait. A diagram in WORKFLOW walks the whole thing.
+
+### Drift detection stopped being partial
+The fingerprint hashed five object classes; the platform has eight, plus project resources.
+The most expensive omission was **project resources** — the `github_repo` ↔ `local_directory`
+switch that decides whether the team can work in parallel at all, changed by hand in the app,
+invisible to us. Now nine hashes, with the standing rule that a class nobody hashes is drift
+nobody sees.
+
+### Webhook autopilots are an inbound door
+A cron autopilot runs on your schedule; a **webhook** autopilot hands anyone holding the URL
+the ability to start agent runs — spending budget, consuming the shared window, acting under
+the company's identity. It is all four owner-gated kinds at once, so: owner-confirmed to
+create, the URL is a **credential** (never a doc or an issue comment), registered in
+`docs/TOOLING.md`, and `trigger-rotate-url` exists because a leaked one is rotated, not
+debated.
+
+### The gates stopped being sentences
+- **Branch protection is installed, not intended.** The skill's own principle is that a rule
+  in prose instructs while only a gate constrains — and merge was fenced by a sentence.
+  Stand-up now runs the `gh api` call, with three honest caveats: it stops force-push and
+  deletion rather than a bad merge (our review gates are Multica sub-issues, not CI checks),
+  `enforce_admins` matters most because the conductor holds git rights, and **with no remote
+  there is no fence at all** — which is said plainly instead of implied.
+- **The company docs guard could be tricked by its own advice.** It refused to overwrite a
+  foreign pre-commit hook by looking for its own script name — and the chaining instruction it
+  printed put that name into the file, so the next install passed the check and deleted a
+  chained gitleaks. It now recognises only a sentinel it wrote itself, refuses in worktrees
+  and under `core.hooksPath` instead of reporting a success it didn't achieve, and never
+  creates a stray `.git/` outside a repository.
+- **The alias installer** no longer writes through a dangling symlink, no longer leaves a
+  truncated command behind after an interrupted session, and refuses to run without
+  `CLAUDE_PLUGIN_ROOT` rather than copying whatever `./templates/` happens to be nearby.
+- **The fourth owner-gated kind reaches the agents who need it.** "Changes the shape of the
+  company" was defined in the core — which only Mops loads — while every agent's guide still
+  listed three kinds. Squad routing, credentials, another agent's instructions and skill
+  attachment were ungated for everyone actually doing the work.
+
+### Two rules that keep it universal
+- **Speak the domain's own language.** Software is the standing trap — best documented, so
+  its vocabulary leaks everywhere — but a chip maker has no data flows and a bakery has no
+  deploys. *If a sentence would sound absurd to someone outside software, the sentence is
+  wrong, not the reader.*
+- **A grade is a routing fact, never a character.** Never write *"you are a junior
+  developer"*: a model told it is junior acts junior, and role-play of competence levels has
+  stopped helping on current models. Grades decide routing and tier; instructions say what
+  the agent owns and when to escalate.
+
+### Interviews stopped being an interrogation
+The question that governs *how many questions to ask* — how much do you want to be in the
+loop — was **nineteenth of twenty**. It is now second. A wave is 3–5 related questions in one
+message with defaults visible; twenty consecutive yes/no prompts is a failure of the rule,
+not the interview working. And Mops narrates while it works: silence during a long stand-up
+reads as a hang.
+
+### Told, not discovered
+- **A batch of operations explains itself line by line** — eighteen `skill import`s with no
+  reasons reads as ceremony; each says what it is for, who gets it, and what the batch costs.
+- **Skill weight is counted at hire time**, in the same breath as the proposal, instead of
+  surfacing later in `/audit`.
+- **Versions are a release act, not an edit act**: in-workspace skills carry a date and a
+  `DECISIONS.md` line, never a number. Numbers appear when a skill leaves for its own repo —
+  which is the only moment a version answers a real question.
+- **Think one step ahead**: report the *direction* of a number, not its level, and name a
+  decision's consequence while it is still free to change.
+- **The resident Mops never gets workspace admin.** It has the widest untrusted-input
+  surface in the company; admin in its env turns any injection into a takeover.
+- **Owner-gated is now four kinds, not four words**: spend, leaves the workspace, destroys,
+  and **changes the shape of the company** — access, credentials, agent instructions,
+  attached skills, routing, acceptance criteria. That fourth class is where everything
+  dangerous had been falling through.
+
 ## 2.1.0 — the parts that keep a company honest
 
 2.0 ran a company. 2.1 hardens it: the team stops being an attack surface, nothing edits the

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Structural integrity of the docs. Every check here exists because the defect it
-looks for actually shipped once — see CHANGELOG 2.1.1/2.1.2. Prints FAIL:/WARN: lines
+looks for actually shipped once — see the 2.1.0 entry. Prints FAIL:/WARN: lines
 for preflight to render; deterministic classes fail, heuristic ones warn."""
 import glob, os, re, shutil, subprocess, sys
 
@@ -51,6 +51,20 @@ for f in DOCS:
                 fail(f"{f}:{i} list continuation lost its indent — renders as a stray paragraph")
                 in_list = False
 
+    # b2 · a heading swallowed by the sentence above it. An insert that replaces part of a
+    # block and leaves the rest is the signature defect of repeated rewriting, and it hides
+    # from the Contents check because the heading no longer exists on either side.
+    for i, l in enumerate(lines, 1):
+        if re.search(r"[a-z,)]\d+\.\s+[A-Z]", l) and not l.lstrip().startswith(("|", ">", "-", "#")):
+            fail(f"{f}:{i} looks like a heading absorbed into prose — '{l.strip()[:60]}'")
+
+    # b3 · section numbers must be contiguous: a missing §N means one was eaten or dropped.
+    nums = [int(m.group(1)) for m in re.finditer(r"^## (\d+)\.", t, re.M)]
+    if nums and nums != list(range(nums[0], nums[0] + len(nums))):
+        missing = sorted(set(range(nums[0], nums[-1] + 1)) - set(nums))
+        if missing:
+            fail(f"{f}: section numbering skips {missing} — a heading was lost")
+
     # c · a line ending in a hyphen is a word a reflow tool broke in half.
     for i, l in enumerate(lines, 1):
         if re.search(r"[a-z]-$", l):
@@ -95,6 +109,18 @@ for f in DOCS:
                 fail(f"{f}: mermaid diagram {n} has unbalanced {open_c}{close_c}")
         if blk.count("subgraph") != len(re.findall(r"^\s*end\s*$", blk, re.M)):
             fail(f"{f}: mermaid diagram {n} has a subgraph without its end")
+
+# f2 · every commands/*.md must have a row in COMMANDS.md. The coherence checks in
+# preflight all iterate table → file, so a command missing from the table is invisible
+# to every one of them at once.
+try:
+    table = open("COMMANDS.md", encoding="utf-8").read()
+    for path in sorted(glob.glob("commands/*.md")):
+        name = os.path.basename(path)[:-3]
+        if not re.search(rf"/{re.escape(name)}[`\s(\\|]", table):
+            warn(f"commands/{name}.md has no row in COMMANDS.md — /help will never list it")
+except OSError:
+    pass
 
 # g · every docs file the stand-up creates needs a template, or an explicit exemption.
 EXEMPT = {"LATER", "ECONOMICS", "analytics"}

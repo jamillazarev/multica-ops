@@ -25,7 +25,12 @@ Input: a JSON array. Only `source_id` and `title` are required.
 Deliberately absent: assignees. Assigning enqueues a task and spends budget, so imported
 work arrives cold and is assigned afterwards, one decision at a time.
 """
-import argparse, json, subprocess, sys, tempfile, os
+import argparse, json, re, subprocess, sys, tempfile, os
+
+def _sanitize(raw):
+    """Strip raw control characters: they appear in issue bodies and break json.loads,
+    which would otherwise abort an import that is meant to be resumable."""
+    return re.sub(r"[\x00-\x08\x0b\x0c\x0e-\x1f]", "", raw)
 
 def multica(*args, check=True):
     r = subprocess.run(["multica", *args], capture_output=True, text=True)
@@ -34,23 +39,40 @@ def multica(*args, check=True):
     return r.stdout.strip()
 
 def existing_source_ids(project):
-    """Issues already carrying a source_id, so a rerun continues instead of duplicating."""
-    seen = {}
-    try:
-        issues = json.loads(multica("issue", "list", "--project", project, "--output", "json") or "[]")
-    except (RuntimeError, json.JSONDecodeError) as e:
-        sys.exit(f"could not list existing issues — refusing to risk duplicates: {e}")
-    for it in issues if isinstance(issues, list) else issues.get("issues", []):
-        iid = it.get("id")
-        if not iid:
-            continue
+    """Issues already carrying a source_id, so a rerun continues instead of duplicating.
+
+    Paginated on purpose: `issue list` caps at 100 rows, and a partial board here means
+    the script re-creates everything past row 100 on a resumed run — for the one workflow
+    whose whole purpose is large backlogs.
+    """
+    seen, offset, page = {}, 0, 100
+    while True:
+        raw = multica("issue", "list", "--project", project, "--output", "json",
+                      "--limit", str(page), "--offset", str(offset), check=False)
+        if not raw:
+            break
         try:
-            meta = json.loads(multica("issue", "metadata", "get", iid, "source_id", check=False) or "null")
-        except json.JSONDecodeError:
-            meta = None
-        val = meta.get("value") if isinstance(meta, dict) else meta
-        if val:
-            seen[str(val)] = iid
+            batch = json.loads(_sanitize(raw))
+        except json.JSONDecodeError as e:
+            sys.exit(f"could not list existing issues — refusing to risk duplicates: {e}")
+        rows = batch if isinstance(batch, list) else batch.get("issues", [])
+        if not rows:
+            break
+        for it in rows:
+            iid = it.get("id")
+            if not iid:
+                continue
+            try:
+                meta = json.loads(multica("issue", "metadata", "get", iid, "source_id",
+                                          check=False) or "null")
+            except json.JSONDecodeError:
+                meta = None
+            val = meta.get("value") if isinstance(meta, dict) else meta
+            if val:
+                seen[str(val)] = iid
+        if len(rows) < page:
+            break
+        offset += page
     return seen
 
 def create(item, project, apply):

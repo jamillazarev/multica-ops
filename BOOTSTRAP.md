@@ -1,6 +1,8 @@
 # Bootstrap — standing up an agent team on Multica from zero
 
-CLI recipes + the traps that cost real hours. Verified with `multica` CLI **v0.4.2**.
+CLI recipes + the traps that cost real hours. The version these are pinned to lives in
+one place — REFERENCE §10 — and `python3 scripts/verify.py` re-checks every recipe here
+against the CLI you actually have.
 When the CLI disagrees with this file, trust `--help`/`--debug` and the docs — then
 propose an update to this skill.
 
@@ -12,7 +14,7 @@ staffing plan — see `ROLES.md`.
 
 ## Contents
 
-- [0. Prerequisites](#0-prerequisites)
+- [0. Day zero — from nothing to a working CLI](#0-day-zero-from-nothing-to-a-working-cli)
 - [1. Project](#1-project)
 - [2. Agents](#2-agents)
 - [3. Squads (routing)](#3-squads-routing)
@@ -28,15 +30,36 @@ staffing plan — see `ROLES.md`.
 - [13. Slack / Lark (optional)](#13-slack-lark-optional)
 - [14. Workspace = company · multiple members · local runtimes](#14-workspace-company-multiple-members-local-runtimes)
 - [15. Stand-up order (detail)](#15-stand-up-order-detail)
+- [15b. The short command — installed, not offered](#15b-the-short-command-installed-not-offered)
 - [16. Interview checklist (detail)](#16-interview-checklist-detail)
 
-## 0. Prerequisites
+## 0. Day zero — from nothing to a working CLI
+
+**Start here on every first contact, before `/init` and before any question about the
+project.** Most people arrive having installed Multica and no idea what comes next; the
+answer is six checks that take seconds, and Mops runs them rather than asking the owner to.
+Each has one repair, and the repair is offered — installing or updating software on
+someone's machine is their call, not a side effect of saying hello.
+
+| Check | Broken looks like | Repair |
+|---|---|---|
+| **1. Installed?** `multica version` | `command not found` | `brew install multica-ai/tap/multica`, or the install script from multica.ai. **Ask which they prefer** — someone who downloaded from the site does not expect a Homebrew formula appearing in their setup |
+| **2. Current?** compare with the latest release | old version, subtle CLI drift | `multica update` — offer it, don't run it |
+| **3. Signed in?** `multica auth status` | not authenticated | `multica setup cloud`, or `multica setup self-host --server-url …` for their own server |
+| **4. A workspace?** `multica workspace list` | empty, or several | create one, or **confirm which** — never guess when there is more than one |
+| **5. Daemon up?** `multica daemon status` | stopped | `multica daemon start`. Nothing executes without it, and the symptom is silence, not an error |
+| **6. Runtimes?** `multica runtime list` | empty, or all `offline` | the daemon auto-detects agent CLIs on PATH: install one, then `daemon restart`. **Agents cannot be created against a runtime that isn't there** |
+
+**Report the whole ladder at once, not one rung per message** — six sequential yes/no
+prompts is exactly the experience this skill exists to avoid. State what's missing, what
+each fix costs, and let the owner say "do it all".
 
 ```sh
-multica setup                 # connect the CLI to the workspace (auth)
-multica runtime list          # runtime ids (agents need one; note online/offline)
-multica daemon status         # the daemon executes tasks; --output json → active_task_count
+multica version && multica auth status      # 1-3
+multica workspace list --output json        # 4
+multica daemon status && multica runtime list   # 5-6
 ```
+
 **The runtime is where agents actually execute.** A desktop app may run its own
 profile daemon (`--profile …`) separate from the CLI daemon: check whose
 `active_task_count` grows — that one is the executor.
@@ -108,7 +131,9 @@ makes, so they are the most expensive text you write per role. Six short blocks,
 1. **Craft and scope** — what this role does, in one line.
 2. **Owns / doesn't own** — the boundary the fit-check tests against. Being explicit here is
    what makes "this isn't mine, handing back" a normal move rather than a confession.
-3. **Grade** — junior · mid · senior, and what it implies about escalating up or handing down.
+3. **Escalation thresholds** — what goes up (ambiguous, architectural, high blast radius) and
+   what goes down (routine, below this role). **Never the grade as a label**: an agent told it
+   is "junior" performs junior. The grade lives in `TEAM.md` as a routing fact (ROLES).
 4. **DoD specifics for this craft** — the general shape lives in the guide; here go the parts
    only this craft can state (what evidence a design gate needs, what a test must cover).
 5. **Next hop** — who receives the handoff, who is the escalation target.
@@ -128,8 +153,8 @@ multica squad create --name "<Discipline>" --leader "<Leader agent>"
 multica squad member add <squad-id> --member-id <agent-id> --type agent
 multica squad update <squad-id> --instructions "<who routes what to whom + next hop>"
 ```
-- Assigning an issue to a squad wakes **only the leader**; the leader **delegates via
-  `@`-mention and does NOT implement**.
+- Assigning an issue to a squad wakes **only the leader**; the leader **routes and does not implement that feature** — delegating via `@`-mention.
+  Assigned *directly*, the same agent works like anyone else: routing is a mode, not a career.
 - A solo discipline (no second specialist) → assign the **agent directly**, no squad.
 
 ## 4. Skills
@@ -287,7 +312,6 @@ integration. Offer at setup; connect any time later.
   same files). Notion, when requested, is a mirror — the repo stays the source of
   truth. Split repos only for separate deploy/access/open-source boundaries.
 
-
 ## 15. Stand-up order (detail)
 
 1. **Workspace = company.** One workspace per company/owner; projects = directions
@@ -320,7 +344,7 @@ integration. Offer at setup; connect any time later.
    experts relevant to the domain (e.g. domain specialist, market/growth, architect)
    as an **Experts squad**; user-simulation personas (built from the PM/UX research)
    as a **Personas squad** used in usability passes. Only Mops in Multica stays squadless. The user may decline both.
-6. **Stand up Mops in Multica (opt-in — checklist #13 · Resident Mops)** — if enabled: install this skill
+6. **Stand up Mops in Multica (opt-in — checklist #16 · Resident Mops)** — if enabled: install this skill
    into the workspace and assign it **only to the Mops agent** (other agents carry the
    *guide* skill, not this one — multica-ops is Mops's brain), so Mops in Multica *is* the
    same Mops:
@@ -331,9 +355,14 @@ integration. Offer at setup; connect any time later.
      `import --on-conflict overwrite`), **never a second copy**. (`import` supports
      github/skills.sh/clawhub URLs.) Then `multica agent create` the agent named
      **Mops**, `multica agent skills` to attach the imported skill (+ find-skills),
-     `multica agent avatar` matching the chosen library, subtitle *"Executive Advisor ·
+     `multica agent avatar` matching the chosen library — except **Mops in Multica, which always uses `assets/mops-avatar.png`** from this repo, subtitle *"Executive Advisor ·
      resident"*. Grant rights per the user's autonomy choice (advisor-only → narrow;
-     ongoing operator → CLI + admin in its `custom-env`).
+     ongoing operator → the CLI plus a token scoped to issues, comments
+   and status). **Never workspace admin.** The resident is the agent with the widest
+   untrusted-input surface — it reads issues, imported tickets and web research — so giving
+   it `agent env set`, `skill import` or member invites turns any successful injection into
+   a full workspace takeover. A genuinely admin-level action escalates to the owner; that is
+   what the escalation vertex is for.
    - Seed the **kickoff**: pinned "Project kickoff" issue + Mops-in-Multica's first message =
      the decisions summary (see "Two seats of Mops"). Tell the user: *"from here you can
      talk to Mops inside Multica — chat, issues, any device; I remain in the CLI for the
@@ -349,64 +378,73 @@ integration. Offer at setup; connect any time later.
    map is re-derived by every agent on every run). The cloud holds issues/comments; code and
    keys stay on members' machines. **Start each from its template in `templates/`** rather than
    improvising the shape — a doc nobody can predict the shape of gets skimmed, not used.
+   **Protect the default branch — actually run this, don't just intend it.** Merge is the
+   conductor's terminal step when the gates are green; the protection is what keeps that from
+   being a sentence anyone can ignore.
+
+   ```sh
+   gh api -X PUT repos/<owner>/<repo>/branches/main/protection \
+     -f "required_pull_request_reviews[required_approving_review_count]=0" \
+     -F "enforce_admins=true" -F "allow_force_pushes=false" -F "allow_deletions=false" \
+     -f "required_status_checks[strict]=true" -f "required_status_checks[contexts][]=" \
+     -f "restrictions=" 2>&1 | head -3
+   ```
+
+   Three honest caveats, because a control you misunderstand is worse than none:
+   **(a)** this stops force-push and deletion, not a bad merge — **our review gates are Multica
+   sub-issues judged by agents, not CI status checks**, so nothing wires a gate verdict to a
+   commit status. If the project has CI, add its job to `contexts` and the two systems finally
+   agree. **(b)** `enforce_admins=true` matters most here: without it the conductor, which holds
+   git rights, can simply step around the fence. **(c)** With **no remote at all** — the
+   documented default when the owner is unsure — there is no branch to protect and the merge
+   rule really is only a sentence. Say that out loud rather than implying a gate exists.
+   Re-checked at `/health`.
    Then **install the docs guard** — `templates/company-preflight.sh` as the repo's
    pre-commit hook (PLAYBOOKS): a skeleton is only useful while it stays true.
    `LATER.md` and `ECONOMICS.md` are the two without a template: their shape is stated where they
    are defined (a deferral is *what · why · revisit trigger*; economics is the ledger
    rolled up — PLAYBOOKS).
 
+## 15b. The short command — installed, not offered
+
+Claude Code namespaces plugin commands, so this skill's are `/multica-ops:mops`,
+`/multica-ops:status` and so on. **User-level commands are not namespaced**, so a file at
+`~/.claude/commands/mops.md` is a real `/mops` in every project.
+
+**A SessionStart hook installs it on first use** (`hooks/hooks.json` →
+`scripts/install-alias.sh`) rather than asking. Asking would teach the long form first and
+the short one later, leaving the user to remember which they have — and this is a file in
+their own Claude config: local, private, and removable with one `rm`, which is a different
+class of thing from acting on an outside system.
+
+It is deliberately timid about everything else:
+
+- **Never overwrites** an existing `/mops` — it may be theirs, and it records that it saw it.
+- **Never recreates one the user deleted.** A marker at `~/.claude/.multica-ops-alias`
+  remembers that the decision was already made, so removal is permanent.
+- **Prints once**, naming the `rm` that undoes it, then stays silent forever.
+
+**When it isn't there, say the long form.** Someone who declined it, or is in another
+harness entirely, must hear `/multica-ops:mops` — quoting a command the reader does not have
+is how the *"Unknown command: /mops"* report happened in the first place. And in Cursor,
+Codex or any non-plugin install there are **no slash commands at all**: plain language is
+the way in, and that is worth saying out loud rather than leaving them to discover it.
 
 ## 16. Interview checklist (detail)
 
 Each item with its default, as walked in `/init` and re-asked in the `/join` delta.
 
-1. **Deliverable & repo** — monorepo by default (repo = company; `apps/ site/
-   marketing/ docs/` = projects); separate repos only for separate deploy/access.
-2. **Disciplines & depth** — only crafts the project names; ≥2 specialists → squad
-   with a routing leader, solo → lone agent.
-3. **DoD per discipline** — objective gates (default: tests/review for code,
-   mockup-fidelity + a11y for design, fact-check for content).
-4. **Stage ladder** — default Build → Review → Accept; prepend Design when design
-   precedes build; parallel gates inside Review.
-5. **Where Multica itself runs** — **cloud by default**; ask once, because on a
-   self-hosted server backups, upgrades, email and signup controls become the owner's
-   (§0). Record the answer — it changes who to call when the board is down.
-6. **Capacity & models** — audit `runtime list` (runtimes are **local**: auto-detected
-   from PATH on each member's machine; several machines can serve one workspace);
-   propose per-role tiers, confirm. Missing tool → install + `daemon restart`.
-7. **Integrations inventory** — "what already exists?" (GitHub/GitLab, Figma,
-   analytics, Mobbin, image-gen APIs…). Per service: **connect-or-create** (exists →
-   connect; missing → create). Access via `mcp_config` / `custom-env` (BOOTSTRAP §12). For digital products,
-   default service & library picks live in **`STACKS.md`** — offer the
-   matching seeds, accept "other" as always.
-8. **Docs home** — default **local-first markdown in the repo**: `docs/` is designed
-   to open as an **Obsidian vault** (plain relative links + Mermaid — readable on
-   GitHub and in Obsidian alike; roadmap, team, specs all browsable). Options: Notion
-   mirror (via MCP; repo stays the source of truth), Figma (cloud) vs Pen (pen.dev, local)
-   for design — or both. As everywhere: the user may name any other tool — research and connect it.
-9. **Assets home** (when the project accumulates media — images, video, 3D):
-   small volumes → in the repo (Git LFS); large → **research the best current
-   provider for the project's actual needs** (object storage, media CDN, or an
-   all-in-one backend) and propose — never keep a hardcoded provider list, the
-   market moves. Wire the chosen one via `mcp_config`/`custom-env`; generated
-   assets still pass the usual review gates.
-10. **Avatars** — default DiceBear (one seed per agent name); or user's images.
-11. **Experts & personas** — offer, per project, both opt-in (see below). Default: none.
-12. **Design system & brand** — opt-in (see the two sections below). Ask: does the
-    project produce a repeatable form (UI, covers, packaging, letters)? Default: **on
-    when a design discipline exists**. And: does it face the world — is there a brand
-    (existing / to create / not needed)? Existing → audit, don't rebuild. Homes:
-    `docs/design-system/` (tokens as files) and `docs/brand/` (the brand book).
-13. **Resident Mops (Mops in Multica)** — opt-in (see "Two seats of Mops"). Default: **on** for a
-    company (a running team needs an in-workspace advisor + escalation vertex when the
-    user is away); **off** for a quick job. Declining means Mops lives in the console
-    only.
-14. **Operating mode** — see next section. Default: per-feature.
-15. **Autopilots / Slack / Lark** — default "later"; connect on request (BOOTSTRAP §13).
-16. **Language & tone** — confirm the chat language as the working language; artifacts
-    in it or English? Tone (business / friendly / terse-technical)? Both go into the
-    guide skill, first line, absolute — including every agent's first greeting.
-17. **Control & expertise** — two questions that shape every later interaction.
+1. **Where the code lives — ask, never assume, and never create anything on the owner's
+   accounts uninvited.** Three separate questions, in this order: *does a repo already
+   exist?* (then use it — do not init a new one beside it); *if not, do you want one, and
+   **where**?*; *and is a remote wanted at all?* **Creating a repository on the owner's
+   GitHub is an outward action on their account** — it lands under whatever identity their
+   `gh`/git is authenticated as, which is very often their **employer's**. It is
+   owner-confirmed, out loud, naming the account it would land in: *"this would create
+   `acme-corp/swipy` under your work account `r-tagiyev` — right one?"*. A local git repo
+   with no remote is a legitimate end state and the correct default when the owner is
+   unsure; nothing in this methodology needs a remote except per-task parallelism.
+2. **Control & expertise** — two questions that shape every later interaction.
     **(a) How much do you want to be in the loop?** *hands-on* (approve each feature) ·
     **checkpoints** (approve at named gates — default) · *hands-off* (only
     destructive/spend, plus a digest). Set globally or per flow; it maps onto `/autonomy`
@@ -415,7 +453,58 @@ Each item with its default, as walked in `/init` and re-asked in the `/join` del
     decisions routed to you; outside them Mops **explains and recommends** with tradeoffs
     instead of dumping a choice on you. The same courtesy governs agents talking across
     squads: explain in the other craft's terms, don't fling jargon over the fence.
-18. **Governance** (see below) — who can direct Mops (default: all members full; owner
+3. **Deliverable & repo shape** — monorepo by default (repo = company; `apps/ site/
+   marketing/ docs/` = projects); separate repos only for separate deploy/access.
+4. **Disciplines & depth** — only crafts the project names; ≥2 specialists → squad
+   with a routing leader, solo → lone agent.
+5. **DoD per discipline** — objective gates (default: tests/review for code,
+   mockup-fidelity + a11y for design, fact-check for content).
+6. **Stage ladder** — default Build → Review → Accept; prepend Design when design
+   precedes build; parallel gates inside Review.
+7. **Where Multica itself runs** — **cloud by default**; ask once, because on a
+   self-hosted server backups, upgrades, email and signup controls become the owner's
+   (§0). Record the answer — it changes who to call when the board is down.
+8. **Capacity & models** — audit `runtime list` (runtimes are **local**: auto-detected
+   from PATH on each member's machine; several machines can serve one workspace);
+   propose per-role tiers, confirm. Missing tool → install + `daemon restart`.
+9. **Anything you already want used** — before proposing anything, ask outright: *are there
+   skills, MCP servers or tools you already use and want this team to have?* People arrive
+   with favourites and with things already wired; discovering them on day three means the
+   team was built around a worse choice. Each named one goes through the same gate as any
+   import (screen → trim → attach with provenance), and "no, you pick" is a fine answer.
+10. **Integrations inventory** — "what already exists?" (GitHub/GitLab, Figma,
+   analytics, Mobbin, image-gen APIs…). Per service: **connect-or-create** (exists →
+   connect; missing → create). Access via `mcp_config` / `custom-env` (BOOTSTRAP §12). For digital products,
+   default service & library picks live in **`STACKS.md`** — offer the
+   matching seeds, accept "other" as always.
+11. **Docs home** — default **local-first markdown in the repo**: `docs/` is designed
+   to open as an **Obsidian vault** (plain relative links + Mermaid — readable on
+   GitHub and in Obsidian alike; roadmap, team, specs all browsable). Options: Notion
+   mirror (via MCP; repo stays the source of truth), Figma (cloud) vs Pen (pen.dev, local)
+   for design — or both. As everywhere: the user may name any other tool — research and connect it.
+12. **Assets home** (when the project accumulates media — images, video, 3D):
+   small volumes → in the repo (Git LFS); large → **research the best current
+   provider for the project's actual needs** (object storage, media CDN, or an
+   all-in-one backend) and propose — never keep a hardcoded provider list, the
+   market moves. Wire the chosen one via `mcp_config`/`custom-env`; generated
+   assets still pass the usual review gates.
+13. **Avatars** — default DiceBear (one seed per agent name); or user's images.
+14. **Experts & personas** — offer, per project, both opt-in (see below). Default: none.
+15. **Design system & brand** — opt-in (see the two sections below). Ask: does the
+    project produce a repeatable form (UI, covers, packaging, letters)? Default: **on
+    when a design discipline exists**. And: does it face the world — is there a brand
+    (existing / to create / not needed)? Existing → audit, don't rebuild. Homes:
+    `docs/design-system/` (tokens as files) and `docs/brand/` (the brand book).
+16. **Resident Mops (Mops in Multica)** — opt-in (see "Two seats of Mops"). Default: **on** for a
+    company (a running team needs an in-workspace advisor + escalation vertex when the
+    user is away); **off** for a quick job. Declining means Mops lives in the console
+    only.
+17. **Operating mode** — see next section. Default: `manual` (a human starts each feature).
+18. **Autopilots / Slack / Lark** — default "later"; connect on request (BOOTSTRAP §13).
+19. **Language & tone** — confirm the chat language as the working language; artifacts
+    in it or English? Tone (business / friendly / terse-technical)? Both go into the
+    guide skill, first line, absolute — including every agent's first greeting.
+20. **Governance** (see below) — who can direct Mops (default: all members full; owner
     always full; destructive/spend always → owner) and which flows need a named human's
     sign-off (default: none beyond the destructive gate; ask what the user wants to
     review — image-gen, publishing, every feature…). Multiple human members are normal.

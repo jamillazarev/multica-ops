@@ -1,7 +1,7 @@
 # Opt-in modules
 
 Enabled at the interview or later via `/module`. **Design system & brand** come from
-checklist #12 · Design system & brand; the **external tracker bridge** is offered only when
+checklist #15 · Design system & brand; the **external tracker bridge** is offered only when
 work already lives somewhere else.
 
 ## Contents

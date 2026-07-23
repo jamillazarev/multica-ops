@@ -216,7 +216,25 @@ for c in $(grep -oE '^\| `/[a-z-]+' COMMANDS.md | tr -d '| `/'); do
   grep -qE "(^|[^a-z-])$c([^a-z-]|$)" commands/mops.md || gaps="$gaps /mops-dispatcher"
   [ -n "$gaps" ] && say_warn "/$c not reachable from:$gaps"
 done
-grep -q "control & expertise" SKILL.md && grep -q "budget" SKILL.md || say_warn "interview delta in /join may be missing newer topics"
+# the /join delta must cover every interview topic, or a joined workspace is asked less
+# than a new one — checked against BOOTSTRAP §16 rather than a hardcoded phrase.
+delta_bad=$(python3 - <<'PYEOF'
+import re
+boot = open("BOOTSTRAP.md").read()
+sec = re.search(r"## 16\. Interview checklist.*?\Z", boot, re.S)
+if not sec: raise SystemExit
+titles = re.findall(r"^\d+\. \*\*(.+?)\*\*", sec.group(0), re.M)
+flows = open("FLOWS.md").read().lower()
+missing = []
+for t in titles:
+    words = [w for w in re.sub(r"[^a-z ]", " ", t.lower()).split() if len(w) > 4]
+    if words and not any(w in flows for w in words):
+        missing.append(t[:38])
+if missing:
+    print("the /join delta in FLOWS.md never mentions: " + ", ".join(missing[:4]))
+PYEOF
+)
+[ -n "$delta_bad" ] && say_warn "$delta_bad"
 
 # 10 · reminders that cannot be verified from this repo
 git diff --cached --name-only 2>/dev/null | grep -qE '\.md$' && \

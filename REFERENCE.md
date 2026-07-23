@@ -31,7 +31,7 @@ platform can't help itself.**
 | **Sub-issue** | A child task with one executor; its **`stage`** number groups it into a barrier |
 | **Agent** | An autonomous worker (model + skills + instructions + runtime) |
 | **Squad** | A group of agents with one **leader**. Assigned *as a squad*, the leader **routes and does not implement**; the same agent assigned **directly** does its own craft — routing is a mode, not a separate career |
-| **Project resource** | What a project's agents work on: **`github_repo`** (cloned per task into an isolated worktree → unlimited parallelism) or **`local_directory`** (a folder on one daemon's machine, **serialized by a per-directory lock** — one task at a time, forever; max one per project+daemon) |
+| **Project resource** | **Two types exist, verified against the CLI**: `--type` documents `github_repo` and `local_directory`, and `--url` is accepted only for the former — no GitLab, Gitea or self-hosted git today, so say that plainly rather than "I haven't checked". (`--ref` takes a generic JSON payload, so the server may accept more than the CLI exposes; that is a question for the vendor, not a guess to act on.) What a project's agents work on: **`github_repo`** (cloned per task into an isolated worktree → unlimited parallelism) or **`local_directory`** (a folder on one daemon's machine, **serialized by a per-directory lock** — one task at a time, forever; max one per project+daemon) |
 | **Task** | One agent run (queued → dispatched → running → completed/failed); every trigger = a new task |
 
 The hierarchy is exactly two levels: `issue → sub-issues`. `stage` is a number on a
@@ -97,7 +97,7 @@ Conductor: staged sub-issues, assigns squads, launches stage 1
 Leader: splits its stage into member tasks, assigns via @mention, peer review
 Executors: work, commit incrementally, @mention the next stage when done
 --stage barrier: stage done → wakes the conductor → next stage
-Conductor (Accept): verify vs spec → merge → archive → mark the backlog
+Conductor (Accept): verify vs spec → merge (**only with every gate green; the branch is protected, and force-push or a red/skipped gate is owner-only**) → archive → mark the backlog
 ```
 
 The board is the truth: `backlog → todo → in_progress → in_review → done`
@@ -149,8 +149,23 @@ don't restate them in instructions.
 - **Concurrency is a property of the resource, not of your decomposition.** `github_repo`
   gives every task its own worktree, so a wide stage really does run wide;
   `local_directory` locks on the resolved real path, so a wide stage just queues
-  ("Waiting for local directory"). Choose `local_directory` only when the work cannot
-  leave a specific machine, and expect serial execution when you do.
+  ("Waiting for local directory").
+
+  **Say why precisely — this is a Multica implementation choice, not a property of local
+  git.** `git worktree` gives one local repository many working directories, each with its
+  own `HEAD`, index and files over shared objects; parallel local agents are entirely
+  possible in principle, and that is exactly what Multica itself does for `github_repo`.
+  What `local_directory` does is run the agent **directly in the path you gave**, with no
+  worktree and no copy — so the only safe thing left is a lock on that path. Telling an
+  owner "local repos can't parallelise" is wrong and ages badly; tell them "**Multica's
+  `local_directory` doesn't create worktrees, so it serialises**".
+
+  Today's options if someone needs local *and* parallel: one Multica project per manually
+  created worktree (works, but scatters sub-issues across projects), or several
+  daemons/runtimes each holding its own worktree (routing becomes manual — Multica does not
+  balance). Both are workarounds; the clean fix is a resource type that pools worktrees, and
+  that is a feature request worth filing rather than a limitation to design around.
+  Choose `local_directory` only when the work genuinely cannot leave one machine.
 
 ## 8. Anti-patterns
 

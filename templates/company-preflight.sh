@@ -12,11 +12,42 @@
 set -uo pipefail
 cd "$(git rev-parse --show-toplevel 2>/dev/null || echo .)"
 
+SENTINEL="# managed by multica-ops company-preflight"
+
 if [ "${1:-}" = "--install" ]; then
-  mkdir -p .git/hooks
-  printf '#!/bin/sh\nexec bash scripts/preflight.sh\n' > .git/hooks/pre-commit
-  chmod +x .git/hooks/pre-commit
-  echo "pre-commit hook installed"; exit 0
+  # Must be a real repo with a real hooks dir. In a worktree .git is a FILE, and with
+  # core.hooksPath (husky, lefthook) the hooks live elsewhere — writing blind there
+  # reports success while installing nothing.
+  root=$(git rev-parse --show-toplevel 2>/dev/null) || {
+    echo "  x not inside a git repository — nothing installed"; exit 1; }
+  hookdir=$(git config --get core.hooksPath 2>/dev/null || true)
+  if [ -n "$hookdir" ]; then
+    echo "  x this repo uses core.hooksPath=$hookdir (husky, lefthook or similar)."
+    echo "    Add to your existing pre-commit instead:  bash scripts/preflight.sh || exit 1"
+    exit 1
+  fi
+  hookdir=$(git rev-parse --git-path hooks 2>/dev/null) || hookdir="$root/.git/hooks"
+  hook="$hookdir/pre-commit"
+
+  # Only ever replace a hook this script wrote. A substring test on the script name is
+  # not enough: the chaining line we print below contains that same name, so a chained
+  # gitleaks hook would look like ours and get overwritten — deleting a real control.
+  if [ -e "$hook" ] || [ -L "$hook" ]; then
+    if ! grep -qF "$SENTINEL" "$hook" 2>/dev/null; then
+      echo "  x $hook already exists and was not written by this script."
+      echo "    Not touching it - it may be your secret scan or test gate."
+      echo "    Chain it by adding this line to it:  bash scripts/preflight.sh || exit 1"
+      exit 1
+    fi
+  fi
+
+  mkdir -p "$hookdir" || { echo "  x cannot create $hookdir"; exit 1; }
+  tmp="$hook.multica-tmp.$$"
+  printf '#!/bin/sh\n%s\nexec bash scripts/preflight.sh\n' "$SENTINEL" > "$tmp" || {
+    echo "  x cannot write $tmp"; exit 1; }
+  chmod +x "$tmp" && mv -f "$tmp" "$hook" || {
+    rm -f "$tmp"; echo "  x cannot install $hook"; exit 1; }
+  echo "pre-commit hook installed at $hook"; exit 0
 fi
 
 fail=0; warn=0

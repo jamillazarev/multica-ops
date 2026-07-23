@@ -5,10 +5,17 @@ offboards anyone, and what tells a new arrival who to ask.
 
 ## People
 
-| Person | Role | Owns | May direct Mops to | Signs off on |
-|---|---|---|---|---|
-| {{Name}} | {{owner}} | {{the product}} | {{everything}} | {{spend · anything outward}} |
-| {{Name}} | {{designer}} | {{brand, design system}} | {{design flows}} | {{published visuals}} |
+| Person | Role | **Expert in** | Owns | May direct Mops to | Signs off on |
+|---|---|---|---|---|---|
+| {{Name}} | {{owner}} | {{iOS, audio DSP}} | {{the product}} | {{everything}} | {{spend · anything outward}} |
+| {{Name}} | {{designer}} | {{brand, typography}} | {{brand, design system}} | {{design flows}} | {{published visuals}} |
+
+**The "Expert in" column changes how everyone talks to that person**, which is why it is
+asked at the interview and belongs here rather than in someone's memory. **Inside** those
+areas: terse and technical, real decisions routed to them, no explaining the basics.
+**Outside** them: explain the tradeoffs and recommend, don't drop a bare choice on them.
+Getting this backwards is the most reliable way to be annoying — lecturing an expert, or
+handing a stranger to the field a decision they have no basis to make.
 
 ## Agents
 

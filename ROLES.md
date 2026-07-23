@@ -12,6 +12,7 @@ the **project guide skill + find-skills** (invariants) on top of its row below.
 - [Baseline kit — what every agent gets, whatever the role](#baseline-kit-what-every-agent-gets-whatever-the-role)
 - [Grades, fit-check and the talent pool](#grades-fit-check-and-the-talent-pool)
 - [Skill load — a generalist is a cost, and usually a missing hire](#skill-load-a-generalist-is-a-cost-and-usually-a-missing-hire)
+- [Naming roles in the owner's language](#naming-roles-in-the-owners-language)
 - [Any role from conversation — the role-builder](#any-role-from-conversation-the-role-builder)
 - [Experts squad (opt-in, composition per project)](#experts-squad-opt-in-composition-per-project)
 - [Personas squad (opt-in, user simulation)](#personas-squad-opt-in-user-simulation)
@@ -65,8 +66,8 @@ cheap/text-oriented runtime (translations, boilerplate legal).
 | **Legal Counsel** | Content | text | docx, pdf, research, handoff | policies, terms, compliance pages |
 | **Marketing Manager** | — (cross, or Content) | mid | marketing-ideas, positioning-ideas, value-prop-statements, product-name, north-star-metric, gtm-strategy, growth-loops, ideal-customer-profile, competitive-battlecard, beachhead-segment, + Corey Haines pack (social, emails, ads, launch, cold-email, referrals), handoff | GTM strategy pre-launch; post-launch owns channels. **Social automation**: content calendar as issues; a scheduled **autopilot** drafts posts on cadence; publishing via the platform's API/scheduler tools (import via find-skills) with human approval until trust is earned |
 | **Domain / Market / Tech Expert** (opt-in) | Experts squad | top | research, critique, brainstorming, handoff | advisors, not executors: pulled into specs, discovery, acceptance by `@`-mention; composition per project — see "Experts squad" below |
-| **Persona** (opt-in) | Personas squad | cheap | handoff | user simulation built from research; used in usability passes and Design QA walkthroughs — see "Personas squad" below |
-| **Finance & Ops** (opt-in) | — (cross) | text | xlsx, analytics, research, handoff | owns `docs/BUDGET.md` and `docs/ECONOMICS.md`: the ledger, burn and runway, **prices verified online per location**, subscriptions and renewal dates, credits with their expiry cliffs. Escalates *before* the cap, not at it |
+| **Persona** (opt-in) | Personas squad | text | handoff | user simulation built from research; used in usability passes and Design QA walkthroughs — see "Personas squad" below |
+| **Finance & Ops** (opt-in) | — (cross) | text | xlsx, analytics, research, handoff | keeps `docs/BUDGET.md` (which the owner sets via `/budget`) and owns `docs/ECONOMICS.md`: the ledger, burn and runway, **prices verified online per location**, subscriptions and renewal dates, credits with their expiry cliffs. Escalates *before* the cap, not at it |
 | **Customer Support** (opt-in) | Content, or its own | text | handoff, copywriting, research, docx | owns the inbox: turns reports into bugs and feedback items with reproduction steps, answers in the brand voice, writes the help docs, and reports what keeps coming back — the input side of `/feedback` |
 | **Analyst** | — (cross) | top | analytics, xlsx, research, **north-star-metric, metrics-dashboard, ab-test-analysis, cohort-analysis**, handoff | event taxonomy, funnels, north-star, cohorts/AB; never PII/audio |
 
@@ -99,6 +100,15 @@ Upload the same way either way: `multica agent avatar <id> --file <png>`.
 
 ## Autopilots (usually "later")
 
+**A webhook trigger is an inbound door, and it is all four owner-gated kinds at once.** A
+cron autopilot runs on your schedule; a webhook autopilot hands **anyone holding the URL** the
+ability to start agent runs — which spends budget, consumes the shared session window and acts
+under the company's identity. So: creating one is **owner-confirmed**, the URL is a
+**credential** (`mcp_config`/`custom-env`, never a doc, an issue comment or a repo), it is
+registered in `docs/TOOLING.md` with what may fire it, and `trigger-rotate-url` exists because
+a leaked one is rotated rather than debated. Under `auto` autonomy an autopilot is an
+unattended actor — the same scrutiny as the resident Mops, for the same reason.
+
 Autopilots are cron/webhook only — they never react to "a stage finished". Offer, and
 if the user says "later", skip: they can add them through the assistant anytime.
 ```sh
@@ -111,18 +121,20 @@ merged PRs.
 
 ## Baseline kit — what every agent gets, whatever the role
 
-Before any role-specific skill, every agent is given the same floor:
+**Two invariants, then a default kit.** The invariants are non-negotiable and every recipe
+in this skill attaches them by name; the rest is the recommended default, trimmed when a
+role genuinely doesn't need it. Confusing the two is how a floor quietly triples.
+
+**Invariants — always, no exception:**
 
 - **The project guide skill** — language/tone, DoD, handoff = @mention, escalation,
   docs-follow-decisions, system-follows-solutions, brand voice, limit/cancel conventions,
   which modules exist. (This is the **cached prefix** — batch its edits, see REFERENCE §12.)
 - **find-skills** — so the agent can close its own capability gaps instead of stalling.
-- **handoff** — compact the context before a session dies; cheap insurance for everyone.
 
-**And that is deliberately all of it.** Every skill added to the floor is paid for by every
-agent on every run, forever. Screening, compression and releasing are the **conductor's**
-tools as owner of the skill inventory (`/skill`), not the floor's — one agent needs them,
-not twelve.
+**Default kit — attach unless there's a reason not to:**
+
+- **handoff** — compact the context before a session dies; cheap insurance for everyone.
 - **caveman** (lite) — terse reasoning/output; token economy is measurable, not cosmetic.
 - **Context7** — for any role that writes version-sensitive code or config: current
   library/SDK/OS docs instead of a frozen training cutoff.
@@ -156,7 +168,16 @@ asks: *is this my craft, and my grade?* Three exits, all normal, none a failure:
   a cheaper agent or ask the leader to re-route. Burning a top model on trivia is a real
   cost, not diligence.
 
-**Grade is not a dial.** Set the model at creation; after that, **don't demote an agent
+**A grade is a routing fact, never a character.** It decides which agent gets the task and
+which model tier it runs on — it does **not** go into an agent's instructions as an identity.
+Never write *"you are a junior developer"*: a model told it is junior will act junior,
+producing worse work on purpose, and role-play of competence levels has stopped helping on
+current models even where it once did. Write what the agent **owns** and **when to escalate**;
+let the tier carry the cost difference and the routing carry the difficulty.
+
+**Grade is not a dial.** Changing `agent update --model/--thinking-level` mid-life is a
+deliberate exception for one exceptional job: it affects *every* later task of that agent and
+**invalidates its cached prefix**, so note it and set it back. Set the model at creation; after that, **don't demote an agent
 to make it cheap** — its task history and its line in the cost ledger become
 unreadable ("was this done by a senior or by the same agent after we downgraded it?").
 Need cheaper work done? Route it to a junior agent or hire one — exactly what you'd do
@@ -200,7 +221,7 @@ forces mid-task compaction, which is exactly where work gets lost and redone.
 | **Guide + role skills + the agent's own instructions** — the target | **≤ 8%** | ~16k tokens |
 | The line where something is wrong | ~12% | ~25k tokens |
 
-For calibration: the shipped `GUIDE-template.md` is **~1.8k tokens** (measure yours — it grows), a median community skill
+For calibration: the shipped `GUIDE-template.md` is **~2.3k tokens** (measure yours — it grows, and this figure has moved twice already), a median community skill
 is ~1–2k, and a deliberately heavy one runs ~8k. So the working budget is roughly *the guide
 plus two heavy skills, or a handful of ordinary ones*. On a smaller-window model the same
 percentages yield smaller numbers — which is the point of expressing it this way.
@@ -235,12 +256,39 @@ squad grows past a handful of members or the lead is over budget for its own cra
 router costs an extra hop and an extra run per task, so it has to buy back more than it
 spends.
 
+**Count it at hire time, in the same breath as the proposal.** The weight is knowable before
+anything is attached, so say it then: *"Android engineer — 6 skills, ~11k tokens of
+always-loaded text, about 5% of the window"*. A list of eighteen imports with no numbers is
+what makes an owner ask "why so many?", and by the time `/audit` notices, the team is built
+around it. Same line names what each skill is **for** — a skill nobody can justify in half a
+sentence does not go on the floor.
+
 **Crossing the line is a hiring signal, not a pruning task.** An agent needing research *and*
 design *and* deployment is carrying two jobs; the fix is a second agent with clear ownership,
 not a smaller version of the same generalist. Prune only what is genuinely unused — if every
 skill is used, the role is too wide. Same principle as grades: **you don't shrink someone to
 fit, you hire the missing person.** `/audit` reports load per agent and names the split
 candidates.
+
+## Naming roles in the owner's language
+
+Role names show up in every mention, every notification and every board column, so a bad
+translation is read a hundred times a day. **Translate the meaning, not the word.** The
+standing example is our own: *Conductor* means the person in front of an orchestra, and its
+literal Russian rendering — *кондуктор* — is the person selling tickets on a tram. A native
+speaker sees the joke instantly and the role loses its authority.
+
+Three rules that avoid it:
+
+- **Ask a native speaker or a translation skill for the *connotation*, not the dictionary
+  entry** — "what does this word make you picture?". Search `awesome-{language}` or the skill
+  catalogs for a localisation or copy-editing skill and let it check register and slang; this
+  is exactly the long tail the role-builder exists for.
+- **When no clean equivalent exists, keep the English term** rather than shipping a wrong
+  image. A borrowed word reads as jargon; a mistranslated one reads as a mistake.
+- **Titles carry status.** "Junior" translated flatly can read as demeaning in languages
+  where seniority is addressed differently — and we don't put grades in agent instructions
+  anyway, so leave them out of display names too.
 
 ## Any role from conversation — the role-builder
 

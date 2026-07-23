@@ -51,9 +51,12 @@ Then sub-issues — **everything independent on the same stage** so it runs conc
 | 1 | Build the 20-query acceptance set from tickets | Analyst |
 | 1 | Empty/failed-search states, designed | Product designer |
 | 2 | Ranking + query parsing against the acceptance set | Backend engineer |
-| 3 | Review: code · design · a11y (parallel gates) | QA, design lead |
+| 3 | Review: code | QA engineer |
+| 3 | Review: design + a11y | Design lead |
 
-Stage 1 has three items because none of them needs the others. Ranking is stage 2 only
+Stage 3 is two rows, not one: **a gate that can independently reject work is its own
+sub-issue with its own single owner** — that is what makes the gates parallel rather than a
+queue. Stage 1 has three items because none of them needs the others. Ranking is stage 2 only
 because it genuinely needs the index. The acceptance set is built **before** the ranking
 work, by someone else, so the bar isn't authored by the person being measured against it.
 
@@ -129,7 +132,7 @@ whether the gate ran.
 | Analyst | 1.1M | $1.40 | 40m |
 | **Total** | **20.8M** | **$26.95** | **11h 05m** |
 
-> **Cache reads:** 87% of tokens. **Against the envelope:** $26.95 of $300/mo, sixth
+> **Cache reads:** 88% of tokens. **Against the envelope:** $26.95 of $300/mo, sixth
 > release this month, $212 spent. **$ is an estimate** from list prices (tokens ×
 > per-million), not an invoice; on a subscription it's value consumed, not cash out.
 > **Compared to the last two releases:** the design share doubled — this one had three

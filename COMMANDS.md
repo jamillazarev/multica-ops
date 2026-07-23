@@ -3,7 +3,7 @@
 **You never need a command** — plain language in any language works; Mops parses intent
 and asks when ambiguous. Commands are optional thin aliases (a plugin nicety), grouped
 below, aliases in parentheses; **arguments are free text** (`/move the crossfeed thing
-to the next release` is fine). **`/mops <anything>`** is the one-word dispatcher
+to the next release` is fine). **`/multica-ops:mops <anything>`** is the free-text dispatcher (plugin commands are namespaced). A short **`/mops`** is installed on first run by the plugin's SessionStart hook — check it exists before quoting either form, and outside Claude Code there are no slash commands at all
 (collision-proof vs Claude Code built-ins; namespaced `/multica-ops:<cmd>` also works) —
 Mops the pug is the skill's mascot. *Where* column: 🖥️ console (heavy/machine/
 interactive) · 🏢 Mops in Multica (presence/async) · ⇆ either.
@@ -11,7 +11,8 @@ interactive) · 🏢 Mops in Multica (presence/async) · ⇆ either.
 **Setup**
 | Command | Where | Routes to |
 |---|---|---|
-| `/init` | 🖥️ | bootstrap from zero (interview → stand up). Full procedure: FLOWS |
+| `/init` | 🖥️ | bootstrap from zero: **day zero** (BOOTSTRAP §0) → three routing questions → shaping → interview → stand up. Full procedure: FLOWS |
+| `/crew` | 🖥️ | **crew mode**: executors and gates, the owner is the product manager — no conductor, discovery or roadmap ceremony. Default offer after `/import`; adding a conductor later is an upgrade, not a redo |
 | `/join` | 🖥️ | join an existing setup — `/audit` + interview delta, then gaps → fixes; reconcile an existing Mops in Multica. Full procedure: FLOWS |
 
 **Features & roadmap**
@@ -58,8 +59,8 @@ interactive) · 🏢 Mops in Multica (presence/async) · ⇆ either.
 | `/recover` (`/continue`) | 🖥️ | revive after limits (rerun interrupted, revive marker-less cancels) |
 | `/start` · `/stop` | 🖥️ | daemon start / stop (local runtime) |
 | `/workspace [name]` | 🖥️ | list your workspaces / switch the active one (`workspace switch`); Mops confirms which company it's acting on when several exist |
-| `/health` (`/runtimes`) | 🖥️ | full-circle check: runtimes (online/stale + affected agents), integrations & MCP reachability, API tokens/secrets (presence + probe + expiry), daemon, limits → component → status → who it blocks → fix |
-| `/upgrade [skill\|all]` | 🖥️ | update skills safely: **re-screen the new version first** (an upgrade ships unreviewed third-party code and instructions — diff it against the version you screened, and read what changed in the prose, not only the scripts) → dry-run impact report (skill + dependent agents/squads/autopilots/guide) → commit current to `docs/skill-backups/` (git = history; pre-upgrade SHA logged in `UPGRADES.md`) → apply → reconcile → verify/rollback |
+| `/health` (`/runtimes`) | 🖥️ | full-circle check: runtimes (online/stale + affected agents), integrations & MCP reachability, API tokens/secrets (presence + probe + expiry), **branch protection where a remote exists** — a fence nobody installed is exactly the failure this skill warns about, daemon, limits → component → status → who it blocks → fix |
+| `/upgrade [skill\|all]` | 🖥️ | **the one command for getting current** — four layers: this skill's bytes on your machine (it prints the line *you* run; a skill can't replace its own plugin), the workspace migration, imported skills, and the CLI locally and on runtimes **only when `active_task_count` is 0**. Update = new bytes; upgrade = your workspace moves to them. Diagram: WORKFLOW. Then: **re-screen the new version first** (an upgrade ships unreviewed third-party code and instructions — diff it against the version you screened, and read what changed in the prose, not only the scripts) → dry-run impact report (skill + dependent agents/squads/autopilots/guide) → commit current to `docs/skill-backups/` (git = history; pre-upgrade SHA logged in `UPGRADES.md`) → apply → reconcile → verify/rollback |
 | `/switch <role\|all> <provider>` | 🖥️ | reassign runtime/model/thinking-level per agent, or an assisted whole-provider migration (install/auth/daemon + tier remap + smoke test) |
 | `/audit` | 🖥️ | health **and** opportunities — not just defects: token burn, limit-killed runs, model-tier misfits, stalled/blocked issues, hygiene (guide/find-skills/instructions/labels), mention cycles, secrets, **design-system hygiene** (unsystematized one-offs, token drift, convention violations — Component Library Audit helps); **plus process improvements** (better stage/gate design, tier savings, skills worth creating, routing tweaks, automation candidates) and **integrity checks** (facts past their check-date, a missing or stale `ARCHITECTURE.md`/`DECISIONS.md`, gates where author and reviewer coincide, edits to locked surfaces, **always-loaded skill weight per agent** — over the ceiling means a role wants splitting, not pruning; **unsourced ICE scores**, and rankings that flip when a score moves by one); pulls in `/health`. Output: finding → recommendation → impact |
 | `/connect <service>` (`/integration`) | 🖥️ | integrations: connect-or-create + **check the MCP registries first** (mcpservers.org, mcp.so, awesome-mcp-servers; mcpmarket.com leaderboards as the maintained-and-popular signal — an existing server beats hand-wiring) + **study the tool** (idioms/best practices → guide) + agent access (mcp_config/custom-env) + permission rules + register in `docs/TOOLING.md` |

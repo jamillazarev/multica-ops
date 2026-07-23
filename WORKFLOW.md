@@ -4,28 +4,55 @@ Mermaid renders on GitHub, in Obsidian, and on the docs site.
 
 ## Contents
 
-- [Bootstrap — from a sentence to a working company](#bootstrap-from-a-sentence-to-a-working-company)
+- [From first message to a working company](#from-first-message-to-a-working-company)
+- [The four routes, side by side](#the-four-routes-side-by-side)
 - [Two seats of Mops](#two-seats-of-mops)
 - [One feature through the conveyor](#one-feature-through-the-conveyor)
 - [Escalation & control](#escalation-control)
 - [Session limits — detect and recover](#session-limits-detect-and-recover)
+- [Getting current — what /upgrade actually walks](#getting-current-what-upgrade-actually-walks)
 - [The skill lifecycle — gates, not ceremony](#the-skill-lifecycle-gates-not-ceremony)
 
-## Bootstrap — from a sentence to a working company
+## From first message to a working company
 
 ```mermaid
 flowchart TD
-    U["User: one sentence"] --> Q{"Quick job or company?"}
-    Q -->|quick| QJ["3 questions:<br/>deliverable · repo · language"] --> MINI["Conductor + 1-2 executors"]
-    Q -->|company| INT["Progressive interview<br/>defaults everywhere"]
-    INT --> WS["Workspace = company<br/>details + logo"]
-    WS --> CON["Conductor = project lead"]
-    CON --> GUIDE["Guide skill + find-skills<br/>on every agent"]
-    GUIDE --> ROLES["Roles from interview<br/>squads where 2+"]
-    ROLES --> OPT["Opt-in modules:<br/>design system · brand<br/>experts · personas · Design QA<br/>autopilots · Slack · Lark"]
-    OPT --> RES["Mops in Multica<br/>(resident · optional)"]
-    RES --> GO["User starts first feature<br/>conveyor takes over"]
-    MINI --> GO
+    U["Any first message —<br/>even a bare /mops or 'hi'"] --> DZ["Day zero: installed · current ·<br/>signed in · workspace · daemon · runtimes<br/><i>one ladder with its fixes, not six prompts</i>"]
+    DZ --> Q{"Three questions:<br/>what exists · what you want ·<br/>who runs the work"}
+    Q -->|"nothing, want a team"| SHAPE
+    Q -->|"a workspace already"| JOIN["/join — audit, then fix<br/>in approved batches"]
+    Q -->|"a backlog elsewhere"| IMP["/import — mapping shown first,<br/>issues created unassigned"]
+    Q -->|"one job, no team"| QJ["Quick job: 3 questions,<br/>1–2 agents, build → review"]
+    SHAPE["Shape the work:<br/>what's hard · what it's made of ·<br/>rough size → <b>team proposed with reasons</b>"] --> INT["Interview in waves —<br/>control question second"]
+    INT --> STAND["Stand up: conductor → guide +<br/>find-skills → roles → docs skeleton<br/>+ branch protection + docs guard"]
+    IMP --> CREW
+    Q -->|"a list of tasks, you decide order"| CREW["Crew mode: executors + gates,<br/><b>no conductor</b> — owner is the PM"]
+    CREW --> RUN["Work"]
+    STAND --> RUN
+    QJ --> RUN
+    JOIN --> RUN
+```
+
+> Nobody is asked to choose a command. Crew mode is the **default offer after `/import`** —
+> someone who just moved their backlog has already decided what the work is. Adding a
+> conductor later is an upgrade, not a redo.
+
+## The four routes, side by side
+
+```mermaid
+flowchart LR
+    subgraph INIT["/init — a company"]
+        I1["shaping → interview"] --> I2["conductor + squads"] --> I3["roadmap · ICE · discovery"]
+    end
+    subgraph CREW["/crew — a crew"]
+        C1["executors + gates"] --> C2["owner assigns"] --> C3["owner also holds:<br/>accept · skill screening ·<br/>dates · 3rd-round"]
+    end
+    subgraph QJ["quick job"]
+        J1["1–2 agents"] --> J2["build → review"] --> J3["no docs skeleton,<br/>no ledger, no modules"]
+    end
+    subgraph JOIN["/join — inherit"]
+        N1["audit first"] --> N2["interview delta"] --> N3["fix in approved batches"]
+    end
 ```
 
 ## Two seats of Mops
@@ -88,6 +115,35 @@ flowchart TD
     CHK -->|no| DIAG["Read run error<br/>+ daemon logs"]
     RERUN --> OK["Work resumes<br/>from repo state"]
 ```
+
+## Getting current — what `/upgrade` actually walks
+
+```mermaid
+flowchart TD
+    GO["/upgrade"] --> L1{"Is this skill's copy<br/>on your machine current?"}
+    L1 -->|"behind"| YOU["<b>You run one line</b> —<br/>claude plugin update, or npx skills add.<br/><i>A skill cannot replace its own plugin</i>"]
+    YOU --> L2
+    L1 -->|"current"| L2["Read the NEW version's CHANGELOG<br/>— it is the migration map"]
+    L2 --> BK["Back up both halves:<br/>skill files + agent config snapshot<br/>+ pre-upgrade SHA in UPGRADES.md"]
+    BK --> WS["Migrate the workspace:<br/>missing docs files · guide rules ·<br/>agent instructions · renamed commands"]
+    WS --> SK{"Imported skills:<br/>newer upstream?"}
+    SK -->|"yes"| SCR["<b>Re-screen</b> against the version<br/>you screened — diff the prose,<br/>not only the scripts"]
+    SCR --> SK
+    SK -->|"all current"| CLI{"CLI behind,<br/>locally or on a runtime?"}
+    CLI -->|"yes"| IDLE{"active_task_count = 0<br/>and nothing in_progress?"}
+    IDLE -->|"no"| WAIT["Say what's in flight.<br/>Wait for idle, or /stop<br/>if the owner accepts it"]
+    WAIT --> IDLE
+    IDLE -->|"idle"| UPD["multica update ·<br/>runtime update &lt;id&gt; ·<br/>daemon restart"]
+    UPD --> FP
+    CLI -->|"current"| FP["Recompute the fingerprint —<br/><i>after</i> reconciling, never before"]
+    FP --> VER{"Behaviour still right?"}
+    VER -->|"no"| RB["Restore from the SHA —<br/>rollback is a normal outcome"]
+    VER -->|"yes"| DONE["Report what was adapted"]
+```
+
+> Two things this picture exists to prevent: **new bytes without a migration** (half the
+> company on one version, half on another), and **a CLI replaced under a running agent**,
+> which produces failures that look like the agent's fault.
 
 ## The skill lifecycle — gates, not ceremony
 

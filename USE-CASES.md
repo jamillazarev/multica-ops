@@ -22,6 +22,13 @@ are shortcuts for when you already know the name. Both columns do the same thing
 
 ## Getting started
 
+| Situation | Say | Runs |
+|---|---|---|
+| "I downloaded Multica — now what?" | *anything* | day zero: installed · current · signed in · workspace · daemon · runtimes, reported in one go with the fixes |
+| "I don't know which of these I need" | *describe the situation* | three questions (what exists · what you want · who runs it) → init, join, import or a quick job |
+| "I just want tasks done, no product manager" | *"just execute, I'll prioritise"* | **`/crew`** — executors and gates, no conductor, no roadmap ceremony |
+
+
 | Situation | Just say | Or run |
 |---|---|---|
 | "I have an idea and no team yet" | *"I want to build a macOS app for X — set up a team"* | `/init` |
@@ -64,6 +71,8 @@ are shortcuts for when you already know the name. Both columns do the same thing
 | Situation | Say | Runs |
 |---|---|---|
 | "Our backlog is in Linear / Jira / a spreadsheet" | `/import` | mapping shown first, then issues created **unassigned** — nothing starts running by itself |
+| "I imported my backlog and want to keep working exactly as before" | *"don't change anything, just execute"* | crew mode, offered by default after an import |
+| "How do I get the new version?" | `/upgrade` | four layers: it tells you the one line *you* run to update the plugin, then migrates the workspace, re-screens imported skills, and offers the CLI update **only when the team is idle** |
 | "The import died halfway" | `/import` again | it skips what's already there and continues |
 | "These imported tickets are one-liners nobody can act on" | *"bring them up to our standard"* | the quality pass: per issue, what's missing (why · success · DoD · dates) → rewrite/extend/leave/drop, in batches you approve |
 | "Our client keeps filing in Linear and always will" | `/module` | the tracker bridge as a standing sync, with the direction of truth written down per field |

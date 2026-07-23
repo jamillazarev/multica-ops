@@ -11,7 +11,7 @@ stay) on it; `—` means usage- or purchase-priced from the first call.
 
 - [Services by need](#services-by-need)
 - [Default libraries — AI-fluent stacks](#default-libraries-ai-fluent-stacks)
-- [Audio & DSP (plugins, instruments, audio apps)](#audio-dsp-plugins-instruments-audio-apps)
+- [A vertical you are not in](#a-vertical-you-are-not-in)
 - [Testing — every stage of the loop, per platform](#testing-every-stage-of-the-loop-per-platform)
 - [Security defaults (digital products)](#security-defaults-digital-products)
 - [Research & reference galleries (design · brand · visual)](#research-reference-galleries-design-brand-visual)
@@ -38,7 +38,7 @@ stay) on it; `—` means usage- or purchase-priced from the first call.
 | **Where the demand signal lives** | pick by category, not by habit: developer tools → **Reddit**, then GitHub issues · consumer goods → **Amazon reviews**, then YouTube comments · B2B/professional → LinkedIn and community Slacks · anything visual → TikTok/Instagram comments | listening in the wrong place returns confident nonsense. Two or three sources per question, chosen deliberately, beat scraping everything. Feeds `/research`, `/audience` and the support role. Aggregators exist (RequestHunt and similar) but are credit-priced — start with the free reads | ✅ |
 | **Codebase orientation** | a maintained map in the repo (`docs/ARCHITECTURE.md`: what lives where, entry points, the paths a change usually touches). Past a large codebase, a generated index — **[Data Structure Protocol](https://github.com/k-kolomeitsev/data-structure-protocol)** (`.dsp/`, stable UIDs surviving renames) or a repo-map tool | **every task starts in a fresh worktree with zero context**, so whatever is not written down is re-derived by every agent on every run. A stale map is worse than none: it falls under docs-follow-decisions like any other doc | ✅ |
 | **Screening imported tooling** | **[claude-skill-antivirus](https://github.com/claude-world/claude-skill-antivirus)** (OSS, pattern-based) | scans a candidate **skill, MCP server or CLI tool** — anything whose code runs on your machine or whose text enters an agent's context — for destructive commands, exfiltration of `.ssh`/`.aws`/`.env`, unexpected external endpoints, over-broad tool grants, injection text, risky MCP configs and sub-agent abuse; severity-scored, block/confirm/warn. Pattern matching, so **false positives are normal** (a password-manager integration looks like credential access) — it informs the human gate, it isn't the gate | ✅ |
-| **Skill compression** | **[skills-optimizer](https://github.com/claude-world/skills-optimizer)** (`semantic-compressor`, OSS) | shrinks a skill or agent file **fail-closed**: an inventory of concepts that must survive is built first, commands/tools/paths/numbers/errors/security rules are preserved **verbatim**, an independent reviewer judges equivalence, and nothing is written until `--apply`. States include `NOT_COMPRESSIBLE` — an honest outcome, not a failure. An idempotence marker stops re-compression, which is what compounds loss | ✅ |
+| **Skill compression** | **[skills-optimizer](https://github.com/claude-world/skills-optimizer)** (`semantic-compressor`, OSS) | shrinks a skill or agent file **fail-closed**: an inventory of concepts that must survive is built first, commands/tools/paths/numbers/errors/security rules are preserved **verbatim**, an independent reviewer judges equivalence, and nothing is written until `--apply`. States include `NOT_COMPRESSIBLE` — an honest outcome, not a failure. An idempotence marker stops re-compression, which is what compounds loss. **Point it at the always-loaded body only, and hold the output to prose a person can read** — skills get opened in Multica's UI to screen, approve and diagnose, and a wall of clipped fragments breaks those gates while looking like a win | ✅ |
 | **Reading pages agents can't fetch** | **[cf-browser](https://github.com/claude-world/cf-browser)** (OSS Worker over Cloudflare Browser Rendering) · [Playwright](https://playwright.dev) for anything you already test with | JS-rendered pages, screenshots, PDFs, accessibility snapshots, multi-page crawls — for research, competitive monitoring and checking your own live page. Free tier ≈10 min/day of rendering; interaction tools need Cloudflare's $5/mo plan | ✅ |
 | **Prompt-to-code builders** | **[v0](https://v0.app)** · **[Bolt](https://bolt.new)** · **[Lovable](https://lovable.dev)** · [Replit](https://replit.com) Agent | they emit **real code into a repo**, so an agent picks the work up afterwards — that makes them an accelerator through the blank page, not a platform you live on. Use for a first cut of a screen or a spike, then treat the output as code: reviewed, tested, owned. Their free tiers are generation-capped and change often — check before promising anyone a workflow | ✅ |
 | **No-code site builders** | **[Framer](https://framer.com)** (AI generation, design-first, publishes) · [Webflow](https://webflow.com) | excellent when a **human designer owns the marketing site** and iterates on it directly; the trade is that the canvas is the source of truth, so **your agents can't work there** — copy changes, A/B tests and SEO fixes queue behind a person. Framer exposes a CMS API, so *content* can be automated even when layout can't. Free tier publishes on their subdomain; a custom domain is paid | ✅ |
@@ -140,25 +140,18 @@ APIs, so agents code against today's versions, not a frozen training cutoff.
 Rule of thumb: deviate from these only when the project itself dictates (a DSP app
 is C/Swift no matter what LLMs prefer) — and record the deviation in the guide.
 
-## Audio & DSP (plugins, instruments, audio apps)
+## A vertical you are not in
 
-**License first — it shapes the product.** In audio the framework's licence decides
-whether you can ship closed source at all; migrating frameworks later is expensive, so
-settle this before the first line of DSP.
+There is deliberately **no per-industry section here** — no audio, no confectionery, no
+video. The moment one domain gets its own catalog, the file stops being a method and starts
+being one author's project. What replaces it is the ladder above plus a search: for any
+vertical, `awesome-{topic}` and the role-builder's tooling step (ROLES) reconstruct a better,
+fresher list than a frozen table ever could.
 
-| Need | Options | Notes |
-|---|---|---|
-| **Plugin / app framework** | **[JUCE](https://juce.com)** (GPLv3 **or** paid commercial) · **[iPlug2](https://iplug2.github.io)** (permissive, MIT-style) · **DPF** (ISC, minimal core) · **[HISE](https://hise.audio)** (GPLv3 or commercial; samplers/instruments) · **NIH-plug** (Rust) | JUCE = biggest ecosystem, tutorials, hosts battle-tested — pay or go GPL. iPlug2/DPF = full control, closed-source-friendly, leaner |
-| **Formats** | **CLAP** (MIT, open) · VST3 (GPLv3 or proprietary) · AU/AUv3 (Apple) · AAX (Avid, NDA) · LV2 | CLAP is native in iPlug2 · DPF · NIH-plug; **JUCE has no native CLAP yet — use [clap-juce-extensions](https://github.com/free-audio/clap-juce-extensions)** until JUCE 9 ships it |
-| **DSP libraries** (permissive) | Airwindows (MIT) · chowdsp_utils · DaisySP · Maximilian · q | pick MIT/BSD when the product must stay closed |
-| **Primitives** | FFT: pffft · KissFFT · Apple **vDSP** · resampling: libsamplerate · r8brain · loudness: **libebur128** (EBU R128) | the pieces a broadcast chain actually needs |
-| **Prototyping / codegen** | **FAUST** (functional DSP → JUCE/VST/CLAP targets) · Cmajor · Elementary Audio | design the algorithm, generate the plugin scaffold |
-| **Validation & testing** | **pluginval** (Tracktion, free — the de-facto validator) · `auval` (Apple AU) · a host matrix (REAPER, Live, Logic) | plugin QA gate; pairs with the Testing section below |
-| **Realtime safety** | **RTSan** (Clang RealtimeSanitizer) · lock-free queues (farbot, moodycamel) | catches allocations/locks on the audio thread — the classic killer |
-| **Distribution** | macOS notarization · Packages · Inno Setup (Windows) | feeds the launch checklist |
-
-Deeper catalogs live in `awesome-musicdsp` (github.com/olilarkin/awesome-musicdsp) — the
-usual seeds-then-awesome-search rule.
+The one transferable rule from every licensing-heavy vertical, worth keeping because it
+changes the product rather than the toolchain: **settle licensing before the first line of
+work.** Plugin formats, font families, sample libraries, stock footage, recipe IP — in each,
+the licence decides what you can ship and to whom, and discovering it late means rebuilding.
 
 ## Testing — every stage of the loop, per platform
 
@@ -218,30 +211,19 @@ directly closing the "no rate limiting" classic miss.
 
 ## Research & reference galleries (design · brand · visual)
 
-Registered sources so research never blocks: **paid source missing → fall back to the
-free set — degrade the tool, never the quality**. These rows are the common cases; for
-anything else search **`awesome-{topic}`** on GitHub (e.g. `awesome-fonts`). Most have no MCP — agents use web
-fetch/search; Mobbin has an MCP (connect if licensed).
+**The method, not the list.** Per project, run *style discovery*: name the feeling in words →
+collect references → extract what actually carries it (type, spacing, colour, motion) → turn
+that into tokens. A frozen link list ages faster than anything else in this file, so keep only
+the anchors that carry a licensing or fallback decision and search `awesome-{topic}` for the
+rest.
 
-| Need | Sources (free unless noted) |
-|---|---|
-| UI/product patterns | **[Mobbin](https://mobbin.com)** (paid, MCP) → free fallback: webdesigninspiration.io, public design-system docs, competitors' live products |
-| Per-component patterns | navbar.gallery · footer.design · goodcart.design (carts/checkout) · supahero.io (hero sections) — real-world takes on one component; pairs with component.gallery |
-| Case studies & UX teardowns | **growth.design** (interactive product/UX case studies) · thestare.in · uxpamagazine.org (UX practice/research articles) · abtest.design (A/B-test outcomes) — feed discovery and UX research, not just visuals |
-| Brand identity & rebrands | Brand New / UnderConsideration (part paid), The Brand Identity, BP&O, rebrand.gallery |
-| Style guides | brandingstyleguides.com — real brand guidelines to learn structure from |
-| Logos & marks | Logobook, logosystem.co, logggos.club, Logopond, logodesignlove.com (craft essays); **fontinlogo.com** — which font a logo uses |
-| Fonts & typography | Google Fonts (free) · `awesome-fonts` — foundries, pairing, licenses · typehunting.com (type ID in the wild) · **practicaltypography.com** — the craft manual agents should actually read |
-| Free design assets & mockups | unblast.com — mockups/templates for presenting brand, packaging, screens |
-| App icons | iosicongallery.com |
-| Boards / collections | Are.na (free tier, has API) — per-project moodboards; seed from public channels (e.g. interface or app collections) |
-| Posters & print | 100-beste-plakate.de — poster craft (non-digital media too) |
-| Product & packaging | goods.so — curated physical/product design |
-| Illustration & visual culture | It's Nice That · Colossal · The Inspiration / Inspiration Grid |
-| Architecture, product & design culture | Dezeen · designboom — industrial/interior/architecture reference for physical-world projects |
+| Need | Anchor | Why this one |
+|---|---|---|
+| UI & product patterns | **[Mobbin](https://mobbin.com)** (paid, has an MCP) — free fallback: search `awesome-design-inspiration` | the only one worth paying for; the fallback matters when nobody has a licence |
+| Typography | **[Google Fonts](https://fonts.google.com)** for licensing-safe families · [Practical Typography](https://practicaltypography.com) for the rules | licence clarity is the whole point |
+| Colour | **[Coolors](https://coolors.co)** · [Color Hunt](https://colorhunt.co) | fast palettes that export as tokens |
+| Boards | **[Are.na](https://are.na)** | where the moodboard lives without becoming a private silo |
 
-**Visual styles — method, not a baked-in taxonomy:** per project, run *style discovery*:
-pull references from these galleries → **name the style in words** (so agents can
-reproduce it) → record as a moodboard + references in `docs/brand/` and encode the
-outcome as design-system tokens. The galleries serve any craft — covers, packaging,
-slides — not just apps.
+**Visual styles — method, not a baked-in taxonomy:** name the style in the owner's own words,
+gather references, extract the carriers, encode as tokens in `docs/design-system/`. What is
+"clean" to one owner is "sterile" to another; the words are theirs, the extraction is yours.

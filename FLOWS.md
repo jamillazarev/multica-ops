@@ -7,14 +7,20 @@ joining an existing one, or touching the live workspace's plumbing. Day-to-day w
 ## Contents
 
 - [Interview progressively — small things must stay small](#interview-progressively-small-things-must-stay-small)
+- [Before anything: day zero, then the routing question](#before-anything-day-zero-then-the-routing-question)
+- [Shape the work, then propose the team](#shape-the-work-then-propose-the-team)
+- [Crew mode — a team without a management layer](#crew-mode-a-team-without-a-management-layer)
 - [Stand up, in this order](#stand-up-in-this-order)
 - [Joining an existing setup](#joining-an-existing-setup)
+- [Getting current — four layers, one command, two words](#getting-current-four-layers-one-command-two-words)
 - [Health, upgrades & runtime changes](#health-upgrades-runtime-changes)
 
 ## Interview progressively — small things must stay small
 
-Never front-load a giant questionnaire. Open with one question: **"What are we
-making, and is this a quick job or a company we're building?"** Then branch:
+Never front-load a giant questionnaire. **The opening is the front door, not this section** —
+day zero first, then the three routing questions (what exists · what you want · who runs the
+work), which pick between `/init`, `/join`, `/import`+crew and a quick job. See "Before
+anything" below. What follows here is the *company* branch once that routing has happened:
 
 - **Quick job** (a utility, one deliverable): 3 questions max — deliverable, repo,
   language. One conductor + 1–2 executors. Done. Everything else uses defaults.
@@ -52,19 +58,89 @@ this file are seeds, never a closed menu.
 Full checklist — **detail and defaults in `BOOTSTRAP.md §16`**; ask in
 waves, each with a default, skipping what context already answered:
 
-1 deliverable & repo · 2 disciplines & depth · 3 DoD per discipline · 4 stage ladder ·
-5 capacity, models **& budget** · 6 integrations · 7 docs home · 8 assets home · 9 avatars ·
-10 experts & personas · 11 design system & brand · 12 resident Mops · 13 operating mode ·
-14 autopilots/Slack · 15 language & tone · **16 control & expertise** · **17 governance**
+**1 where the code lives (and whose account)** · **2 control & expertise — asked second on
+purpose: it sets how many of the rest you ask at all** · 3 deliverable & repo shape ·
+4 disciplines · 5 DoD · 6 stage ladder · 7 where Multica itself runs · 8 capacity, models
+**& budget** · 9 skills/MCP you already want · 10 integrations · 11 docs home ·
+12 assets home · 13 avatars · 14 experts & personas · 15 design system & brand ·
+16 resident Mops · 17 operating mode · 18 autopilots/Slack · 19 language & tone ·
+**20 governance**
 
-Two of these shape every later interaction, so never skip them: **#16 control & expertise**
+Two of these shape every later interaction, so never skip them: **checklist #2 · Control & expertise**
 — how much the owner wants to be in the loop (*hands-on* · **checkpoints** (default) ·
 *hands-off*) and **what they're actually expert in** (recorded in `TEAM.md`: consulted as
 an expert there, taught-and-recommended elsewhere; agents apply the same across squads).
 Asked at `/init`, re-asked in the `/join` delta, changed any time — `/reviews` takes
 effect **immediately**, `/autonomy` is **boundary-safe**, `/stop` is the instant halt.
-**#17 governance** — who may direct Mops and which flows need a named human's sign-off.
+**checklist #20 · Governance** — who may direct Mops and which flows need a named human's sign-off.
 
+## Before anything: day zero, then the routing question
+
+`/init` does not start at the workspace. It starts at **BOOTSTRAP §0** — installed, current,
+signed in, a workspace, daemon up, runtimes present — reported as one ladder with its fixes,
+not six sequential prompts. Only then the three routing questions (what exists · what you
+want · who runs the work), because `/init` into an existing workspace duplicates a conductor
+and `/join` on an empty one does nothing.
+
+**Crew mode short-circuits the rest**: no conductor, no discovery, no roadmap — stand up the
+executors, the guide, the gates the owner wants, and stop. It is the default offer after
+`/import`.
+
+## Shape the work, then propose the team
+
+**A company is sized to a plan, not to a sentence.** Hiring off *"a macOS app that fixes
+system audio"* — or *"a snack brand"* — produces the team that sentence suggests, which is a
+guess. So between the opening questions and creating anything there is a **shaping
+conversation**, and the owner sees a proposed team only after it, with the reasoning attached.
+
+- **What it is, who it's for, and — the question that changes everything — what is hard
+  about it.** Uncertainty is staffing information: an unknown gets research before it gets
+  someone to execute it.
+- **What the work is made of.** Name the surfaces in *this* domain's own words and stay in
+  them: screens, services and data for software; recipe, packaging, supply and retail for a
+  food brand; scripts, filming, edit and thumbnails for a channel. Each surface is a craft,
+  and crafts are what you hire. **Never import another domain's vocabulary** — nobody making
+  chips needs to hear about data flows.
+- **Rough size, honestly held.** Not points — *what kinds of work exist and roughly how
+  much*. "Two screens" and "a sync engine" staff differently, so do "one flavour" and "a
+  seasonal line"; and "I don't know yet" is a valid answer that argues for starting small.
+- **Then the proposal, with its why**: *"iOS and backend because the sync is the hard part;
+  no designer yet because the first cut is a settings screen; QA once there is something to
+  regress."* Numbers follow the work — five agents or fifty — and the owner can argue with
+  reasoning they can see.
+
+**Re-runnable, because plans move.** When scope changes materially the shaping runs again
+and the team is re-sized — the same signal as the utilization review, arriving earlier. A
+**quick job skips this entirely**: shaping a one-hour task is the ceremony this skill exists
+to avoid.
+
+## Crew mode — a team without a management layer
+
+Not everyone wants a company. A developer with a list of tasks, a designer with a queue,
+anyone who already knows what to build: **they are the product manager**, and the machinery
+that exists to decide *what* to do is pure overhead for them.
+
+Crew mode is the honest shape for that: **executors, gates if wanted, and no conductor.**
+No discovery, no roadmap ceremony, no ICE, no cost ledger unless asked. The owner assigns
+issues directly to an agent or a squad; work moves because they moved it. Everything else
+in this skill still applies — the guide, the review gates, limits and recovery, the
+permission rules, dated work.
+
+It is the **default offer after `/import`**: someone who just brought a backlog over has
+already decided what the work is, and proposing discovery over it is insulting. Say plainly
+*"I'll execute; you keep prioritising — or I can add a conductor later"*, and mean the
+"later": adding one is a normal upgrade, not a redo.
+
+**Reassign what the conductor held, out loud, or it silently stops happening.** Four duties
+are not planning and do not disappear with the planner: **accepting finished work and merging**
+(gates green is a check, not an approver), **screening and attaching an imported skill** (the
+"never auto-approved" gate needs an approver), **holding start dates** (nothing in the platform
+stops an agent beginning early), and **settling a third review round on the same point**. In
+crew mode all four sit with the **owner** by default — say so at stand-up and write it into the
+guide, because an unnamed duty is an unperformed one.
+
+**Where it stops being right:** when the owner starts asking *what* should be next rather
+than telling. That is the moment to offer a conductor, once, with the reason.
 
 ## Stand up, in this order
 
@@ -77,19 +153,20 @@ Step detail and CLI recipes: **`BOOTSTRAP.md §15`**.
    handoff = @mention, evidence-over-opinion, **docs follow decisions**, self-improvement,
    limit/cancel conventions, and who Mops is. Escalation: agent → squad leader → conductor
    → **Mops** → user (Mops in Multica off → the vertex collapses to conductor → user).
-4. **Roles from the interview** — ROLES.md templates, else the **role-builder**: research
+4. **Roles from the shaping proposal** (and the interview where it added detail) — ROLES.md templates, else the **role-builder**: research
    the craft → find **skills · tooling (MCP registries first) · resources**, broadening the
    search rather than giving up on a miss → propose → create. Every agent also gets the
    **baseline kit** (guide · find-skills · handoff · caveman · Context7 where relevant ·
    the docs it must know) — ROLES.md. Designers and engineers join from the first
    decisions, not only at their stage.
 5. **Experts & personas** (opt-in) — squads of advisors / user simulations.
-6. **Mops in Multica** (opt-in — checklist #13 · Resident Mops) — install this skill into the workspace **idempotently**
+6. **Mops in Multica** (opt-in — checklist #16 · Resident Mops) — install this skill into the workspace **idempotently**
    (check `skill list`; exists → compare versions, refresh via `/upgrade`, never a second
    copy), assign it **only to the Mops agent**, then seed the kickoff (pinned issue + first
    message = the decisions summary).
-7. **Labels** (discipline/type, never the stage) and **docs skeleton**: `ROADMAP.md`,
-   `TEAM.md`, `TOOLING.md`, `LATER.md`.
+7. **Labels** (discipline/type, never the stage) and the **docs skeleton** — the list is
+   **BOOTSTRAP §15 step 7**, never a subset quoted from memory; it also installs the repo's
+   docs guard.
 
 ## Joining an existing setup
 
@@ -120,13 +197,52 @@ refresh the agent's instructions, surface new/renamed commands) and **report the
 adaptations**. Then reconcile the avatar, the *"Executive Advisor · resident"* subtitle,
 the guide-lane rules, and its rights per the current autonomy choice; `/sync` after.
 
+## Getting current — four layers, one command, two words
+
+**Say the difference once and keep saying it.** *Update* means **new bytes arrive** — a newer
+plugin, a newer CLI binary. *Upgrade* means **your workspace moves to them** — docs files the
+new version expects, guide rules, agent instructions, renamed commands. New bytes without a
+migration is where a company quietly runs half of one version and half of another.
+
+**`/upgrade` is the one command**, and it walks all four layers in this order, asking before
+anything that costs or restarts:
+
+| Layer | What it is | Who does it |
+|---|---|---|
+| **1. This skill's bytes** | the plugin or skills.sh copy on *your* machine | **you** — a skill cannot replace its own plugin. Mops detects it's behind and prints the exact line: `claude plugin update multica-ops@multica-ops`, or `npx skills add jamillazarev/multica-ops` |
+| **2. The workspace** | docs skeleton, guide rules, agent instructions, new/renamed commands | **Mops** — the migration proper, from the **new** version's CHANGELOG |
+| **3. Imported skills** | third-party skills each against its source | **Mops**, re-screening every one before applying |
+| **4. The CLI** | `multica` itself, locally and on each runtime | **Mops proposes, you approve** — see the drain rule below |
+
+**The CLI update needs the team to be idle, and nothing enforces that for you.** The daemon
+executes tasks; replacing the binary underneath it interrupts whatever is mid-run, and
+`daemon stop` has no drain flag — it stops, it does not wait. So:
+
+```sh
+multica daemon status --output json          # active_task_count must be 0
+multica issue list --output json             # nothing in in_progress
+multica update                               # local CLI
+multica runtime update <runtime-id>          # the CLI on a runtime machine
+multica daemon restart
+```
+
+Never update mid-flight. If work is running, **say what's in flight and offer to wait** —
+`/stop` first if the owner wants it now and accepts the interruption, otherwise queue the
+update for the next idle window. A CLI updated under a running agent produces failures that
+look like the agent's fault.
+
+**Hashes and deltas run at the end, not the start.** An upgrade changes agents, skills and
+labels, so the fingerprint written before it is stale by definition: recompute
+`docs/.workspace-state.json` **after** reconciling, and record the pre-upgrade SHA in
+`UPGRADES.md` first so a rollback has something to return to.
+
 ## Health, upgrades & runtime changes
 
 All three are **preview-first** (blast radius reported before anything changes), backed
 up and reversible where they can break things. Recipes: **PLAYBOOKS**.
 
 - **`/health`** — full-circle sweep of what fails silently: runtimes (+ **which agents
-  sit on a degraded one**), integrations/MCP probes (**the probe list = `docs/TOOLING.md`**), API tokens/secrets, **free-tier headroom** (usage vs the ceiling recorded per service), daemon, limits.
+  sit on a degraded one**), integrations/MCP probes (**the probe list = `docs/TOOLING.md`**), **branch protection on the default branch** where a remote exists, API tokens/secrets, **free-tier headroom** (usage vs the ceiling recorded per service), daemon, limits.
   Output: component → status → who it blocks → fix. `/audit` pulls it in.
 - **Version checks cover three layers, not one**: **multica-ops** itself, every
   **imported skill**, and the **tooling** registered in `docs/TOOLING.md` (MCP servers,
@@ -140,6 +256,11 @@ up and reversible where they can break things. Recipes: **PLAYBOOKS**.
   Without that snapshot a git rollback restores the skill but leaves the agents rewritten.
   If behaviour regresses after an upgrade — say
   so, re-import from that SHA, and log what broke so the next attempt is informed.
+- **The short command restores itself.** `~/.claude/commands/mops.md` lives in the owner's
+  global config, so a new machine or a wiped profile loses it — the SessionStart hook puts it
+  back, unless they deleted it on purpose (BOOTSTRAP §15b).
+- **Sweep for skills compressed past readability** while you are already touching them:
+  restore from `docs/skill-backups/` and re-run the pass, never "expand it back" (PLAYBOOKS).
 - **An upgrade delivers unreviewed code and unreviewed instructions.** A skill screened
   at import is not screened forever: the new version can add a script, an endpoint, a tool
   grant or a paragraph telling agents to do something. So **re-screen before applying**,
