@@ -7,10 +7,12 @@ shape agents produce by default.
 
 ## Contents
 
-Turning an idea into staged work · A handoff comment · A review verdict · A cost/effort
-ledger entry · Reporting status · Recording a rejected decision
-
----
+- [1. Turning an idea into staged work](#1-turning-an-idea-into-staged-work)
+- [2. A handoff comment](#2-a-handoff-comment)
+- [3. A review verdict](#3-a-review-verdict)
+- [4. A cost/effort ledger entry](#4-a-costeffort-ledger-entry)
+- [5. Reporting status](#5-reporting-status)
+- [6. Recording a rejected decision](#6-recording-a-rejected-decision)
 
 ## 1. Turning an idea into staged work
 

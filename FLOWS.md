@@ -6,7 +6,10 @@ joining an existing one, or touching the live workspace's plumbing. Day-to-day w
 
 ## Contents
 
-Interview · Stand up · Joining an existing setup · Health, upgrades & runtime changes
+- [Interview progressively — small things must stay small](#interview-progressively-small-things-must-stay-small)
+- [Stand up, in this order](#stand-up-in-this-order)
+- [Joining an existing setup](#joining-an-existing-setup)
+- [Health, upgrades & runtime changes](#health-upgrades-runtime-changes)
 
 ## Interview progressively — small things must stay small
 

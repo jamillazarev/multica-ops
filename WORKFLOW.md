@@ -4,8 +4,12 @@ Mermaid renders on GitHub, in Obsidian, and on the docs site.
 
 ## Contents
 
-Bootstrap · Two seats of Mops · One feature through the conveyor · Escalation & control ·
-Session limits · The skill lifecycle
+- [Bootstrap — from a sentence to a working company](#bootstrap-from-a-sentence-to-a-working-company)
+- [Two seats of Mops](#two-seats-of-mops)
+- [One feature through the conveyor](#one-feature-through-the-conveyor)
+- [Escalation & control](#escalation-control)
+- [Session limits — detect and recover](#session-limits-detect-and-recover)
+- [The skill lifecycle — gates, not ceremony](#the-skill-lifecycle-gates-not-ceremony)
 
 ## Bootstrap — from a sentence to a working company
 

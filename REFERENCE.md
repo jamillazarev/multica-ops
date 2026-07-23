@@ -8,7 +8,18 @@ platform can't help itself.**
 
 ## Contents
 
-1 Objects · 2 Trigger paths · 3 Roles · 4 Feature structure & stages · 5 Full flow · 6 Minimal custom layer · 7 Operational practices · 8 Anti-patterns · 9 The human's role · 10 CLI command surface · 11 Frameworks per stage · 12 Token economy
+- [1. Objects](#1-objects)
+- [2. Four trigger paths](#2-four-trigger-paths)
+- [3. Roles and what's native](#3-roles-and-whats-native)
+- [4. Feature structure and stages](#4-feature-structure-and-stages)
+- [5. The full flow (Kanban)](#5-the-full-flow-kanban)
+- [6. Minimal custom layer (only the platform's gaps)](#6-minimal-custom-layer-only-the-platforms-gaps)
+- [7. Operational practices](#7-operational-practices)
+- [8. Anti-patterns](#8-anti-patterns)
+- [9. The human's role](#9-the-humans-role)
+- [10. Multica CLI — the full command surface](#10-multica-cli-the-full-command-surface)
+- [11. Frameworks — picked per task, never one-size](#11-frameworks-picked-per-task-never-one-size)
+- [12. Token economy — what actually moves the needle](#12-token-economy-what-actually-moves-the-needle)
 
 ## 1. Objects
 

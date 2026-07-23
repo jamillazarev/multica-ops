@@ -142,7 +142,7 @@ via telemetry on the first `npx skills add jamillazarev/multica-ops`.
 | [CHANGELOG.md](CHANGELOG.md) | versioned history — the migration map for `/upgrade` |
 | [BUDGET template](templates/BUDGET-template.md) | envelope · currency · credits with expiries · prices on record |
 | [evals/](evals/) | stratified scenarios — from a job too small to deserve a company to an import carrying a hidden instruction |
-| [templates/](templates/) · [scripts/](scripts/) | guide · roadmap · brand · component docs · **decisions log · architecture map** · ops helpers · **resumable backlog import** |
+| [templates/](templates/) · [scripts/](scripts/) | guide · roadmap · brand · component docs · **decisions log · architecture map · tooling register · team roster** · ops helpers · **resumable backlog import** |
 
 Contributing? Run **`bash scripts/preflight.sh --install`** once — the pre-commit hook
 checks version sync, the CHANGELOG entry, README completeness, internal links, command

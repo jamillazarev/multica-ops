@@ -1,5 +1,33 @@
 # Changelog
 
+## 2.1.1 — audit fixes
+
+Two full passes over every paragraph. Nothing new, only what was wrong:
+
+- **A contradiction the core still carried**: it said squad leaders "never implement",
+  while ROLES makes working craft leads. Routing is a *mode* — assigned as the squad a
+  leader delegates, assigned directly the same agent works. Core now says so.
+- **Two bullet lists rendered as broken paragraphs** — continuation lines had lost their
+  indentation, so `/bug` and launch-completeness fell out of their lists. A check now scans
+  every file for unindented list continuations.
+- **"Two loops that eat weeks"** listed three. **"2b."** in the version-check playbook broke
+  an ordered list. Both fixed.
+- **`docs/TOOLING.md` and `docs/TEAM.md` had no template** while the stand-up told agents to
+  start every skeleton file from one. Both now ship — tooling as the probe list `/health`
+  reads, with a *checked* date column; team covering agents *and* people, grades and the
+  archived talent pool. The two that deliberately have none (`LATER`, `ECONOMICS`) are named.
+- **`/bug` never said what to do when a bug won't reproduce**: build the deterministic
+  pass/fail signal first, and when there isn't one, **ask for artifacts instead of guessing
+  at a fix nobody can verify**.
+- **Contents blocks are now anchor lists, not prose runs** — one clickable line per section
+  in every companion, so an agent jumping into a 400-line file lands where it meant to. A
+  preflight check regenerates the expectation from the file's own headings and fails when
+  they diverge, which is the failure mode a hand-maintained table of contents always has.
+- The docs site rendered a **duplicate Contents block** on every page next to its own "On
+  this page" sidebar. The generator strips it now — the block stays in the repo, where
+  agents read files in parts and need it — and a **self-check fails the build** if the
+  stripping ever silently stops matching.
+
 ## 2.1.0 — the parts that keep a company honest
 
 2.0 ran a company. 2.1 hardens it: the team stops being an attack surface, nothing edits the

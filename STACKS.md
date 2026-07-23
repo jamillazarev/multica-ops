@@ -9,7 +9,12 @@ stay) on it; `—` means usage- or purchase-priced from the first call.
 
 ## Contents
 
-Services by need · Selection ladder & decision rules · Default libraries · Audio & DSP · Testing · Security defaults · Research & reference galleries
+- [Services by need](#services-by-need)
+- [Default libraries — AI-fluent stacks](#default-libraries-ai-fluent-stacks)
+- [Audio & DSP (plugins, instruments, audio apps)](#audio-dsp-plugins-instruments-audio-apps)
+- [Testing — every stage of the loop, per platform](#testing-every-stage-of-the-loop-per-platform)
+- [Security defaults (digital products)](#security-defaults-digital-products)
+- [Research & reference galleries (design · brand · visual)](#research-reference-galleries-design-brand-visual)
 
 ## Services by need
 

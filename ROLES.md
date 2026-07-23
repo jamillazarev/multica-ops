@@ -5,7 +5,16 @@ the **project guide skill + find-skills** (invariants) on top of its row below.
 
 ## Contents
 
-Skill sources · Role templates · Avatars · Baseline kit · Skill load · Grades, fit-check and the talent pool · The role-builder · Autopilots · Experts squad · Personas squad
+- [Skill sources (import URLs)](#skill-sources-import-urls)
+- [Role templates](#role-templates)
+- [Avatars](#avatars)
+- [Autopilots (usually "later")](#autopilots-usually-later)
+- [Baseline kit — what every agent gets, whatever the role](#baseline-kit-what-every-agent-gets-whatever-the-role)
+- [Grades, fit-check and the talent pool](#grades-fit-check-and-the-talent-pool)
+- [Skill load — a generalist is a cost, and usually a missing hire](#skill-load-a-generalist-is-a-cost-and-usually-a-missing-hire)
+- [Any role from conversation — the role-builder](#any-role-from-conversation-the-role-builder)
+- [Experts squad (opt-in, composition per project)](#experts-squad-opt-in-composition-per-project)
+- [Personas squad (opt-in, user simulation)](#personas-squad-opt-in-user-simulation)
 
 ## Skill sources (import URLs)
 

@@ -7,7 +7,35 @@ control characters that break `json.loads` — sanitize with
 
 ## Contents
 
-Daily operations · Autonomy switches · Backlog import · Skill lifecycle · Skill load · Health sweep · Skill upgrade · Provider switch · Human onboarding/offboarding · Cost ledger · Resident Mops · Workspace fingerprint · Economics · Tool knowledge placement · Launch checklist
+- [You are the console — map the user's phrases to actions](#you-are-the-console-map-the-users-phrases-to-actions)
+- [Start a feature (the human's one move)](#start-a-feature-the-humans-one-move)
+- [See what's going on](#see-whats-going-on)
+- [Recover after a session limit](#recover-after-a-session-limit)
+- [Talk to an agent on a task](#talk-to-an-agent-on-a-task)
+- [Add an agent mid-project](#add-an-agent-mid-project)
+- [Give an agent a capability (skill)](#give-an-agent-a-capability-skill)
+- [Pause / resume the whole team](#pause-resume-the-whole-team)
+- [Retire or reshape](#retire-or-reshape)
+- [Scale capacity when limits keep firing](#scale-capacity-when-limits-keep-firing)
+- [Connect an external service to agents](#connect-an-external-service-to-agents)
+- [Kick off discovery from one sentence](#kick-off-discovery-from-one-sentence)
+- [Switch operating mode](#switch-operating-mode)
+- [Import a backlog from another tracker (/import)](#import-a-backlog-from-another-tracker-import)
+- [The skill lifecycle (/skill)](#the-skill-lifecycle-skill)
+- [Health sweep (/health)](#health-sweep-health)
+- [Skill upgrade (/upgrade)](#skill-upgrade-upgrade)
+- [Provider switch (/switch)](#provider-switch-switch)
+- [Human onboarding / offboarding](#human-onboarding-offboarding)
+- [Cost/effort ledger (at /ship and /measure)](#costeffort-ledger-at-ship-and-measure)
+- [Resident Mops — install / refresh](#resident-mops-install-refresh)
+- [Skill load per agent (in /audit)](#skill-load-per-agent-in-audit)
+- [Utilization review (in /audit, or on a leader's request)](#utilization-review-in-audit-or-on-a-leaders-request)
+- [Rollback after a bad upgrade](#rollback-after-a-bad-upgrade)
+- [Version check (proactive, at /status or before a major /ship)](#version-check-proactive-at-status-or-before-a-major-ship)
+- [Workspace fingerprint (drift detection)](#workspace-fingerprint-drift-detection)
+- [Economics — what the company actually costs](#economics-what-the-company-actually-costs)
+- [Tool knowledge — where it goes (and where it must not)](#tool-knowledge-where-it-goes-and-where-it-must-not)
+- [Launch checklist — what "done" requires, per medium](#launch-checklist-what-done-requires-per-medium)
 
 ## You are the console — map the user's phrases to actions
 
@@ -400,10 +428,10 @@ finds agents doing too little, the other finds agents asked to be too much.
 
 1. multica-ops: compare `version:` in the workspace skill against the canonical repo.
 2. Imported skills: compare each against its source (`skill get` vs the origin URL).
-2b. **Tooling** from `docs/TOOLING.md`: for each MCP server / CLI, check its release feed
+3. **Tooling** from `docs/TOOLING.md`: for each MCP server / CLI, check its release feed
    for a newer version and for breaking changes; a tool that changed its interface breaks
    agents silently, exactly like a stale CLI pin.
-3. Newer? Summarize **what changed and what it would touch** (agents carrying it, guide
+4. Newer? Summarize **what changed and what it would touch** (agents carrying it, guide
    rules, commands) and offer `/upgrade` — never upgrade unasked.
 
 

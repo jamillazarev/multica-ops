@@ -6,7 +6,9 @@ work already lives somewhere else.
 
 ## Contents
 
-Design system · Brand · External tracker bridge (with the post-import quality pass)
+- [Design system — the system follows solutions](#design-system-the-system-follows-solutions)
+- [Brand — identity, systematized](#brand-identity-systematized)
+- [External tracker bridge (opt-in — offered only if you already use one)](#external-tracker-bridge-opt-in-offered-only-if-you-already-use-one)
 
 ## Design system — the system follows solutions
 

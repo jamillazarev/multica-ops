@@ -12,7 +12,23 @@ staffing plan — see `ROLES.md`.
 
 ## Contents
 
-Prerequisites · Project · Agents · Squads · Skills · Labels · Issues & stages · Capacity and session limits · CLI traps · Ops scripts · Launch checklist · Multica docs · External services · Slack/Lark · Workspace = company · Stand-up order · Interview checklist
+- [0. Prerequisites](#0-prerequisites)
+- [1. Project](#1-project)
+- [2. Agents](#2-agents)
+- [3. Squads (routing)](#3-squads-routing)
+- [4. Skills](#4-skills)
+- [5. Labels](#5-labels)
+- [6. Issues, sub-issues, stages](#6-issues-sub-issues-stages)
+- [7. Capacity and session limits (the big one)](#7-capacity-and-session-limits-the-big-one)
+- [8. CLI traps (all hit in production)](#8-cli-traps-all-hit-in-production)
+- [9. Ops scripts (set up immediately)](#9-ops-scripts-set-up-immediately)
+- [10. Launch checklist](#10-launch-checklist)
+- [11. Multica docs — go there, don't guess](#11-multica-docs-go-there-dont-guess)
+- [12. External services — connect-or-create, access, secrets](#12-external-services-connect-or-create-access-secrets)
+- [13. Slack / Lark (optional)](#13-slack-lark-optional)
+- [14. Workspace = company · multiple members · local runtimes](#14-workspace-company-multiple-members-local-runtimes)
+- [15. Stand-up order (detail)](#15-stand-up-order-detail)
+- [16. Interview checklist (detail)](#16-interview-checklist-detail)
 
 ## 0. Prerequisites
 
@@ -319,14 +335,18 @@ integration. Offer at setup; connect any time later.
      heavy work."*
    - If declined: skip; Mops lives in the console only, and `/help` says so.
 7. **Labels** (discipline/type; never the stage) and **docs skeleton**: `docs/ROADMAP.md`,
-   `docs/TEAM.md` (who owns what — essential once several humans join), `docs/TOOLING.md`
-   (every tool: what · for what · access · wiring · conventions), `docs/DECISIONS.md`
+   `docs/TEAM.md` (who owns what — agents *and* people; essential once several humans join),
+   `docs/TOOLING.md` (every tool: what · for what · access · where its secret lives · when
+   it was last checked — this is the probe list `/health` reads), `docs/DECISIONS.md`
    (**append-only**: what was tried or proposed and rejected, with the evidence — so the
    same idea isn't rediscovered every quarter) and, once there's code, `docs/ARCHITECTURE.md`
    (what lives where, entry points — every task starts in a fresh worktree, so an unwritten
    map is re-derived by every agent on every run). The cloud holds issues/comments; code and
-   keys stay on members' machines. **Start each of these from `templates/`** rather than
+   keys stay on members' machines. **Start each from its template in `templates/`** rather than
    improvising the shape — a doc nobody can predict the shape of gets skimmed, not used.
+   `LATER.md` and `ECONOMICS.md` are the two without one: their shape is stated where they
+   are defined (a deferral is *what · why · revisit trigger*; economics is the ledger
+   rolled up — PLAYBOOKS).
 
 
 ## 16. Interview checklist (detail)

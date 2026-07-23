@@ -115,6 +115,31 @@ PYEOF
 )
 [ -n "$xref_bad" ] && while IFS= read -r l; do say_fail "$l"; done <<< "$xref_bad"
 
+# 5f · a Contents block must list exactly the file's own ## headings, as working anchors.
+# Hand-maintained tables of contents go stale the moment a section is added or renamed.
+toc_bad=$(python3 - <<'PYEOF'
+import re, glob
+def anchor(h):
+    a = re.sub(r"`|\*\*|\*|\[|\]|\(|\)", "", h)
+    a = re.sub(r"[^\w\s-]", "", a, flags=re.U).strip().lower()
+    return re.sub(r"\s+", "-", a)
+def clean(h): return re.sub(r"`|\*\*|\*", "", h).strip()
+bad=[]
+for f in sorted(glob.glob("*.md")):
+    t=open(f).read()
+    m=re.search(r"^## Contents\n(.*?)(?=^## )", t, re.S|re.M)
+    if not m: continue
+    want=[f"- [{clean(h)}](#{anchor(h)})" for h in re.findall(r"^## (.+)$", t, re.M) if h.strip()!="Contents"]
+    have=[l.strip() for l in m.group(1).strip().split("\n") if l.strip()]
+    if have!=want:
+        miss=[w for w in want if w not in have]; extra=[h for h in have if h not in want]
+        d=(f" missing {len(miss)}" if miss else "")+(f" stale {len(extra)}" if extra else "")
+        bad.append(f"{f}: Contents does not match its headings —{d or ' order differs'}")
+print("\n".join(bad))
+PYEOF
+)
+[ -n "$toc_bad" ] && while IFS= read -r l; do say_fail "$l"; done <<< "$toc_bad"
+
 # 5c · references must stay one level deep from SKILL.md
 for f in $(ls *.md | grep -vE '^(SKILL|README|CHANGELOG|AGENTS)\.md$'); do
   nested=$(grep -ohE '\]\([A-Z][A-Za-z-]*\.md' "$f" 2>/dev/null | head -1)

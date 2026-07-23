@@ -11,8 +11,8 @@ interactive) · 🏢 Mops in Multica (presence/async) · ⇆ either.
 **Setup**
 | Command | Where | Routes to |
 |---|---|---|
-| `/init` | 🖥️ | bootstrap from zero (interview → stand up) |
-| `/join` | 🖥️ | join an existing setup — `/audit` + interview delta, then gaps → fixes; reconcile an existing Mops in Multica |
+| `/init` | 🖥️ | bootstrap from zero (interview → stand up). Full procedure: FLOWS |
+| `/join` | 🖥️ | join an existing setup — `/audit` + interview delta, then gaps → fixes; reconcile an existing Mops in Multica. Full procedure: FLOWS |
 
 **Features & roadmap**
 | Command | Where | Routes to |
