@@ -18,65 +18,44 @@
 
 **diagrams say `/mops` too, and changelog headings are just the version**
 
-- The 2.3.4 rewrite skipped fenced blocks to spare shell examples — which also skipped the
-  **Mermaid workflow diagrams**, still showing the old `/join`, `/init`. Rewritten (7 nodes),
-  so the pictures match the prose: every command reads `/mops <name>`.
-- **Changelog headings are now just the version number**; each release's title moved to a bold
-  line beneath it, so the page outline is a clean column of versions, not truncated sentences.
+- Mermaid workflow diagrams now read `/mops <name>` — the 2.3.4 sweep had skipped fenced blocks.
+- Changelog headings are just the version number; each title moved to a bold line beneath.
 
 ## 2.3.4
 
 **commands are written in full: `/mops <name>`, everywhere**
 
-recognition over recall. Every command reference across the skill and the docs site is now
-the real short command you type — **`/mops join`, not `/join`** — shown in full so you copy it
-rather than translate it. A bare `/join` was never a real command (only `/mops join` and
-`/multica-ops:join` are), and writing it that way is exactly what made a first user type a
-command that doesn't exist. 523 references rewritten. Section headings keep the short `/name`
-as a tag so page anchors stay stable. The two coherence guards (preflight's command
-extraction, `check-structure`'s file↔table check) were moved to the `/mops <name>` form in the
-same change. Net effect for you: Mops now quotes the copy-pasteable command, not a phantom.
+recognition over recall: every command reference across skill and docs is now the real command
+you type — **`/mops join`, not the phantom `/join`** (523 references). Section headings keep the
+short `/name` as a stable-anchor tag; the two coherence guards moved to the same form.
 
 ## 2.3.3
 
 **the commands table calls them flows**
 
-Completing 2.3.2: the table listing `/init`, `/feature` … was still headed **Command**, which
-said the opposite of the note right above it — that `/name` is a *flow you invoke* (via
-`/multica-ops:name`, `/mops name`, or plain language), not a command you type. Renamed the
-column to **Flow** across all five tables so the header and the note finally agree.
+Renamed the commands-table column **Command → Flow** across all five tables, so the header
+stopped contradicting the note above it (a `/name` is a flow you invoke, not one you type).
 
 ## 2.3.2
 
 **the command table now says how to type a command**
 
-- **How to read the commands table.** `/feature` in the docs is a *flow name*, not something
-  you type literally — reach it as `/multica-ops:feature`, `/mops feature …`, or plain
-  language. The table never said so, and a first user read `/feature` as a command that
-  doesn't exist. The Commands page and the Getting Started routing now both spell out the
-  three forms; there is no bare `/<name>`, and outside Claude Code there are no slash commands at all.
-- **Docs-site information architecture.** Introduction now leads (the *why* and the mental
-  model) and Getting Started follows (install and first run) — the two had drifted into
-  overlapping how-tos. Introduction drops the duplicated install and upgrade steps and points
-  to Getting Started for them.
+- **How to read the table** — a `/name` is reached via `/multica-ops:name`, `/mops name`, or
+  plain language; there's no bare `/name`. A first user had read `/feature` as a command that
+  doesn't exist.
+- **Docs IA** — Introduction leads (the *why*), Getting Started follows (install + first run);
+  dropped the duplicated steps between them.
 
 ## 2.3.1
 
 **a real on-ramp, and tests that keep themselves honest**
 
-- **A Getting Started page** on the docs site — the friendly on-ramp a first-time user
-  needs, walking install → sign-in → day-zero checks → "just say what you're making." The
-  gap the first outside user-test surfaced ("downloaded Multica, now what") was covered as Mops *behaviour* but not as
-  a page to read; now it is the top of the sidebar.
-- **One canonical list for drift.** The workspace fingerprint is now the single source of
-  truth for which structural objects exist; `/sync`, `/join` and `/upgrade` all reconcile
-  against it rather than each carrying their own — add a class in one place and all three
-  cover it. `verify.py` guards it, so one check protects every flow that reads it.
-- **The evals caught up and stay caught up.** 2.3's flagship behaviours had no regression
-  test — the design flow, `/process`, "you decide", the adaptive interview. Added, including
-  the exact run that shipped garbage. preflight now **warns when the version bumped and the
-  evals didn't**, and `AGENTS.md` carries a **release checklist**: refresh the evals, run the
-  four review lenses, and keep the guards themselves current — they rot too.
+- A **Getting Started page** — the on-ramp a first user needs (the *"downloaded Multica, now
+  what"* gap).
+- The workspace **fingerprint** is now the single canonical list `/sync`, `/join` and
+  `/upgrade` all read; `verify.py` guards it.
+- **Evals** added for the 2.3 behaviours; preflight warns when a version bump skips them, and
+  `AGENTS.md` gained a release checklist.
 
 ## 2.3.0
 
