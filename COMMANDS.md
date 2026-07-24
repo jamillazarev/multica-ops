@@ -8,6 +8,11 @@ to the next release` is fine). **`/multica-ops:mops <anything>`** is the free-te
 Mops the pug is the skill's mascot. *Where* column: 🖥️ console (heavy/machine/
 interactive) · 🏢 Mops in Multica (presence/async) · ⇆ either.
 
+**How to read this table.** Each row names a *flow*; the `/name` is shorthand, **not a
+command you type literally**. In Claude Code you reach a flow three ways — `/multica-ops:<name>`,
+**`/mops <name>`** (e.g. `/mops feature …`), or plain language. There is no bare `/<name>`;
+outside Claude Code there are no slash commands at all, only plain language.
+
 **Setup**
 | Command | Where | Routes to |
 |---|---|---|

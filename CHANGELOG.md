@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.3.2 — the command table now says how to type a command
+
+- **How to read the commands table.** `/feature` in the docs is a *flow name*, not something
+  you type literally — reach it as `/multica-ops:feature`, `/mops feature …`, or plain
+  language. The table never said so, and a first user read `/feature` as a command that
+  doesn't exist. The Commands page and the Getting Started routing now both spell out the
+  three forms; there is no bare `/<name>`, and outside Claude Code there are no slash commands at all.
+- **Docs-site information architecture.** Introduction now leads (the *why* and the mental
+  model) and Getting Started follows (install and first run) — the two had drifted into
+  overlapping how-tos. Introduction drops the duplicated install and upgrade steps and points
+  to Getting Started for them.
+
 ## 2.3.1 — a real on-ramp, and tests that keep themselves honest
 
 - **A Getting Started page** on the docs site — the friendly on-ramp a first-time user
