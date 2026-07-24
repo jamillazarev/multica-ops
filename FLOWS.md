@@ -226,11 +226,16 @@ anything that costs or restarts:
 executes tasks; replacing the binary underneath it interrupts whatever is mid-run, and
 `daemon stop` has no drain flag — it stops, it does not wait. So:
 
+**Mops checks and reports; the owner runs the update.** Moving the platform under a running
+team is theirs to time — and on a **self-hosted** server the update is a deployment
+(`docker compose pull && up -d`, `MULTICA_IMAGE_TAG` pinned, or Helm), where **CLI↔server skew
+bites and the server goes first**. On cloud the server is the vendor's; only these are yours:
+
 ```sh
-multica daemon status --output json          # active_task_count must be 0
+multica daemon status --output json          # active_task_count must be 0 before anything
 multica issue list --output json             # nothing in in_progress
-multica update                               # local CLI
-multica runtime update <runtime-id>          # the CLI on a runtime machine
+multica update                               # local CLI          — hand over, don't run
+multica runtime update <runtime-id>          # CLI on a runtime   — hand over, don't run
 multica daemon restart
 ```
 

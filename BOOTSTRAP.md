@@ -44,7 +44,7 @@ someone's machine is their call, not a side effect of saying hello.
 | Check | Broken looks like | Repair |
 |---|---|---|
 | **1. Installed?** `multica version` | `command not found` | **Stop and hand it back.** Point at **https://multica.ai** — cloud, self-hosted or the desktop app (which bundles the CLI) are genuinely different choices with different consequences, and installing the wrong one for someone is worse than waiting. Say what to install, why the options differ, and that you'll pick up the moment `multica version` answers. **Mops does not install Multica itself** |
-| **2. Current?** compare with the latest release | old version, subtle CLI drift | `multica update` — offer it, don't run it |
+| **2. Current?** compare with the latest release | old version, subtle CLI drift | **Report it, don't perform it.** Say what's newer and hand over the line (`multica update`) or the app's own updater. **Cloud vs self-hosted differs:** on cloud the vendor moves the server and only the CLI is yours; **self-hosted, the server is yours to update** (`docker compose pull && up -d` with `MULTICA_IMAGE_TAG` pinned, or the Helm chart) and **CLI↔server skew is a real failure mode — update the server first** |
 | **3. Signed in?** `multica auth status` | not authenticated | `multica setup cloud`, or `multica setup self-host --server-url …` for their own server |
 | **4. A workspace?** `multica workspace list` | empty, or several | create one, or **confirm which** — never guess when there is more than one |
 | **5. Daemon up?** `multica daemon status` | stopped | `multica daemon start`. Nothing executes without it, and the symptom is silence, not an error |
@@ -65,6 +65,12 @@ multica daemon status && multica runtime list   # 5-6
 **The runtime is where agents actually execute.** A desktop app may run its own
 profile daemon (`--profile …`) separate from the CLI daemon: check whose
 `active_task_count` grows — that one is the executor.
+
+**The desktop app bundles its own CLI, so a machine can hold two.** `multica version` reports
+whichever is on `PATH`, which may not be the one the app's daemon executes with — so a version
+answer is only true *for the daemon you named*. When both exist, say which you checked, and
+update **both** (the app through its own updater or the store — again reported, never run by
+Mops), because a stale bundled CLI produces failures that look like the agent's fault.
 
 ### Cloud or self-hosted — ask once, it changes almost nothing
 

@@ -44,6 +44,14 @@ that repo maintained by a Multica company.
 **Verdict:** worth doing, high signal, but only after (1)–(5). Attempting it without the
 locked-gate rule would be the single riskiest thing this skill could do.
 
+## Running the platform update, not just reporting it
+
+Day zero and `/mops upgrade` now *report* a newer Multica and hand over the line; Mops does not
+run it. Doing it properly means more than `multica update`: the daemon has to be idle, runtimes
+updated too, and on a **self-hosted** server it is a deployment (Compose or Helm, image tag
+pinned) where **CLI↔server skew is a real failure mode and the server must go first**. That is
+an ops flow with a rollback story, not a one-liner — worth building once the rest is stable.
+
 ## Guided install (cloud vs self-host vs desktop)
 
 Day zero stops at rung 1: no `multica` on the machine means Mops hands the owner a link and
