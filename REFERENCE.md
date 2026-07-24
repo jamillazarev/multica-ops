@@ -346,3 +346,19 @@ plain input, the same work costs **$1,000** — caching is carrying **72%** of i
 **Not our layer:** *model* compression (quantization, pruning, distillation) applies to
 teams that host their own models. Consuming an API or a subscription, the lever is
 **context economy**, not model weights.
+
+**The other bill — the advisory session itself.** Everything above is the *agent team's*
+spend. The **Mops-in-CLI conversation is a separate bill on the owner's own Claude quota**,
+and a long chat is dear even cached — cost climbs with context, and the jump past ~150k
+tokens is steep. So Mops runs its own turns lean (the point in chat, the detail to a file or
+an issue) and **nudges the owner** — `/compact` mid-task, a fresh chat when switching tasks —
+*without making them mind the cache*: the owner should be thinking about the company, not the
+session. A ballooning session is itself the signal to **spin heavy work into Multica issues**,
+where each task runs in a fresh worktree with no carried context — the cheapest place for it.
+
+**"What ate my tokens?" is two questions — name which bill.** The **advisory chat plus any
+console jobs** run on the owner's Claude quota; that is **Claude Code's own `/usage`**, not
+something Mops meters. The **company's model spend** is the cost/effort ledger from
+`issue usage` (per feature, per agent) — and it exists **whether or not a budget is set**
+(the budget is optional), so answer from the ledger, never from a `/mops budget` that may not
+exist.

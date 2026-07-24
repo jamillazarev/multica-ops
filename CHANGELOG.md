@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.3.8
+
+**the advisory session is its own bill (owner cost/context economy)**
+
+From a user who burned their weekly limit on long chats: REFERENCE §12 now separates the two
+token bills. The **Mops-in-CLI conversation runs on your own Claude quota** — dear past ~150k
+context — so Mops keeps its turns lean, nudges `/compact` and a fresh chat on task-switch, and
+spins heavy work into **Multica issues** (fresh worktree, no carried context). And *"what ate
+my tokens"* is two bills, named separately: Claude Code's `/usage` for the chat, the cost/effort
+ledger for the company — the ledger works **even with no budget set** (budget is optional).
+
 ## 2.3.7
 
 **hotfix: the upgrade fallback pointed at a command that can also be missing**
