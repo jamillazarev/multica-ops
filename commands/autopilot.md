@@ -3,4 +3,4 @@ description: Scheduled automations: create/list/delete cron or webhook autopilot
 ---
 
 Load and follow the **multica-ops** skill (SKILL.md), executing
-its `/autopilot` flow. Scheduled automations: create/list/delete cron or webhook autopilots (set up here, they run inside Multica). Args: $ARGUMENTS
+its `/mops autopilot` flow. Scheduled automations: create/list/delete cron or webhook autopilots (set up here, they run inside Multica). Args: $ARGUMENTS

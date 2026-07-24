@@ -1,6 +1,6 @@
 # Opt-in modules
 
-Enabled at the interview or later via `/module`. **Design system & brand** come from
+Enabled at the interview or later via `/mops module`. **Design system & brand** come from
 checklist #15 · Design system & brand; the **external tracker bridge** is offered only when
 work already lives somewhere else.
 
@@ -17,7 +17,7 @@ work already lives somewhere else.
 high-fidelity HTML and produced gradient placeholders — because it skipped the structure and
 skipped the real tools. Two rules fix it.
 
-**Run `/process` before drawing anything.** Design is the clearest case for
+**Run `/mops process` before drawing anything.** Design is the clearest case for
 process-discovery (PLAYBOOKS): for a UI it typically surfaces **information architecture →
 user flows & journeys → low-fi wireframes → owner approves the structure → high-fi → design
 system** — but Mops discovers that per project rather than hardcoding it, and the owner cuts
@@ -62,8 +62,8 @@ truth. **Curator = the Design squad lead** (or the sole designer).
   + our delta layer*. Extensions then live in a **separate, documented "our extensions"
   layer** that follows the host's own philosophy and naming — never restyle or reinterpret
   host semantics, that is exactly how teams drift away from the host. Host ships a new version →
-  treat it like `/upgrade`: preview the diff and its impact on the delta layer before
-  applying. **Inheriting an existing own system** (typical at `/join`): audit-and-prepare
+  treat it like `/mops upgrade`: preview the diff and its impact on the delta layer before
+  applying. **Inheriting an existing own system** (typical at `/mops join`): audit-and-prepare
   exactly like the join delta — inventory tokens/components/templates, verdict per piece
   (complete / needs additions / needs rework), wire the conventions, only then extend.
 - **Systematize in the same feature.** A shipped solution that introduced new patterns
@@ -90,7 +90,7 @@ truth. **Curator = the Design squad lead** (or the sole designer).
   Pen.dev or any other tool → study its token workflow first (see `docs/TOOLING.md`).
 - **Design QA checks against the system**: implementations use tokens/components, not
   hardcoded values; a deviation is either fixed or argued into the system. The owner can
-  add a human checkpoint on system extensions via `/reviews`.
+  add a human checkpoint on system extensions via `/mops reviews`.
 
 ## Brand — identity, systematized
 
@@ -106,13 +106,13 @@ against what · why believe) · **archetype** (one of 12 — a shorthand agents 
 tone words + a sample paragraph per register — executable examples, not adjectives) ·
 values (short) · **references & anti-references** (anti = hard bans) · tagline + naming
 rules. Reference galleries for brand/design research (free-first, Mobbin-fallback): **STACKS**. Workshop artifacts — competitor teardowns, "what we dislike about the old brand",
-metaphor boards — are **discovery input** that feeds the book (run via `/discovery` /
-`/research`), then gets distilled; they are not the book.
+metaphor boards — are **discovery input** that feeds the book (run via `/mops discovery` /
+`/mops research`), then gets distilled; they are not the book.
 
-**Flow (`/brand`).** New brand → brand discovery (research + the artifacts above; Brand
+**Flow (`/mops brand`).** New brand → brand discovery (research + the artifacts above; Brand
 Designer + Copywriter, conductor coordinates) → book → **owner approval** (identity is
 outward) → systematize (tokens/templates → design system, voice → guide). **Existing
-brand** (typical at `/join`) → audit first: inventory logo/palette/type/voice/
+brand** (typical at `/mops join`) → audit first: inventory logo/palette/type/voice/
 positioning, verdict per piece — **complete / needs additions / needs rework** — fill
 only the gaps the user confirms; an existing brand is incumbent convention, respected.
 **Rebrand** (rework verdict) gets its own discovery pass: critique of the current brand
@@ -141,7 +141,7 @@ an agent's context on every ticket.
 **Two shapes, and they behave differently:**
 
 - **One-off migration** — the backlog moves here and the old tracker is archived. This is
-  `/import`, it ends, and afterwards there is one source of truth.
+  `/mops import`, it ends, and afterwards there is one source of truth.
 - **Standing bridge** — the tracker stays authoritative for some slice (a client files
   tickets there; marketing plans there). Then decide the **direction of truth per field**
   and write it down: who owns status, who owns the description, what happens when both
@@ -171,5 +171,5 @@ Three rules keep this from becoming vandalism:
 - **Fix what blocks work, not what offends taste.** An issue an agent can start on is done
   being edited. Rewriting for elegance burns budget and changes nothing.
 
-Run it right after `/import`, and again on anything imported that reaches `todo` without
+Run it right after `/mops import`, and again on anything imported that reaches `todo` without
 having been through the pass — that is the moment it actually starts costing money.

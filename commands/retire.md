@@ -1,6 +1,6 @@
 ---
-description: Alias of /fire (multica-ops).
+description: Alias of /mops fire (multica-ops).
 ---
 
 Load and follow the **multica-ops** skill (SKILL.md), executing
-its `/retire` flow. Alias of /fire (multica-ops). Args: $ARGUMENTS
+its `/mops retire` flow. Alias of /mops fire (multica-ops). Args: $ARGUMENTS

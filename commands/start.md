@@ -3,4 +3,4 @@ description: Start the Multica daemon; interrupted issue-tasks requeue automatic
 ---
 
 Load and follow the **multica-ops** skill (SKILL.md), executing
-its `/start` flow. Start the Multica daemon; interrupted issue-tasks requeue automatically.
+its `/mops start` flow. Start the Multica daemon; interrupted issue-tasks requeue automatically.

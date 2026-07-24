@@ -60,11 +60,11 @@ cannot tell that a *concept* has no door.
 
 ### Writing the changelog
 
-The changelog is the migration map `/upgrade` reads, and it is also what a stranger uses to
+The changelog is the migration map `/mops upgrade` reads, and it is also what a stranger uses to
 decide whether to adopt this. Both audiences want the same thing: **what changed for me, and
 what must I do differently.**
 
-- **Lead with the capability or the consequence, not the discovery.** "`/import` brings a
+- **Lead with the capability or the consequence, not the discovery.** "`/mops import` brings a
   backlog over from Linear" — not "we noticed imports were unhandled".
 - **A fix is worth an entry when it changes what a reader should do**: a recipe they may have
   copied, a behaviour they relied on. Say it plainly and briefly, including the remedy.

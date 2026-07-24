@@ -3,4 +3,4 @@ description: Audience work: segments, ICP, personas as documents; refresh from r
 ---
 
 Load and follow the **multica-ops** skill (SKILL.md), executing
-its `/audience` flow. Audience work: segments, ICP, personas as documents; refresh from research. Args: $ARGUMENTS
+its `/mops audience` flow. Audience work: segments, ICP, personas as documents; refresh from research. Args: $ARGUMENTS

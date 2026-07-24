@@ -37,11 +37,11 @@ platform can't help itself.**
 The hierarchy is exactly two levels: `issue → sub-issues`. `stage` is a number on a
 sub-issue, not another level.
 
-**Operating-mode switches.** **Switching is boundary-safe — nothing running is ever killed, no stop needed.** Flow changes take effect at the next feature boundary in both directions: the in-flight feature finishes as started, then either the conductor pulls the next one (manual→auto) or the conveyor parks and waits (auto→manual). An immediate halt is a different thing — `/stop`. Hiring switches apply to future hires at once, and on returning to manual Mops in Multica reports every hire made meanwhile. Mechanics: update the mode section in the guide skill plus the conductor's and Mops-in-Multica's instructions — no daemon restart, subsequent runs read the new state.
+**Operating-mode switches.** **Switching is boundary-safe — nothing running is ever killed, no stop needed.** Flow changes take effect at the next feature boundary in both directions: the in-flight feature finishes as started, then either the conductor pulls the next one (manual→auto) or the conveyor parks and waits (auto→manual). An immediate halt is a different thing — `/mops stop`. Hiring switches apply to future hires at once, and on returning to manual Mops in Multica reports every hire made meanwhile. Mechanics: update the mode section in the guide skill plus the conductor's and Mops-in-Multica's instructions — no daemon restart, subsequent runs read the new state.
 
 **Two seats — lanes.** **Lanes — each seat redirects to the other's strength:** Multica → console for the heavy/machine/interactive (build, hire, integrations, secrets, git/deploy, ops); console → Multica for living with the running team (the board, an agent in its thread, reviewing in context, staying reachable, autopilots). The guide encodes both redirects. **The *Where* tag is a recommendation, not a lock.** Mops in Multica is a real runtime with a workdir — it *can* push/deploy/shell **if creds and tooling are wired in**; the seat difference is what's already wired plus the costs (async, shared limit, blast radius of keys in an agent's env). No computer at hand → run a console job from Multica and name the cost. Truly console-only = what's bound to the user's own machine (local files, personal SSH, the daemon). Never refuse a doable action over the "wrong" seat.
 
-**Multiple workspaces.** A user can have several workspaces (separate companies). The console operates on **one at a time** — the profile's default (`workspace list` shows them). When more than one exists, Mops **confirms which workspace it's acting on** before doing anything, and switches on request: `workspace switch <id>` (or `--workspace-id` per command) — `/workspace [name]`. Each workspace is its own company — own team, roadmap, and, if enabled, its own resident Mops in Multica; nothing crosses between them. A Mops in Multica lives in exactly one workspace, so switching is a console-only notion.
+**Multiple workspaces.** A user can have several workspaces (separate companies). The console operates on **one at a time** — the profile's default (`workspace list` shows them). When more than one exists, Mops **confirms which workspace it's acting on** before doing anything, and switches on request: `workspace switch <id>` (or `--workspace-id` per command) — `/mops workspace [name]`. Each workspace is its own company — own team, roadmap, and, if enabled, its own resident Mops in Multica; nothing crosses between them. A Mops in Multica lives in exactly one workspace, so switching is a console-only notion.
 
 ## 2. Four trigger paths
 
@@ -171,7 +171,7 @@ don't restate them in instructions.
 in the **CLI**, before a long operation state the expected duration and how to check, then
 poll (`issue run-messages`, the board, `daemon status active_task_count`) and print a
 progress line as each sub-issue finishes — not a silent wait for the whole thing. When the
-**console is closed**, the resident Mops carries it: `/status` on demand plus issue comments
+**console is closed**, the resident Mops carries it: `/mops status` on demand plus issue comments
 as stages complete, and a nightly sweep so nothing sits unseen. The status digest agents
 already produce *after* work (the board + what each shipped) is exactly what to stream
 *during* it.
@@ -225,7 +225,7 @@ of `multica` **v0.4.8** — but it lists *what exists*, not exact flags, since t
 evolves, so **always confirm with `multica <group> <cmd> --help`** and consult
 https://multica.ai/docs. **Precedence: live `--help` wins over this map** — on any
 mismatch trust the CLI, and regenerate this section when the skill is upgraded
-(`multica --help` + per-group `--help` is the whole procedure). The `/cli` command is the **framework-free escape hatch** — run
+(`multica --help` + per-group `--help` is the whole procedure). The `/mops cli` command is the **framework-free escape hatch** — run
 or explain any of the below directly, no methodology assumed.
 
 **Work objects**
@@ -292,7 +292,7 @@ defaults below, alternatives when the context demands, the choice recorded in th
 | Goals → work | roadmap releases | OKR (multi-team alignment, quarter horizon) · **Impact Mapping** (Why → Who → How → What: from a goal through actors and impacts to deliverables — bridges strategy to roadmap items) |
 | Discovery & risk | JTBD + user stories, pre-mortem | SWOT (strategy review) · Porter (market entry) · Opportunity Solution Tree (map opportunities → solutions before committing to features) |
 | Design & UX review | design-system conformance (Design QA) | **Nielsen's 10 heuristics** (usability lens) · WCAG (a11y) · cognitive walkthrough (first-use flows) |
-| Retro / learn | `/measure` Learn items | 5 Whys (incident root cause) |
+| Retro / learn | `/mops measure` Learn items | 5 Whys (incident root cause) |
 
 Frameworks are seeds too — an unlisted one the user names gets researched and applied
 the same way.
@@ -318,7 +318,7 @@ plain input, the same work costs **$1,000** — caching is carrying **72%** of i
 1. **Keep the cached prefix stable.** The guide skill + agent instructions are what gets
    cached. Every edit invalidates it: you pay a cache *write* (dearer than input) and lose
    cheap reads until it warms again. **Batch guide/instruction changes** — apply them at
-   `/sync` or a module toggle, never as a dribble of small edits mid-flight.
+   `/mops sync` or a module toggle, never as a dribble of small edits mid-flight.
 2. **Progressive disclosure.** Only `SKILL.md` is always loaded; companions load on
    trigger (see the routing table). Adding to a companion is nearly free; adding to the
    core is paid on every run, by every agent.

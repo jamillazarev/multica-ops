@@ -1,6 +1,6 @@
 ---
-description: Spin up a fuzzy idea: research, competitors, team brainstorm → proposal; flows into /feature.
+description: Spin up a fuzzy idea: research, competitors, team brainstorm → proposal; flows into /mops feature.
 ---
 
 Load and follow the **multica-ops** skill (SKILL.md), executing
-its `/discovery` flow. Spin up a fuzzy idea: research, competitors, team brainstorm → proposal; flows into /feature. Args: $ARGUMENTS
+its `/mops discovery` flow. Spin up a fuzzy idea: research, competitors, team brainstorm → proposal; flows into /mops feature. Args: $ARGUMENTS

@@ -1,6 +1,6 @@
 ---
-description: Alias of /ship (multica-ops).
+description: Alias of /mops ship (multica-ops).
 ---
 
 Load and follow the **multica-ops** skill (SKILL.md), executing
-its `/launch` flow. Alias of /ship (multica-ops). Args: $ARGUMENTS
+its `/mops launch` flow. Alias of /mops ship (multica-ops). Args: $ARGUMENTS

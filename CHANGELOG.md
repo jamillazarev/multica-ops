@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.3.4 — commands are written in full: `/mops <name>`, everywhere
+
+recognition over recall. Every command reference across the skill and the docs site is now
+the real short command you type — **`/mops join`, not `/join`** — shown in full so you copy it
+rather than translate it. A bare `/join` was never a real command (only `/mops join` and
+`/multica-ops:join` are), and writing it that way is exactly what made a first user type a
+command that doesn't exist. 523 references rewritten. Section headings keep the short `/name`
+as a tag so page anchors stay stable. The two coherence guards (preflight's command
+extraction, `check-structure`'s file↔table check) were moved to the `/mops <name>` form in the
+same change. Net effect for you: Mops now quotes the copy-pasteable command, not a phantom.
+
 ## 2.3.3 — the commands table calls them flows
 
 Completing 2.3.2: the table listing `/init`, `/feature` … was still headed **Command**, which

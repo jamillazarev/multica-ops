@@ -3,4 +3,4 @@ description: Manage human sign-off checkpoints: which flows/stages @mention whic
 ---
 
 Load and follow the **multica-ops** skill (SKILL.md), executing
-its `/reviews` flow. Manage human sign-off checkpoints: which flows/stages @mention which person before proceeding; add/remove/list. Args: $ARGUMENTS
+its `/mops reviews` flow. Manage human sign-off checkpoints: which flows/stages @mention which person before proceeding; add/remove/list. Args: $ARGUMENTS

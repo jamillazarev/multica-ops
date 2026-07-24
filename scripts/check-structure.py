@@ -112,12 +112,13 @@ for f in DOCS:
 
 # f2 · every commands/*.md must have a row in COMMANDS.md. The coherence checks in
 # preflight all iterate table → file, so a command missing from the table is invisible
-# to every one of them at once.
+# to every one of them at once. Commands are written in full — `/mops <name>` — so the
+# `mops ` prefix is optional here only to still match the bare `/mops` dispatcher itself.
 try:
     table = open("COMMANDS.md", encoding="utf-8").read()
     for path in sorted(glob.glob("commands/*.md")):
         name = os.path.basename(path)[:-3]
-        if not re.search(rf"/{re.escape(name)}[`\s(\\|]", table):
+        if not re.search(rf"/(?:mops )?{re.escape(name)}[`\s(\\|:]", table):
             warn(f"commands/{name}.md has no row in COMMANDS.md — /help will never list it")
 except OSError:
     pass

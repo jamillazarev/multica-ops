@@ -3,4 +3,4 @@ description: View or rebuild the release plan: release surgery — cut/extend re
 ---
 
 Load and follow the **multica-ops** skill (SKILL.md), executing
-its `/roadmap` flow. View or rebuild the release plan: release surgery — cut/extend releases, move features, re-run ICE scoring.
+its `/mops roadmap` flow. View or rebuild the release plan: release surgery — cut/extend releases, move features, re-run ICE scoring.

@@ -3,4 +3,4 @@ description: Toggle an opt-in module: resident Mops, design system & brand, expe
 ---
 
 Load and follow the **multica-ops** skill (SKILL.md), executing
-its `/module` flow. Toggle an opt-in module: resident Mops, design system & brand, experts, personas, Design QA, social… Args: $ARGUMENTS
+its `/mops module` flow. Toggle an opt-in module: resident Mops, design system & brand, experts, personas, Design QA, social… Args: $ARGUMENTS

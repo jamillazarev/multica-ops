@@ -53,11 +53,11 @@ cheap/text-oriented runtime (translations, boilerplate legal).
 
 | Role | Squad | Model tier | Recommended skills | Notes |
 |---|---|---|---|---|
-| **Conductor / Product Manager** | — (project lead) | top | **owns the skill inventory** (`/skill`: create · screen-and-import · optimize · release) — grill-with-docs, to-tickets, triage, wayfinder, research, skill-creator, **prioritization-frameworks, create-prd, prioritize-features, pre-mortem, release-notes, job-stories, user-stories**, handoff | owns intake→spec→stages→accept; git/GitHub rights; owns `skill import`; prioritizes the backlog with explicit frameworks (ICE by default), pre-mortems risky features |
+| **Conductor / Product Manager** | — (project lead) | top | **owns the skill inventory** (`/mops skill`: create · screen-and-import · optimize · release) — grill-with-docs, to-tickets, triage, wayfinder, research, skill-creator, **prioritization-frameworks, create-prd, prioritize-features, pre-mortem, release-notes, job-stories, user-stories**, handoff | owns intake→spec→stages→accept; git/GitHub rights; owns `skill import`; prioritizes the backlog with explicit frameworks (ICE by default), pre-mortems risky features |
 | **Engineer** (per platform: core/app/web) | Eng squad(s) | top for core, mid for app/web | implement, code-review, tdd, diagnosing-bugs, codebase-design, domain-modeling, resolving-merge-conflicts, using-git-worktrees, verification-before-completion, handoff | ≥2 per squad enables peer review |
 | **Web Engineer** | Eng/Web | mid | + frontend-design, theme-factory, webapp-testing, seo-audit, animation set | if a site/landing exists; owns the **GEO** markup with the copywriter (bot allowlist, FAQPage/Article JSON-LD, `/llms.txt`) |
 | **Product Designer** | Design (leader) | mid | impeccable, apple-design (or platform equivalent), animation-vocabulary, improve/review-animations, extract-design-system, canvas-design, prototype, **Storybook Component Doc, Design System Patterns** (when the DS module is on), handoff | leads design squad; runs Design QA gate; **design-system curator** |
-| **Brand Designer** | Design | mid | brand-guidelines, canvas-design, theme-factory, extract-design-system, apple-design, **brandkit** (when no brand exists yet), **SVG, Logo Creator, Svg Animation** (vector work), handoff | identity, icons, visuals; brandkit bootstraps identity from zero; owns `/brand` artifacts |
+| **Brand Designer** | Design | mid | brand-guidelines, canvas-design, theme-factory, extract-design-system, apple-design, **brandkit** (when no brand exists yet), **SVG, Logo Creator, Svg Animation** (vector work), handoff | identity, icons, visuals; brandkit bootstraps identity from zero; owns `/mops brand` artifacts |
 | **Design System Engineer** (opt-in, larger digital products) | Eng or Design | mid | implement, Storybook, Storybook Component Doc, Component Library Audit, code-review, handoff | builds/maintains tokens & the component catalog in code; the curator reviews |
 | **UX Researcher** | Design | top | grill-me, research, prototype, review-animations, handoff | usability/a11y reviewer, injection gate |
 | **QA Engineer** | Quality (leader) | top | code-review, tdd, diagnosing-bugs, webapp-testing, verification-before-completion, handoff | external review gate for every code feature. **Never the author, and preferably not even the author's provider** — models rate their own output generously, so when the workspace has several runtimes (Claude · Codex · Gemini · Kimi · opencode), routing the review to a different one costs nothing and removes a real bias |
@@ -67,8 +67,8 @@ cheap/text-oriented runtime (translations, boilerplate legal).
 | **Marketing Manager** | — (cross, or Content) | mid | marketing-ideas, positioning-ideas, value-prop-statements, product-name, north-star-metric, gtm-strategy, growth-loops, ideal-customer-profile, competitive-battlecard, beachhead-segment, + Corey Haines pack (social, emails, ads, launch, cold-email, referrals), handoff | GTM strategy pre-launch; post-launch owns channels. **Social automation**: content calendar as issues; a scheduled **autopilot** drafts posts on cadence; publishing via the platform's API/scheduler tools (import via find-skills) with human approval until trust is earned |
 | **Domain / Market / Tech Expert** (opt-in) | Experts squad | top | research, critique, brainstorming, handoff | advisors, not executors: pulled into specs, discovery, acceptance by `@`-mention; composition per project — see "Experts squad" below |
 | **Persona** (opt-in) | Personas squad | text | handoff | user simulation built from research; used in usability passes and Design QA walkthroughs — see "Personas squad" below |
-| **Finance & Ops** (opt-in) | — (cross) | text | xlsx, analytics, research, handoff | keeps `docs/BUDGET.md` (which the owner sets via `/budget`) and owns `docs/ECONOMICS.md`: the ledger, burn and runway, **prices verified online per location**, subscriptions and renewal dates, credits with their expiry cliffs. Escalates *before* the cap, not at it |
-| **Customer Support** (opt-in) | Content, or its own | text | handoff, copywriting, research, docx | owns the inbox: turns reports into bugs and feedback items with reproduction steps, answers in the brand voice, writes the help docs, and reports what keeps coming back — the input side of `/feedback` |
+| **Finance & Ops** (opt-in) | — (cross) | text | xlsx, analytics, research, handoff | keeps `docs/BUDGET.md` (which the owner sets via `/mops budget`) and owns `docs/ECONOMICS.md`: the ledger, burn and runway, **prices verified online per location**, subscriptions and renewal dates, credits with their expiry cliffs. Escalates *before* the cap, not at it |
+| **Customer Support** (opt-in) | Content, or its own | text | handoff, copywriting, research, docx | owns the inbox: turns reports into bugs and feedback items with reproduction steps, answers in the brand voice, writes the help docs, and reports what keeps coming back — the input side of `/mops feedback` |
 | **Analyst** | — (cross) | top | analytics, xlsx, research, **north-star-metric, metrics-dashboard, ab-test-analysis, cohort-analysis**, handoff | event taxonomy, funnels, north-star, cohorts/AB; never PII/audio |
 
 Create:
@@ -203,7 +203,7 @@ date and the reason.
 name** and a description starting `TEMP — <purpose>, archive after <event>`, so
 `agent list` stays readable and nobody mistakes it for a permanent role. It goes into
 `TEAM.md` the same way, and **archiving it is part of finishing the task** — an
-un-archived temp is roster debt that `/audit` will flag.
+un-archived temp is roster debt that `/mops audit` will flag.
 
 **Talent pool — archive, don't delete.** `multica agent archive` is reversible
 (`agent restore`), so a role that's gone quiet is **parked, not fired**: archive it and
@@ -211,7 +211,7 @@ record in `TEAM.md` *why it was parked and what would bring it back* ("re-hire w
 mobile app starts"). This keeps the roster legible without losing the configured skills,
 instructions and tier.
 
-**Utilization review** (part of `/audit`, and any squad leader can raise it): from
+**Utilization review** (part of `/mops audit`, and any squad leader can raise it): from
 `agent tasks` and `runtime usage` Mops sees who carried real load and who idled. Proposal
 goes **through the squad leader first** — leaders know whether a quiet agent is waiting on
 a stage or genuinely unused — then to Mops, and to the owner only if it means archiving
@@ -274,7 +274,7 @@ spends.
 **Count it at hire time, in the same breath as the proposal.** The weight is knowable before
 anything is attached, so say it then: *"Android engineer — 6 skills, ~11k tokens of
 always-loaded text, about 5% of the window"*. A list of eighteen imports with no numbers is
-what makes an owner ask "why so many?", and by the time `/audit` notices, the team is built
+what makes an owner ask "why so many?", and by the time `/mops audit` notices, the team is built
 around it. Same line names what each skill is **for** — a skill nobody can justify in half a
 sentence does not go on the floor.
 
@@ -282,7 +282,7 @@ sentence does not go on the floor.
 design *and* deployment is carrying two jobs; the fix is a second agent with clear ownership,
 not a smaller version of the same generalist. Prune only what is genuinely unused — if every
 skill is used, the role is too wide. Same principle as grades: **you don't shrink someone to
-fit, you hire the missing person.** `/audit` reports load per agent and names the split
+fit, you hire the missing person.** `/mops audit` reports load per agent and names the split
 candidates.
 
 ## Naming roles in the owner's language

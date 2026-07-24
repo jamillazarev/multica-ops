@@ -2,9 +2,9 @@
 description: What Mops can do and how to reach it — the front door, the four routes, and every command.
 ---
 
-Load and follow the **multica-ops** skill (SKILL.md), executing its `/help` flow.
+Load and follow the **multica-ops** skill (SKILL.md), executing its `/mops help` flow.
 
-Answer from the **live skill**, never from memory — the point of `/help` is that it is
+Answer from the **live skill**, never from memory — the point of `/mops help` is that it is
 current. Cover, briefly:
 
 - **You never need a command.** Plain language works; a bare `/mops` (or "hi") is the front

@@ -3,4 +3,4 @@ description: Set what a workspace member may direct Mops to do; owner always ful
 ---
 
 Load and follow the **multica-ops** skill (SKILL.md), executing
-its `/access` flow. Set what a workspace member may direct Mops to do; owner always full; destructive/spend always → owner. Args: $ARGUMENTS
+its `/mops access` flow. Set what a workspace member may direct Mops to do; owner always full; destructive/spend always → owner. Args: $ARGUMENTS

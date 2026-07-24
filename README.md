@@ -59,15 +59,15 @@ The four ways in, if you like to see them:
 
 | You have | You want | You get |
 |---|---|---|
-| nothing yet | a team | **`/init`** — the work is shaped first, then staffed |
-| a Multica workspace | it continued | **`/join`** — audit, then fixes in batches you approve |
-| a backlog in Linear/Jira | it moved here | **`/import`**, then crew mode |
+| nothing yet | a team | **`/mops init`** — the work is shaped first, then staffed |
+| a Multica workspace | it continued | **`/mops join`** — audit, then fixes in batches you approve |
+| a backlog in Linear/Jira | it moved here | **`/mops import`**, then crew mode |
 | a list of tasks, no tracker | them done, you set the order | **crew mode** — executors, no PM layer |
 | one job, no team | it done | a **quick job** — three questions, no machinery |
 
 ### Updating
 
-Ask Mops **"is there a new version?"** or run **`/upgrade`**. Mops fetches the new bytes
+Ask Mops **"is there a new version?"** or run **`/mops upgrade`**. Mops fetches the new bytes
 itself (it has your shell) and asks you to **restart Claude Code** — that restart is the
 only manual step, because a running skill can't replace its own plugin under itself. After
 the restart it migrates your workspace, re-screens imported skills, and offers the CLI
@@ -97,12 +97,12 @@ Multica for when you're away.
 
 **#3 — Session limits stall everything silently.** All agents on one runtime share
 one plan's window; a hit looks like a failed run and nothing retries itself. *Fix:*
-limits are first-class — detection with reset time, `/recover`, capacity levers,
+limits are first-class — detection with reset time, `/mops recover`, capacity levers,
 model tiering.
 
 **#4 — Teams can't grow themselves.** Mid-project you need a designer, a marketer, a
 pastry chef. *Fix:* a role-builder researches best practices and skills for any role
-you name; hiring can even run autonomously (`/autonomy hiring auto`).
+you name; hiring can even run autonomously (`/mops autonomy hiring auto`).
 
 **#5 — Agents reinvent wheels and improvise opinions.** *Fix:* evidence-over-opinion
 and self-improvement are baked into the shared guide — research before inventing,
@@ -114,7 +114,7 @@ Obsidian-compatible vault, ROADMAP/TEAM as files — everything in the repo, mir
 optional.
 
 **#7 — Work arrives with a history and a calendar.** A backlog already lives in Linear or
-Jira; posts are due on specific days. *Fix:* `/import` brings it over — mapping shown first,
+Jira; posts are due on specific days. *Fix:* `/mops import` brings it over — mapping shown first,
 issues created unassigned so nothing starts running by itself — and dated work is never
 started early.
 
@@ -168,21 +168,21 @@ via telemetry on the first `npx skills add jamillazarev/multica-ops`.
 | [COMMANDS.md](COMMANDS.md) | every command, its aliases and the surface it runs best on |
 | [STACKS.md](STACKS.md) | services, libraries, audio/DSP, testing, security, reference galleries |
 | [MODULES.md](MODULES.md) | opt-in modules: design system · brand · external tracker bridge |
-| [FLOWS.md](FLOWS.md) | the full procedures for `/init`, `/join`, `/health`, `/upgrade`, `/switch` |
+| [FLOWS.md](FLOWS.md) | the full procedures for `/mops init`, `/mops join`, `/mops health`, `/mops upgrade`, `/mops switch` |
 | [BOOTSTRAP.md](BOOTSTRAP.md) | zero-to-team CLI recipes, capacity levers, real-hours traps |
 | [ROLES.md](ROLES.md) | role catalog with curated skill packs + generic role-builder |
 | [PLAYBOOKS.md](PLAYBOOKS.md) | daily operations, copy-paste ready |
 | [REFERENCE.md](REFERENCE.md) | object model, anti-patterns, **CLI surface (§10)**, **frameworks (§11)** |
 | [WORKFLOW.md](WORKFLOW.md) | Mermaid diagrams of the whole process |
 | [BACKLOG.md](BACKLOG.md) | ideas past the current version — dogfooding the skill on itself, and open questions |
-| [CHANGELOG.md](CHANGELOG.md) | versioned history — the migration map for `/upgrade` |
+| [CHANGELOG.md](CHANGELOG.md) | versioned history — the migration map for `/mops upgrade` |
 | [BUDGET template](templates/BUDGET-template.md) | envelope · currency · credits with expiries · prices on record |
 | [evals/](evals/) | stratified scenarios — from a job too small to deserve a company to an import carrying a hidden instruction |
 | [templates/](templates/) · [scripts/](scripts/) | guide · roadmap · brand · component docs · **decisions log · architecture map · tooling register · team roster** · **a docs guard for the companies Mops builds** · ops helpers · **resumable backlog import** |
 
 Contributing? Run **`bash scripts/preflight.sh --install`** once. The pre-commit hook holds
 the invariants that this repo has actually broken before: version sync, the CHANGELOG entry
-(it is the migration map for `/upgrade`), README completeness, internal links, one-level-deep
+(it is the migration map for `/mops upgrade`), README completeness, internal links, one-level-deep
 references, the token budget on the always-loaded core, command↔file↔dispatcher coherence,
 use-case coverage, and — via **`scripts/check-structure.py`** — table column counts, list
 indentation, words a reflow tool broke across lines, counts that no longer match their list,

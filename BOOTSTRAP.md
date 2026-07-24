@@ -35,7 +35,7 @@ staffing plan — see `ROLES.md`.
 
 ## 0. Day zero — from nothing to a working CLI
 
-**Start here on every first contact, before `/init` and before any question about the
+**Start here on every first contact, before `/mops init` and before any question about the
 project.** Most people arrive having installed Multica and no idea what comes next; the
 answer is six checks that take seconds, and Mops runs them rather than asking the owner to.
 Each has one repair, and the repair is offered — installing or updating software on
@@ -86,12 +86,12 @@ daemon.
 `runtime list` shows `MODE=local` — the daemon runs on **your machine**, and your agent
 CLIs, model subscriptions, keys and code stay there. Self-hosting moves the **control
 plane** (issues, board, orchestration, the web app), not the work. So everything in this
-skill holds unchanged; what does change is operational and worth stating at `/init`:
+skill holds unchanged; what does change is operational and worth stating at `/mops init`:
 
 - **You own uptime and backups now** — Postgres is the company's memory. Add it to
-  `/health` and put a restore drill in the launch checklist.
+  `/mops health` and put a restore drill in the launch checklist.
 - **Upgrades are yours to run** (`docker compose pull && up -d`; pin `MULTICA_IMAGE_TAG`).
-  `/cli` still checks the CLI, but the **server version is a separate thing to track** —
+  `/mops cli` still checks the CLI, but the **server version is a separate thing to track** —
   and CLI/server skew is a real failure mode, so upgrade the server first.
 - **Email**: verification codes need `RESEND_API_KEY`, otherwise codes come from backend
   logs. Fine for a solo instance, a blocker the moment you invite someone.
@@ -236,7 +236,7 @@ Generic versions live in [scripts/](scripts/) — run from the project repo root
 - **issues.py** — paginated, corruption-tolerant issue listing. Use it instead of raw
   `issue list` whenever you need the whole board: it walks `--offset` past the 100-row cap
   and sanitizes control characters that otherwise break `json.loads` (both traps are §8).
-- **import-issues.py** — resumable creation from a normalized JSON file, for `/import`;
+- **import-issues.py** — resumable creation from a normalized JSON file, for `/mops import`;
   parents before children, `source_id` in metadata, nothing assigned. See PLAYBOOKS.
 - Team rule: **commit incrementally** — `rerun` resumes from the repo, not from chat.
 
@@ -351,7 +351,7 @@ integration. Offer at setup; connect any time later.
    - **Install idempotently, never blindly.** First `multica skill list` — if `multica-ops`
      isn't there, `multica skill import --url github.com/jamillazarev/multica-ops`. If it
      **already exists** (re-run, or a teammate imported it), **compare versions**: same →
-     skip; older → refresh through `/upgrade` (backup current to `docs/skill-backups/` →
+     skip; older → refresh through `/mops upgrade` (backup current to `docs/skill-backups/` →
      `import --on-conflict overwrite`), **never a second copy**. (`import` supports
      github/skills.sh/clawhub URLs.) Then `multica agent create` the agent named
      **Mops**, `multica agent skills` to attach the imported skill (+ find-skills),
@@ -367,11 +367,11 @@ integration. Offer at setup; connect any time later.
      the decisions summary (see "Two seats of Mops"). Tell the user: *"from here you can
      talk to Mops inside Multica — chat, issues, any device; I remain in the CLI for the
      heavy work."*
-   - If declined: skip; Mops lives in the console only, and `/help` says so.
+   - If declined: skip; Mops lives in the console only, and `/mops help` says so.
 7. **Labels** (discipline/type; never the stage) and **docs skeleton**: `docs/ROADMAP.md`,
    `docs/TEAM.md` (who owns what — agents *and* people; essential once several humans join),
    `docs/TOOLING.md` (every tool: what · for what · access · where its secret lives · when
-   it was last checked — this is the probe list `/health` reads), `docs/DECISIONS.md`
+   it was last checked — this is the probe list `/mops health` reads), `docs/DECISIONS.md`
    (**append-only**: what was tried or proposed and rejected, with the evidence — so the
    same idea isn't rediscovered every quarter) and, once there's code, `docs/ARCHITECTURE.md`
    (what lives where, entry points — every task starts in a fresh worktree, so an unwritten
@@ -398,7 +398,7 @@ integration. Offer at setup; connect any time later.
    git rights, can simply step around the fence. **(c)** With **no remote at all** — the
    documented default when the owner is unsure — there is no branch to protect and the merge
    rule really is only a sentence. Say that out loud rather than implying a gate exists.
-   Re-checked at `/health`.
+   Re-checked at `/mops health`.
    Then **install the docs guard** — `templates/company-preflight.sh` as the repo's
    pre-commit hook (PLAYBOOKS): a skeleton is only useful while it stays true.
    `LATER.md` and `ECONOMICS.md` are the two without a template: their shape is stated where they
@@ -432,7 +432,7 @@ the way in, and that is worth saying out loud rather than leaving them to discov
 
 ## 16. Interview checklist (detail)
 
-Each item with its default, as walked in `/init` and re-asked in the `/join` delta.
+Each item with its default, as walked in `/mops init` and re-asked in the `/mops join` delta.
 
 1. **Where the code lives — ask, never assume, and never create anything on the owner's
    accounts uninvited.** Three separate questions, in this order: *does a repo already
@@ -447,8 +447,8 @@ Each item with its default, as walked in `/init` and re-asked in the `/join` del
 2. **Control & expertise** — two questions that shape every later interaction.
     **(a) How much do you want to be in the loop?** *hands-on* (approve each feature) ·
     **checkpoints** (approve at named gates — default) · *hands-off* (only
-    destructive/spend, plus a digest). Set globally or per flow; it maps onto `/autonomy`
-    and `/reviews`. **(b) What are you actually expert in?** Record it in `TEAM.md`:
+    destructive/spend, plus a digest). Set globally or per flow; it maps onto `/mops autonomy`
+    and `/mops reviews`. **(b) What are you actually expert in?** Record it in `TEAM.md`:
     inside those areas you are **consulted as an expert** — terse, technical, real
     decisions routed to you; outside them Mops **explains and recommends** with tradeoffs
     instead of dumping a choice on you. The same courtesy governs agents talking across

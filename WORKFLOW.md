@@ -33,7 +33,7 @@ flowchart TD
     JOIN --> RUN
 ```
 
-> Nobody is asked to choose a command. Crew mode is the **default offer after `/import`** —
+> Nobody is asked to choose a command. Crew mode is the **default offer after `/mops import`** —
 > someone who just moved their backlog has already decided what the work is. Adding a
 > conductor later is an upgrade, not a redo.
 

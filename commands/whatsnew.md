@@ -2,7 +2,7 @@
 description: What changed in this version and why it helps — a plain-language tour, drawn from the CHANGELOG.
 ---
 
-Load and follow the **multica-ops** skill (SKILL.md), executing its `/whatsnew` flow.
+Load and follow the **multica-ops** skill (SKILL.md), executing its `/mops whatsnew` flow.
 
 Read the **CHANGELOG.md between the version the workspace last recorded and the current one**
 (the fingerprint and `UPGRADES.md` hold the prior version). Then explain, in the owner's
@@ -15,4 +15,4 @@ language, not the changelog's:
 
 Keep it a tour, not a recitation: lead with the two or three things that matter for *this*
 company (a crew-mode shop does not need the discovery changes), and offer "more?" rather than
-dumping everything. Offered automatically after a successful `/upgrade`.
+dumping everything. Offered automatically after a successful `/mops upgrade`.

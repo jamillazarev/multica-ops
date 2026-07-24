@@ -3,4 +3,4 @@ description: Connect an external service: connect-or-create, agent access via mc
 ---
 
 Load and follow the **multica-ops** skill (SKILL.md), executing
-its `/connect` flow. Connect an external service: connect-or-create, agent access via mcp_config/custom-env, permission rules. Args: $ARGUMENTS
+its `/mops connect` flow. Connect an external service: connect-or-create, agent access via mcp_config/custom-env, permission rules. Args: $ARGUMENTS

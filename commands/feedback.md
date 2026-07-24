@@ -3,4 +3,4 @@ description: Log an incoming user/customer signal (complaint, request, review, i
 ---
 
 Load and follow the **multica-ops** skill (SKILL.md), executing
-its `/feedback` flow. Log an incoming user/customer signal (complaint, request, review, idea) → triage → backlog or discovery. Args: $ARGUMENTS
+its `/mops feedback` flow. Log an incoming user/customer signal (complaint, request, review, idea) → triage → backlog or discovery. Args: $ARGUMENTS

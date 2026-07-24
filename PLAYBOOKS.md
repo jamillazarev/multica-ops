@@ -228,7 +228,7 @@ multica issue create --title "$CT" --parent "$id" --stage 1 --status backlog …
 
 - **Import unassigned. Always.** Assigning an issue *is a run that spends budget* — a
   400-issue import with assignees would enqueue 400 tasks the moment it lands. Bring the
-  work in cold, then assign deliberately through `/next`.
+  work in cold, then assign deliberately through `/mops next`.
 - **`source_id` in metadata is the idempotency key**, and it's what makes the script
   resumable: on each item, look it up first and skip if present. (Multica also refuses
   active duplicates by default — `--allow-duplicate` exists to override that, which during
@@ -311,7 +311,7 @@ enters an agent's context and becomes something that agent believes. So:
    the same fail-closed pass as your own. Imported skills carry generic scaffolding,
    alternative platforms and examples that will sit in the cached prefix forever.
 4. **Attach with provenance**: source URL, version or commit, date screened, who approved.
-   Without it, `/upgrade` can't tell what it's updating and `/audit` can't tell what's old.
+   Without it, `/mops upgrade` can't tell what it's updating and `/mops audit` can't tell what's old.
 
 **Repairing an over-compressed skill — restore, don't rewrite.** Compression is lossy: you
 cannot recover prose from its own compressed output, and asking a model to "expand it back"
@@ -319,7 +319,7 @@ invents plausible text that was never there. If a skill has been squeezed into u
 notation, the only honest repair is **restore the pre-compression copy from
 `docs/skill-backups/` and run the pass again under the readability rules above** — that is
 what the backup is for. No backup? Then say so plainly and treat re-writing it as new work
-with a human reviewing the result, not as a restoration. Worth a sweep at `/upgrade`: an
+with a human reviewing the result, not as a restoration. Worth a sweep at `/mops upgrade`: an
 upgrade is when someone is already looking at every skill.
 
 **Upgrade — screening is not a one-time event.** The version you vetted is not the version
@@ -385,7 +385,7 @@ control nobody can exercise has the same value as a rule nobody can follow.
 and why. Numbers appear only when a skill leaves for its own repository, because that is the
 only moment a version answers a real question: *which of the copies out there is this?*
 Without this rule agents bump a patch number on every wording tweak, producing a changelog
-that records typing rather than change, and an `/upgrade` that fires for nothing. When a
+that records typing rather than change, and an `/mops upgrade` that fires for nothing. When a
 released skill does change: **patch** for a fix that alters no instruction, **minor** for a
 new capability, **major** when existing companies must do something differently — and the
 CHANGELOG entry says which, because it is the migration map.
@@ -459,12 +459,12 @@ append-only: it is the only one protecting knowledge that cannot be reconstructe
    Then `git commit`; append `UPGRADES.md`: date · source/version · **pre-upgrade SHA** ·
    impact line.
 3. Apply: `multica skill import --url <src> --on-conflict overwrite` → rewrite affected
-   instructions/autopilots/guide. For multica-ops itself: refresh the Mops agent + `/sync`.
+   instructions/autopilots/guide. For multica-ops itself: refresh the Mops agent + `/mops sync`.
 4. Verify (agents keep skills, autopilots intact); breakage → re-import from the SHA.
-5. **multica-ops itself?** Migrate: read new CHANGELOG/diff → `/join`-style delta
+5. **multica-ops itself?** Migrate: read new CHANGELOG/diff → `/mops join`-style delta
    (create every docs file the new version expects — BOOTSTRAP §15 step 7 is the list —
    update guide rules, refresh the Mops agent's
-   instructions + `/sync`) → report the adaptations.
+   instructions + `/mops sync`) → report the adaptations.
 
 ## Provider switch (`/switch`)
 
@@ -476,7 +476,7 @@ run → update the guide's capacity section. Preview the full remap first.
 ## Human onboarding / offboarding
 
 Onboard: ask title/responsibilities → owner confirms `workspace member invite <email>` →
-set `/access` (default full) + `/reviews` checkpoints → record in `docs/TEAM.md` →
+set `/mops access` (default full) + `/mops reviews` checkpoints → record in `docs/TEAM.md` →
 subscribe to their flows. Offboard: surface what they own/block (open issues, squad
 leadership, sole-owner skills/integrations, held checkpoints) → reassign → revoke
 access → update TEAM.md → **the owner removes the member in the Multica app** (no CLI).
@@ -511,10 +511,10 @@ further than the problem:
 2. **The agent's instructions** — `agent update --instructions`. Right when the gap is *this
    role's*: a boundary it keeps crossing, a hand-off it keeps skipping. Mops proposes the
    edit with the evidence (the three runs that failed the same way), the owner approves, and
-   it is **batched at `/sync`** rather than dribbled — instructions are a cached prefix and
+   it is **batched at `/mops sync`** rather than dribbled — instructions are a cached prefix and
    churning them costs twice.
 3. **A skill** — when the gap is a *capability* rather than a boundary, and the routine
-   recurs: create or import one (`/skill`).
+   recurs: create or import one (`/mops skill`).
 4. **The gate** — when the failure keeps reaching review, the review is doing its job and the
    spec isn't: fix the DoD.
 5. **The role** — when none of the above fits, the role is wrong-shaped: split it, or hire.
@@ -559,7 +559,7 @@ finds agents doing too little, the other finds agents asked to be too much.
    (`multica agent update <id> --instructions … --model …`).
 3. `git show <sha>:docs/skill-backups/<skill>/…` → re-import that content
    (`multica skill import --url … --on-conflict overwrite`, or `--file` from the checkout).
-4. `/sync` so agent instructions match the restored version; verify the regression is gone.
+4. `/mops sync` so agent instructions match the restored version; verify the regression is gone.
 5. Log what broke in `UPGRADES.md` next to that entry — the next attempt starts informed.
 
 ## Version check (proactive, at `/status` or before a major `/ship`)
@@ -570,7 +570,7 @@ finds agents doing too little, the other finds agents asked to be too much.
    for a newer version and for breaking changes; a tool that changed its interface breaks
    agents silently, exactly like a stale CLI pin.
 4. Newer? Summarize **what changed and what it would touch** (agents carrying it, guide
-   rules, commands) and offer `/upgrade` — never upgrade unasked.
+   rules, commands) and offer `/mops upgrade` — never upgrade unasked.
 
 
 ## Workspace fingerprint (drift detection)
@@ -603,7 +603,7 @@ instead of ageing quietly.
 ## Economics — what the company actually costs
 
 The cost/effort ledger covers **model spend**; the company also pays for **services**.
-Keep a rolling `docs/ECONOMICS.md`, refreshed monthly (autopilot) and at each `/ship`:
+Keep a rolling `docs/ECONOMICS.md`, refreshed monthly (autopilot) and at each `/mops ship`:
 
 | Line | Source |
 |---|---|
@@ -613,7 +613,7 @@ Keep a rolling `docs/ECONOMICS.md`, refreshed monthly (autopilot) and at each `/
 | Cost per shipped feature | model + service share ÷ features shipped that period |
 | Trend | this period vs the last two — direction matters more than the number |
 
-Surface it in `/status` (one line), on the dashboard, and whenever a budget cap is
+Surface it in `/mops status` (one line), on the dashboard, and whenever a budget cap is
 approached. A tool crossing its free tier is **spend** — owner-gated, never silent.
 
 
@@ -623,7 +623,7 @@ Wiring a tool produces knowledge. Put each part where only its users pay for it:
 
 | What | Home | Who reads it |
 |---|---|---|
-| It exists, why, access, plan + ceiling | `docs/TOOLING.md` | Mops, `/health`, `/audit` |
+| It exists, why, access, plan + ceiling | `docs/TOOLING.md` | Mops, `/mops health`, `/mops audit` |
 | **How to operate it** — purge a cache, add a region, rotate a key, read its errors | **`docs/tooling/<tool>.md`** (runbook) | whoever is about to use it |
 | A reusable procedure worth teaching | a **skill** (skill-creator) | **only agents attached to that tool** |
 | That runbooks exist at all | one line in the team guide | everyone (cheap) |
@@ -633,13 +633,13 @@ every run, so a CDN's purge procedure would be paid for by the copywriter and th
 accountant too — and editing it churns the cache (REFERENCE §12).
 
 Writing it: the agent that wires the tool starts the runbook with what it just learned
-(`/connect` step "study the tool"); anyone who later hits an operation or a failure mode
+(`/mops connect` step "study the tool"); anyone who later hits an operation or a failure mode
 adds it — **docs follow decisions** applies here as much as to specs. A procedure that
 repeats across projects graduates into a skill, and the runbook links to it.
 
 ## Launch checklist — what "done" requires, per medium
 
-Researched before the first release and re-verified at each `/ship` (requirements change;
+Researched before the first release and re-verified at each `/mops ship` (requirements change;
 check the platform's current docs rather than recalling them).
 
 - **Any digital product**: legal pages · OG/social images · analytics wired · error

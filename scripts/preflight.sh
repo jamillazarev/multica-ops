@@ -196,8 +196,8 @@ chars=$(wc -c < SKILL.md | tr -d ' '); tok=$((chars/4))
 [ "$tok" -gt 9000 ] && [ "$tok" -le 10000 ] && say_warn "SKILL.md ~${tok} tokens — approaching the 10k budget"
 
 # 6 · every command in the table has a plugin file
-for c in $(grep -oE '^\| `/[a-z-]+' COMMANDS.md | tr -d '| `/'); do
-  [ -f "commands/$c.md" ] || say_fail "command /$c has no commands/$c.md"
+for c in $(grep -oE '^\| `/mops [a-z-]+' COMMANDS.md | sed -E 's/^.*mops //'); do
+  [ -f "commands/$c.md" ] || say_fail "command /mops $c has no commands/$c.md"
 done
 
 # 6b · official checklist: at least three evaluations
@@ -206,8 +206,8 @@ n=$(grep -c '^## [0-9]' evals/README.md 2>/dev/null || echo 0)
 
 # 7 · docs coverage — a new command with no use case is a doc gap, not a bug
 missing=""
-for c in $(grep -oE '^\| `/[a-z-]+' COMMANDS.md | tr -d '| `/'); do
-  grep -q "/$c" USE-CASES.md || missing="$missing /$c"
+for c in $(grep -oE '^\| `/mops [a-z-]+' COMMANDS.md | sed -E 's/^.*mops //'); do
+  grep -q "/mops $c" USE-CASES.md || missing="$missing /mops $c"
 done
 [ -n "$missing" ] && say_warn "USE-CASES.md covers no situation for:$missing — add one or decide it's internal"
 
@@ -221,11 +221,11 @@ fi
 
 # 9 · coherence — a new capability must be reachable from every entry point, or it is
 #     invisible in practice. Warn per missing surface rather than guessing intent.
-for c in $(grep -oE '^\| `/[a-z-]+' COMMANDS.md | tr -d '| `/'); do
+for c in $(grep -oE '^\| `/mops [a-z-]+' COMMANDS.md | sed -E 's/^.*mops //'); do
   gaps=""
-  grep -q "/$c" SKILL.md || gaps="$gaps SKILL"
+  grep -q "/mops $c" SKILL.md || gaps="$gaps SKILL"
   grep -qE "(^|[^a-z-])$c([^a-z-]|$)" commands/mops.md || gaps="$gaps /mops-dispatcher"
-  [ -n "$gaps" ] && say_warn "/$c not reachable from:$gaps"
+  [ -n "$gaps" ] && say_warn "/mops $c not reachable from:$gaps"
 done
 # the /join delta must cover every interview topic, or a joined workspace is asked less
 # than a new one — checked against BOOTSTRAP §16 rather than a hardcoded phrase.

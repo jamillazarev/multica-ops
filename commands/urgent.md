@@ -1,6 +1,6 @@
 ---
-description: Alias of /bug (multica-ops).
+description: Alias of /mops bug (multica-ops).
 ---
 
 Load and follow the **multica-ops** skill (SKILL.md), executing
-its `/urgent` flow. Alias of /bug (multica-ops). Args: $ARGUMENTS
+its `/mops urgent` flow. Alias of /mops bug (multica-ops). Args: $ARGUMENTS

@@ -1,6 +1,6 @@
 ---
-description: Alias of /health (multica-ops).
+description: Alias of /mops health (multica-ops).
 ---
 
 Load and follow the **multica-ops** skill (SKILL.md), executing
-its `/runtimes` flow. Alias of /health (multica-ops).
+its `/mops runtimes` flow. Alias of /mops health (multica-ops).

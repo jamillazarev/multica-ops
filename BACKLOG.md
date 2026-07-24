@@ -12,7 +12,7 @@ written" and "as it behaves" shows up on us first.
 **Why it's compelling.** Every defect this session's audits found was of one kind — a
 sentence that parsed, linked and was false. A company running the skill over the skill
 would hit those the way a user does, not the way an author rereads. And it closes the loop
-the skill already implies: `/skill release` sends a proven skill to its own repo; this is
+the skill already implies: `/mops skill release` sends a proven skill to its own repo; this is
 that repo maintained by a Multica company.
 
 **What it needs before it's safe or useful — this is why it's backlog, not done:**
@@ -38,7 +38,7 @@ that repo maintained by a Multica company.
 - Does the resident Mops editing this skill create a version-identity problem — it is
   running vN while proposing vN+1 of itself? Probably fine (the running copy is bytes on
   disk, the proposal is a diff), but worth a paragraph before trying.
-- How does `/upgrade` behave when the workspace *is* the skill's own repo? The migration
+- How does `/mops upgrade` behave when the workspace *is* the skill's own repo? The migration
   map is the file being edited.
 
 **Verdict:** worth doing, high signal, but only after (1)–(5). Attempting it without the

@@ -3,4 +3,4 @@ description: Start the next feature from docs/ROADMAP.md (manual flow's main but
 ---
 
 Load and follow the **multica-ops** skill (SKILL.md), executing
-its `/next` flow. Start the next feature from docs/ROADMAP.md (manual flow's main button).
+its `/mops next` flow. Start the next feature from docs/ROADMAP.md (manual flow's main button).

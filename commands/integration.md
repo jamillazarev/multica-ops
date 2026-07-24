@@ -1,6 +1,6 @@
 ---
-description: Alias of /connect (multica-ops).
+description: Alias of /mops connect (multica-ops).
 ---
 
 Load and follow the **multica-ops** skill (SKILL.md), executing
-its `/integration` flow. Alias of /connect (multica-ops). Args: $ARGUMENTS
+its `/mops integration` flow. Alias of /mops connect (multica-ops). Args: $ARGUMENTS

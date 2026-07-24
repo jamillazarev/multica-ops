@@ -19,7 +19,7 @@ joining an existing one, or touching the live workspace's plumbing. Day-to-day w
 
 Never front-load a giant questionnaire. **The opening is the front door, not this section** —
 day zero first, then the three routing questions (what exists · what you want · who runs the
-work), which pick between `/init`, `/join`, `/import`+crew and a quick job. See "Before
+work), which pick between `/mops init`, `/mops join`, `/mops import`+crew and a quick job. See "Before
 anything" below. What follows here is the *company* branch once that routing has happened:
 
 - **Quick job** (a utility, one deliverable): 3 questions max — deliverable, repo,
@@ -70,21 +70,21 @@ Two of these shape every later interaction, so never skip them: **checklist #2 �
 — how much the owner wants to be in the loop (*hands-on* · **checkpoints** (default) ·
 *hands-off*) and **what they're actually expert in** (recorded in `TEAM.md`: consulted as
 an expert there, taught-and-recommended elsewhere; agents apply the same across squads).
-Asked at `/init`, re-asked in the `/join` delta, changed any time — `/reviews` takes
-effect **immediately**, `/autonomy` is **boundary-safe**, `/stop` is the instant halt.
+Asked at `/mops init`, re-asked in the `/mops join` delta, changed any time — `/mops reviews` takes
+effect **immediately**, `/mops autonomy` is **boundary-safe**, `/mops stop` is the instant halt.
 **checklist #20 · Governance** — who may direct Mops and which flows need a named human's sign-off.
 
 ## Before anything: day zero, then the routing question
 
-`/init` does not start at the workspace. It starts at **BOOTSTRAP §0** — installed, current,
+`/mops init` does not start at the workspace. It starts at **BOOTSTRAP §0** — installed, current,
 signed in, a workspace, daemon up, runtimes present — reported as one ladder with its fixes,
 not six sequential prompts. Only then the three routing questions (what exists · what you
-want · who runs the work), because `/init` into an existing workspace duplicates a conductor
-and `/join` on an empty one does nothing.
+want · who runs the work), because `/mops init` into an existing workspace duplicates a conductor
+and `/mops join` on an empty one does nothing.
 
 **Crew mode short-circuits the rest**: no conductor, no discovery, no roadmap — stand up the
 executors, the guide, the gates the owner wants, and stop. It is the default offer after
-`/import`.
+`/mops import`.
 
 ## Shape the work, then propose the team
 
@@ -126,7 +126,7 @@ issues directly to an agent or a squad; work moves because they moved it. Everyt
 in this skill still applies — the guide, the review gates, limits and recovery, the
 permission rules, dated work.
 
-It is the **default offer after `/import`**: someone who just brought a backlog over has
+It is the **default offer after `/mops import`**: someone who just brought a backlog over has
 already decided what the work is, and proposing discovery over it is insulting. Say plainly
 *"I'll execute; you keep prioritising — or I can add a conductor later"*, and mean the
 "later": adding one is a normal upgrade, not a redo.
@@ -144,7 +144,7 @@ on one surface, anyone responsible for a *part* — this is crew mode narrowed t
 over any route, not a fifth entrance. Say what the slice is (a feature, a layer, a directory)
 and everything narrows to it: the board shows only that slice's issues, shaping sizes only its
 crafts, permissions and gates cover only its files. The rest of the project may not even exist
-in this workspace — the owner works their part and hands off at its edge. `/crew` with a named
+in this workspace — the owner works their part and hands off at its edge. `/mops crew` with a named
 scope is the shape; adding the rest of the project later is an expansion, not a redo.
 
 **Where it stops being right:** when the owner starts asking *what* should be next rather
@@ -169,7 +169,7 @@ Step detail and CLI recipes: **`BOOTSTRAP.md §15`**.
    decisions, not only at their stage.
 5. **Experts & personas** (opt-in) — squads of advisors / user simulations.
 6. **Mops in Multica** (opt-in — checklist #16 · Resident Mops) — install this skill into the workspace **idempotently**
-   (check `skill list`; exists → compare versions, refresh via `/upgrade`, never a second
+   (check `skill list`; exists → compare versions, refresh via `/mops upgrade`, never a second
    copy), assign it **only to the Mops agent**, then seed the kickoff (pinned issue + first
    message = the decisions summary).
 7. **Labels** (discipline/type, never the stage) and the **docs skeleton** — the list is
@@ -184,14 +184,14 @@ deltas with recommendations (fix now / later / ignore is the user's call) → **
 interview delta** (any topic the incumbent setup doesn't already answer — language/tone,
 token economy, avatars, opt-in modules, autonomy, docs home, **where Multica itself runs
 (cloud or self-hosted)**, integrations, stacks,
-resident Mops (in Multica), **brand & design system**, **governance**, **control & expertise**, **budget & currency** — is asked with defaults and wired, exactly as in `/init`;
+resident Mops (in Multica), **brand & design system**, **governance**, **control & expertise**, **budget & currency** — is asked with defaults and wired, exactly as in `/mops init`;
 nothing from bootstrap is skipped just because the project pre-exists) → apply in **approved batches** — full report first, the user can stop after any batch — never duplicating (`--on-conflict skip`; read instructions before
 appending). Respect incumbent conventions unless asked to change them.
 
 **Reconcile every human member, not just agents.** Walk `workspace member` and, for each
 person, confirm the delta captures them: recorded role/responsibilities in `docs/TEAM.md`,
-an **access policy** (`/access` — what they may direct Mops to do; owner always full),
-and their **review checkpoints** (`/reviews` — which flows @mention them). Anyone present
+an **access policy** (`/mops access` — what they may direct Mops to do; owner always full),
+and their **review checkpoints** (`/mops reviews` — which flows @mention them). Anyone present
 in the workspace but missing from the records gets onboarded (ask their role → set access
 + checkpoints → record); anyone in the records but no longer a member gets cleaned up.
 
@@ -199,11 +199,11 @@ in the workspace but missing from the records gets onboarded (ask their role →
 a Mops agent (common when re-joining a project you built earlier): **update, never
 create a second.** Compare the workspace skill's frontmatter `version` against yours —
 **older → the workspace itself is a migration target**: run the same migration delta as
-`/upgrade` (backup → re-import → **create every docs file the current version expects —
+`/mops upgrade` (backup → re-import → **create every docs file the current version expects —
 the skeleton in BOOTSTRAP §15 step 7 is the list, never a remembered subset** → update guide rules,
 refresh the agent's instructions, surface new/renamed commands) and **report the
 adaptations**. Then reconcile the avatar, the *"Executive Advisor · resident"* subtitle,
-the guide-lane rules, and its rights per the current autonomy choice; `/sync` after.
+the guide-lane rules, and its rights per the current autonomy choice; `/mops sync` after.
 
 ## Getting current — four layers, one command, two words
 
@@ -212,7 +212,7 @@ plugin, a newer CLI binary. *Upgrade* means **your workspace moves to them** —
 new version expects, guide rules, agent instructions, renamed commands. New bytes without a
 migration is where a company quietly runs half of one version and half of another.
 
-**`/upgrade` is the one command**, and it walks all four layers in this order, asking before
+**`/mops upgrade` is the one command**, and it walks all four layers in this order, asking before
 anything that costs or restarts:
 
 | Layer | What it is | Who does it |
@@ -235,19 +235,19 @@ multica daemon restart
 ```
 
 Never update mid-flight. If work is running, **say what's in flight and offer to wait** —
-`/stop` first if the owner wants it now and accepts the interruption, otherwise queue the
+`/mops stop` first if the owner wants it now and accepts the interruption, otherwise queue the
 update for the next idle window. A CLI updated under a running agent produces failures that
 look like the agent's fault.
 
 **Then offer the tour.** A successful upgrade ends with *"want to hear what's new?"* —
-`/whatsnew` reads the changelog between the old and new version and explains it in the owner's
+`/mops whatsnew` reads the changelog between the old and new version and explains it in the owner's
 terms. A migration nobody understands is a migration nobody trusts; this is how the new
 version onboards the person, not just the workspace.
 
 **One canonical list, so nothing is forgotten.** The workspace fingerprint (PLAYBOOKS) is the
 single source of truth for *which structural objects exist* — agents, squads, skills, labels,
-autopilots, projects, runtimes, properties, members, resources. **`/sync`, `/join` and
-`/upgrade` all read that one list**, they don't each carry their own; add a class to the
+autopilots, projects, runtimes, properties, members, resources. **`/mops sync`, `/mops join` and
+`/mops upgrade` all read that one list**, they don't each carry their own; add a class to the
 fingerprint and all three cover it automatically. `verify.py` guards the fingerprint against
 the CLI, so a new object type raises a warning in one place and protects every flow that reads
 it. **Hashes and deltas run at the end, not the start.** An upgrade changes agents, skills and
@@ -260,14 +260,14 @@ labels, so the fingerprint written before it is stale by definition: recompute
 All three are **preview-first** (blast radius reported before anything changes), backed
 up and reversible where they can break things. Recipes: **PLAYBOOKS**.
 
-- **`/health`** — full-circle sweep of what fails silently: runtimes (+ **which agents
+- **`/mops health`** — full-circle sweep of what fails silently: runtimes (+ **which agents
   sit on a degraded one**), integrations/MCP probes (**the probe list = `docs/TOOLING.md`**), **branch protection on the default branch** where a remote exists, API tokens/secrets, **free-tier headroom** (usage vs the ceiling recorded per service), daemon, limits.
-  Output: component → status → who it blocks → fix. `/audit` pulls it in.
+  Output: component → status → who it blocks → fix. `/mops audit` pulls it in.
 - **Version checks cover three layers, not one**: **multica-ops** itself, every
   **imported skill**, and the **tooling** registered in `docs/TOOLING.md` (MCP servers,
-  CLIs — their own releases and breaking changes). Proactively at `/status` (weekly at
-  most) and before any major `/ship`, compare each against its source; something newer → say **what changed and what it would touch**, and
-  offer `/upgrade`. Never upgrade unasked.
+  CLIs — their own releases and breaking changes). Proactively at `/mops status` (weekly at
+  most) and before any major `/mops ship`, compare each against its source; something newer → say **what changed and what it would touch**, and
+  offer `/mops upgrade`. Never upgrade unasked.
 - **Rollback is a normal outcome, not a failure.** Upgrades and migrations do break
   things; that's why every one commits a restore point first (`docs/skill-backups/` +
   the pre-upgrade SHA in `UPGRADES.md`) — **including a snapshot of agent instructions and
@@ -287,22 +287,22 @@ up and reversible where they can break things. Recipes: **PLAYBOOKS**.
   part is *what changed*, in the prose as much as in the scripts (STACKS → skill
   screening). A version that adds capability you didn't ask for is a decision for the
   owner, not a detail of the update.
-- **`/upgrade [skill|all]`** — skills carry **no workspace-side version history**, so the
+- **`/mops upgrade [skill|all]`** — skills carry **no workspace-side version history**, so the
   flow is: **re-screen** → dry-run impact report → back up **both halves** (skill files *and* an agent
   config/instructions snapshot) with the pre-upgrade SHA in `UPGRADES.md` → apply →
   reconcile dependents → verify, else restore from that SHA. Steps: PLAYBOOKS. **Upgrading multica-ops itself is a
-  migration, not a swap**: read the new version's CHANGELOG/diff → run a `/join`-style
+  migration, not a swap**: read the new version's CHANGELOG/diff → run a `/mops join`-style
   delta against the workspace (**create every docs file the new version expects — read the
   skeleton in BOOTSTRAP §15 step 7 rather than a list quoted here, which goes stale** —
   update guide rules, refresh Mops-in-Multica's instructions, surface new/renamed
   commands) → report what was adapted. Versions compare via the skill's frontmatter
   `version` + CHANGELOG. **Migrations belong to the NEW version**: updating multica-ops
-  (via `/upgrade` or `/join`), first fetch the latest version from the canonical repo
+  (via `/mops upgrade` or `/mops join`), first fetch the latest version from the canonical repo
   (github.com/jamillazarev/multica-ops) and follow **its** migration instructions — the
   old version can't know how to migrate forward, only the new one does. The CHANGELOG is
   the migration map: read every entry between the installed and the new version. This
   clause itself is the forward-compat bootstrap — even an old version knows to hand over.
-- **`/switch`** — providers auto-appear as runtimes, so switching is reassignment:
+- **`/mops switch`** — providers auto-appear as runtimes, so switching is reassignment:
   per-agent `agent update --runtime-id --model --thinking-level`; whole-provider =
   assisted migration (install/auth/`daemon restart`, tier remap, smoke test), the full
   remap previewed first.
