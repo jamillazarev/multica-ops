@@ -71,10 +71,11 @@ Ask Mops **"is there a new version?"** or run **`/mops upgrade`**. Mops fetches 
 itself (it has your shell) and asks you to **restart Claude Code** — that restart is the
 only manual step, because a running skill can't replace its own plugin under itself.
 
-> **Upgrading *from* an older version?** `/mops` is a shortcut newer versions install on
-> first run, so if `/mops upgrade` isn't found, your copy predates it. Use
-> **`/multica-ops:upgrade`** (present whenever the plugin is installed) or just say
-> *"upgrade"* — both reach the same flow. After
+> **Can't run `/mops upgrade`?** If it — or `/multica-ops:upgrade` — says *unknown command*,
+> your install has **no slash commands**: an older version, or a `skills.sh` install rather
+> than a Claude Code plugin (slash commands are a plugin feature). **Just say "upgrade"** or
+> **"is there a new version?"** — plain language reaches the flow on *any* install, which is
+> why it's the path that never breaks. After
 the restart it migrates your workspace, re-screens imported skills, and offers the CLI
 update **only when the team is idle**. *Update* = new bytes arrive; *upgrade* = your
 workspace moves onto them.

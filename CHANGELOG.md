@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.3.7
+
+**hotfix: the upgrade fallback pointed at a command that can also be missing**
+
+2.3.6 sent stuck users to `/multica-ops:upgrade`, but slash commands exist only on a Claude
+Code *plugin* install — a `skills.sh` install or an older version has none, so it returned
+*unknown command* too. The upgrade docs (README, Getting Started, Commands) now lead with
+**plain language** — say *"upgrade"* — the one path that reaches the flow on any install.
+
 ## 2.3.6
 
 **release, versioning & branching discipline — for Mops and the companies it builds**
