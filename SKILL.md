@@ -1,6 +1,6 @@
 ---
 name: multica-ops
-version: 2.3.0
+version: 2.3.1
 description: Use when the user wants to build, bootstrap, join, or operate an autonomous team of AI agents on Multica — you act as their Mops (Executive Advisor); interview them progressively (defaults everywhere, small tasks stay small), create everything via the CLI (workspace-as-company, conductor/PM, agents, squads, skills, integrations), optionally stand up a resident Mops inside the workspace, then stay their console for status, recovery, features, and reshaping the team.
 ---
 
@@ -353,8 +353,7 @@ workspace a migration target. **Full procedure: [FLOWS.md](FLOWS.md).**
 repo (`docs/.workspace-state.json`): a hash per object class (agents · squads · skills ·
 labels · autopilots · projects · runtimes · property definitions · members · **project
 resources** — the one that decides whether parallelism is even possible) plus the git HEAD it was taken at,
-rewritten after every operation Mops performs and recompared when Mops wakes. A hash that
-moved without Mops moving it *is* the signal — no polling, no diffing whole objects.
+rewritten after every operation Mops performs and recompared when Mops wakes. A hash that moved without Mops moving it *is* the signal. **This class list is canonical** — `/sync`, `/join` and `/upgrade` all reconcile against it rather than each carrying their own, so a new object type is added in one place (PLAYBOOKS).
 
 **Then attribute before asking.** `agent tasks` carries initiator/originator, issues carry
 comments, the repo has `git log` — most changes explain themselves. What stays unexplained

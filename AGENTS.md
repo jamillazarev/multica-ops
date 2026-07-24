@@ -72,3 +72,24 @@ what must I do differently.**
   maintainer will look for it. It does not belong in the release notes, and a changelog full
   of self-audit reads as a product made of bugs rather than one kept honest.
 - **Never rewrite a released entry's substance.** Versions are public; correct forward.
+
+### Cutting a release
+
+A version bump is not just a changelog entry. Before you tag:
+
+1. **Refresh the evals.** Every new behaviour needs a scenario, or it has no regression test —
+   evals go stale silently (2.3 shipped a release behind until caught by hand). preflight warns
+   when the version bumped and `evals/README.md` didn't.
+2. **Run the four review lenses** (deletion · adversarial · contradiction · cold-read) on the
+   changed skill — they find the class of defect no script can: a sentence that parses, links
+   and is false. This is not optional for a minor or major; a patch can skip it.
+3. **Keep the guards current — they rot too.** A new capability usually needs a new check, and
+   this session's guards were mostly added *reactively*, after a defect shipped. Ask *before*:
+   does this change need a guard, or break an existing one's assumption? The rot surfaces are
+   the guards' own hardcoded lists — `verify.py`'s `STRUCTURAL`/`IGNORE` object sets and `SMOKE`
+   calls, `check-structure.py`'s section-contiguity and command checks, the CLI pin. A guard
+   that no longer matches reality passes silently, which is worse than no guard.
+4. **`bash scripts/preflight.sh` and `python3 scripts/verify.py --live` green**, and the docs
+   site rebuilds.
+5. **Changelog** leads with the capability or the consequence, not the archaeology of how a
+   defect was found (that goes in the commit message).

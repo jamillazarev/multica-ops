@@ -178,7 +178,7 @@ Step detail and CLI recipes: **`BOOTSTRAP.md §15`**.
 
 ## Joining an existing setup
 
-Audit before touching: inventory (projects, agents, squads, skills, labels, statuses,
+Audit before touching: inventory **every class in the workspace fingerprint** (PLAYBOOKS — agents · squads · skills · labels · autopilots · projects · runtimes · properties · members · project resources), plus statuses,
 **and workspace members**) → gap-check against the invariants and this file → report
 deltas with recommendations (fix now / later / ignore is the user's call) → **run the
 interview delta** (any topic the incumbent setup doesn't already answer — language/tone,
@@ -244,7 +244,13 @@ look like the agent's fault.
 terms. A migration nobody understands is a migration nobody trusts; this is how the new
 version onboards the person, not just the workspace.
 
-**Hashes and deltas run at the end, not the start.** An upgrade changes agents, skills and
+**One canonical list, so nothing is forgotten.** The workspace fingerprint (PLAYBOOKS) is the
+single source of truth for *which structural objects exist* — agents, squads, skills, labels,
+autopilots, projects, runtimes, properties, members, resources. **`/sync`, `/join` and
+`/upgrade` all read that one list**, they don't each carry their own; add a class to the
+fingerprint and all three cover it automatically. `verify.py` guards the fingerprint against
+the CLI, so a new object type raises a warning in one place and protects every flow that reads
+it. **Hashes and deltas run at the end, not the start.** An upgrade changes agents, skills and
 labels, so the fingerprint written before it is stale by definition: recompute
 `docs/.workspace-state.json` **after** reconciling, and record the pre-upgrade SHA in
 `UPGRADES.md` first so a rollback has something to return to.

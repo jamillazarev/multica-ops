@@ -1,5 +1,21 @@
 # Changelog
 
+## 2.3.1 — a real on-ramp, and tests that keep themselves honest
+
+- **A Getting Started page** on the docs site — the friendly on-ramp a first-time user
+  needs, walking install → sign-in → day-zero checks → "just say what you're making." The
+  gap Ruslan hit ("downloaded Multica, now what") was covered as Mops *behaviour* but not as
+  a page to read; now it is the top of the sidebar.
+- **One canonical list for drift.** The workspace fingerprint is now the single source of
+  truth for which structural objects exist; `/sync`, `/join` and `/upgrade` all reconcile
+  against it rather than each carrying their own — add a class in one place and all three
+  cover it. `verify.py` guards it, so one check protects every flow that reads it.
+- **The evals caught up and stay caught up.** 2.3's flagship behaviours had no regression
+  test — the design flow, `/process`, "you decide", the adaptive interview. Added, including
+  the exact run that shipped garbage. preflight now **warns when the version bumped and the
+  evals didn't**, and `AGENTS.md` carries a **release checklist**: refresh the evals, run the
+  four review lenses, and keep the guards themselves current — they rot too.
+
 ## 2.3.0 — it finds the process, not just the tool
 
 Built on a first outsider's run (Ruslan's), which produced a beautiful discovery doc and then

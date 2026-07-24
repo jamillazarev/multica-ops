@@ -173,6 +173,17 @@ if [ -f scripts/check-structure.py ]; then
   done <<< "$(python3 scripts/check-structure.py 2>/dev/null)"
 fi
 
+# 5j · a version bump must bring the tests with it. Evals and the lens review go stale
+# silently — 2.3 shipped with evals a release behind until caught by hand.
+if git rev-parse --verify HEAD >/dev/null 2>&1; then
+  head_ver=$(git show HEAD:SKILL.md 2>/dev/null | grep -m1 "^version:" | tr -dc "0-9.")
+  work_ver=$(grep -m1 "^version:" SKILL.md | tr -dc "0-9.")
+  if [ -n "$head_ver" ] && [ "$head_ver" != "$work_ver" ]; then
+    git diff --quiet HEAD -- evals/README.md 2>/dev/null &&       say_warn "version bumped ${head_ver} → ${work_ver} but evals/README.md is unchanged — refresh the eval scenarios for any new behaviour"
+    say_warn "releasing ${work_ver}: run the four review lenses before tagging (AGENTS.md → Cutting a release)"
+  fi
+fi
+
 # 5c · references must stay one level deep from SKILL.md
 for f in $(ls *.md | grep -vE '^(SKILL|README|CHANGELOG|AGENTS)\.md$'); do
   nested=$(grep -ohE '\]\([A-Z][A-Za-z-]*\.md' "$f" 2>/dev/null | head -1)
