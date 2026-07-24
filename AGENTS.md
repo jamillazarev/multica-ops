@@ -58,6 +58,23 @@ counter-example.
 points at does not exist for the agent who needs it. The hook checks command coherence; it
 cannot tell that a *concept* has no door.
 
+### When a flow deserves a command — and how one appears
+
+The scripts guard command *coherence* (every table row has a file, is reachable from SKILL and
+the `/mops` dispatcher, and has a use case). They cannot judge whether a command should exist
+at all, so decide it deliberately, every time you add capability.
+
+**A command is a shortcut for a flow the owner reaches for repeatedly, by name.** Add one when
+all three hold: it is **invoked as an action in its own right** (not a phase inside another
+flow), it has **a name in the owner's own language**, and **plain language alone reaches it
+unreliably**. Do not add one for a one-off step, an internal stage of another flow, or a
+synonym — a synonym is an alias on an existing row. A quick job deliberately has none.
+
+**The command appears in the same commit as the capability** — table row, `commands/<name>.md`,
+a use case, and a mention in SKILL — or the commit message says plainly why the capability is
+*not* getting one. A capability shipped now and given its door later is invisible in between,
+which is the same failure as an unreachable one.
+
 ### Writing the changelog
 
 The changelog is the migration map `/mops upgrade` reads, and it is also what a stranger uses to
@@ -112,7 +129,9 @@ A version bump is not just a changelog entry. Before you tag:
    the guards' own hardcoded lists — `verify.py`'s `STRUCTURAL`/`IGNORE` object sets and `SMOKE`
    calls, `check-structure.py`'s section-contiguity and command checks, the CLI pin. A guard
    that no longer matches reality passes silently, which is worse than no guard.
-4. **`bash scripts/preflight.sh` and `python3 scripts/verify.py --live` green**, and the docs
+4. **Every new capability has a door, or a stated reason it doesn't** — see *When a flow
+   deserves a command*. Reachability is guarded; the decision to add a command is not.
+5. **`bash scripts/preflight.sh` and `python3 scripts/verify.py --live` green**, and the docs
    site rebuilds.
-5. **Changelog** leads with the capability or the consequence, not the archaeology of how a
+6. **Changelog** leads with the capability or the consequence, not the archaeology of how a
    defect was found (that goes in the commit message).
