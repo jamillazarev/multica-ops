@@ -374,7 +374,10 @@ integration. Offer at setup; connect any time later.
      github/skills.sh/clawhub URLs.) Then `multica agent create` the agent named
      **Mops**, `multica agent skills` to attach the imported skill (+ find-skills),
      `multica agent avatar` matching the chosen library — except **Mops in Multica, which always uses `assets/mops-avatar.png`** from this repo, subtitle *"Executive Advisor ·
-     resident"*. Grant rights per the user's autonomy choice (advisor-only → narrow;
+     resident"*. Create it **`--permission-mode public_to --public-to-workspace`**: the
+     resident exists to be reachable by whoever is in the workspace, so a private one
+     defeats the point (one resident serves the team; per-person residents are not a thing
+     today). Grant rights per the user's autonomy choice (advisor-only → narrow;
      ongoing operator → the CLI plus a token scoped to issues, comments
    and status). **Never workspace admin.** The resident is the agent with the widest
    untrusted-input surface — it reads issues, imported tickets and web research — so giving

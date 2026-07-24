@@ -44,6 +44,15 @@ that repo maintained by a Multica company.
 **Verdict:** worth doing, high signal, but only after (1)–(5). Attempting it without the
 locked-gate rule would be the single riskiest thing this skill could do.
 
+## One resident Mops per person
+
+Today the workspace gets **one** resident Mops, created `public_to workspace` so everybody
+reaches the same agent. With several humans that means one shared thread and no per-person
+memory of what was discussed. A per-person resident (`--permission-mode public_to
+--public-to-member <user-id>`) would fix both, at the cost of N agents to keep in sync — same
+skill, same instructions, N copies drifting. Worth doing only once per-person memory exists to
+justify it; until then the shared resident plus a memory keyed by person is the cheaper shape.
+
 ## Persona simulation is thin on new models
 
 Noted from user feedback: role-play of competence levels ("you are a junior") has stopped

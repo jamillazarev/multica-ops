@@ -58,6 +58,23 @@ counter-example.
 points at does not exist for the agent who needs it. The hook checks command coherence; it
 cannot tell that a *concept* has no door.
 
+### Before building anything: does Multica already do it?
+
+This skill is a **methodology on top of a platform that keeps growing**, so the first question
+for any new capability is not *how do we build it* but **does Multica already have it**. Check
+`multica <group> --help` for every group it might touch, and the docs, *before* designing.
+Recording the answer costs a minute; missing it costs a home-grown mechanism that drifts from
+the platform and confuses anyone reading both.
+
+This has already bitten twice: agents were created with the **legacy `--visibility`** flag long
+after Multica had a real per-agent permission model (and the legacy flag cannot express
+"specific people" at all); and the workspace **member roles** — owner · admin · member, with
+the invite and removal rules that follow from them — went undocumented here for versions.
+
+Same rule when the platform *lacks* something: say so explicitly, and note the version checked,
+so a later reader knows the wheel was deliberate. (`workspace delete` does not exist in the CLI
+as of 0.4.8: Mops cannot remove a workspace it created, and must say so rather than promise.)
+
 ### When a flow deserves a command — and how one appears
 
 The scripts guard command *coherence* (every table row has a file, is reachable from SKILL and
