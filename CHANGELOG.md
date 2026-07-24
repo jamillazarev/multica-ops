@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.3.9
+
+**free-asset sources, and command examples show the short form**
+
+- **STACKS: a "free assets / stock" row** — where to *source* photos, video, audio, public-domain
+  art (the great museums' open-access collections), icons, illustrations, 3D and fonts —
+  **licence-first** (CC0 / public-domain / permissive, verify per item), and the owner's own
+  brand kit or named source always wins over free stock.
+- **"Search further" is explicit** — on any STACKS/stock row the owner can ask Mops to look
+  beyond the defaults, weighted by their preferences (cheaper · self-host · agent-drivable · a
+  licence), not blindly wider.
+- The README hero and the upgrade use-case now show the **short `/mops`** form (upgrade leads
+  with plain language, which works on any install).
+
 ## 2.3.8
 
 **the advisory session is its own bill (owner cost/context economy)**

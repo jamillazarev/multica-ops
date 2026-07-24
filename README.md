@@ -6,7 +6,7 @@
 
 <p align="center">
   Meet <b>Mops</b> 🐶 — the pug behind the ops. One word gets you everything:<br>
-  just say what you need — or <code>/multica-ops:mops status</code>
+  just say what you need — or <code>/mops status</code>
 </p>
 
 <p align="center">
