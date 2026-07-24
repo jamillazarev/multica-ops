@@ -67,8 +67,9 @@ lines=$(wc -l < SKILL.md | tr -d ' ')
 [ "$lines" -gt 500 ] && say_fail "SKILL.md $lines lines — over Anthropic's 500-line guidance"
 
 # 5b · reference files >100 lines need a table of contents (partial reads otherwise miss scope)
-# SKILL.md is exempt: its load-routing table already serves as the table of contents.
-for f in $(ls *.md | grep -vE '^(README|CHANGELOG|SKILL)\.md$'); do
+# Exempt: SKILL (its load-routing table is the TOC), and the read-top-to-bottom entry docs
+# README/CHANGELOG/AGENTS — those are narrative, not navigable companion references.
+for f in $(ls *.md | grep -vE '^(README|CHANGELOG|SKILL|AGENTS)\.md$'); do
   n=$(wc -l < "$f" | tr -d ' ')
   [ "$n" -gt 100 ] && ! grep -qE '^## Contents' "$f" && say_warn "$f is $n lines with no '## Contents'"
 done
