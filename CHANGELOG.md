@@ -4,7 +4,7 @@
 
 - **A Getting Started page** on the docs site — the friendly on-ramp a first-time user
   needs, walking install → sign-in → day-zero checks → "just say what you're making." The
-  gap Ruslan hit ("downloaded Multica, now what") was covered as Mops *behaviour* but not as
+  gap the first outside user-test surfaced ("downloaded Multica, now what") was covered as Mops *behaviour* but not as
   a page to read; now it is the top of the sidebar.
 - **One canonical list for drift.** The workspace fingerprint is now the single source of
   truth for which structural objects exist; `/sync`, `/join` and `/upgrade` all reconcile
@@ -18,7 +18,7 @@
 
 ## 2.3.0 — it finds the process, not just the tool
 
-Built on a first outsider's run (Ruslan's), which produced a beautiful discovery doc and then
+Built on a first outsider's run, which produced a beautiful discovery doc and then
 **gradient-placeholder garbage for the design** — because it searched skills for "designer",
 found nothing usable, and hand-drew HTML for 2–5 minutes a screen. Everything here traces back
 to that.

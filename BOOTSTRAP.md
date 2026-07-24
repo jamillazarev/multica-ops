@@ -475,7 +475,7 @@ Each item with its default, as walked in `/init` and re-asked in the `/join` del
    per provider), so the owner chooses by outcome. **The tiers are a prompt, never a menu** —
    the owner can always answer freely ("all top", "Sonnet for everything except the core",
    "you pick"), and Mops honours the free answer over the three buckets. A squad that is all
-   one tier because nobody asked is the bug Ruslan hit. In Multica a model is bound to
+   one tier because nobody asked is the bug the first user-test hit. In Multica a model is bound to
    the agent (per-role), so the preference shapes who is created at which tier; a task can't
    pick a model at assign time, only the graded agent can (REFERENCE §7). Missing tool →
    install + `daemon restart`.
