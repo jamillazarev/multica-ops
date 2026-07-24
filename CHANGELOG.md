@@ -1,6 +1,18 @@
 # Changelog
 
-## 2.3.4 — commands are written in full: `/mops <name>`, everywhere
+## 2.3.5
+
+**diagrams say `/mops` too, and changelog headings are just the version**
+
+- The 2.3.4 rewrite skipped fenced blocks to spare shell examples — which also skipped the
+  **Mermaid workflow diagrams**, still showing the old `/join`, `/init`. Rewritten (7 nodes),
+  so the pictures match the prose: every command reads `/mops <name>`.
+- **Changelog headings are now just the version number**; each release's title moved to a bold
+  line beneath it, so the page outline is a clean column of versions, not truncated sentences.
+
+## 2.3.4
+
+**commands are written in full: `/mops <name>`, everywhere**
 
 recognition over recall. Every command reference across the skill and the docs site is now
 the real short command you type — **`/mops join`, not `/join`** — shown in full so you copy it
@@ -11,14 +23,18 @@ as a tag so page anchors stay stable. The two coherence guards (preflight's comm
 extraction, `check-structure`'s file↔table check) were moved to the `/mops <name>` form in the
 same change. Net effect for you: Mops now quotes the copy-pasteable command, not a phantom.
 
-## 2.3.3 — the commands table calls them flows
+## 2.3.3
+
+**the commands table calls them flows**
 
 Completing 2.3.2: the table listing `/init`, `/feature` … was still headed **Command**, which
 said the opposite of the note right above it — that `/name` is a *flow you invoke* (via
 `/multica-ops:name`, `/mops name`, or plain language), not a command you type. Renamed the
 column to **Flow** across all five tables so the header and the note finally agree.
 
-## 2.3.2 — the command table now says how to type a command
+## 2.3.2
+
+**the command table now says how to type a command**
 
 - **How to read the commands table.** `/feature` in the docs is a *flow name*, not something
   you type literally — reach it as `/multica-ops:feature`, `/mops feature …`, or plain
@@ -30,7 +46,9 @@ column to **Flow** across all five tables so the header and the note finally agr
   overlapping how-tos. Introduction drops the duplicated install and upgrade steps and points
   to Getting Started for them.
 
-## 2.3.1 — a real on-ramp, and tests that keep themselves honest
+## 2.3.1
+
+**a real on-ramp, and tests that keep themselves honest**
 
 - **A Getting Started page** on the docs site — the friendly on-ramp a first-time user
   needs, walking install → sign-in → day-zero checks → "just say what you're making." The
@@ -46,7 +64,9 @@ column to **Flow** across all five tables so the header and the note finally agr
   evals didn't**, and `AGENTS.md` carries a **release checklist**: refresh the evals, run the
   four review lenses, and keep the guards themselves current — they rot too.
 
-## 2.3.0 — it finds the process, not just the tool
+## 2.3.0
+
+**it finds the process, not just the tool**
 
 Built on a first outsider's run, which produced a beautiful discovery doc and then
 **gradient-placeholder garbage for the design** — because it searched skills for "designer",
@@ -112,7 +132,9 @@ object type raises a warning instead of becoming a silent blind spot. The `/join
 command reachability were already guarded. A tidy **mermaid theme** on the docs site; the
 quick-job diagram redrawn; the examples page's last example given its missing takeaway.
 
-## 2.2.1 — the update path a human can actually walk
+## 2.2.1
+
+**the update path a human can actually walk**
 
 A follow-up to 2.2.0, from the first question every user asked after it: *how do I get the
 new version?*
@@ -132,7 +154,9 @@ new version?*
   Multica (with the five preconditions that make it safe), and re-checking whether persona
   simulation still earns its cost on current models.
 
-## 2.2.0 — a front door, a team you can size, and gates that are real
+## 2.2.0
+
+**a front door, a team you can size, and gates that are real**
 
 Built on what first users actually hit, then hardened by four independent audit passes over
 the result. Several of these were defects in things this skill told people to do.
@@ -280,7 +304,9 @@ reads as a hang.
   attached skills, routing, acceptance criteria. That fourth class is where everything
   dangerous had been falling through.
 
-## 2.1.0 — the parts that keep a company honest
+## 2.1.0
+
+**the parts that keep a company honest**
 
 2.0 ran a company. 2.1 hardens it: the team stops being an attack surface, nothing edits the
 bar it is measured against, skills gain a weight limit and a lifecycle, and the one place
@@ -613,7 +639,9 @@ can verify.
 Plus rendering repairs: two bullet lists whose continuations had lost their indent, an
 ordered list broken by a stray "2b.", and a count that no longer matched its list.
 
-## 2.0.0 — the company, end to end
+## 2.0.0
+
+**the company, end to end**
 
 1.x stood a team up. 2.0 runs a company: it ships, measures, budgets, keeps itself
 honest, and knows what it doesn't know. Upgrading from any 1.x is automatic via
@@ -940,7 +968,9 @@ end to end." Migration from 1.0.0 is automatic via `/upgrade` or `/join`.
 - **Express setup** ("defaults"), **batched approvals** in `/status`, versioned skill
   (frontmatter `version`) so updates are detectable. 38 commands + aliases.
 
-## 1.0.0 — 2026-07-18
+## 1.0.0
+
+**2026-07-18**
 
 First public release.
 

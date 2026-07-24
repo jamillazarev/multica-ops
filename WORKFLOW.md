@@ -20,8 +20,8 @@ flowchart TD
     U["Any first message —<br/>even a bare /mops or 'hi'"] --> DZ["Day zero: installed · current ·<br/>signed in · workspace · daemon · runtimes<br/><i>one ladder with its fixes, not six prompts</i>"]
     DZ --> Q{"Three questions:<br/>what exists · what you want ·<br/>who runs the work"}
     Q -->|"nothing, want a team"| SHAPE
-    Q -->|"a workspace already"| JOIN["/join — audit, then fix<br/>in approved batches"]
-    Q -->|"a backlog elsewhere"| IMP["/import — mapping shown first,<br/>issues created unassigned"]
+    Q -->|"a workspace already"| JOIN["/mops join — audit, then fix<br/>in approved batches"]
+    Q -->|"a backlog elsewhere"| IMP["/mops import — mapping shown first,<br/>issues created unassigned"]
     Q -->|"one job, no team"| QJ["Quick job: 3 questions,<br/>1–2 agents, build → review"]
     SHAPE["Shape the work:<br/>what's hard · what it's made of ·<br/>rough size → <b>team proposed with reasons</b>"] --> INT["Interview in waves —<br/>control question second"]
     INT --> STAND["Stand up: conductor → guide +<br/>find-skills → roles → docs skeleton<br/>+ branch protection + docs guard"]
@@ -41,17 +41,17 @@ flowchart TD
 
 ```mermaid
 flowchart LR
-    subgraph INIT["/init — a company"]
+    subgraph INIT["/mops init — a company"]
         I1["shaping → interview"] --> I2["conductor + squads"] --> I3["roadmap · ICE · discovery"]
     end
-    subgraph CREW["/crew — a crew"]
+    subgraph CREW["/mops crew — a crew"]
         C1["executors + gates"] --> C2["owner assigns"] --> C3["owner also holds:<br/>accept · skill screening ·<br/>dates · 3rd-round"]
     end
     subgraph QJ["quick job — the whole thing"]
         J1["1–2 agents · build → review · done"]
         J2["<i>and deliberately none of the machinery:<br/>no docs skeleton, no ledger, no modules</i>"]
     end
-    subgraph JOIN["/join — inherit"]
+    subgraph JOIN["/mops join — inherit"]
         N1["audit first"] --> N2["interview delta"] --> N3["fix in approved batches"]
     end
 ```
@@ -121,7 +121,7 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    GO["/upgrade"] --> L1{"Is this skill's copy<br/>on your machine current?"}
+    GO["/mops upgrade"] --> L1{"Is this skill's copy<br/>on your machine current?"}
     L1 -->|"behind"| YOU["<b>Mops runs the update</b> (it has the shell);<br/>you approve, then <b>restart Claude Code</b>.<br/><i>A skill can fetch new bytes but cannot<br/>apply them to its own running self</i>"]
     YOU --> L2
     L1 -->|"current"| L2["Read the NEW version's CHANGELOG<br/>— it is the migration map"]
@@ -132,7 +132,7 @@ flowchart TD
     SCR --> SK
     SK -->|"all current"| CLI{"CLI behind,<br/>locally or on a runtime?"}
     CLI -->|"yes"| IDLE{"active_task_count = 0<br/>and nothing in_progress?"}
-    IDLE -->|"no"| WAIT["Say what's in flight.<br/>Wait for idle, or /stop<br/>if the owner accepts it"]
+    IDLE -->|"no"| WAIT["Say what's in flight.<br/>Wait for idle, or /mops stop<br/>if the owner accepts it"]
     WAIT --> IDLE
     IDLE -->|"idle"| UPD["multica update ·<br/>runtime update &lt;id&gt; ·<br/>daemon restart"]
     UPD --> FP
