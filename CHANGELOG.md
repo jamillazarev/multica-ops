@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.3.3 — the commands table calls them flows
+
+Completing 2.3.2: the table listing `/init`, `/feature` … was still headed **Command**, which
+said the opposite of the note right above it — that `/name` is a *flow you invoke* (via
+`/multica-ops:name`, `/mops name`, or plain language), not a command you type. Renamed the
+column to **Flow** across all five tables so the header and the note finally agree.
+
 ## 2.3.2 — the command table now says how to type a command
 
 - **How to read the commands table.** `/feature` in the docs is a *flow name*, not something

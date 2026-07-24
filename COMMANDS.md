@@ -14,14 +14,14 @@ command you type literally**. In Claude Code you reach a flow three ways — `/m
 outside Claude Code there are no slash commands at all, only plain language.
 
 **Setup**
-| Command | Where | Routes to |
+| Flow | Where | Routes to |
 |---|---|---|
 | `/init` | 🖥️ | bootstrap from zero: **day zero** (BOOTSTRAP §0) → three routing questions → shaping → interview → stand up. Full procedure: FLOWS |
 | `/crew` | 🖥️ | **crew mode**: executors and gates, the owner is the product manager — no conductor, discovery or roadmap ceremony. Default offer after `/import`; adding a conductor later is an upgrade, not a redo |
 | `/join` | 🖥️ | join an existing setup — `/audit` + interview delta, then gaps → fixes; reconcile an existing Mops in Multica. Full procedure: FLOWS |
 
 **Features & roadmap**
-| Command | Where | Routes to |
+| Flow | Where | Routes to |
 |---|---|---|
 | `/research <question>` | ⇆ | point research without a feature: market, competitor, tech, pricing — cited findings land in `docs/research/`; feeds discovery, specs, and expert reviews |
 | `/brand` | ⇆ | create or evolve the brand: new → brand discovery → book → owner approval → systematize (tokens/templates → design system, voice → guide); existing → audit with a complete/add/rework verdict per piece |
@@ -39,7 +39,7 @@ outside Claude Code there are no slash commands at all, only plain language.
 | `/drop <feature>` | ⇆ | remove a feature: cancel with a `Cancel reason: …` comment (or park to backlog if it may return) |
 
 **Team**
-| Command | Where | Routes to |
+| Flow | Where | Routes to |
 |---|---|---|
 | `/team` | ⇆ | roster: agents, roles, models, squads, who is on what |
 | `/hire <role\|person>` (`/invite`) | 🖥️ | add to the team — Mops asks **agent or real person**. Agent → role-builder. Person → `workspace member invite <email>` (owner-confirmed, outward) → ask title/tasks → set `/access` + `/reviews` → record in TEAM.md |
@@ -52,14 +52,14 @@ outside Claude Code there are no slash commands at all, only plain language.
 | `/reviews` | ⇆ | manage human sign-off checkpoints: which flows/stages @mention which person before proceeding (image-gen, publish, a stage, every feature); add / remove / list |
 
 **Autonomy & automation**
-| Command | Where | Routes to |
+| Flow | Where | Routes to |
 |---|---|---|
 | `/pace [careful\|balanced\|fast]` | 🖥️ | the parallelism dial, changeable on the fly: how hard to fan work out vs. how careful — trades throughput against cost and blast radius, capped by the ~3–5 concurrent ceiling and by the resource (`local_directory` serialises regardless). REFERENCE §7 |
 | `/autonomy [manual\|auto]` (`/hiring [manual\|auto]` = its hiring dial) | 🖥️ | presets: manual = user-started features + confirmed hires; auto = non-stop + autonomous hiring. Fine dials: `/autonomy flow auto`, `/autonomy hiring manual`. Switches are boundary-safe (see Operating modes) |
 | `/autopilot` | 🖥️ | create/list/delete scheduled automations (cron/webhook): nightly sweeps, PR-merged hooks, social cadence — set up here, they *run* inside Multica |
 
 **Operations**
-| Command | Where | Routes to |
+| Flow | Where | Routes to |
 |---|---|---|
 | `/status` | ⇆ | Mops digest: in flight, finished, stuck & why, waiting on the user, spend snapshot, **ripe deferrals from LATER.md**, and **pending owner approvals batched into one digest** (not scattered pings) — Mops in Multica answers this natively |
 | `/recover` (`/continue`) | 🖥️ | revive after limits (rerun interrupted, revive marker-less cancels) |
