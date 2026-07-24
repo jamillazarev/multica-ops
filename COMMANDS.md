@@ -49,7 +49,7 @@ are no slash commands at all, only plain language.
 | `/mops squad` | 🖥️ | create/reshape squads: members, leader, routing instructions |
 | `/mops module <name> on\|off` | 🖥️ | toggle an opt-in module (resident Mops (in Multica), design system & brand, experts, personas, Design QA, social…) |
 | `/mops budget [amount/period]` | 🖥️ | set or show the envelope: amount + period, currency (USD default), credits/grants with expiries, what counts; reports burn, runway and cost per shipped feature, and re-proposes the stack if the number changes |
-| `/mops access <member> <full\|features\|status\|…>` | 🖥️ | set what a workspace member may direct Mops to do; owner always full; destructive/spend always → owner |
+| `/mops access <member> <full\|features\|status\|…>` | 🖥️ | set what a workspace member may direct **Mops** to do; owner always full; destructive/spend always → owner. **Distinct from Multica's per-agent *Access*** (who may invoke a given agent — `agent create/update --permission-mode private\|public_to`, BOOTSTRAP §2) |
 | `/mops reviews` | ⇆ | manage human sign-off checkpoints: which flows/stages @mention which person before proceeding (image-gen, publish, a stage, every feature); add / remove / list |
 
 **Autonomy & automation**

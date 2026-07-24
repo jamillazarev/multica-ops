@@ -116,7 +116,7 @@ multica project resource add <project-id> --type github_repo --url <repo>
 
 ```sh
 multica agent create --name "<Role name>" --model <model-id> --runtime-id <rt> \
-  --visibility workspace --max-concurrent-tasks 3 \
+  --permission-mode public_to --public-to-workspace --max-concurrent-tasks 3 \
   --description "<one line>" --instructions "<role system prompt>" --output json
 multica agent avatar <agent-id> --file <png>       # see ROLES.md → Avatars
 multica agent update <agent-id> --model <…> --instructions "<…>"
@@ -124,6 +124,24 @@ multica agent update <agent-id> --model <…> --instructions "<…>"
 - **Profession-style names** ("QA Engineer", "Product Manager") — clearer in mentions.
 - **Model tiering is mandatory** — see §7: not every role needs the top model.
 - `agent update` takes a **UUID**, not a name.
+
+**Who may invoke an agent is Multica's own setting — use it, don't invent one.** The app shows
+it as *Access* on an agent; the CLI is `--permission-mode`, on `create` and `update`:
+
+| Intent | Flags | The app calls it |
+|---|---|---|
+| only its owner runs it | `--permission-mode private` | *Only me* |
+| any member runs it | `--permission-mode public_to --public-to-workspace` | *Entire workspace* |
+| named members run it | `--permission-mode public_to --public-to-member <user-id>` (repeatable) | *Specific people* |
+
+`--visibility private|workspace` still works but is **legacy** — it just maps onto the above,
+and it cannot express *Specific people*. Prefer `--permission-mode`; it is authoritative when
+both are given, and changing it on an existing agent is **owner-only**.
+
+**Do not confuse it with `/mops access`.** This one is Multica's: *who may run this agent*.
+`/mops access` is ours: *what a human member may direct Mops to do*. A workspace with several
+people needs both — team agents public to the workspace, anything holding credentials or
+spend kept `private` or narrowed to named people.
 
 **What belongs in `--instructions` — and what must not.** These load on every run this agent
 makes, so they are the most expensive text you write per role. Six short blocks, no prose:

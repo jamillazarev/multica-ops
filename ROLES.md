@@ -74,7 +74,7 @@ cheap/text-oriented runtime (translations, boilerplate legal).
 Create:
 ```sh
 multica agent create --name "<Role>" --model <model-id> --runtime-id <rt> \
-  --visibility workspace --max-concurrent-tasks 3 \
+  --permission-mode public_to --public-to-workspace --max-concurrent-tasks 3 \
   --description "<one line>" --instructions "<language rule + role + routing>" --output json
 multica agent skills add <agent-id> --skill-ids <guide>,<find-skills>,<role-skills…>
 ```

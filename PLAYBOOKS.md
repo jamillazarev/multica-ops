@@ -99,7 +99,7 @@ mention) wake the squad leader instead.
 
 ```sh
 multica agent create --name "<Role>" --model <model-id> --runtime-id <rt> \
-  --visibility workspace --instructions "<role prompt>" --output json
+  --permission-mode public_to --public-to-workspace --instructions "<role prompt>" --output json
 multica agent skills add <agent-id> --skill-ids <guide-id>,<find-skills-id>   # invariants!
 multica squad member add <squad-id> --member-id <agent-id> --type agent        # if squad exists
 multica squad update <squad-id> --instructions "<updated routing map>"
