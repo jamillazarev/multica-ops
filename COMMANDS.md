@@ -2,8 +2,8 @@
 
 **You never need a command** — plain language in any language works; Mops parses intent
 and asks when ambiguous. Commands are optional thin aliases (a plugin nicety), grouped
-below, aliases in parentheses; **arguments are free text** (`/mops move the crossfeed thing
-to the next release` is fine). **`/multica-ops:mops <anything>`** is the free-text dispatcher (plugin commands are namespaced). A short **`/mops`** is installed on first run by the plugin's SessionStart hook — check it exists before quoting either form, and outside Claude Code there are no slash commands at all
+below, aliases in parentheses; **arguments are free text**
+(`/mops move the crossfeed thing to the next release` is fine). **`/multica-ops:mops <anything>`** is the free-text dispatcher (plugin commands are namespaced). A short **`/mops`** is installed on first run by the plugin's SessionStart hook — check it exists before quoting either form, and outside Claude Code there are no slash commands at all
 (collision-proof vs Claude Code built-ins; namespaced `/multica-ops:<cmd>` also works) —
 Mops the pug is the skill's mascot. *Where* column: 🖥️ console (heavy/machine/
 interactive) · 🏢 Mops in Multica (presence/async) · ⇆ either.

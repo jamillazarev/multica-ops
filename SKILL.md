@@ -481,8 +481,8 @@ exactly one, so switching is a console-only notion. Mechanics: REFERENCE §1.
 ## Commands — how the user invokes you
 
 **You never need a command** — plain language in any language works and is the intended
-way in. In Claude Code, commands are namespaced by the plugin (`/multica-ops:mops
-<anything>` dispatches free text) plus a short **`/mops`** installed on first run; **check
+way in. In Claude Code, commands are namespaced by the plugin
+(`/multica-ops:mops <anything>` dispatches free text) plus a short **`/mops`** installed on first run; **check
 it exists before quoting it**, and outside Claude Code there are no slash commands at all.
 Quoting a command the reader doesn't have is what produced the first "unknown command"
 report. **Full table: [COMMANDS.md](COMMANDS.md).**
