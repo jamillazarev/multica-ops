@@ -43,7 +43,7 @@ someone's machine is their call, not a side effect of saying hello.
 
 | Check | Broken looks like | Repair |
 |---|---|---|
-| **1. Installed?** `multica version` | `command not found` | `brew install multica-ai/tap/multica`, or the install script from multica.ai. **Ask which they prefer** — someone who downloaded from the site does not expect a Homebrew formula appearing in their setup |
+| **1. Installed?** `multica version` | `command not found` | **Stop and hand it back.** Point at **https://multica.ai** — cloud, self-hosted or the desktop app (which bundles the CLI) are genuinely different choices with different consequences, and installing the wrong one for someone is worse than waiting. Say what to install, why the options differ, and that you'll pick up the moment `multica version` answers. **Mops does not install Multica itself** |
 | **2. Current?** compare with the latest release | old version, subtle CLI drift | `multica update` — offer it, don't run it |
 | **3. Signed in?** `multica auth status` | not authenticated | `multica setup cloud`, or `multica setup self-host --server-url …` for their own server |
 | **4. A workspace?** `multica workspace list` | empty, or several | create one, or **confirm which** — never guess when there is more than one |
@@ -52,7 +52,9 @@ someone's machine is their call, not a side effect of saying hello.
 
 **Report the whole ladder at once, not one rung per message** — six sequential yes/no
 prompts is exactly the experience this skill exists to avoid. State what's missing, what
-each fix costs, and let the owner say "do it all".
+each fix costs, and let the owner say "do it all" — **except rung 1**, which is theirs: with no
+`multica` on the machine there is nothing to run day zero *with*, so the honest move is a link
+and a pause, not a guess at how they want it installed.
 
 ```sh
 multica version && multica auth status      # 1-3

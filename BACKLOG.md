@@ -44,6 +44,17 @@ that repo maintained by a Multica company.
 **Verdict:** worth doing, high signal, but only after (1)–(5). Attempting it without the
 locked-gate rule would be the single riskiest thing this skill could do.
 
+## Guided install (cloud vs self-host vs desktop)
+
+Day zero stops at rung 1: no `multica` on the machine means Mops hands the owner a link and
+waits. That is deliberate — the three ways in (cloud, self-hosted server, desktop app that
+bundles the CLI) have different consequences, and a self-hosted install is a Postgres, a
+Docker Compose or a Helm chart plus signup controls and email keys, not a one-liner. Guiding
+that well means asking what they're optimising for (data residency, uptime ownership, cost)
+and then walking a real install — a proper flow, not a check. Worth doing once the rest is
+stable; the cost of getting it wrong today (installing the wrong shape on someone's machine)
+is higher than the cost of waiting for them.
+
 ## One resident Mops per person
 
 Today the workspace gets **one** resident Mops, created `public_to workspace` so everybody
