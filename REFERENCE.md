@@ -186,6 +186,20 @@ stream with its own team and cadence (a real editorial calendar), the same "is t
 or a one-off" call as everything else. Ongoing upkeep — a living feature, a forever
 calendar — is just recurring issues or an autopilot; the format already holds it.
 
+**Branching, hotfixes, versions (code projects).** The conveyor already runs **GitHub Flow /
+trunk-based**: a short-lived branch per issue → the review gate → merge to `main` → deploy,
+held by branch protection. Keep it — that is the modern default for continuous delivery.
+**Don't reach for GitFlow**: its own author now advises against it for continuous delivery,
+and its `develop` + long-lived release branches fight the fresh-worktree-per-task model. The
+one exception is a product that **supports several shipped versions at once** (a library, an
+SDK, this skill) — then keep a release branch per supported line and **backport** fixes to it.
+A **hotfix is the `/mops bug` lane with a branch**: fast-tracked off `main` → minimal review →
+merge → deploy now, backported to each maintained line where they exist. **Version with
+SemVer, release in batches** (PATCH fix · MINOR feature · MAJOR breaking; pool small changes,
+ship an urgent one alone, keep the note terse and for the audience — same discipline as the
+skill's own `AGENTS.md`). Non-code work has no branches: the version is a date or an edition,
+but the batching and the audience-facing note are identical.
+
 ## 8. Anti-patterns
 
 - ❌ A squad leader executing a whole feature that was addressed **to the squad** — that

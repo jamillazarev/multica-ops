@@ -69,7 +69,12 @@ The four ways in, if you like to see them:
 
 Ask Mops **"is there a new version?"** or run **`/mops upgrade`**. Mops fetches the new bytes
 itself (it has your shell) and asks you to **restart Claude Code** — that restart is the
-only manual step, because a running skill can't replace its own plugin under itself. After
+only manual step, because a running skill can't replace its own plugin under itself.
+
+> **Upgrading *from* an older version?** `/mops` is a shortcut newer versions install on
+> first run, so if `/mops upgrade` isn't found, your copy predates it. Use
+> **`/multica-ops:upgrade`** (present whenever the plugin is installed) or just say
+> *"upgrade"* — both reach the same flow. After
 the restart it migrates your workspace, re-screens imported skills, and offers the CLI
 update **only when the team is idle**. *Update* = new bytes arrive; *upgrade* = your
 workspace moves onto them.

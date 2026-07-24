@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.3.6
+
+**release, versioning & branching discipline — for Mops and the companies it builds**
+
+- **Upgrade fallback.** `/mops upgrade` needs the `/mops` shortcut, which older versions don't
+  install — so upgrading *from* one failed silently. Docs now send those users to
+  `/multica-ops:upgrade` (always present) or plain language.
+- **When to cut a version** (`AGENTS.md`). SemVer + batch, don't drip: the docs site deploys
+  continuously, the skill bumps only when a user has a reason to move, urgent fixes ship alone,
+  and changelog entries stay terse and grouped (this one included).
+- **Release & branching for built projects** (`REFERENCE.md`, domain-neutral). The conveyor
+  already is GitHub Flow / trunk-based — now named, with GitFlow marked legacy; a hotfix is the
+  `/mops bug` lane with a branch; release branches only for products supporting several versions.
+
 ## 2.3.5
 
 **diagrams say `/mops` too, and changelog headings are just the version**

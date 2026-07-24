@@ -72,6 +72,29 @@ what must I do differently.**
   maintainer will look for it. It does not belong in the release notes, and a changelog full
   of self-audit reads as a product made of bugs rather than one kept honest.
 - **Never rewrite a released entry's substance.** Versions are public; correct forward.
+- **Terse, and grouped.** Compact technical language — the reader wants the delta, not an
+  essay. Not every fix earns a paragraph; fold a handful of minor corrections into one line
+  (*"several doc and notation fixes"*) rather than a bullet each. Over-granular notes read as
+  a product made of bugs.
+
+### When to cut a version
+
+Two artifacts ship from this repo and they version differently. **The docs site deploys
+continuously** — a wording, IA or typo fix is a deploy, never a version. **The skill is what
+users pull** with `/mops upgrade`, so a bump is a whole upgrade cycle for them (a re-screen, a
+restart, a changelog entry someone reads) — bump it only when a user has a reason to move.
+
+SemVer picks the number: **PATCH** (x.y.Z) a bug fix or correction that changes what a reader
+should do · **MINOR** (x.Y.0) a new command, flow or capability · **MAJOR** (X.0.0) a breaking
+change (a removed or renamed command, a changed contract).
+
+**Batch, don't drip.** Commit small; tag on a coherent unit of value, not per commit. Pool
+small fixes into one patch and let wording/notation/doc-only changes ride the next real
+release rather than minting a version each — **the changelog is the upgrade map**, so an entry
+must be something a user cares about; a release of "renamed a column" reads as a product made
+of noise. The one exception is an **urgent** fix — a real block, a security or data issue —
+which ships alone, immediately. (This repo's own 2.3.1–2.3.5 run was exactly the drip this
+rule now prevents.)
 
 ### Cutting a release
 
