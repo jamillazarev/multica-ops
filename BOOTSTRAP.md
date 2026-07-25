@@ -256,6 +256,14 @@ multica issue comment add <id> --content-stdin      # @-mention = native trigger
 
 ## 8. CLI traps (all hit in production)
 
+- **`workspace switch` can fail while your script keeps going — and your objects land in
+  whatever workspace was active.** Hit in production: a failed `create` (slug conflict) made
+  the following `switch` a no-op, and three projects were created in the wrong company.
+  Two rules: **batch creation always passes `--workspace-id` explicitly on every command**
+  (a wrong default becomes impossible), and interactive work **verifies before creating**
+  (`workspace get` → compare the id → only then create). A cleanup is `project delete`,
+  but the rule is to never need it.
+
 | Trap | Workaround |
 |---|---|
 | `issue list` caps at **100 per page** (`--limit 500` ignored) | paginate with `--offset`, watch `has_more` |
