@@ -33,9 +33,10 @@ flowchart TD
     JOIN --> RUN
 ```
 
-> Nobody is asked to choose a command. Crew mode is the **default offer after `/mops import`** —
-> someone who just moved their backlog has already decided what the work is. Adding a
-> conductor later is an upgrade, not a redo.
+> Nobody is asked to choose a command. Crew mode is the **default offer after `/mops import`
+> when no conductor is standing** — someone who just moved their backlog has already decided
+> what the work is; a workspace that already has a conductor keeps it. Adding a conductor
+> later is an upgrade, not a redo.
 
 ## The four routes, side by side
 

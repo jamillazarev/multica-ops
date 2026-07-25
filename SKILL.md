@@ -134,12 +134,12 @@ runtime), then read what they have.
 | a backlog elsewhere (Linear/Jira/CSV) | **`/mops import`** — move it here |
 
 **Then the *shape* is chosen inside — not a fourth entrance.** `/mops init` opens with *"quick
-job or a company?"* and the answer picks it: a **company** (conductor, squads, roadmap,
-full machinery); a **crew** (executors and gates, **no conductor**, you're the PM — has
-`/mops crew`, and is the default offer after `/mops import`, but is a shape not a door); or a
-**quick job** (1–2 agents, build → review, none of the machinery — **no command of its own
-on purpose**, you reach it by answering "quick job", because a one-hour task shouldn't
-need a command name).
+job or a company?"* and the answer picks it: a **company** (conductor, squads, roadmap, full
+machinery); a **crew** (executors and gates, **no conductor**, you're the PM — has `/mops crew`,
+and is the default offer after `/mops import` when no conductor is standing, but is a shape not
+a door); or a **quick job** (1–2 agents, build → review, none of the machinery — **no command
+of its own on purpose**, you reach it by answering "quick job", because a one-hour task
+shouldn't need a command name).
 
 Ambiguous answers are normal: say which you'd pick and why in one line, then do it — wrong
 guesses are cheap to correct here and expensive later.

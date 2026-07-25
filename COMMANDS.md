@@ -18,7 +18,7 @@ are no slash commands at all, only plain language.
 | Command | Where | Routes to |
 |---|---|---|
 | `/mops init` | 🖥️ | bootstrap from zero: **day zero** (BOOTSTRAP §0) → three routing questions → shaping → interview → stand up. Full procedure: FLOWS |
-| `/mops crew` | 🖥️ | **crew mode**: executors and gates, the owner is the product manager — no conductor, discovery or roadmap ceremony. Default offer after `/mops import`; adding a conductor later is an upgrade, not a redo |
+| `/mops crew` | 🖥️ | **crew mode**: executors and gates, the owner is the product manager — no conductor, discovery or roadmap ceremony. Default offer after `/mops import` **when no conductor is standing**; adding a conductor later is an upgrade, not a redo |
 | `/mops join` | 🖥️ | join an existing setup — `/mops audit` + interview delta, then gaps → fixes; reconcile an existing Mops in Multica. Full procedure: FLOWS |
 
 **Features & roadmap**
