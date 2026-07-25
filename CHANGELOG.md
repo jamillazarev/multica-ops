@@ -1,5 +1,23 @@
 # Changelog
 
+## 2.4.1
+
+**first dogfood day: the traps the skill hit running itself**
+
+- **Interview item 19 rewritten — language is three layers**: the CLI mirrors the speaker;
+  the working language of shared threads stays steady (a resident 1:1 may mirror, opt-in);
+  the artifact default is **derived** — public/international → EN, local → the chat
+  language — and stated with its reasoning. Per-member language preferences → LATER.
+- **BOOTSTRAP §8 — three CLI traps from live runs**: list commands return a bare array *or*
+  a wrapper object, and write commands print a human line *before* the JSON even with
+  `--output json` — parse defensively and check exit codes (`scripts/issues.py` `_clean` is
+  the pattern) · `workspace switch` can fail silently, so **batch creation always passes
+  `--workspace-id` explicitly**.
+- **Interview item 8: tier is model × thinking-level**, asked together, in outcomes.
+- **STACKS: graphify leads the Codebase-orientation generated-index slot** (MIT/Apache-2.0,
+  Tree-sitter AST parsing, code parsed 100% locally; upstream claims attributed to its
+  README, not our measurements) — DSP stays as the alternative.
+
 ## 2.4.0
 
 **the platform-audit release: the skill tells the truth about Multica — and can run itself**
