@@ -151,6 +151,20 @@ both are given, and changing it on an existing agent is **owner-only**.
 people needs both — team agents public to the workspace, anything holding credentials or
 spend kept `private` or narrowed to named people.
 
+**Three per-agent dials most teams never touch — and should.**
+
+| Flag | What it does | When to reach for it |
+|---|---|---|
+| **`--thinking-level`** (Claude: `low·medium·high·xhigh·max`; other runtimes take their own set) | reasoning effort, **a second axis beside the model** | a cheap model at high effort often beats an expensive one at default — tier **both**, not just the model |
+| **`--custom-args`** (JSON array, appended to the tool's command line) | e.g. `--max-turns`, `--append-system-prompt` | capping runaway loops per role. **Some flags are blocked** (the daemon owns `-p`, permission mode, effort), and long lists slow startup — keep under ~10 |
+| **`--custom-env`** (+ `-file` / `-stdin`) | secrets for this agent only | prefer `--custom-env-file` (mode 0600) or stdin; a value on the command line is visible to shell history and `ps`. `PATH`/`HOME`/`USER`/`SHELL`/`TERM`/`CODEX_HOME` and anything `MULTICA_*` are **silently ignored** |
+
+**Agents inherit the runtime's local skills and MCP servers — inventory them, don't assume.**
+The workspace's skills are not the whole picture: whatever is installed on the runtime machine
+is merged in, and `disabled_runtime_skills` is how you switch specific ones off per agent. So
+"everything this company uses is in the repo" is only true once you have looked. Do it at
+creation, and re-check at `/mops audit` and `/mops sync`.
+
 **What belongs in `--instructions` — and what must not.** These load on every run this agent
 makes, so they are the most expensive text you write per role. Six short blocks, no prose:
 
@@ -330,13 +344,30 @@ integration. Offer at setup; connect any time later.
   on each member's machine**. Several members each run their own daemon for the same
   workspace. Keep `docs/TEAM.md`: humans and agents, who owns what, which features.
   Several PMs = one project lead per direction; Mops in Multica coordinates.
+- **Three roles, and the CLI cannot grant the top one.** `owner` · `admin` · `member`:
+  day-to-day work (issues, comments, using agents) is open to all three. **Only an owner can
+  invite another owner or delete the workspace**; admins invite and remove members and admins
+  but cannot touch an owner. `workspace member invite --role member|admin` — **`owner` is not
+  offered**, and **there is no member removal in the CLI at all** (the app only). A workspace
+  always keeps at least one owner, and the last one cannot demote themselves. **Email invites
+  expire after 7 days.** So `/mops hire <person>` must ask which role, and say plainly what it
+  cannot do.
 - **Runtimes are local**: auto-detected from PATH when each member's daemon starts
-  (16 supported tools). Adding one = install the tool + `multica daemon restart`.
+  (the supported list grows — check `/docs/providers` rather than quoting a count).
+  Adding one = install the tool + `multica daemon restart`.
   Audit with `multica runtime list` (note online/offline and which machine).
+- **A second machine is the honest way to raise the ceiling.** The caps (6 per agent, 20 per
+  daemon) are **per daemon**, so another computer is another ceiling — plus its own local tool
+  subscriptions. Setup is the owner's two lines on that machine: the install script from
+  multica.ai, then `multica setup` (browser sign-in, daemon in the background); it appears as a
+  runtime by itself. No browser there → `multica setup … --callback-host <ip>`. **Mops hands
+  over the lines; it does not install.** An always-on machine is what a scheduled pipeline needs.
 - **Monorepo default**: repo = company; `apps/ site/ marketing/ docs/` = projects;
   `docs/` opens as an Obsidian vault (plain markdown + Mermaid; GitHub renders the
   same files). Notion, when requested, is a mirror — the repo stays the source of
-  truth. Split repos only for separate deploy/access/open-source boundaries.
+  truth. Split repos only for separate deploy/access/open-source boundaries — and when you do,
+  it is **native, not a workaround**: `multica repo add|list|remove` keeps a workspace registry,
+  and `project create --repo` takes the flag **repeatedly**, so a project can carry several.
 
 ## 15. Stand-up order (detail)
 
@@ -445,6 +476,13 @@ Claude Code namespaces plugin commands, so this skill's are `/multica-ops:mops`,
 the short one later, leaving the user to remember which they have — and this is a file in
 their own Claude config: local, private, and removable with one `rm`, which is a different
 class of thing from acting on an outside system.
+
+**The hook only fires on a plugin install.** A `skills.sh` install has no `CLAUDE_PLUGIN_ROOT`
+and no plugin commands at all — the skill is reachable by name (`multica-ops`) and by plain
+language, but `/mops` does not exist. So on first run in Claude Code, **Mops checks for
+`~/.claude/commands/mops.md` and, if the hook never ran, creates it itself** — same file, same
+one-line notice, same `rm` to undo. Outside Claude Code no harness has slash commands, so the
+universal form of `/mops` is simply the word: "mops, status" reaches the same flow everywhere.
 
 It is deliberately timid about everything else:
 

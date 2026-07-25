@@ -5,6 +5,6 @@ description: The parallelism dial — careful, balanced, or fast. How hard to fa
 Load and follow the **multica-ops** skill (SKILL.md), executing its `/mops pace` flow. Set how
 hard the team parallelises: *careful* (few concurrent, more checkpoints) · *balanced* ·
 *fast* (fan out toward the concurrency ceiling, tier routine work down). It trades throughput
-against cost and blast radius, is capped at ~3–5 concurrent agents and by runtime concurrency,
+against cost and blast radius. Platform caps: 6 tasks per agent, 20 per daemon (tighter wins); ~3–5 concurrent agents is our coordination judgement, not a limit;
 and does nothing on a `local_directory` project, which serialises regardless (REFERENCE §7) —
 say so plainly rather than promise speed a local resource can't give.

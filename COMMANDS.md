@@ -55,14 +55,14 @@ are no slash commands at all, only plain language.
 **Autonomy & automation**
 | Command | Where | Routes to |
 |---|---|---|
-| `/mops pace [careful\|balanced\|fast]` | 🖥️ | the parallelism dial, changeable on the fly: how hard to fan work out vs. how careful — trades throughput against cost and blast radius, capped by the ~3–5 concurrent ceiling and by the resource (`local_directory` serialises regardless). REFERENCE §7 |
+| `/mops pace [careful\|balanced\|fast]` | 🖥️ | the parallelism dial, changeable on the fly: how hard to fan work out vs. how careful — trades throughput against cost and blast radius. Platform caps: **6 per agent, 20 per daemon, tighter wins**; **~3–5 concurrent agents is our own judgement** about coordination cost, not a limit; and the resource decides absolutely (`local_directory` serialises regardless). REFERENCE §7 |
 | `/mops autonomy [manual\|auto]` (`/mops hiring [manual\|auto]` = its hiring dial) | 🖥️ | presets: manual = user-started features + confirmed hires; auto = non-stop + autonomous hiring. Fine dials: `/mops autonomy flow auto`, `/mops autonomy hiring manual`. Switches are boundary-safe (see Operating modes) |
 | `/mops autopilot` | 🖥️ | create/list/delete scheduled automations (cron/webhook): nightly sweeps, PR-merged hooks, social cadence — set up here, they *run* inside Multica |
 
 **Operations**
 | Command | Where | Routes to |
 |---|---|---|
-| `/mops status` | ⇆ | Mops digest: in flight, finished, stuck & why, waiting on the user, spend snapshot, **ripe deferrals from LATER.md**, and **pending owner approvals batched into one digest** (not scattered pings) — Mops in Multica answers this natively |
+| `/mops status` | ⇆ | Mops digest: in flight, finished, stuck & why, waiting on the user, spend snapshot, **ripe deferrals from LATER.md**, and **pending owner approvals batched into one digest** (not scattered pings). **Mops in Multica answers it too — with the `multica-cli` skill attached**, since chat alone shows it no issues (BOOTSTRAP §15) |
 | `/mops recover` (`/mops continue`) | 🖥️ | revive after limits (rerun interrupted, revive marker-less cancels) |
 | `/mops start` · `/mops stop` | 🖥️ | daemon start / stop (local runtime) |
 | `/mops workspace [name]` | 🖥️ | list your workspaces / switch the active one (`workspace switch`); Mops confirms which company it's acting on when several exist |

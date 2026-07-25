@@ -1,6 +1,6 @@
 ---
 name: multica-ops
-version: 2.3.9
+version: 2.4.0
 description: Use when the user wants to build, bootstrap, join, or operate an autonomous team of AI agents on Multica — you act as their Mops (Executive Advisor); interview them progressively (defaults everywhere, small tasks stay small), create everything via the CLI (workspace-as-company, conductor/PM, agents, squads, skills, integrations), optionally stand up a resident Mops inside the workspace, then stay their console for status, recovery, features, and reshaping the team.
 ---
 
@@ -218,9 +218,9 @@ yes per hire ⇄ Mops in Multica hires within the roadmap's needs and reports. *
 it plainly — "want this faster or more careful?" — since it trades throughput against cost
 and blast radius.
 
-**Honest ceiling on pace:** width comes from decomposition and is capped at ~3–5
-concurrent agents (past that coordination costs more than it returns), by runtime
-concurrency, and absolutely by the resource — a **`local_directory` serialises
+**Honest ceiling on pace:** the platform's caps are **6 tasks per agent and 20 per daemon
+(the tighter wins)**; *our* judgement is that past **~3–5 concurrent agents** coordination
+costs more than it returns. And absolutely by the resource — a **`local_directory` serialises
 regardless**, so "fast" there buys nothing and the real lever is tiering + composing from
 libraries (REFERENCE §7). **Autonomy needs a resident**: pick `auto` with no Mops in
 Multica or autopilot and the conveyor parks until the console opens. **Switching is
@@ -378,7 +378,7 @@ its chat.
 **Right-size, then fan out.** Size by **routing, not rewriting** — model belongs to the
 *agent*, so the lever is **grades**; when difficulty is unclear, start low and let a
 failed review mean "needs a senior". **Parallelism is the stage** (`/mops pace` dials how
-wide), capped at **~3–5 concurrent agents**, **one owner per file**, and serialised
+wide) — platform caps 6/agent, 20/daemon; **~3–5 is our judgement**, **one owner per file**, serialised
 entirely on a `local_directory`. Star lays the foundation, routine fans out below it
 (ROLES). Levers, anti-patterns and the three-attempts / third-round rules: REFERENCE §7–8.
 
@@ -466,8 +466,8 @@ All preview-first and backed up. **`/mops health`** sweeps what fails silently (
 who sits on a degraded one, integrations/MCP, tokens, free-tier headroom, branch
 protection, daemon, limits). **`/mops upgrade`** is the one command for getting current across
 four layers — *update* = new bytes, *upgrade* = the workspace moves to them: **Mops
-fetches the new plugin itself** (it has the shell) and you just **restart Claude Code**,
-then it migrates the workspace, re-screens imported skills, and offers the CLI update
+fetches the new plugin itself** (it has the shell); **content applies on next read, so a restart
+is only for new commands or hooks**, then it migrates the workspace, re-screens skills, offers the CLI update
 **only when the team is idle**; ends with `/mops whatsnew`. **`/mops switch`**: providers are
 runtimes, so switching is reassignment. Migrations belong to the new version; **rollback
 is normal**. Steps and the diagram: FLOWS · WORKFLOW.
@@ -495,5 +495,6 @@ report. **Full table: [COMMANDS.md](COMMANDS.md).**
 - **Operations** — `/mops status` `/mops recover` `/mops start` `/mops stop` `/mops workspace` `/mops health`
   `/mops upgrade` `/mops whatsnew` `/mops switch` `/mops audit` `/mops connect` `/mops cli` `/mops sync` `/mops skill` `/mops process` `/mops import` `/mops help`
 
-In the workspace the user talks to **Mops in Multica** — plain chat, no commands; it
-answers `/mops status`-style questions natively and points back to the console for heavy work.
+In the workspace the user talks to **Mops in Multica** — plain chat, no commands. **Chat shows it only
+that conversation, not the board** — which is a setup choice, not a wall: attach the `multica-cli`
+skill (the CLI login is inherited) and it answers about anything; heavy work still → the console.

@@ -11,7 +11,7 @@
 
 <p align="center">
   <a href="https://ai.jamillazarev.com/skills/multica-ops/overview"><img alt="Docs" src="https://img.shields.io/badge/docs-ai.jamillazarev.com-black"></a>
-  <a href="https://github.com/jamillazarev/multica-ops/releases"><img alt="Release" src="https://img.shields.io/github/v/release/jamillazarev/multica-ops?color=black"></a>
+  <a href="https://ai.jamillazarev.com/skills/multica-ops/changelog"><img alt="Release" src="https://img.shields.io/github/v/release/jamillazarev/multica-ops?color=black"></a>
   <a href="LICENSE"><img alt="MIT" src="https://img.shields.io/badge/license-MIT-black"></a>
 </p>
 
@@ -43,10 +43,12 @@ multica skill import --url github.com/jamillazarev/multica-ops
 ```
 
 Then just say what you need. In Claude Code you also get slash commands — namespaced as
-`/multica-ops:mops`, plus a short **`/mops`** the plugin installs on first run (one file in
-your own config; `rm ~/.claude/commands/mops.md` removes it). Everywhere else — Cursor,
-Codex, Windsurf and the rest — there are no slash commands and none are needed: plain
-language reaches every flow.
+`/multica-ops:mops`, plus a short **`/mops`**: the plugin's hook installs it on first run, and
+on a skills.sh install (where plugin hooks never fire) **Mops creates the same file itself the
+first time you talk to it** (one file in your own config; `rm ~/.claude/commands/mops.md`
+removes it). Everywhere else — Cursor, Codex, Windsurf and the rest — there are no slash
+commands and none are needed: plain language reaches every flow, and so does the plain word
+("mops, status").
 
 ### First run — you don't need to know a command
 
@@ -68,17 +70,21 @@ The four ways in, if you like to see them:
 ### Updating
 
 Ask Mops **"is there a new version?"** or run **`/mops upgrade`**. Mops fetches the new bytes
-itself (it has your shell) and asks you to **restart Claude Code** — that restart is the
-only manual step, because a running skill can't replace its own plugin under itself.
+itself (it has your shell). **New content applies the next time a file is read** — you only need to
+**restart Claude Code** when the update adds or renames a command, or changes a hook, since those
+are registered at session start — **and Mops reads the changelog, so it tells you which case this
+one is** rather than leaving you to guess. (Restarting doesn't lose the conversation: `claude --continue`
+resumes it, at the cost of re-reading it into context.)
+
+It then migrates your workspace, re-screens imported skills, and offers the CLI update
+**only when the team is idle**. *Update* = new bytes arrive; *upgrade* = your workspace
+moves onto them.
 
 > **Can't run `/mops upgrade`?** If it — or `/multica-ops:upgrade` — says *unknown command*,
 > your install has **no slash commands**: an older version, or a `skills.sh` install rather
 > than a Claude Code plugin (slash commands are a plugin feature). **Just say "upgrade"** or
 > **"is there a new version?"** — plain language reaches the flow on *any* install, which is
-> why it's the path that never breaks. After
-the restart it migrates your workspace, re-screens imported skills, and offers the CLI
-update **only when the team is idle**. *Update* = new bytes arrive; *upgrade* = your
-workspace moves onto them.
+> why it's the path that never breaks.
 
 ## What's inside
 

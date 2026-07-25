@@ -1,5 +1,38 @@
 # Changelog
 
+## 2.4.0
+
+**the platform-audit release: the skill tells the truth about Multica — and can run itself**
+
+- **Corrected against the platform** (CLI + source, not memory): parallelism caps are **6 per
+  agent / 20 per daemon** (~3–5 stays as our coordination judgement) · **content applies on next
+  read** — a restart is only for new commands or hooks, and outside Claude Code never · a
+  monorepo is a default, **not a limit** (workspace repo registry, `project --repo` repeatable) ·
+  the resident **sees only its chat** unless `multica-cli` is attached · agents are created with
+  **`--permission-mode`** (the legacy flag cannot express *Specific people*).
+- **Operations, with real numbers** (REFERENCE §7): task lifecycle; what auto-retries and what
+  never does (**`agent_error` incl. quota; autopilot tasks never**); timeouts **5 min / 2.5 h**;
+  a failed task rolls its issue back to `todo`; rerun vs per-row retry; daemon rhythm 3s/15s/45s
+  and `~/.multica/daemon.log`; the four stuck-in-queued causes.
+- **Native-first surface**: typed custom properties · resolvable comment threads · subscribers
+  and inbox rules · `creator_type` provenance · server-side search/filters · label
+  `usage_count` · runtime usage/activity · **archive-vs-delete asymmetry** (back up before the
+  irreversible, warn before archiving — archiving cancels an agent's unfinished tasks) ·
+  workspace roles (owner-only caps, 7-day invites) · **a second machine as the honest capacity
+  lever** · `--thinking-level` as the second tiering dial · per-agent inventory of inherited
+  runtime skills/MCP (`disabled_runtime_skills`).
+- **Mops installs less and reports more**: day zero stops at "not installed" with a link;
+  platform updates are handed over, never run (self-hosted: the server is yours, and it goes
+  first; the desktop app bundles its own CLI — check both).
+- **Dogfood is a playbook**: run a company on this skill itself — locked surfaces, lenses as
+  temporary agents, a briefed resident (`templates/SELF-MAINTENANCE-brief.md`), and a
+  **self-adoption loop** (merge → guards green → idle → re-import; symlink on the console side).
+- **Every skill is born modular**: `templates/SKILL-SCAFFOLD.md` (budgeted router core +
+  companions), enforced by the company preflight. The **`/mops` alias now appears on skills.sh
+  installs too** — Mops creates the file itself when the plugin hook never ran.
+- STACKS: **component libraries per platform** (web/Vue/Svelte/RN/native/CLI-TUI) + reference
+  design systems. Evals grew to **12 scenarios** covering all of the above.
+
 ## 2.3.9
 
 **free-asset sources, and command examples show the short form**

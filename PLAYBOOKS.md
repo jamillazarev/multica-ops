@@ -24,6 +24,7 @@ control characters that break `json.loads` — sanitize with
 - [Import a backlog from another tracker (/import)](#import-a-backlog-from-another-tracker-import)
 - [Discover the process, then the tools (/process)](#discover-the-process-then-the-tools-process)
 - [The skill lifecycle (/skill)](#the-skill-lifecycle-skill)
+- [Running a company on this skill itself (dogfood)](#running-a-company-on-this-skill-itself-dogfood)
 - [The company guards its own docs](#the-company-guards-its-own-docs)
 - [Health sweep (/health)](#health-sweep-health)
 - [Skill upgrade (/upgrade)](#skill-upgrade-upgrade)
@@ -294,7 +295,9 @@ inventory** — four operations, each with a gate, all recorded in `docs/TOOLING
 **Create — a routine repeated twice becomes a skill.**
 1. Evidence first: name the two occasions. Once is a task, twice is a pattern, and
    "we might need it" is neither.
-2. Draft with **skill-creator**, small and single-purpose.
+2. Draft with **skill-creator**, small and single-purpose — **born modular, per
+   `templates/SKILL-SCAFFOLD.md`**: a budgeted router core + companions loaded on trigger.
+   Modularity is cheap at birth and expensive at 500 lines.
 3. **Test before you trust it**: hand it to a fresh agent that has never seen the routine
    and check it reaches the outcome. A skill nobody tested is a hypothesis.
 4. **Optimize** (below), then the conductor attaches it and logs what it replaces.
@@ -401,6 +404,39 @@ CHANGELOG entry says which, because it is the migration map.
 4. **Re-import it as an external skill** so there is exactly one source of truth; the
    in-workspace copy is deleted, not left to drift. From then on it upgrades like any other
    third-party skill, and other companies of yours can import the same URL.
+
+## Running a company on this skill itself (dogfood)
+
+The strongest eval this skill has: a Multica company whose product **is** this skill, hitting
+the gap between "as written" and "as it behaves" the way a user does. Everything below exists
+already — this is assembly order, not new machinery.
+
+1. **Workspace + three projects.** `multica-ops` (the skill, **`github_repo`** — public, so
+   cloning is free and the lenses can run in parallel) · `content` (articles + social cadence)
+   · `site` (the landing, its own repo). One company, three directions.
+2. **Fence before staff.** Branch protection with `enforce_admins=true` (recipe: BOOTSTRAP §15)
+   — the merge gate must be real before anyone can push. **A human merges; agents propose.**
+3. **Locked surfaces, said out loud.** `SKILL.md`, `scripts/`, `evals/` are append-only for the
+   company: editing the skill it runs is "the author moves the bar" (REFERENCE §8) and routes
+   to the owner — governance, not etiquette.
+4. **Staff.** A **Maintainer** (conductor, project lead) and a **Reviewer** as standing agents;
+   the **four lenses as temporary agents per release** (create → run → archive — the
+   talent-pool pattern; they read, they don't own). Grades per §7 tiering; `--thinking-level`
+   is the second dial.
+5. **Resident Mops** — `public_to workspace`, **`multica-cli` skill attached** (chat alone sees
+   no board), **never workspace admin**, briefed with `templates/SELF-MAINTENANCE-brief.md`.
+6. **Memory layer**: graphify index over the repo (local, ~zero tokens; the graph is a derived
+   cache, never a source).
+7. **Self-adoption loop** — new capability applies to the team as soon as it merges:
+   a **webhook autopilot on PR-merged** → guards green (preflight · verify · check-structure ·
+   evals)? → wait for `active_task_count = 0` → `multica skill import --url <repo>
+   --on-conflict overwrite` → smoke. Red guards = not adopted, and it says so. Rollback is the
+   pre-upgrade SHA in `UPGRADES.md`. The **console side** installs by **symlink to the working
+   copy** (content applies on next read; restart only for new commands/hooks) — dogfood only,
+   regular users install normally. **One version per feature**: work in flight finishes on the
+   bytes it started with.
+8. **The invariant stands**: the project must rebuild from repo + workspace alone — memory,
+   graph and atlas are derived, never the only copy. Re-test it whenever those layers change.
 
 ## The company guards its own docs
 

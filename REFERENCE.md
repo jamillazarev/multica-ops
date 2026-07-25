@@ -26,16 +26,38 @@ platform can't help itself.**
 | Object | What it is |
 |---|---|
 | **Workspace** | Top container: projects, issues, agents, members |
-| **Project** | A group of issues. Has a **lead** — a human OR an agent |
-| **Issue** | A unit of work. May have **sub-issues** (one nesting level). Carries native **start date · due date · priority** — dates are constraints, not decoration |
+| **Project** | A group of issues. Has a **lead** — a human OR an agent. Also carries **status · priority · start/due date · icon** (the icon is the only visual marker in lists — use it to tell a product from a recurring pipeline) and **free progress counters** `issue_count` / `done_count` / `resource_count` — read them instead of computing progress yourself |
+| **Issue** | A unit of work. May have **sub-issues** (one nesting level). Carries native **start date · due date · priority**, plus **`creator_id`/`creator_type`** (the platform already records *whether a human or an agent* made it), **labels**, **KV `metadata`**, **typed `properties`**, board `position`, and both an `identifier` (`ABC-123`) and a `number` — don't confuse the two in scripts |
 | **Sub-issue** | A child task with one executor; its **`stage`** number groups it into a barrier |
 | **Agent** | An autonomous worker (model + skills + instructions + runtime) |
-| **Squad** | A group of agents with one **leader**. Assigned *as a squad*, the leader **routes and does not implement**; the same agent assigned **directly** does its own craft — routing is a mode, not a separate career |
+| **Squad** | A group of agents with one **leader**. Assigned *as a squad*, the leader **routes and does not implement**; the same agent assigned **directly** does its own craft — routing is a mode, not a separate career. Has its own **instructions** (routing rules the leader reads every run) and **avatar**; **`squad delete` archives rather than destroys**, and archiving hands its open issues to the leader so nothing goes silent |
 | **Project resource** | **Two types exist, verified against the CLI**: `--type` documents `github_repo` and `local_directory`, and `--url` is accepted only for the former — no GitLab, Gitea or self-hosted git today, so say that plainly rather than "I haven't checked". (`--ref` takes a generic JSON payload, so the server may accept more than the CLI exposes; that is a question for the vendor, not a guess to act on.) What a project's agents work on: **`github_repo`** (cloned per task into an isolated worktree → unlimited parallelism) or **`local_directory`** (a folder on one daemon's machine, **serialized by a per-directory lock** — one task at a time, forever; max one per project+daemon) |
 | **Task** | One agent run (queued → dispatched → running → completed/failed); every trigger = a new task |
 
 The hierarchy is exactly two levels: `issue → sub-issues`. `stage` is a number on a
 sub-issue, not another level.
+
+**Native primitives worth reaching for before writing your own.**
+
+- **Typed custom properties.** `property create --type text|number|select|multi_select|date|checkbox|url`
+  (coloured options, an icon, **20 active per workspace**, archivable), values set with
+  `issue property`. **Agents read and write them with validation** — so *Severity*, *Environment*
+  or *Channel* becomes a field, not a sentence buried in a description that every agent parses
+  differently. Prefer a property over prose whenever something is later filtered or counted.
+- **Resolvable comment threads.** `issue comment resolve|unresolve` is the platform's own
+  "this objection is settled" — cheaper than a sub-issue for a single point of review.
+- **Subscribers.** `issue subscriber add|remove`. Auto-subscription is generous (create, get
+  assigned, comment, get mentioned) and **reassignment does not unsubscribe**, so a human keeps
+  getting noise until removed. **Agents never read the inbox** — it is a human channel only.
+  Sub-issue status bubbles to the parent's subscribers; comments and priority do not.
+- **Cheap reads instead of dumps:** `issue search` (title/description) and
+  `issue list --metadata key=value --sort position|title|created_at|start_date|due_date|priority`.
+  Filter server-side; don't pull the board and grep it.
+- **Labels are typed and counted:** each carries a `resource_type` and a `usage_count` — a label
+  nobody uses is visible for free at `/mops audit`.
+- **Runtimes are multi-user objects:** `owner_id`, `visibility`, a custom name, `last_seen_at`,
+  plus `runtime usage` (tokens) and `runtime activity` (hourly) — the numbers behind a limit
+  story, without reading logs.
 
 **Operating-mode switches.** **Switching is boundary-safe — nothing running is ever killed, no stop needed.** Flow changes take effect at the next feature boundary in both directions: the in-flight feature finishes as started, then either the conductor pulls the next one (manual→auto) or the conveyor parks and waits (auto→manual). An immediate halt is a different thing — `/mops stop`. Hiring switches apply to future hires at once, and on returning to manual Mops in Multica reports every hire made meanwhile. Mechanics: update the mode section in the guide skill plus the conductor's and Mops-in-Multica's instructions — no daemon restart, subsequent runs read the new state.
 
@@ -136,10 +158,30 @@ don't restate them in instructions.
 - **Pause/resume is the runtime daemon** (`multica daemon stop|start|status`) — no
   dedicated pause exists; on start, interrupted issue-tasks are requeued
   automatically (autopilot tasks are not).
+- **Task lifecycle:** `queued` → `dispatched` → `running` → `completed` / `failed` / `cancelled`.
+- **Which failures come back by themselves.** **Retryable, auto-requeued:** `runtime_offline`
+  (daemon vanished after dispatch) · `runtime_recovery` (daemon crashed and restarted) ·
+  `timeout`. **Not retryable:** `agent_error` — the tool itself errored, **and quota/limit
+  exhaustion lands here**. Auto-retry is capped at **two attempts (original + one)**, and
+  **autopilot-triggered tasks never auto-retry** — they have their own cadence.
+- **Timeouts are real numbers:** **5 minutes to dispatch, 2.5 hours to run**. Work that cannot
+  finish in one run must be decomposed, not hoped through.
+- **A failed issue-task rolls the issue back `in_progress` → `todo`** — so a board that "went
+  backwards" overnight is a failure, not someone's edit.
+- **Manual rerun ≠ auto-retry:** a rerun **resets the attempt counter and has no ceiling**;
+  a per-row retry **reuses the working directory and resumes the session**, while a CLI rerun
+  **starts fresh**. Pick deliberately: fresh is safer after a corrupt state, resume is cheaper.
+- **Session resumption is provider-specific** — most tools resume, some do not (Gemini). On a
+  non-resuming runtime every rerun pays full context again; that is a model-tiering input.
 - **Session limit = run `failed`, reason `agent_error`** (not `cancelled`),
   non-retryable, with a "resets HH:MM" comment; recovery = `issue rerun`; retrying
   before the reset fails again. Detection: the issue's latest run failed with
   `agent_error`.
+- **Daemon rhythm:** polls for work every **3 s**, heartbeats every **15 s**, and a runtime is
+  **offline after 45 s** (three missed beats). Logs: **`~/.multica/daemon.log`**.
+- **Stuck in `queued` has four usual causes:** the agent's concurrency cap (default 6) ·
+  **the same agent on the same issue runs serially** · the agent is archived ·
+  the runtime never registered (`daemon restart`).
 - **`cancelled` is separate** — a decision. Intentional cancels always carry a
   "Cancel reason: …" comment; revive only marker-less ones.
 - **Incremental commits are mandatory:** `rerun` resumes from the repository.
@@ -218,7 +260,7 @@ but the batching and the audience-facing note are identical.
 - ❌ Treating a rule in the guide as enforcement — text instructs, it does not constrain.
 - ❌ Two parallel sub-issues owning the same file — assign ownership at decomposition.
 - ❌ Letting an agent grind past three attempts at one error — reassign instead.
-- ❌ Widening a stage past ~5 concurrent agents — coordination cost overtakes throughput.
+- ❌ Widening a stage past ~5 concurrent agents — coordination cost overtakes throughput (a judgement, not the platform cap: that is 6 per agent / 20 per daemon).
 - ❌ Approvals ageing invisibly — a pending human decision is a blocked flow, surface it.
 - ❌ Nesting sub-issues deeper than one level — order lives in `stage`, not nesting.
 - ❌ Expecting autopilot to react to "a stage finished" — cron/webhook only.

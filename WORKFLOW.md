@@ -62,7 +62,7 @@ flowchart LR
 flowchart TD
     OWNER["Owner"]
     OWNER -->|"build · heavy ops<br/>instant · own quota"| CLI["Mops in CLI<br/>shell · git · deploy · full CLI"]
-    OWNER -->|"@Mops: status · advice<br/>escalation · async"| MUL["Mops in Multica<br/>resident agent · shared limit<br/>(optional)"]
+    OWNER -->|"@Mops: status · advice<br/>escalation · async"| MUL["Mops in Multica<br/>resident agent · shared limit<br/>chat shows it only that chat —<br/><b>attach multica-cli to reach the board</b>"]
     CLI -->|writes decisions| STATE["Written state<br/>repo + issue comments<br/>= source of truth"]
     MUL -->|reads + writes| STATE
     STATE -.->|kickoff handoff| MUL
@@ -110,10 +110,10 @@ flowchart BT
 
 ```mermaid
 flowchart TD
-    RUN["Run fails:<br/>agent_error"] --> CHK{"Comment says<br/>resets HH:MM?"}
+    RUN["Run fails: <b>agent_error</b><br/><i>not auto-retried — nothing<br/>brings it back on its own</i>"] --> CHK{"Comment says<br/>resets HH:MM?"}
     CHK -->|yes| WAIT["Wait for reset<br/>(retry before it fails again)"]
     WAIT --> RERUN["issue rerun<br/>= Retry task"]
-    CHK -->|no| DIAG["Read run error<br/>+ daemon logs"]
+    CHK -->|no| DIAG["Read run error<br/>+ daemon logs<br/>(~/.multica/daemon.log)"]
     RERUN --> OK["Work resumes<br/>from repo state"]
 ```
 
@@ -122,7 +122,7 @@ flowchart TD
 ```mermaid
 flowchart TD
     GO["/mops upgrade"] --> L1{"Is this skill's copy<br/>on your machine current?"}
-    L1 -->|"behind"| YOU["<b>Mops runs the update</b> (it has the shell);<br/>you approve, then <b>restart Claude Code</b>.<br/><i>A skill can fetch new bytes but cannot<br/>apply them to its own running self</i>"]
+    L1 -->|"behind"| YOU["<b>Mops runs the update</b> (it has the shell);<br/>you approve. <b>Content applies on next read</b>;<br/><i>restart only for new commands or hooks —<br/>those register at session start</i>"]
     YOU --> L2
     L1 -->|"current"| L2["Read the NEW version's CHANGELOG<br/>— it is the migration map"]
     L2 --> BK["Back up both halves:<br/>skill files + agent config snapshot<br/>+ pre-upgrade SHA in UPGRADES.md"]
@@ -134,7 +134,7 @@ flowchart TD
     CLI -->|"yes"| IDLE{"active_task_count = 0<br/>and nothing in_progress?"}
     IDLE -->|"no"| WAIT["Say what's in flight.<br/>Wait for idle, or /mops stop<br/>if the owner accepts it"]
     WAIT --> IDLE
-    IDLE -->|"idle"| UPD["multica update ·<br/>runtime update &lt;id&gt; ·<br/>daemon restart"]
+    IDLE -->|"idle"| UPD["<b>Hand over the lines, don't run them</b>:<br/>multica update · runtime update &lt;id&gt; ·<br/>daemon restart<br/><i>self-hosted? the server is the owner's,<br/>and it goes first</i>"]
     UPD --> FP
     CLI -->|"current"| FP["Recompute the fingerprint —<br/><i>after</i> reconciling, never before"]
     FP --> VER{"Behaviour still right?"}
