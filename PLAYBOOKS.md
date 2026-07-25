@@ -47,6 +47,12 @@ control characters that break `json.loads` — sanitize with
 The user talks to you instead of dashboards; translate and execute, then report in
 their language. Bulk helpers live in [scripts/](scripts/).
 
+**A blanket "yes" covers only the ungated.** When the owner approves a batch in one word
+("run the fixes", "do it all"), the ordinary items proceed — but anything individually gated
+inside it (a spend, an outward action, a destructive step, an access change such as git
+rights or a skill import) still surfaces for its own yes. One approval never launders a gated
+item riding along in the batch.
+
 | User says | You do |
 |---|---|
 | "what's the status?" | `bash scripts/status.sh` + `daemon status --output json`; summarize: working/waiting/limit-stuck (+ reset time from `scripts/health.sh`) |
@@ -84,9 +90,12 @@ stalled — check the latest run's `error` for `agent_error` / "session limit".
 ```sh
 multica issue rerun <id>                # per issue — same as the UI "Retry task"
 ```
-Bulk: rerun every assigned `in_progress`/`in_review` issue (never `todo`/`backlog` —
-they wait on the stage barrier). Retrying before the reset time fails again; the reset
-is in the failed run's `error` ("resets HH:MM").
+Bulk: rerun every assigned `in_progress`/`in_review` issue. **A failed task rolls its issue
+back to `todo` (REFERENCE §7), so also rerun the `todo` issues whose latest run failed —
+task history shows the failure — while still skipping *untouched* `todo`/`backlog`, which
+waits on the stage barrier.** The bulk resume pass (`scripts/resume.sh`) covers
+`in_progress`/`in_review` only, so rerun the rolled-back `todo` issues by id. Retrying before
+the reset time fails again; the reset is in the failed run's `error` ("resets HH:MM").
 
 ## Talk to an agent on a task
 
@@ -230,6 +239,9 @@ multica issue create --title "$CT" --parent "$id" --stage 1 --status backlog …
 - **Import unassigned. Always.** Assigning an issue *is a run that spends budget* — a
   400-issue import with assignees would enqueue 400 tasks the moment it lands. Bring the
   work in cold, then assign deliberately through `/mops next`.
+- **Creation isn't the finish; the quality pass is.** The ordering is fixed: create the
+  issues cold (Pass 3), run the **quality pass** on them (MODULES → *After an import, the work
+  is not yet ours*) *before* any assignment, then assign. Never assign an unreviewed import.
 - **`source_id` in metadata is the idempotency key**, and it's what makes the script
   resumable: on each item, look it up first and skip if present. (Multica also refuses
   active duplicates by default — `--allow-duplicate` exists to override that, which during

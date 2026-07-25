@@ -43,6 +43,12 @@ when it's done, and the whole thing sits on one agent's guess.
 > **DoD:** the acceptance query set (20 real searches from tickets, in `docs/research/`)
 > passes at ≥90%; p95 latency under 400 ms; recorded before/after numbers on the issue.
 
+**Every fact in the issue carries its source and check-date, or is phrased as "verify X."**
+The "38%" above cites issue #204; a "~71x faster" or a licence, a limit, a version lifted from
+memory is either sourced and dated or written as a task ("verify the current figure"). The
+executor should trust or re-check each claim, never inherit a recalled number as settled — the
+verify-first habit is the one to keep.
+
 Then sub-issues — **everything independent on the same stage** so it runs concurrently:
 
 | Stage | Sub-issue | Owner |

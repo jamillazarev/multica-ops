@@ -18,7 +18,7 @@ are no slash commands at all, only plain language.
 | Command | Where | Routes to |
 |---|---|---|
 | `/mops init` | 🖥️ | bootstrap from zero: **day zero** (BOOTSTRAP §0) → three routing questions → shaping → interview → stand up. Full procedure: FLOWS |
-| `/mops crew` | 🖥️ | **crew mode**: executors and gates, the owner is the product manager — no conductor, discovery or roadmap ceremony. Default offer after `/mops import`; adding a conductor later is an upgrade, not a redo |
+| `/mops crew` | 🖥️ | **crew mode**: executors and gates, the owner is the product manager — no conductor, discovery or roadmap ceremony. Default offer after `/mops import` **when no conductor is standing**; adding a conductor later is an upgrade, not a redo |
 | `/mops join` | 🖥️ | join an existing setup — `/mops audit` + interview delta, then gaps → fixes; reconcile an existing Mops in Multica. Full procedure: FLOWS |
 
 **Features & roadmap**
@@ -33,7 +33,7 @@ are no slash commands at all, only plain language.
 | `/mops next` | ⇆ | start the next feature from ROADMAP.md (manual flow's main button) |
 | `/mops ship [release]` (`/mops release`, `/mops launch`, `/mops deliver`) | 🖥️ | the **go-live step — whatever "live" means for this project**: ship code, launch a snack flavor, publish an episode, send the batch. Confirm gates green → do/hand off the release → release notes → tag → announce (deploy/announce are outward → **owner-confirmed**); writes the **cost/effort ledger** (below) and marks it shipped in ROADMAP |
 | `/mops measure [feature\|release]` | ⇆ | close the loop: the Analyst pulls the success metrics set at discovery, compares to target, reports the outcome, files a **Learn** item back to the roadmap, and records the **cost/effort ledger** (tokens · $ · time · per agent/human) from `issue usage` |
-| `/mops bug <text>` (`/mops urgent`, `/mops hotfix`, `/mops incident`) | ⇆ | the **urgent lane that jumps the queue** — a defect, recall, or correction (broken build, wrong label on a batch, bad copy live). Minimal spec → straight to Build + Review, owner notified; not ICE-prioritized like `/mops feature` |
+| `/mops bug <text>` (`/mops urgent`, `/mops hotfix`, `/mops incident`) | ⇆ | the **urgent lane that jumps the queue** — a defect, recall, or correction (broken build, wrong label on a batch, bad copy live). Minimal spec → **Build (first sub-step: a reproduction / pass-fail signal, before any fix) + Review**, owner notified; not ICE-prioritized like `/mops feature` |
 | `/mops feedback <text>` | ⇆ | log an **incoming signal from users/customers** — a complaint, request, review, or idea — then **triage** it (assess/sort) and file it: small → backlog, bigger → a `/mops discovery`. Feeds the next `/mops roadmap` |
 | `/mops roadmap` (`/mops prioritize` = its rescoring pass) | ⇆ | view / rebuild the release plan; re-run ICE scoring across backlog/releases; **release surgery**: cut a release (features → backlog), extend it (pull from backlog or `/mops feature` new ones), reprioritize |
 | `/mops move <feature> <release\|backlog>` | ⇆ | move one feature between releases or to the backlog |

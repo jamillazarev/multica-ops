@@ -23,7 +23,10 @@ work), which pick between `/mops init`, `/mops join`, `/mops import`+crew and a 
 anything" below. What follows here is the *company* branch once that routing has happened:
 
 - **Quick job** (a utility, one deliverable): 3 questions max — deliverable, repo,
-  language. One conductor + 1–2 executors. Done. Everything else uses defaults.
+  language. One conductor + 1–2 executors. Done. Everything else uses defaults. **When the
+  craft itself hinges on control level — a design quick job, where the intake and sign-off
+  depend on it — control surfaces as a *stated default* ("checkpoints unless you say
+  otherwise") inside the cap, not a fourth question.**
 - **Company/product**: walk the full checklist below, but **every question carries a
   default** the user can accept with one word; bundle related questions; skip what
   the context already answers. Ask in waves (next wave only when the previous
@@ -66,25 +69,30 @@ purpose: it sets how many of the rest you ask at all** · 3 deliverable & repo s
 16 resident Mops · 17 operating mode · 18 autopilots/Slack · 19 language & tone ·
 **20 governance**
 
-Two of these shape every later interaction, so never skip them: **checklist #2 · Control & expertise**
+Two of these shape every later interaction, so they are a **single opening wave — asked
+together, up front, never skipped and never deferred to the tail of the list**: **checklist #2 · Control & expertise**
 — how much the owner wants to be in the loop (*hands-on* · **checkpoints** (default) ·
 *hands-off*) and **what they're actually expert in** (recorded in `TEAM.md`: consulted as
 an expert there, taught-and-recommended elsewhere; agents apply the same across squads).
 Asked at `/mops init`, re-asked in the `/mops join` delta, changed any time — `/mops reviews` takes
 effect **immediately**, `/mops autonomy` is **boundary-safe**, `/mops stop` is the instant halt.
-**checklist #20 · Governance** — who may direct Mops and which flows need a named human's sign-off.
+**checklist #20 · Governance** — who may direct Mops and which flows need a named human's
+sign-off; **asked in this same opening wave as #2, not left for position 20**, so a from-zero
+build can't drop it.
 
 ## Before anything: day zero, then the routing question
 
 `/mops init` does not start at the workspace. It starts at **BOOTSTRAP §0** — installed, current,
 signed in, a workspace, daemon up, runtimes present — reported as one ladder with its fixes,
-not six sequential prompts. Only then the three routing questions (what exists · what you
+not six sequential prompts. **All-green collapses to one terse line** — a single "day zero:
+all set" before the routing question, never the six-rung ladder recited; the ladder shows only
+when a rung needs a fix. Only then the three routing questions (what exists · what you
 want · who runs the work), because `/mops init` into an existing workspace duplicates a conductor
 and `/mops join` on an empty one does nothing.
 
 **Crew mode short-circuits the rest**: no conductor, no discovery, no roadmap — stand up the
 executors, the guide, the gates the owner wants, and stop. It is the default offer after
-`/mops import`.
+`/mops import` **when no conductor is standing**.
 
 ## Shape the work, then propose the team
 
@@ -92,6 +100,10 @@ executors, the guide, the gates the owner wants, and stop. It is the default off
 system audio"* — or *"a snack brand"* — produces the team that sentence suggests, which is a
 guess. So between the opening questions and creating anything there is a **shaping
 conversation**, and the owner sees a proposed team only after it, with the reasoning attached.
+
+**"Defaults" does not skip shaping.** Express setup takes the defaulted *checklist* answers;
+the shaping questions have no defaults to take — they are discovery, not preferences — so a
+company is always shaped. Only a quick job skips shaping.
 
 - **What it is, who it's for, and — the question that changes everything — what is hard
   about it.** Uncertainty is staffing information: an unknown gets research before it gets
@@ -126,10 +138,12 @@ issues directly to an agent or a squad; work moves because they moved it. Everyt
 in this skill still applies — the guide, the review gates, limits and recovery, the
 permission rules, dated work.
 
-It is the **default offer after `/mops import`**: someone who just brought a backlog over has
-already decided what the work is, and proposing discovery over it is insulting. Say plainly
-*"I'll execute; you keep prioritising — or I can add a conductor later"*, and mean the
-"later": adding one is a normal upgrade, not a redo.
+It is the **default offer after `/mops import` into a workspace with no standing conductor**:
+someone who just brought a backlog over has already decided what the work is, and proposing
+discovery over it is insulting. Say plainly *"I'll execute; you keep prioritising — or I can
+add a conductor later"*, and mean the "later": adding one is a normal upgrade, not a redo.
+**A workspace that already has a conductor keeps it — an import doesn't unseat the planner, so
+there crew is not the default.**
 
 **Reassign what the conductor held, out loud, or it silently stops happening.** Four duties
 are not planning and do not disappear with the planner: **accepting finished work and merging**
@@ -185,7 +199,9 @@ interview delta** (any topic the incumbent setup doesn't already answer — lang
 token economy, avatars, opt-in modules, autonomy, docs home, **where Multica itself runs
 (cloud or self-hosted)**, integrations, stacks,
 resident Mops (in Multica), **brand & design system**, **governance**, **control & expertise**, **budget & currency** — is asked with defaults and wired, exactly as in `/mops init`;
-nothing from bootstrap is skipped just because the project pre-exists) → apply in **approved batches** — full report first, the user can stop after any batch — never duplicating (`--on-conflict skip`; read instructions before
+nothing from bootstrap is skipped just because the project pre-exists — **walk every topic on
+this list out loud before the fix batch, even the ones that resolve to "default, revisit
+later"; never narrow the delta to the two hard gates**) → apply in **approved batches** — full report first, the user can stop after any batch — never duplicating (`--on-conflict skip`; read instructions before
 appending). Respect incumbent conventions unless asked to change them.
 
 **Reconcile every human member, not just agents.** Walk `workspace member` and, for each
