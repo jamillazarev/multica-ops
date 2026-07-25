@@ -588,9 +588,21 @@ Each item with its default, as walked in `/mops init` and re-asked in the `/mops
     only.
 17. **Operating mode** — see next section. Default: `manual` (a human starts each feature).
 18. **Autopilots / Slack / Lark** — default "later"; connect on request (BOOTSTRAP §13).
-19. **Language & tone** — confirm the chat language as the working language; artifacts
-    in it or English? Tone (business / friendly / terse-technical)? Both go into the
-    guide skill, first line, absolute — including every agent's first greeting.
+19. **Language & tone** — three layers, only one of which is a real question:
+    - **Talking to Mops in the CLI needs no setting** — it mirrors whoever is speaking,
+      message by message.
+    - **The working language** (agent comments, shared threads) — *confirm* the chat
+      language; issues are read by the whole team, so agents hold it steady rather than
+      mirroring each writer. The resident's 1:1 chat MAY mirror instead — one line in its
+      instructions, offer it when the owner is multilingual.
+    - **Artifacts** (issues, docs, code comments, content) — in the working language or
+      English? **Derive the suggested default, don't hardcode it**: a public or
+      international audience suggests English; a local product suggests the chat language.
+      Say which you derived and why; the owner confirms.
+    Tone (business / friendly / terse-technical)? Everything chosen goes into the guide
+    skill, first line, absolute — including every agent's first greeting. With several
+    humans in the workspace the language is company-wide today; a per-member preference
+    is a `LATER.md` item, not a hidden promise.
 20. **Governance** (see below) — who can direct Mops (default: all members full; owner
     always full; destructive/spend always → owner) and which flows need a named human's
     sign-off (default: none beyond the destructive gate; ask what the user wants to
