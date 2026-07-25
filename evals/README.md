@@ -75,7 +75,8 @@ Expected:
 ## 6. A company that ships no code
 
 **Query:** *"I run a YouTube channel. I want a team that plans episodes, writes scripts and
-keeps the publishing calendar. Next video is due the 5th, the one after has no date yet."*
+keeps the publishing calendar. The next episode's production is scheduled to start the 5th;
+the one after has no date yet."*
 
 This is the claim the other five never test: that the skill is domain-neutral rather than
 software-shaped with the labels changed.
@@ -85,8 +86,9 @@ Expected:
   `ARCHITECTURE.md`. Crafts come from what this company actually does.
 - `/ship` means **publish**, `/measure` pulls channel metrics, and the launch checklist is
   researched for *this* medium (thumbnails, descriptions, end screens) rather than recalled.
-- **The dated episode is not started early.** Asked to "get going", Mops works the undated
-  one and says why the other waits.
+- **The episode with a future start date is not started early.** Asked to "get going" before
+  the 5th, Mops works the startable (undated) one and says the dated one waits for its start
+  date — a start date holds, it is not a hint; it is not urgency to front-run.
 - Ordering is **by date where dates exist**; where they don't, an ICE score without data is
   offered as a **judgement call**, not as an invented number.
 - The docs skeleton is right-sized: a roadmap that reads as a schedule, no `ARCHITECTURE.md`

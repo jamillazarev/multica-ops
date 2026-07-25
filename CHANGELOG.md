@@ -1,5 +1,41 @@
 # Changelog
 
+## 2.4.2
+
+**the eval run's fixes — sixteen rules the dogfood day proved missing**
+
+- **Recovery no longer skips the issues a failure produces** (PLAYBOOKS): a failed task rolls
+  its issue back to `todo` (REFERENCE §7), so bulk recovery also reruns the `todo` issues whose
+  latest run failed — task history tells them apart from untouched backlog — while the
+  `in_progress`/`in_review`-only resume pass leaves those to a per-id rerun.
+- **Interview hard gates hold** (FLOWS): **governance** rides the same opening wave as
+  **control & expertise**, not position 20, so a from-zero build can't drop it; **"defaults"
+  never waives the shaping conversation** (it has no defaults — only a quick job skips it); a
+  **quick job whose craft hinges on control** (design) surfaces control as a stated default
+  inside the 3-question cap.
+- **"You decide" can't answer the non-delegable** (SKILL): where the code lives, whose
+  account, credentials — anything bound to the owner's identity — moves to a **waits-for-owner**
+  list, never guessed.
+- **Nothing quoted bare**: numeric **platform limits** carry "(per REFERENCE §N / `--help`,
+  checked <date>)" or trigger the live check (SKILL), and **every fact in an issue** carries
+  its source and check-date or is phrased "verify X" (EXAMPLES §1).
+- **Design tools by step, not by title** (MODULES): each surviving process step gets a
+  tool-or-gap line — a flow library for user flows, a wireframing approach for low-fi, a
+  component library for high-fi — and a step with no tool is a gap, never hand-drawn.
+- **Front door and join, walked in full** (FLOWS): an all-green day zero collapses to one terse
+  line before the routing question; a join walks every delta topic out loud, even the ones that
+  resolve to "default, revisit later", never narrowing to the two hard gates.
+- **Import ordering pinned** (PLAYBOOKS · MODULES): the quality pass runs on the created,
+  still-unassigned issues **between creation and assignment**; **crew is the default offer after
+  import only where no conductor is standing**.
+- **Smaller truths**: `/mops bug` names its repro/pass-fail signal as Build's first sub-step
+  (COMMANDS); the REFERENCE §1 lanes row carries the resident's sees-only-its-chat caveat
+  inline; a blanket "yes" covers only the ungated — a spend, outward, destructive or access
+  change inside the batch still asks (PLAYBOOKS); the readability rule is named and extended to
+  every `docs/` file a human reads (SKILL).
+- **Evals**: scenario 6's dated-episode bullet rewritten to test **start-date** discipline (a
+  start date holds; a due date is urgency), matching canon.
+
 ## 2.4.1
 
 **first dogfood day: the traps the skill hit running itself**

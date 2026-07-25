@@ -25,6 +25,12 @@ or adds steps. **Low-fi comes first on purpose:** approving structure on cheap a
 saves the tokens and days that redrawing finished screens costs, and it is where the owner's
 taste enters before it is expensive to change.
 
+**Tool each surviving step, or name it a gap — not one flat "designer" skill list.** Search
+by the step's own function: a **flow library** (Mobbin) for user flows & journeys, a
+**wireframing approach** for low-fi, a **component library** (Pen.dev / Shadcn) for high-fi. A
+step that turns up no tool is flagged as a gap, never hand-drawn — the flows step going silent
+because the skill list only covered high-fi is exactly the miss this catches.
+
 **Ask the design intake up front — never guess it.** Before a pixel: *style and mood ·
 colour direction · references the owner likes · anti-references (hard no)*. An agent that
 asks only "what stack?" and starts drawing has skipped the questions that decide whether the
@@ -171,5 +177,7 @@ Three rules keep this from becoming vandalism:
 - **Fix what blocks work, not what offends taste.** An issue an agent can start on is done
   being edited. Rewriting for elegance burns budget and changes nothing.
 
-Run it right after `/mops import`, and again on anything imported that reaches `todo` without
-having been through the pass — that is the moment it actually starts costing money.
+Run it **after the import creates the issues** (`/mops import` Pass 3 — they land
+**unassigned**, so the pass sits between creation and assignment, never before creation), and
+again on anything imported that reaches `todo` without having been through the pass — that is
+the moment it actually starts costing money.
