@@ -256,6 +256,14 @@ multica issue comment add <id> --content-stdin      # @-mention = native trigger
 
 ## 8. CLI traps (all hit in production)
 
+- **JSON output is not one shape, and write-commands prefix it with prose.** Hit in
+  production twice in one day: list commands return **either a bare array or a wrapper
+  object** (`issue list` → `{issues:[…], has_more, …}`, `autopilot list` →
+  `{autopilots:[…], total}`), and write-commands print a **human line before the JSON**
+  ("Comment added to issue X." then `{…}`) even with `--output json`. Rules: parse lists
+  defensively — `d if isinstance(d, list) else` the first list-valued key; for writes,
+  **check the exit code instead of parsing stdout**, and if you need the id, cut from the
+  first `{`. The shipped `scripts/issues.py` does this (`_clean`) — copy its pattern.
 - **`workspace switch` can fail while your script keeps going — and your objects land in
   whatever workspace was active.** Hit in production: a failed `create` (slug conflict) made
   the following `switch` a no-op, and three projects were created in the wrong company.
@@ -539,7 +547,10 @@ Each item with its default, as walked in `/mops init` and re-asked in the `/mops
 7. **Where Multica itself runs** — **cloud by default**; ask once, because on a
    self-hosted server backups, upgrades, email and signup controls become the owner's
    (§0). Record the answer — it changes who to call when the board is down.
-8. **Capacity & models** — audit `runtime list` (runtimes are **local**: auto-detected
+8. **Capacity & models** — the tier is **model × thinking-level**, asked together and in
+   outcomes (stronger/medium/light — quality AND speed; a free answer wins): a cheaper
+   model at high effort often beats a dearer one at default, so `--thinking-level` is set
+   per role right here, not later. Audit `runtime list` (runtimes are **local**: auto-detected
    from PATH on each member's machine; several machines can serve one workspace).
    **Ask preference in plain outcomes, not model names** — the owner may not know which model
    is which. Offer tiers by what they *do*: **stronger** (best results, slower, pricier — for
