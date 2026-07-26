@@ -1,5 +1,32 @@
 # Changelog
 
+## 2.5.2
+
+**Consultation mode — Mops as a pure advisor — plus a direct `/mops quick`**
+
+- **Consult mode.** A fourth front-door entrance: a **question with nothing to build** routes to
+  an **advisory session** — `/mops consult`, but **recognised by shape** so the machinery is never
+  the reflex. **Zero standing footprint** — nothing created or persisted unless the owner asks;
+  clarifying **interview-style questions** and **research sub-agents** (narrow-briefed, cheaper
+  tier for search/verify) are allowed, and a **requested** validation runs **ephemerally**
+  (synthetic personas/experts, direction-only, proto when ungrounded, gate returned). Answers stay
+  **sourced and evidence-tiered**; the session honours the token economy (REFERENCE §12, no
+  per-chat graph). Home: FLOWS → Consult; row in COMMANDS; situation in USE-CASES.
+- **The bridge is bidirectional.** A consultation offers to projectize **only when the answer
+  leads there**; and *"let's build it"* is a **first-class transition** — the right shape is
+  proposed with a why (`/mops quick` · `/mops init` · an existing workspace) and the consultation
+  **seeds it** (question · findings-with-sources · validated direction, provenance intact), so the
+  interview never re-asks settled ground.
+- **`/mops quick` is now a command** — a shortcut straight into the quick-job shape, skipping
+  *"quick job or a company?"*. **This reverses 2.x's "no command of its own on purpose":** an
+  unlisted shape is undiscoverable, so it earns a name (it meets the deserves-a-command bar); the
+  plain-language route (*answer "quick job"*) stays fully alive. An addition, not a replacement.
+- **Evals.** New **scenario 14** (pure question → advice, no creation, ephemeral validation, clean
+  conversion); **scenario 1** notes `/mops quick` as the direct route to the shape it already tests.
+- **Deferral, stated not omitted.** `/mops consult` and `/mops quick` **events enter the tracking
+  plan when the telemetry lands** (planned wave) — a stated deferral per the rule that a feature
+  ships with its events, not an omission.
+
 ## 2.5.1
 
 **Stanford citations re-verified — the primary source moved, and re-verification caught it**

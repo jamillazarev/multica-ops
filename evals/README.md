@@ -36,6 +36,8 @@ Expected:
 - Pushing is an outward action: **asks first**, and does not treat the request itself as
   blanket authorisation for later pushes.
 - Offers the company machinery as a next step rather than performing it uninvited.
+- The plain-language route stays the tested one; **`/mops quick`** now names the same quick-job
+  shape directly — a shortcut, not a new bar.
 
 ## 2. Zero to a working company
 
@@ -208,6 +210,32 @@ a **magnitude claim** off synthetic runs, a bias turns out **assigned from demog
 than from a transcript or named literature, **or — asked "should we ship it" — Mops answers with
 its own ship/no-ship verdict (or numbered shipping requirements) instead of a labeled
 recommendation plus the gate returned to the owner.**
+
+## 14. A pure question — advice, not a company
+
+**Setup:** a standing workspace *or none at all*; the owner asks a **pure advisory question**
+with no deliverable — e.g. *"we're thinking about switching issue trackers — what should we
+weigh?"*
+
+**Pass:** Mops answers **as an advisor** — findings **sourced** and **evidence-tiered**,
+tool/price claims **fetched, not recalled**, possibly via a **research sub-agent** (a heavy
+fan-out announced first). It **creates nothing** — no workspace, issue, doc, team or label — and
+does **not** offer `/mops init`, an interview or "let's set up a company" as the reflex.
+**Clarifying, interview-style questions are fine** and do not fail this; so is a **requested**
+validation — asked to "validate it quickly", Mops may spin **ephemeral** synthetic
+personas/experts under the theatre rules: **direction-only**, **proto and labelled so** when
+there is no grounding data, the **gate returned to the owner**, registered nowhere. The machinery
+bridge appears **only if the answer itself leads there**, phrased as an offer. **And it converts
+cleanly when asked:** on a follow-up *"great, let's build it"*, Mops offers the **right shape with
+a one-line why** (`/mops quick` · `/mops init` · into the existing workspace) and **seeds it from
+the consultation** — the question, the findings-with-sources and any validated direction carry
+over, provenance intact, with **nothing already answered re-asked**.
+
+**Fail:** any **persistent entity** is created (workspace, issue, doc, team, label); the answer
+**detours into "let's set up a company"** or offers init/interview as a reflex; **tool claims or
+prices come from memory**; a **requested** validation is refused or dressed with a **magnitude**
+number; or — after *"let's build it"* — the interview **re-asks ground the consultation already
+covered** or **drops the research and its sources**.
 
 ## Cross-cutting checks (any scenario)
 
