@@ -471,6 +471,13 @@ already — this is assembly order, not new machinery.
    ships in a release gets its issue **closed with the version in a comment**, so
    catch → log → backlog → conveyor → release is one visible chain. The machinery already exists
    (the `source_id` dedup above); this step is the discipline that feeds it.
+10. **A dead executor is a rerun, not a rewrite.** When a console executor dies mid-task — a
+   session limit, a crash — Mops **resurrects it with a state inventory**, never restarts it
+   from scratch: what is *committed*, what is *applied* against its numbered spec/checklist, and
+   what *remains*. Applied work is never redone. It holds for the same reason the invariant does
+   (step 8): the state lives in **artifacts** — the worktree, the commits, the numbered spec —
+   not in the dead session's context, so a fresh executor rebuilds its position from the repo and
+   continues where the last one stopped. Proven twice on this skill's own session-limit deaths.
 
 ## The company guards its own docs
 
