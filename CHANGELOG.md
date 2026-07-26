@@ -1,5 +1,25 @@
 # Changelog
 
+## 2.5.1
+
+**Stanford citations re-verified — the primary source moved, and re-verification caught it**
+
+- **The paper was retitled.** arXiv:2411.10109 is now *LLM Agents Grounded in Self-Reports Enable
+  General-Purpose Simulation of Individuals* (v3, 2026-06-28); v1 was *Generative Agent Simulations
+  of 1,000 People*, which the May-2025 Stanford HAI brief still matches. Every MODULES citation now
+  names the current title and flags the v1/brief lineage.
+- **Numbers corrected to the current abstract** (re-verified 2026-07-26): interview-grounded **83%**
+  / survey **82%** / combined **86%** / demographics-only **74%** of two-week test-retest — replacing
+  the brief-era "~85%, 14–15 p.p." The interview-vs-demographics gap is **~9 p.p.**, and **combined
+  self-reports beat interview-only** (86 > 83).
+- **Grounding = self-reports, not interviews alone.** The transcript chain stays the spine; surveys
+  are now named a legitimate supplement. The interview remains the strongest single source.
+- **Bias claim cites honestly.** The current abstract's own finding — self-report agents **reduce
+  accuracy disparities** across racial/ideological groups vs demographics-only — now carries the
+  never-from-demographics rule; the stronger "amplify stereotype bias" phrasing is attributed to the
+  Stanford HAI brief (brief-era, v3 status unverified). `templates/PERSONA-template.md` aligned.
+- No behaviour change — citations and provenance only.
+
 ## 2.5.0
 
 **Persona Theatre v2 — evidence-grounded audiences, honest about what a simulation can't tell you**

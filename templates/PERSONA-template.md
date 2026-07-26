@@ -42,9 +42,9 @@ hosted STT only with consent recorded there.
 
 **Rules:** a twin's biases come from **its own transcript**; a **validated non-twin's** from the
 **pooled segment transcripts / QDA** (its grounding artifact); a proto-persona's from **named
-cognitive-science literature**; **never assigned from demographics** (interview-grounding narrowed
-demographic-parity gaps; demographic personas amplify stereotype bias — Stanford, checked
-2026-07-26).
+cognitive-science literature**; **never assigned from demographics** (self-report grounding
+reduces accuracy disparities across racial/ideological groups vs demographics-only — Park et al.,
+re-verified 2026-07-26; the "amplify stereotype bias" framing is the Stanford HAI brief's).
 
 ## Accuracy score (twins only)
 
