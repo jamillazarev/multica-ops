@@ -648,3 +648,5 @@ Each item with its default, as walked in `/mops init` and re-asked in the `/mops
     always full; destructive/spend always → owner) and which flows need a named human's
     sign-off (default: none beyond the destructive gate; ask what the user wants to
     review — image-gen, publishing, every feature…). Multiple human members are normal.
+    **Asked in the opening hard-gates wave alongside #2 (control & expertise), not left for
+    position 20** (see FLOWS).

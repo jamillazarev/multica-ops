@@ -74,7 +74,7 @@ are shortcuts for when you already know the name. Both columns do the same thing
 | Situation | Say | Runs |
 |---|---|---|
 | "Our backlog is in Linear / Jira / a spreadsheet" | `/mops import` | mapping shown first, then issues created **unassigned** — nothing starts running by itself |
-| "I imported my backlog and want to keep working exactly as before" | *"don't change anything, just execute"* | crew mode, offered by default after an import |
+| "I imported my backlog and want to keep working exactly as before" | *"don't change anything, just execute"* | crew mode, the default offer after an import **when no conductor is standing** |
 | "What actually changed in this update?" | `/mops whatsnew` | a plain-language tour from the changelog — what changed, why it helps, what to do differently; offered automatically after `/mops upgrade` |
 | "How do I get the new version?" | *"upgrade"* (or `/mops upgrade`) | plain language works on **any** install — even an older one without the `/mops` shortcut; it tells you the one line *you* run to update, then migrates the workspace, re-screens imported skills, and offers the CLI update **only when the team is idle** |
 | "The import died halfway" | `/mops import` again | it skips what's already there and continues |
