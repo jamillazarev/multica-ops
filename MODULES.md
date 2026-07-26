@@ -186,7 +186,9 @@ on the first price, fear loss, follow the crowd, and leave at the first friction
 persona carries a **bias profile — 2–4 named cognitive biases**, each with a **named grounding
 source**:
 
-- a **twin's** biases come from **its own interview transcript** (this person, observed);
+- a **twin's** biases come from **its own interview transcript** (this one person, observed);
+- a **validated non-twin's** come from the **pooled segment transcripts / QDA** it was built from
+  (that pooled distillation is its grounding artifact) — a segment, not one person;
 - a **proto-persona's** come from **published cognitive-science literature, source named** (a
   documented effect, not a guess);
 - **never assigned from demographics** — that is the tier Stanford measured 14–15 p.p. worse and
@@ -291,22 +293,38 @@ one voice ×N — still direction-only (below). (Concept adapted from agentman; 
 real person and to the twin**, then store the **agreement score with a check-date on the
 persona**, and **re-verify before a decision leans on it** (a stale score is `unknown`).
 
-**A twin of a real person needs consent machinery** (Stanford proposes an audit log + revocable
-permission + data rights). Any persona built from a real person's data carries, per
-`templates/PERSONA-template.md`:
+**A twin of a real person needs consent machinery** — an **audit log, revocable permission and
+data rights**, delivered concretely rather than gestured at (Stanford's proposal). Any persona
+built from a real person's data carries, per `templates/PERSONA-template.md`:
 
-- a **provenance file** — whose data, gathered how, when, under what permission;
-- a **usage log** — each time the twin was used, and for what;
-- a **revocation path** — permission granted now can be **withdrawn later**, and **withdrawal
-  retires the twin** (archive the agent, retire the persona). This extends "inviting a live
-  participant is an access decision" from the person's seat to the person's *data*.
+- **Raw identifiable material never enters git.** Interview audio and full transcripts of real
+  people live in a **private external store**; the repo keeps only a **pointer + checksum +
+  capture date**, and the in-repo persona file is **pseudonymized** — the pseudonym → person map
+  lives in the external store, never in git (consistent with the Analyst rule, ROLES: never
+  PII/audio). Audio is transcribed **locally by default (Whisper)**; a hosted STT is used only
+  with the participant's explicit consent, recorded in the provenance.
+- a **provenance file** — whose data, gathered how, when, under what permission, plus the
+  external-store pointers and the hosted-STT-consent flag;
+- a **usage log** — each time the twin was used, and for what (this is the audit log);
+- a **revocation path with three legs** — permission granted now can be **withdrawn later**, and
+  withdrawal **retires the twin** (archive the agent, mark the persona file revoked), **purges
+  the external-store objects** (audio, transcript, QDA source), and **records the date in the
+  usage log**. Stated honestly: **pseudonymized derivatives already in git history persist** —
+  which is exactly *why* raw identifiable material never enters git; identifiable data committed
+  by mistake is an **owner-level history-rewrite decision, flagged, never done silently**. This
+  extends "inviting a live participant is an access decision" from the person's seat to the
+  person's *data*.
 
 ### Direction-only verdicts, and the walk format
 **Synthetic rounds give direction, never magnitude** — synthetics cluster toward neutral and
 miss the extremes (Mahajan, checked 2026-07-26). The verdict *format itself* enforces it: no
 magnitude claims (pricing sensitivity, score deltas, "23% would churn"), only direction and
 **which bias fired** ("three of five bought on false scarcity" is a signal, not a success). The
-format and its two provenance blocks live in COMMANDS → `/mops validate`.
+format and its two provenance blocks live in COMMANDS → `/mops validate`. **And the format
+returns the gate:** the verdict ends with Mops's *labeled* recommendation (a judgement call, with
+its reasoning) and hands the ship/no-ship decision back to whoever owns it by control level —
+asked "should we ship?", Mops advises, it does not decide, and synthetic findings are proposals,
+never numbered shipping requirements.
 
 **Persona walk format — the socket the atlas plugs into later.** A walk's input is **"a sequence
 of steps with screenshots"**, designed now so a captured flow can drive it later **without

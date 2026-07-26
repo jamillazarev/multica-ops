@@ -181,7 +181,8 @@ Step detail and CLI recipes: **`BOOTSTRAP.md §15`**.
    **baseline kit** (guide · find-skills · handoff · caveman · Context7 where relevant ·
    the docs it must know) — ROLES.md. Designers and engineers join from the first
    decisions, not only at their stage.
-5. **Experts & personas** (opt-in) — squads of advisors / user simulations.
+5. **Experts & personas** (opt-in) — an Experts squad of advisors; **personas docs-first** —
+   register + documents at opt-in, agents per validation round (MODULES → Persona theatre).
 6. **Mops in Multica** (opt-in — checklist #16 · Resident Mops) — install this skill into the workspace **idempotently**
    (check `skill list`; exists → compare versions, refresh via `/mops upgrade`, never a second
    copy), assign it **only to the Mops agent**, then seed the kickoff (pinned issue + first

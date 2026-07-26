@@ -23,9 +23,14 @@ person — both skip the twin-only blocks (mark them `n/a`).
 
 ## Grounding artifact (validated only)
 
-{{Link to the **interview transcript / QDA distillation** — the primary grounding, not a bio.
-Chain: Whisper → transcript → QDA distillation → this persona. A validated persona with no
-artifact linked here is still a proto-persona.}}
+{{Link to the grounding distillation — the primary grounding, not a bio. For a **twin**: this one
+person's **interview transcript / QDA**. For a **validated non-twin**: the **pooled segment
+transcripts / QDA**. Chain: Whisper → transcript → QDA distillation → this persona. A validated
+persona with no artifact linked here is still a proto-persona.}}
+
+For a real person the link is a **pointer, not the file** — raw audio and full transcript live in
+the external store (see Provenance); audio is transcribed **locally by default (Whisper)**, a
+hosted STT only with consent recorded there.
 
 ## Bias profile — 2–4 named biases, each with its source
 
@@ -33,10 +38,11 @@ artifact linked here is still a proto-persona.}}
 |---|---|---|
 | {{e.g. loss aversion}} | {{twin: interview transcript §… · proto: cited literature}} | {{the choice where it fires — not "performs it in every reply"}} |
 
-**Rules:** a twin's biases come from **its own transcript**; a proto-persona's from **named
-cognitive-science literature**; **never assigned from demographics** (interview-grounding
-narrowed demographic-parity gaps; demographic personas amplify stereotype bias — Stanford,
-checked 2026-07-26).
+**Rules:** a twin's biases come from **its own transcript**; a **validated non-twin's** from the
+**pooled segment transcripts / QDA** (its grounding artifact); a proto-persona's from **named
+cognitive-science literature**; **never assigned from demographics** (interview-grounding narrowed
+demographic-parity gaps; demographic personas amplify stereotype bias — Stanford, checked
+2026-07-26).
 
 ## Accuracy score (twins only)
 
@@ -46,8 +52,17 @@ checked 2026-07-26).
 
 ## Provenance (twins only)
 
-{{Whose data · gathered how · when · under what permission. This is the record that makes the
-twin legitimate.}}
+{{Whose data · gathered how · when · under what permission · **hosted-STT consent** (yes/no —
+default is local Whisper). This is the record that makes the twin legitimate.}}
+
+**External-store pointers** — raw audio, full transcript and QDA source live **outside git**; the
+repo holds only pointer + checksum + capture date, and the in-repo file is pseudonymized:
+
+| Object | Pointer | Checksum | Captured |
+|---|---|---|---|
+| audio | {{…}} | {{…}} | {{YYYY-MM-DD}} |
+| transcript | {{…}} | {{…}} | {{YYYY-MM-DD}} |
+| QDA source | {{…}} | {{…}} | {{YYYY-MM-DD}} |
 
 ## Usage log (twins only)
 
@@ -59,8 +74,15 @@ Append-only. One line per use.
 
 ## Revocation (twins only)
 
-{{Permission granted now can be **withdrawn later**. On withdrawal: **retire the twin** —
-archive the agent, stop using the persona, note the date here. Withdrawal is not negotiable.}}
+{{Permission granted now can be **withdrawn later**; withdrawal is not negotiable. On withdrawal,
+three legs:
+1. **retire the twin** — archive the agent, mark this persona file `revoked`;
+2. **purge the external store** — delete the audio, transcript and QDA-source objects above;
+3. **log it** — add the date to the usage log.}}
+
+**Honest limit:** pseudonymized derivatives already in git history persist — which is why raw
+identifiable material never entered git. Identifiable data committed by mistake is an owner-level
+history-rewrite decision — flagged, never silent.
 
 ## Marking (squad mode)
 

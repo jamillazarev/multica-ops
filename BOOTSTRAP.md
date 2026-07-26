@@ -445,8 +445,11 @@ stage finished" (that is @mentions and barriers). Offer at setup, default "later
    (discovery, spec review), not only at their stage.
 5. **Experts & personas (opt-in)** — composition depends on the project; propose 2–4
    experts relevant to the domain (e.g. domain specialist, market/growth, architect)
-   as an **Experts squad**; user-simulation personas (built from the PM/UX research)
-   as a **Personas squad** used in usability passes. Only Mops in Multica stays squadless. The user may decline both.
+   as an **Experts squad**. **Personas are docs-first:** opting into the theatre seeds the
+   **register and persona documents** in `docs/audience/` (proto or validated per the data that
+   exists — MODULES → Persona theatre); persona **agents/squads stand up per validation round
+   and retire after**, never as standing roster at bootstrap. Only Mops in Multica stays
+   squadless. The user may decline both.
 6. **Stand up Mops in Multica (opt-in — checklist #16 · Resident Mops)** — if enabled: install this skill
    into the workspace and assign it **only to the Mops agent** (other agents carry the
    *guide* skill, not this one — multica-ops is Mops's brain), so Mops in Multica *is* the
@@ -618,6 +621,8 @@ Each item with its default, as walked in `/mops init` and re-asked in the `/mops
    assets still pass the usual review gates.
 13. **Avatars** — default DiceBear (one seed per agent name); or user's images.
 14. **Experts & personas** — offer, per project, both opt-in (see below). Default: none.
+    **Personas are docs-first** — opt-in seeds the register + documents; agents stand up per
+    validation round, not at bootstrap.
 15. **Design system & brand** — opt-in (see the two sections below). Ask: does the
     project produce a repeatable form (UI, covers, packaging, letters)? Default: **on
     when a design discipline exists**. And: does it face the world — is there a brand
