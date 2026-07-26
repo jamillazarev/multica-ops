@@ -74,7 +74,10 @@ Work crosses a conveyor stage barrier.
 | `verdict` | e.g. `pass`, `revise`, `block` | verdict mix (conveyor health) |
 
 ### `consult_ended`
-A consult session closes.
+A consult session closes. **Bounded by topic**, not by the chat: it fires at the answer, a
+topic switch, or owner disengagement — whichever comes first — and may fire more than once
+per chat session (each pairs with its own `command_invoked{command=consult}`, in order; a
+"consult session" here is narrower than the chat-wide `session_id`).
 
 | property | values | why it exists |
 |---|---|---|
