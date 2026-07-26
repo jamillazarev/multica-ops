@@ -285,9 +285,11 @@ multica issue comment add <id> --content-stdin      # @-mention = native trigger
 
 Generic versions live in [scripts/](scripts/) — run from the project repo root:
 - **status.sh** — counters by status + assigned/in-flight list.
-- **resume.sh** — `issue rerun` for **interrupted** (`in_progress`/`in_review`) only.
-  ⚠ never rerun `todo`/`backlog` — they wait on stage barriers.
-  `--revive-cancelled` also revives `cancelled` **without** a "Cancel reason" marker.
+- **resume.sh** — `issue rerun` for **interrupted** (`in_progress`/`in_review`) work **and** for
+  `todo` issues rolled back by an `agent_error` run (`issue runs` tells those apart).
+  ⚠ never touches *untouched* `todo`/`backlog` — they wait on stage barriers.
+  `--revive-cancelled` also revives `cancelled` **without** a "Cancel reason" marker; `--dry-run`
+  prints the selection without firing.
 - **health.sh** — for indicators: waiting / limit-stuck / reset time (from run `error`).
 - **issues.py** — paginated, corruption-tolerant issue listing. Use it instead of raw
   `issue list` whenever you need the whole board: it walks `--offset` past the 100-row cap

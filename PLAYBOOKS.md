@@ -90,12 +90,13 @@ stalled — check the latest run's `error` for `agent_error` / "session limit".
 ```sh
 multica issue rerun <id>                # per issue — same as the UI "Retry task"
 ```
-Bulk: rerun every assigned `in_progress`/`in_review` issue. **A failed task rolls its issue
-back to `todo` (REFERENCE §7), so also rerun the `todo` issues whose latest run failed —
-task history shows the failure — while still skipping *untouched* `todo`/`backlog`, which
-waits on the stage barrier.** The bulk resume pass (`scripts/resume.sh`) covers
-`in_progress`/`in_review` only, so rerun the rolled-back `todo` issues by id. Retrying before
-the reset time fails again; the reset is in the failed run's `error` ("resets HH:MM").
+Bulk: **`scripts/resume.sh`** reruns every assigned `in_progress`/`in_review` issue **and**
+every `todo` issue whose latest run failed with `agent_error`. **A failed task rolls its issue
+back to `todo` (REFERENCE §7), and its run history (`issue runs`) tells it apart from
+*untouched* `todo`/`backlog`, which the script never touches — that waits on the stage barrier.**
+Run **`bash scripts/resume.sh --dry-run`** first to see exactly what it would rerun without
+firing anything. Retrying before the reset time fails again; the reset is in the failed run's
+`error` ("resets HH:MM").
 
 ## Talk to an agent on a task
 

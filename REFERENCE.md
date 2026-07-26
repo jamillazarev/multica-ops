@@ -150,8 +150,9 @@ don't restate them in instructions.
 ## 7. Operational practices
 
 - **resume script:** `issue rerun` over assigned **interrupted** work
-  (`in_progress`/`in_review` only — `todo`/`backlog` wait on barriers). Paginate
-  (page = 100) and sanitize control characters before parsing JSON.
+  (`in_progress`/`in_review`) **plus** `todo` issues whose last run failed with `agent_error`
+  (a rollback, told apart by `issue runs`); *untouched* `todo`/`backlog` waits on barriers.
+  Paginate (page = 100) and sanitize control characters before parsing JSON.
 - **status script:** counters by status + assigned/in-flight.
 - **health script:** waiting / limit-stuck / reset time (from the failed run's
   `error` field) — feeds indicators.
