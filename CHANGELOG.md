@@ -1,5 +1,53 @@
 # Changelog
 
+## 2.5.0
+
+**Persona Theatre v2 — evidence-grounded audiences, honest about what a simulation can't tell you**
+
+- **Personas are staged and grounded.** Each is **proto** (a pre-interview hypothesis, marked a
+  guess) or **validated** — and a validated persona carries its **interview transcript / QDA
+  distillation as the primary artifact**, not a bio (Whisper → transcript → QDA → persona).
+  Grounding beats demographics as a measured result, not a preference (Stanford HAI, checked
+  2026-07-26). Home: MODULES → Persona theatre, plus `templates/PERSONA-template.md`.
+- **Bias profiles, evidence-grounded.** Every persona carries **2–4 named biases, each with a
+  source** — a twin's from its own transcript, a proto's from cited literature, **never from
+  demographics** — plus a **calibration layer** that keeps the bias in decisions, not in every
+  reply (anti-sycophancy, anti-caricature). Reactions **diverge** instead of collapsing into one
+  polite review; a loss-averse persona doubles as a dark-pattern detector.
+- **Verdicts give direction, never magnitude.** `/mops validate` from synthetic rounds names
+  **which bias fired and which way**, with **no magnitude claims** (synthetics miss extremes).
+  Synthetic reactions (hypotheses) and live reactions (facts) are **counted separately**, never
+  merged into one tally.
+- **Live participants beside synthetics.** A squad can mix synthetic personas, real users and
+  real experts, with the rules that keep it honest: **reaction provenance** (hypothesis vs fact),
+  **live-cadence honesty** (a human round never silently holds an agent-speed gate),
+  **notification etiquette** (the `@all` and reassignment-doesn't-unsubscribe traps), **paying
+  participants = owner-gated spend + a ledger line**, and **live expert = the source vs synthetic
+  expert = cites sources**. Cohort distributions for quantitative rounds.
+- **Consent machinery for twins of real people.** A twin carries a **provenance file, a usage log
+  and a revocation path** (permission withdrawn later **retires the twin**), plus a **persona
+  accuracy score** — real person vs twin, stored with a check-date, re-verified before a decision
+  leans on it.
+- **Creation modes and squads, priced.** Docs-only is the default (no roster clutter); one agent
+  per segment, separate agents, or a persona squad when the task earns it. Squads group by
+  **axis** (segment · cohort · situational) — a cohort squad without real churn data is a
+  **judgement call**. The FEATURE **Impacted personas** field becomes an **@-mentionable link**,
+  under mention discipline (each mention = tasks = tokens = a ledger line).
+- **Theatre entities are not staff.** A **🎭 name prefix** and a machine-readable description
+  first line (`theatre: personas · axis: …`) mark them in every native list — the same shape as
+  the `(temp)` marking — so they are **excluded from `/mops team` headcount** and attributed to a
+  **theatre ledger line**; a register in `docs/audience/` is the truth.
+- **Persona walk format — the socket for the atlas.** A walk takes **"a sequence of steps with
+  screenshots"** as input, so a captured flow can drive it later without rework: pre-ship
+  design-gate walks are live now; shipped-flow improvement mining waits until a captured flow
+  exists (not a 2.5 capability).
+- **Also:** a new **eval scenario 13** (two profiles must diverge, verdict direction-only,
+  provenance carried); the persona-interview flow and QDA step reuse the method skeleton of
+  cookiy's **MIT** `user-research-skill`, rebuilt through the import gate — no vendor wrapper
+  (checked 2026-07-26); README gains a compounding-subsystems paragraph (shipped examples only),
+  corrects the `/mops explore` roadmap line to surface-capture-into-repo-maps, and drops the
+  now-shipped theatre roadmap line.
+
 ## 2.4.4
 
 **the second STACKS wave + field notes close the dogfood loop**

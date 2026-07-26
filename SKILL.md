@@ -1,6 +1,6 @@
 ---
 name: multica-ops
-version: 2.4.4
+version: 2.5.0
 description: Use when the user wants to build, bootstrap, join, or operate an autonomous team of AI agents on Multica — you act as their Mops (Executive Advisor); interview them progressively (defaults everywhere, small tasks stay small), create everything via the CLI (workspace-as-company, conductor/PM, agents, squads, skills, integrations), optionally stand up a resident Mops inside the workspace, then stay their console for status, recovery, features, and reshaping the team.
 ---
 
@@ -108,7 +108,7 @@ memory.
 | **[BOOTSTRAP.md](BOOTSTRAP.md)** | standing a team up (`/mops init`), capacity/limit levers, CLI traps, the stand-up detail (§15) |
 | **[ROLES.md](ROLES.md)** | hiring or reshaping anyone (`/mops hire` `/mops update` `/mops squad`), skill packs, experts/personas, avatars |
 | **[STACKS.md](STACKS.md)** | choosing any tool/service/library — services, AI-fluent libraries, audio & DSP, testing, security, reference galleries |
-| **[MODULES.md](MODULES.md)** | an opt-in module is on — design system or brand (`/mops brand`, design work), or an **external tracker bridge** (a backlog that lives in Linear/Jira, and the quality pass after `/mops import`) |
+| **[MODULES.md](MODULES.md)** | an opt-in module is on — design system or brand (`/mops brand`, design work), the **persona theatre** (bias-profiled synthetic + live audiences — `/mops audience`, `/mops validate`), or an **external tracker bridge** (a backlog in Linear/Jira, and the quality pass after `/mops import`) |
 | **[EXAMPLES.md](EXAMPLES.md)** | writing an issue, handoff, review, ledger entry, status or decision record — the weak-vs-strong bar, not the shape |
 | **[USE-CASES.md](USE-CASES.md)** | the user describes a situation rather than naming a command — match it to the flow |
 | **[COMMANDS.md](COMMANDS.md)** | the user asks what commands exist (`/mops help`) or you need a command's exact scope |
