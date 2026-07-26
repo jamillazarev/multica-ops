@@ -2,9 +2,12 @@
 
 One shape for every persona in the theatre (MODULES → Persona theatre). Lives in
 `docs/audience/` and is the persona's **primary artifact** — the agent's instructions are
-generated from it, never the other way round. A **twin of a real person** must fill the
-provenance, usage-log and revocation blocks; a **proto-persona** marks them `n/a — not a real
-person`.
+generated from it, never the other way round.
+
+**A twin** is a validated persona grounded in **one specific real person's** interview — it must
+fill the provenance, usage-log, accuracy and revocation blocks below. A validated persona built
+from **pooled segment data is not a twin**, and a **proto-persona** is a hypothesis, not a real
+person — both skip the twin-only blocks (mark them `n/a`).
 
 ## Stage
 

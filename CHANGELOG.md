@@ -31,8 +31,9 @@
 - **Creation modes and squads, priced.** Docs-only is the default (no roster clutter); one agent
   per segment, separate agents, or a persona squad when the task earns it. Squads group by
   **axis** (segment · cohort · situational) — a cohort squad without real churn data is a
-  **judgement call**. The FEATURE **Impacted personas** field becomes an **@-mentionable link**,
-  under mention discipline (each mention = tasks = tokens = a ledger line).
+  **judgement call**. Impacted personas are **@-mentioned by hand today**; when the FEATURE spec
+  spine lands (planned) its *Impacted personas* field binds them as **links** — under mention
+  discipline (each mention = tasks = tokens = a ledger line).
 - **Theatre entities are not staff.** A **🎭 name prefix** and a machine-readable description
   first line (`theatre: personas · axis: …`) mark them in every native list — the same shape as
   the `(temp)` marking — so they are **excluded from `/mops team` headcount** and attributed to a

@@ -227,14 +227,16 @@ same screen), **situational** (one artifact, one-off). One persona lives in seve
 "the churned" help only if you know *why* they left — without it the cohort is a guess, marked a
 **judgement call** and its members kept proto (the Whisper→QDA chain supplies the *why*).
 
-**"Who does this feature touch" is an @-mentionable link, not prose.** The FEATURE spec's
-*Impacted personas* field becomes **addresses**: "touches: small-business segment + churned
-cohort" = two things you can @-mention, so **who to ask is computed, not remembered** — the
-impacted squads get the question at the design gate automatically, and a re-walk after a change
-targets **only** the personas that feature touched. Discipline, or you burn people and budget:
-⚠️ **each mention of an agent squad = tasks = tokens** — "touches 4 squads" is four validation
-runs, a deliberate owner choice and **a ledger line**, never automatic. Mention only the squads
-a feature really touches, only at the stage where their answer changes something.
+**"Who does this feature touch" — @-mention the squads it touches.** Today this is **manual and
+live**: the conductor names the impacted personas in the issue text and **@-mentions their
+squads by hand** at the design gate, so the right audience reacts and a re-walk after a change
+targets **only** the personas that feature touched. **Once the FEATURE spec spine lands**
+(planned, sequenced after this release), its *Impacted personas* field becomes **addresses** —
+"touches: small-business segment + churned cohort" = two things bound as links, and the gate
+mentions them itself. Either way, discipline or you burn people and budget: ⚠️ **each mention of
+an agent squad = tasks = tokens** — "touches 4 squads" is four validation runs, a deliberate
+owner choice and **a ledger line**. Mention only the squads a feature really touches, only at
+the stage where their answer changes something.
 
 ### Marking — a persona is not a hire
 Theatre entities must be **distinguishable from staff in every native list**, with no machinery
