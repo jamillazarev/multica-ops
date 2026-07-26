@@ -201,6 +201,13 @@ not conversation depth: **clarifying, interview-style questions are normal consu
 (past behaviour over hypotheticals, no leading questions). A consultation
 can be one line or a long back-and-forth; it just leaves no trace.
 
+**Artifacts on request — no silent temp files, ever.** A consultation writes **nothing to disk on
+its own**; the **transcript is the incidental record**. An artifact appears only on an **explicit
+ask or an accepted offer**, and then exactly **one**, **where the user says** — the default offer is
+the project's `docs/` where a workspace exists, else a **single named file in the cwd**. That write
+is deliberate and placed; everything else stays **zero-footprint**, and the rule ends there for that
+one artifact only — no scratch files spun up unasked along the way.
+
 **Research is encouraged; heavy fan-out is announced.** Per the decision loop, spin **sub-agents
 for search and verification** freely — reads are free — and **brief each one narrow** (specific
 questions, grep-not-read, a scoped file list) to keep each run cheap. Before a *heavy*
