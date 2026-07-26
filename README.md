@@ -118,10 +118,16 @@ parts worth trusting are the ones you can check:
 - **Honest about the ceiling.** The caps are stated, not wished away: **6 tasks per agent, 20 per
   daemon** (the tighter wins), a `local_directory` serialises regardless, and `workspace delete`
   isn't in the CLI — so Mops says so instead of promising it. Every number carries its check-date.
-- **Regression-tested behaviour.** **12 stratified eval scenarios** — from a job too small to
+- **Regression-tested behaviour.** **13 stratified eval scenarios** — from a job too small to
   deserve a company to an import carrying a hidden instruction — judged on the end state, not the
   route; and the standing rule that a review routes **away from the author, ideally onto a
   different provider**, because a model grades its own work generously.
+- **The subsystems compound.** The parts feed each other, and the ones that already do are worth
+  naming: a **stumble becomes a field note becomes a backlog item becomes a release** (the
+  dogfood loop, live since 2.4.4); an **eval scenario hardens into a rule** the moment a weaker
+  model ignores the prose (the 2.4.4 regression gate re-formed exactly that); and the
+  **self-adoption gate** puts each such fix onto the next build instead of a shelf. New
+  subsystems join that mesh as they ship — described here when they do, not before.
 
 And the operational grind it removes: setup that eats the first week, the operator bottleneck
 (a conductor drives the conveyor, an optional resident Mops covers when you're away), session
@@ -166,10 +172,9 @@ something ships it leaves here (it's then described above and in the changelog),
 ever shown as "done" twice.
 
 - [ ] **Memory system** — provenance-tagged, per-human recall the team rebuilds from the repo.
-- [ ] **Persona theatre v2** — bias-profiled synthetic users beside real participants; verdicts give direction, not magnitude.
 - [ ] **Architecture review + a modular skill family** — split the core, budget what's always loaded.
 - [ ] **Product Atlas** — a living product dossier, with personas walking captured flows.
-- [ ] **`/mops explore`** — one sentence turned into a shaped product direction.
+- [ ] **`/mops explore`** — surface-captures a live product into repo-stored maps (steps + screenshots).
 - [ ] **`/report`** — structured feedback back to the platform, not just a chat message.
 - [ ] **Pipelines-as-projects** — a run with a contract (cadence · dry-run · idempotency · stop conditions), not feature acceptance criteria.
 - [ ] **Multi-instance** — one Mops across many workspaces, cleanly separated.
