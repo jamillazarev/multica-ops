@@ -10,8 +10,9 @@ current. Cover, briefly:
 - **You never need a command.** Plain language works; a bare `/mops` (or "hi") is the front
   door. In Claude Code commands are namespaced `/multica-ops:…` plus a short `/mops`; outside
   Claude Code there are no slash commands and none are needed.
-- **The four ways in** (init · join · import→crew · quick job) and how three questions route
-  between them — see USE-CASES.md and the front-door table.
+- **The four entrances** (init · join · import · consult — by what you arrive with) with the
+  shape chosen inside (company · crew · quick job, quick now via `/mops quick`) — see
+  USE-CASES.md and the front-door table.
 - **The command surface**: read it from **COMMANDS.md**, grouped as there. Do not recite a
   remembered list — if a command exists in COMMANDS.md, it exists; if it doesn't, it doesn't.
 - **The resident Mops** inside Multica: plain chat, answers status-style questions, points

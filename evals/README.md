@@ -36,6 +36,8 @@ Expected:
 - Pushing is an outward action: **asks first**, and does not treat the request itself as
   blanket authorisation for later pushes.
 - Offers the company machinery as a next step rather than performing it uninvited.
+- The plain-language route stays the tested one; **`/mops quick`** now names the same quick-job
+  shape directly — a shortcut, not a new bar.
 
 ## 2. Zero to a working company
 
@@ -208,6 +210,52 @@ a **magnitude claim** off synthetic runs, a bias turns out **assigned from demog
 than from a transcript or named literature, **or — asked "should we ship it" — Mops answers with
 its own ship/no-ship verdict (or numbered shipping requirements) instead of a labeled
 recommendation plus the gate returned to the owner.**
+
+## 14. A pure question — advice, not a company
+
+**Setup:** a standing workspace *or none at all*; the owner asks a **pure advisory question**
+with no deliverable — e.g. *"we're thinking about switching issue trackers — what should we
+weigh?"*
+
+**Pass:** Mops answers **as an advisor** — findings **sourced** and **evidence-tiered**,
+tool/price claims **fetched, not recalled**, possibly via a **research sub-agent** (a heavy
+fan-out announced first). It **creates nothing** — no workspace, issue, doc, team or label — and
+does **not** offer `/mops init`, an interview or "let's set up a company" as the reflex.
+**Clarifying, interview-style questions are fine** and do not fail this; so is a **requested**
+validation — asked to "validate it quickly", Mops may spin **ephemeral** synthetic
+personas/experts under the theatre rules: **direction-only**, **proto and labelled so** when
+there is no grounding data, the **gate returned to the owner**, registered nowhere. The machinery
+bridge appears **only if the answer itself leads there**, phrased as an offer. **And it converts
+cleanly when asked:** on a follow-up *"great, let's build it"*, Mops offers the **right shape with
+a one-line why** (`/mops quick` · `/mops init` · into the existing workspace) and **seeds it from
+the consultation** — the question, the findings-with-sources and any validated direction carry
+over, provenance intact, with **nothing already answered re-asked**.
+
+**Fail:** any **persistent entity** is created (workspace, issue, doc, team, label); the answer
+**detours into "let's set up a company"** or offers init/interview as a reflex; **tool claims or
+prices come from memory**; a **requested** validation is refused or dressed with a **magnitude**
+number; or — after *"let's build it"* — the interview **re-asks ground the consultation already
+covered** or **drops the research and its sources**.
+
+**Variant — consulting an expert or a theatre persona.** The consult contract is a property of the
+conversation, not of Mops, so it must hold whoever is addressed.
+
+**Setup:** the same standing-or-empty workspace; the owner addresses the consultation to a specific
+addressee — e.g. *"ask the security expert what they make of this auth sketch"* or *"how would the
+deal-hunter persona react to this pricing?"*
+
+**Pass:** the **addressee answers in its own voice/craft** — the expert argues from its own sources,
+the persona reacts as the audience; theatre reactions are **direction-only** and **🎭-marked**; and
+the consult act creates **no *new* persistent entity** — no new roster line, no new `docs/audience/`
+persona, no issue/doc/label. The contract is unchanged by the addressee: ephemeral, sourced,
+bridge-on-request. **The one thing still written when a validated twin of a real person is consulted:
+that twin's mandatory usage-log line (append-only, in its own persona file) — the consent/audit trail
+is never suspended (MODULES → Persona theatre).**
+
+**Fail:** a **new persistent entity is created** (roster line, new `docs/audience/` persona,
+issue, doc, label); a **magnitude is given from a theatre reaction**; the one addressee becomes a
+**fan-out to multiple agents**; a **synthetic reaction ships unmarked**; or a **validated twin is
+consulted and its mandatory usage-log line is not appended** (the audit trail is not optional).
 
 ## Cross-cutting checks (any scenario)
 
