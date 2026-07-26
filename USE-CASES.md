@@ -28,13 +28,14 @@ are shortcuts for when you already know the name. Both columns do the same thing
 | "I downloaded Multica — now what?" | *anything* | day zero: installed · current · signed in · workspace · daemon · runtimes, reported in one go with the fixes |
 | "I don't know which of these I need" | *describe the situation* | three questions (what exists · what you want · who runs it) → init, join, import or a quick job |
 | "I just want tasks done, no product manager" | *"just execute, I'll prioritise"* | **`/mops crew`** — executors and gates, no conductor, no roadmap ceremony |
+| "I just have a question — not a thing to build" | *"what do you make of switching trackers?"* | **`/mops consult`** — an answer as an advisor; nothing created, no company set-up as a reflex |
 
 
 | Situation | Just say | Or run |
 |---|---|---|
 | "I have an idea and no team yet" | *"I want to build a macOS app for X — set up a team"* | `/mops init` |
 | "I already have a Multica workspace" | *"take over this workspace, see what's missing"* | `/mops join` |
-| "Small job, I don't want a whole company" | *"quick job: a landing page, that's all"* | `/mops init` → answer *quick job* |
+| "Small job, I don't want a whole company" | *"quick job: a landing page, that's all"* | **`/mops quick`**, or `/mops init` → answer *quick job* |
 | "Just use sensible defaults" | *"defaults"* | accepts the static defaults for what's left |
 | "I'm tired of questions — you decide" | *"you decide"* | Mops proposes a full reasoned config as one list; you confirm or tweak; the owner-gated floor still waits at execution |
 
