@@ -148,7 +148,16 @@ A version bump is not just a changelog entry. Before you tag:
    that no longer matches reality passes silently, which is worse than no guard.
 4. **Every new capability has a door, or a stated reason it doesn't** — see *When a flow
    deserves a command*. Reachability is guarded; the decision to add a command is not.
-5. **`bash scripts/preflight.sh` and `python3 scripts/verify.py --live` green**, and the docs
-   site rebuilds.
+5. **`bash scripts/preflight.sh` and `python3 scripts/verify.py --live` green** (warnings named).
 6. **Changelog** leads with the capability or the consequence, not the archaeology of how a
    defect was found (that goes in the commit message).
+
+**Then the cut itself, in order — the last two steps were live misses caught on 2.4.1:**
+
+1. **Bump both** — `SKILL.md` frontmatter and `.claude-plugin/plugin.json`; preflight fails on a mismatch.
+2. **Changelog** — the `## x.y.z` section, since it is the map `/mops upgrade` reads.
+3. **preflight green** — the checklist above.
+4. **Merge** — a human merges the release branch (self-editing is locked; the loop adopts *after* the gate).
+5. **Tag** the merge commit.
+6. **`gh release create`** from that changelog section — a tag alone is **not** a Release, and a stranger deciding whether to adopt this reads the Releases page, not the tag list. (2.4.1 was tagged with no Release until the owner caught it; created retroactively.)
+7. **Regenerate and push the docs site** — `python3 scripts/generate.py` in the `ai` repo, then push. The site deploys continuously, so a skipped regen silently ships the previous pages against the new tag. (2.4.1's site lagged its tag the same way.)

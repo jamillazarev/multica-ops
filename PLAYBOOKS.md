@@ -427,7 +427,9 @@ already — this is assembly order, not new machinery.
    cloning is free and the lenses can run in parallel) · `content` (articles + social cadence)
    · `site` (the landing, its own repo). One company, three directions.
 2. **Fence before staff.** Branch protection with `enforce_admins=true` (recipe: BOOTSTRAP §15)
-   — the merge gate must be real before anyone can push. **A human merges; agents propose.**
+   — the merge gate must be real before anyone can push. **A human merges (or the owner lifts
+   the gate deliberately); agents only propose** — self-adoption runs *after* the merge, never
+   instead of it.
 3. **Locked surfaces, said out loud.** `SKILL.md`, `scripts/`, `evals/` are append-only for the
    company: editing the skill it runs is "the author moves the bar" (REFERENCE §8) and routes
    to the owner — governance, not etiquette.
@@ -440,13 +442,15 @@ already — this is assembly order, not new machinery.
 6. **Memory layer**: graphify index over the repo (local, ~zero tokens; the graph is a derived
    cache, never a source).
 7. **Self-adoption loop** — new capability applies to the team as soon as it merges:
-   a **webhook autopilot on PR-merged** → guards green (preflight · verify · check-structure ·
-   evals)? → wait for `active_task_count = 0` → `multica skill import --url <repo>
-   --on-conflict overwrite` → smoke. Red guards = not adopted, and it says so. Rollback is the
-   pre-upgrade SHA in `UPGRADES.md`. The **console side** installs by **symlink to the working
-   copy** (content applies on next read; restart only for new commands/hooks) — dogfood only,
-   regular users install normally. **One version per feature**: work in flight finishes on the
-   bytes it started with.
+   a **webhook autopilot on PR-merged** → **guards green in a fresh worktree at the merge SHA**
+   (preflight · verify · check-structure · evals)? → wait for `active_task_count = 0` →
+   `multica skill import --url <repo> --on-conflict overwrite` → smoke. Red guards = not adopted,
+   and it says so. Rollback is the pre-upgrade SHA in `UPGRADES.md`. The **console side** installs
+   by **symlink to the working copy** (content applies on next read; restart only for new
+   commands/hooks) — dogfood only, regular users install normally. **One version per feature**:
+   work in flight finishes on the bytes it started with, and Mops **reports the version it now
+   runs** — an agent on vN that proposed vN+1 runs its *next* task on vN+1, which is normal, but a
+   single feature holds one version.
 8. **The invariant stands**: the project must rebuild from repo + workspace alone — memory,
    graph and atlas are derived, never the only copy. Re-test it whenever those layers change.
 
