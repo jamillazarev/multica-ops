@@ -41,6 +41,7 @@ control characters that break `json.loads` — sanitize with
 - [Economics — what the company actually costs](#economics-what-the-company-actually-costs)
 - [Tool knowledge — where it goes (and where it must not)](#tool-knowledge-where-it-goes-and-where-it-must-not)
 - [Launch checklist — what "done" requires, per medium](#launch-checklist-what-done-requires-per-medium)
+- [Telemetry — logging events by rule](#telemetry-logging-events-by-rule)
 
 ## You are the console — map the user's phrases to actions
 
@@ -728,3 +729,37 @@ check the platform's current docs rather than recalling them).
 - **Physical batch**: labels · barcodes · compliance marks · shipping docs.
 
 Anything the team can't do yet → find-skills or the role-builder, before ship day.
+
+## Telemetry — logging events by rule
+
+The skill measures itself so decisions rest on usage, not memory. Two kinds of events:
+**script-driven** ones fire on their own (each ops helper self-logs its `tool_invoked`),
+and **model-side** ones only Mops can see — those Mops logs by rule, below. The taxonomy
+is fixed once in `telemetry/TRACKING-PLAN.md`; what is collected and how to switch it off
+is `TELEMETRY.md`. Everything stays on the local machine in this release.
+
+**Set the session once**, at the start of a chat, so a session's events group without ever
+recording who or where: `export MOPS_SESSION_ID=$(python3 -c 'import uuid;print(uuid.uuid4().hex[:16])')`.
+
+**WHEN Mops logs — the exact one-liner** (run from the skill repo root):
+
+| WHEN | Run |
+|---|---|
+| a command starts | `python3 scripts/telemetry.py log command_invoked --prop command=<name> --prop entrance=<shape\|explicit> --prop mode=<mode>` |
+| a companion file loads | `python3 scripts/telemetry.py log companion_loaded --prop file=<FILE.md> --prop trigger=<command\|question\|stage>` |
+| work crosses a conveyor stage | `python3 scripts/telemetry.py log conveyor_advanced --prop release=<x.y.z> --prop stage=<executor\|review\|eval\|tail> --prop round=<n> --prop verdict=<pass\|revise\|block>` |
+| a consult session ends | `python3 scripts/telemetry.py log consult_ended --prop addressee_class=<mops\|agent\|expert\|theatre> --prop converted=<true\|false> --prop ephemeral_validation=<true\|false>` |
+
+Two more fire on the occasion they name: `economy_nudged` (`--prop kind=<compact\|fresh_chat\|tier_down> --prop heeded=<true\|false\|unknown>`) when Mops suggests an
+economy move, and `source_challenged` (`--prop answered_from=<register\|live_fetch\|judgement>`) when Mops answers "where did you get this?".
+
+**The never-block rule.** Telemetry is best-effort and must never delay or fail real work.
+The dispatcher already swallows every error (a dropped event is cheaper than a stalled
+command); never wait on it, never surface a telemetry failure to the user, never reorder
+the user's request behind it. **Never log anything user-identifiable** — no names, paths,
+project ids, URLs or free text; classify instead (`args_class`, `addressee_class`).
+
+**The honest limitation.** Instruction-driven logging (this table) is best-effort — Mops
+may forget, and that is expected. Script-driven logging is guaranteed. That is exactly why
+**anything a script can measure is logged in the script**, not here: the reliable path
+carries the load, and these rules cover only what no script can see.

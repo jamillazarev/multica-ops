@@ -182,6 +182,15 @@ if __name__ == "__main__":
     ap.add_argument("--live", action="store_true", help="run the read-only CLI surface")
     a = ap.parse_args()
 
+    try:  # self-log; telemetry must never break verify
+        import os
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        import telemetry
+        telemetry.log("tool_invoked", tool="verify",
+                      args_class="live" if a.live else "sources" if a.sources else "default")
+    except Exception:
+        pass
+
     print("verify — multica-ops")
     check_recipes()
     check_fingerprint()

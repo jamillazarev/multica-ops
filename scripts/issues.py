@@ -139,6 +139,13 @@ def all_issues(pid: str) -> list:
 
 
 if __name__ == "__main__":
+    try:  # self-log this run; telemetry never breaks the tool (import-guarded when run as a module)
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        import telemetry
+        telemetry.log("tool_invoked", tool="board",
+                      args_class="project_scoped" if len(sys.argv) > 1 else "all")
+    except Exception:
+        pass
     pids = [sys.argv[1]] if len(sys.argv) > 1 else project_ids()
     for pid in pids:
         for i in all_issues(pid):

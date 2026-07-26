@@ -1,5 +1,33 @@
 # Changelog
 
+## 2.5.4
+
+**The telemetry core — fully local, events never deferred, viewing layer as generated markdown**
+
+- **Tracking plan.** New `telemetry/TRACKING-PLAN.md` — the event taxonomy defined once,
+  sink-agnostic: commands, companion loads (the 2.6 family-split evidence), tool invocations
+  (feeds the future toolbox GC), conveyor stages, consult sessions, economy nudges, source
+  challenges. Every event is tier-1 LOCAL: nothing leaves the machine in this release.
+- **The dispatcher.** New `scripts/telemetry.py` — `log <event>` appends one JSON line to a
+  local ledger (`$MOPS_TELEMETRY_DIR` → `company/telemetry/` → `~/.multica-ops/telemetry/`);
+  telemetry never breaks real work (any failure is a warning, exit 0); an off switch is
+  honored. Sinks by config: the JSONL ledger is always on; **PostHog is a designed, dark
+  slot** — recognized in `telemetry/sinks.json`, shipped with the wire cut (no HTTP call in
+  the code), enabled only by the owner's future call at Atlas.
+- **Dashboards as generated markdown.** New `scripts/telemetry-report.py` — aggregates the
+  ledger into MD dashboards next to it (commands, companion load frequency, tool usage with
+  last-used, conveyor health, consult funnel); versioned where the ledger lives, so a
+  release can show its metric deltas as a diff.
+- **Scripts self-log.** The existing ops scripts (`health`, `resume`, `verify`,
+  `import-issues`, `issues`, `fetch-source`, `preflight`) emit their own `tool_invoked`
+  events — the guaranteed channel; Mops-side logging rules land in PLAYBOOKS as the
+  best-effort channel, and the difference is stated plainly.
+- **`TELEMETRY.md`.** What is collected, where the ledger lives, the off switch, and the
+  dark-slot statement — the whole privacy story on one page.
+- **The DoD rule.** A release now carries its tracking-plan diff or states "no events
+  needed" as a decision (AGENTS.md release ritual): a feature without its events is a dark
+  feature.
+
 ## 2.5.3
 
 **The sources register v1 — every slow-rotting claim carries its evidence, and "where did you get this?" is answerable**
