@@ -125,21 +125,21 @@ route, and the wrong pick is expensive (`/mops init` into an existing workspace 
 conductor). So: **day zero** (BOOTSTRAP §0 — installed · signed in · workspace · daemon ·
 runtime), then read what they have.
 
-**There are three entrances, by what you already have:**
+**There are four entrances, by what you arrive with:**
 
-| What's already there? | Entrance |
+| What you arrive with | Entrance |
 |---|---|
 | nothing yet | **`/mops init`** — build something new |
 | a Multica workspace | **`/mops join`** — audit, then continue it |
 | a backlog elsewhere (Linear/Jira/CSV) | **`/mops import`** — move it here |
+| a question, nothing to build | **`/mops consult`** — advise; no machinery unless the answer leads there |
 
-**Then the *shape* is chosen inside — not a fourth entrance.** `/mops init` opens with *"quick
+**Then the *shape* is chosen inside — not another entrance.** `/mops init` opens with *"quick
 job or a company?"* and the answer picks it: a **company** (conductor, squads, roadmap, full
 machinery); a **crew** (executors and gates, **no conductor**, you're the PM — has `/mops crew`,
-and is the default offer after `/mops import` when no conductor is standing, but is a shape not
-a door); or a **quick job** (1–2 agents, build → review, none of the machinery — **no command
-of its own on purpose**, you reach it by answering "quick job", because a one-hour task
-shouldn't need a command name).
+default offer after `/mops import` when no conductor stands, still a shape not a door); or a
+**quick job** (1–2 agents, build → review, none of the machinery) — reached by answering "quick
+job" or the **`/mops quick`** shortcut straight into it.
 
 Ambiguous answers are normal: say which you'd pick and why in one line, then do it — wrong
 guesses are cheap to correct here and expensive later.

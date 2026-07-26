@@ -18,8 +18,10 @@ are no slash commands at all, only plain language.
 | Command | Where | Routes to |
 |---|---|---|
 | `/mops init` | 🖥️ | bootstrap from zero: **day zero** (BOOTSTRAP §0) → three routing questions → shaping → interview → stand up. Full procedure: FLOWS |
+| `/mops quick <task>` | 🖥️ | **the quick-job shape, direct** — skip *"quick job or a company?"* and go straight in: 3 questions (deliverable · repo · language), 1–2 agents, build → review, **none of the company machinery**; whatever it outgrows is added later. The plain-language route (answer *"quick job"* at `/mops init`) still works — this is the discoverable shortcut |
 | `/mops crew` | 🖥️ | **crew mode**: executors and gates, the owner is the product manager — no conductor, discovery or roadmap ceremony. Default offer after `/mops import` **when no conductor is standing**; adding a conductor later is an upgrade, not a redo |
 | `/mops join` | 🖥️ | join an existing setup — `/mops audit` + interview delta, then gaps → fixes; reconcile an existing Mops in Multica. Full procedure: FLOWS |
+| `/mops consult <question>` | ⇆ | **advisory session — a question, not a build**: answer as an advisor, **zero standing footprint** (no workspace/issue/team/doc created, nothing persisted unless you ask). Clarifying questions and **research sub-agents** are fine; a **requested** validation runs ephemerally (synthetic personas/experts, direction-only, proto when ungrounded, gate returned). Ends with an **answer**, then optionally an offer to persist a note or **projectize** (`/mops quick` / `/mops init`) — only when the answer leads there. Full flow: FLOWS |
 
 **Features & roadmap**
 | Command | Where | Routes to |
