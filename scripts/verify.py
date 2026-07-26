@@ -88,8 +88,8 @@ def check_sources():
                     ok += 1
         except Exception as e:
             code = getattr(e, "code", None)
-            if code in (403, 405, 429):        # bot-blocked or HEAD-averse, not dead
-                ok += 1
+            if code in (401, 403, 405, 429):   # bot-blocked (e.g. Unsplash's within.website
+                ok += 1                         # challenge → 401) or HEAD-averse, not dead
             else:
                 warn(f"source does not resolve: {u} ({code or type(e).__name__})")
     print(f"  sources: {ok}/{len(urls)} resolve")
