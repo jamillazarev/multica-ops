@@ -66,7 +66,7 @@ cheap/text-oriented runtime (translations, boilerplate legal).
 | **Legal Counsel** | Content | text | docx, pdf, research, handoff | policies, terms, compliance pages |
 | **Marketing Manager** | — (cross, or Content) | mid | marketing-ideas, positioning-ideas, value-prop-statements, product-name, north-star-metric, gtm-strategy, growth-loops, ideal-customer-profile, competitive-battlecard, beachhead-segment, + Corey Haines pack (social, emails, ads, launch, cold-email, referrals), handoff | GTM strategy pre-launch; post-launch owns channels. **Social automation**: content calendar as issues; a scheduled **autopilot** drafts posts on cadence; publishing via the platform's API/scheduler tools (import via find-skills) with human approval until trust is earned |
 | **Domain / Market / Tech Expert** (opt-in) | Experts squad | top | research, critique, brainstorming, handoff | advisors, not executors: pulled into specs, discovery, acceptance by `@`-mention; composition per project — see "Experts squad" below |
-| **Persona** (opt-in) | Personas squad | text | handoff | user simulation built from research; used in usability passes and Design QA walkthroughs — see "Personas squad" below |
+| **Persona** (opt-in) | Personas squad | text | handoff | user simulation; instructions generated from `templates/PERSONA-template.md` (stage · bias profile · grounding artifact); used in usability passes and Design QA walkthroughs — see "Personas squad" below and MODULES → Persona theatre |
 | **Finance & Ops** (opt-in) | — (cross) | text | xlsx, analytics, research, handoff | keeps `docs/BUDGET.md` (which the owner sets via `/mops budget`) and owns `docs/ECONOMICS.md`: the ledger, burn and runway, **prices verified online per location**, subscriptions and renewal dates, credits with their expiry cliffs. Escalates *before* the cap, not at it |
 | **Customer Support** (opt-in) | Content, or its own | text | handoff, copywriting, research, docx | owns the inbox: turns reports into bugs and feedback items with reproduction steps, answers in the brand voice, writes the help docs, and reports what keeps coming back — the input side of `/mops feedback` |
 | **Analyst** | — (cross) | top | analytics, xlsx, research, **north-star-metric, metrics-dashboard, ab-test-analysis, cohort-analysis**, handoff | event taxonomy, funnels, north-star, cohorts/AB; never PII/audio |
@@ -363,13 +363,29 @@ squad** (leader = the most central expert); they're pulled into specs, discovery
 acceptance via `@`-mention. Load each with the project's reference resources. The
 user may decline; they can be added any time later.
 
+**A live expert can sit in the same squad as a synthetic one — and they weigh differently.**
+A synthetic expert **cites sources** (a hypothesis backed by what it can find); a live expert
+**is** the source (a fact). The verdict keeps them apart and weights the live one accordingly —
+the same hypothesis-vs-fact provenance the audience side uses (MODULES → Persona theatre).
+Inviting a live expert is an **access decision** (they see issues), and paying one is **spend**
+— owner-gated, a ledger line.
+
 ## Personas squad (opt-in, user simulation)
 
-Built **after** research exists: the PM/UX turn audience research into 2–3 personas as
-**documents first**, then — if the user opts in — matching agents whose instructions *are*
-the persona. Grouped as a **Personas squad**, and they are **not part of the build
-pipeline**: they're convened for a session (a usability pass, a Design QA walkthrough, a
-copy reaction), then quiet again.
+The theatre's roster — its **design and rules are MODULES → Persona theatre**; this section is
+how the *agents* are built and run. Personas are **documents first** (`docs/audience/`, one
+`templates/PERSONA-template.md` each), and become agents only for a session (a usability pass, a
+Design QA walkthrough, a copy reaction), then quiet again. They are **not part of the build
+pipeline**.
+
+**A persona's instructions are generated from its profile, not written free-hand.** Each agent
+carries, from its `PERSONA-template.md`: its **stage** (proto = a marked guess · validated =
+grounded in an interview transcript / QDA distillation), a **bias profile of 2–4 named biases
+each with a source** (a twin's from its own transcript, a proto's from cited literature, **never
+from demographics**), and — for a **twin of a real person** — a provenance file, a usage log and
+a revocation path. **Calibration is part of the instruction:** the bias shows *in decisions, not
+in every reply*, and sycophancy is suppressed. The research behind all of it: MODULES → Persona
+theatre.
 
 **A persona without a situation is a stereotype.** Instructions carry both:
 - **Who** — goals, habits, vocabulary, what they already use, what frustrates them.
@@ -385,11 +401,18 @@ and keep them on a **cheap tier**: simulating a reaction is not reasoning-heavy 
 Reserve a stronger model only for a persona whose job is adversarial (a sceptical expert
 buyer picking apart pricing).
 
-**Synthesis over volume.** Five personas agreeing is not evidence; what matters is where
-they *diverge* and why. The UX researcher collects the runs into one verdict — the
-disagreements, the moments people stalled, the words they used — and that lands in the
-issue. Treat it as **a cheap first pass that tells you what to test with real humans**,
-never as a replacement for them; say so plainly when reporting.
+**Synthesis over volume, and it stays direction-only.** Five personas agreeing is not evidence;
+what matters is where they *diverge* and why. The UX researcher collects the runs into one
+verdict — the disagreements, the moments people stalled, the words they used — and it lands in
+the issue **as direction, never magnitude** (synthetics cluster toward neutral and miss the
+extremes — MODULES). Treat it as **a cheap first pass that tells you what to test with real
+humans**, never a replacement; say so plainly when reporting. A **twin's accuracy score** is
+re-verified before a decision leans on it.
+
+**Marking — a persona is not a hire.** In squad mode the agent carries a **🎭 name prefix** and
+`theatre: personas · axis: …` as its description's first line, is **excluded from `/mops team`
+headcount** and is attributed to the theatre ledger line — the same shape as the `(temp)`
+marking above (MODULES → Persona theatre).
 
 Tooling: none is required — this is prompting, not a product. If the project wants more
 (recorded sessions, panels, statistical framing), that's a `find-skills` / role-builder
