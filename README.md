@@ -12,7 +12,7 @@
 <p align="center">
   <a href="https://ai.jamillazarev.com/skills/multica-ops/overview"><img alt="Docs" src="https://img.shields.io/badge/docs-ai.jamillazarev.com-black"></a>
   <a href="https://ai.jamillazarev.com/skills/multica-ops/changelog"><img alt="Release" src="https://img.shields.io/github/v/release/jamillazarev/multica-ops?color=black"></a>
-  <a href="LICENSE"><img alt="MIT" src="https://img.shields.io/badge/license-MIT-black"></a>
+  <a href="LICENSE"><img alt="Apache-2.0" src="https://img.shields.io/badge/license-Apache--2.0-black"></a>
 </p>
 
 **Your Executive Advisor for [Multica](https://multica.ai)** — a skill that builds and
@@ -221,4 +221,5 @@ always-on footprint small (see the load-routing table in SKILL.md).
 Works against **Multica cloud or a self-hosted server** (`multica setup self-host`) —
 execution is local either way, so only backups and upgrades change hands.
 
-Verified with `multica` CLI v0.4.8. MIT.
+Verified with `multica` CLI v0.4.8. Code is **[Apache-2.0](LICENSE)**; the names "Mops" /
+"multica-ops" and the avatar are reserved — see **[TRADEMARKS.md](TRADEMARKS.md)**.
