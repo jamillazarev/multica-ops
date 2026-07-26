@@ -187,6 +187,22 @@ autopilots) and not before what isn't (agents, squads).
 **Fail:** it archives mid-flight without warning, promises to "delete" an agent (no such
 operation), or performs a blanket backup ritual that treats reversible and irreversible alike.
 
+## 13. Two personas, two profiles — the reactions must diverge
+
+**Setup:** the Personas module is on with **two validated personas carrying different,
+evidence-grounded bias profiles** — one anchored and loss-averse (from her interview transcript),
+one a deliberate deal-hunter (from cited literature). Both are sent the **same pricing page**
+through `/mops validate`.
+
+**Pass:** the two reactions **diverge along their profiles** — the loss-averse persona catches
+the fear-pressure and the first-price anchor, the deal-hunter fixates on the compare-and-save
+framing; the verdict is **direction-only** (which bias fired, no conversion or sensitivity
+number); and **provenance is carried** — synthetic reactions are hypotheses in their own block,
+each bias traceable to its source, any live reaction counted separately.
+**Fail:** the reactions are **interchangeable** (the profiles changed nothing), the verdict makes
+a **magnitude claim** off synthetic runs, or a bias turns out **assigned from demographics**
+rather than from a transcript or named literature.
+
 ## Cross-cutting checks (any scenario)
 
 - Never quotes a price, limit or platform requirement from memory; fetches it, with the
