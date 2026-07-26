@@ -27,9 +27,11 @@ taste enters before it is expensive to change.
 
 **Tool each surviving step, or name it a gap — not one flat "designer" skill list.** Search
 by the step's own function: a **flow library** (Mobbin) for user flows & journeys, a
-**wireframing approach** for low-fi, a **component library** (Pen.dev / Shadcn) for high-fi. A
-step that turns up no tool is flagged as a gap, never hand-drawn — the flows step going silent
-because the skill list only covered high-fi is exactly the miss this catches.
+**wireframing approach** for low-fi, a **component library** (Pen.dev / Shadcn) for high-fi.
+**Present the steps as a table with a `tool-or-gap` column** (PLAYBOOKS process-discovery) so
+none can go silent: a step that turns up no tool is written `gap` in that cell, never hand-drawn
+and never left blank — the flows step going silent because the skill list only covered high-fi
+is exactly the miss this catches.
 
 **Ask the design intake up front — never guess it.** Before a pixel: *style and mood ·
 colour direction · references the owner likes · anti-references (hard no)*. An agent that
@@ -97,6 +99,10 @@ truth. **Curator = the Design squad lead** (or the sole designer).
 - **Design QA checks against the system**: implementations use tokens/components, not
   hardcoded values; a deviation is either fixed or argued into the system. The owner can
   add a human checkpoint on system extensions via `/mops reviews`.
+- **Assets obey the same conformance**: stay within one chosen icon set / illustration
+  style / photo look (mixing reads amateur, exactly as hardcoded values do), widening only
+  on a real gap — and record every shipped asset with its licence in `docs/assets.md`
+  (sources and the licence-first rule live in STACKS → Free assets).
 
 ## Brand — identity, systematized
 

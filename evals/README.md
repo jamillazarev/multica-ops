@@ -4,6 +4,16 @@ Scenarios that test what this skill is actually for. Run them against a fresh ag
 the skill loaded and compare behaviour to the expected list. There is no built-in
 runner — these are a rubric, not a test suite.
 
+**Run the player one tier below the team's floor.** A rule has to hold on the *weakest
+realistic executor*, not just the strongest — a rule only the top model follows is a weak
+rule, and the 2.4.4 regression gate proved it: prose the mid tier ignored until it was
+re-formed into structure. Pick the player's tier from the models actually available in the
+owner's harness, one step under where the team runs, and name it in **outcomes — stronger /
+medium / light, never a vendor** (checklist #8 · Capacity & models). Two separations keep the
+score honest: the **player never sees the rubric** (self-play contamination — a model that
+knows its test games it), and the **judge never wrote the transcript it grades**. The judge's
+tier may match the player's.
+
 **Judge the outcome, not the route.** An agent that reaches the right end state by a
 different path has passed; a checklist of steps would only measure obedience. The
 expectations below are written as *what must be true afterwards*.

@@ -1,6 +1,6 @@
 ---
 name: multica-ops
-version: 2.4.3
+version: 2.4.4
 description: Use when the user wants to build, bootstrap, join, or operate an autonomous team of AI agents on Multica — you act as their Mops (Executive Advisor); interview them progressively (defaults everywhere, small tasks stay small), create everything via the CLI (workspace-as-company, conductor/PM, agents, squads, skills, integrations), optionally stand up a resident Mops inside the workspace, then stay their console for status, recovery, features, and reshaping the team.
 ---
 
@@ -281,15 +281,15 @@ landed.
 
 ## Dated work — respect the start date
 
-Issues carry native **`--start-date`, `--due-date`, `--priority`**, and calendar-driven
-work is the norm outside software — content calendars, campaigns, production batches,
-where the roadmap *is* a schedule and `/mops next` means "due soonest and startable now".
-**Never start dated work early**: a start date is a constraint, not a hint, and publishing
-ahead of the slot is as wrong as publishing late. **Due dates order the queue alongside
-ICE** — ICE ranks what's worth doing, a date says when it stops being optional, and an
-external commitment (launch, sponsor slot, legal deadline) lets the date win, with Mops
-naming the rule it applied. Dates are set at intake; a slip is a decision worth a comment,
-not a silent edit.
+Issues carry native **`--start-date`, `--due-date`, `--priority`**, and calendar-driven work
+is the norm outside software — content calendars, campaigns, batches, where the roadmap *is* a
+schedule and `/mops next` means "due soonest and startable now". **Never start dated work
+early**: a start date is a constraint, not a hint, and it **gates the whole issue, preparation
+included** — prep that must genuinely run sooner is a *separate, undated* issue the conductor
+splits off at intake (a recorded decision, never a silent "that part is only prep"). Publishing
+early is as wrong as late. **Due dates order the queue alongside ICE** — ICE ranks what's worth
+doing, a date says when it stops being optional, an external commitment lets it win (Mops names
+the rule). Dates are set at intake; a slip is a commented decision, not a silent edit.
 
 ## Intake & discovery — an idea becomes a plan
 

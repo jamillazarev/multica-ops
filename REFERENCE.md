@@ -40,7 +40,9 @@ sub-issue, not another level.
 **Native primitives worth reaching for before writing your own.**
 
 - **Typed custom properties.** `property create --type text|number|select|multi_select|date|checkbox|url`
-  (coloured options, an icon, **20 active per workspace**, archivable), values set with
+  (coloured options, an icon, **20 active per workspace** — platform cap, not printed by
+  `--help`; verify behaviorally (the 21st `property create` is rejected), checked 2026-07-26 —
+  archivable), values set with
   `issue property`. **Agents read and write them with validation** — so *Severity*, *Environment*
   or *Channel* becomes a field, not a sentence buried in a description that every agent parses
   differently. Prefer a property over prose whenever something is later filtered or counted.
@@ -167,8 +169,10 @@ don't restate them in instructions.
   **autopilot-triggered tasks never auto-retry** — they have their own cadence, and a failed
   autopilot task also **posts nothing to the inbox**, so subscribe the owner or it fails silently
   (BOOTSTRAP §13).
-- **Timeouts are real numbers:** **5 minutes to dispatch, 2.5 hours to run**. Work that cannot
-  finish in one run must be decomposed, not hoped through.
+- **Timeouts are real numbers:** **5 minutes to dispatch, 2.5 hours to run** (platform watchdog
+  defaults; the run cap is the `--agent-timeout` watchdog, env `MULTICA_AGENT_TIMEOUT`, in
+  `multica daemon start --help` — the flag is shown, the default is not, so re-verify; checked
+  2026-07-26). Work that cannot finish in one run must be decomposed, not hoped through.
 - **A failed issue-task rolls the issue back `in_progress` → `todo`** — so a board that "went
   backwards" overnight is a failure, not someone's edit.
 - **Manual rerun ≠ auto-retry:** a rerun **resets the attempt counter and has no ceiling**;
@@ -182,7 +186,8 @@ don't restate them in instructions.
   `agent_error`.
 - **Daemon rhythm:** polls for work every **3 s**, heartbeats every **15 s**, and a runtime is
   **offline after 45 s** (three missed beats). Logs: **`~/.multica/daemon.log`**.
-- **Stuck in `queued` has four usual causes:** the agent's concurrency cap (default 6) ·
+- **Stuck in `queued` has four usual causes:** the agent's concurrency cap (**default 6 —
+  CLI-verified 2026-07-26: `multica agent create --help` → `--max-concurrent-tasks`**) ·
   **the same agent on the same issue runs serially** · the agent is archived ·
   the runtime never registered (`daemon restart`).
 - **`cancelled` is separate** — a decision. Intentional cancels always carry a
@@ -190,7 +195,10 @@ don't restate them in instructions.
 - **Incremental commits are mandatory:** `rerun` resumes from the repository.
 - **Start dates are enforced by the team, not the platform:** nothing stops an agent
   beginning early, so the guide carries the rule and the conductor checks it when releasing
-  a stage. For strictly scheduled output, pair a date with a **scheduled autopilot**.
+  a stage. **The date gates the *whole* issue, preparation included** — work that must
+  genuinely run sooner is split into its own *undated* issue at intake (a recorded decision),
+  never reinterpreted away as "that part is only prep". For strictly scheduled output, pair a
+  date with a **scheduled autopilot**.
 - **Concurrency is a property of the resource, not of your decomposition.** `github_repo`
   gives every task its own worktree, so a wide stage really does run wide;
   `local_directory` locks on the resolved real path, so a wide stage just queues
@@ -263,7 +271,7 @@ but the batching and the audience-facing note are identical.
 - ❌ Treating a rule in the guide as enforcement — text instructs, it does not constrain.
 - ❌ Two parallel sub-issues owning the same file — assign ownership at decomposition.
 - ❌ Letting an agent grind past three attempts at one error — reassign instead.
-- ❌ Widening a stage past ~5 concurrent agents — coordination cost overtakes throughput (a judgement, not the platform cap: that is 6 per agent / 20 per daemon).
+- ❌ Widening a stage past ~5 concurrent agents — coordination cost overtakes throughput (a judgement, not the platform cap: that is **6 per agent** — `multica agent create --help` → `--max-concurrent-tasks`, default 6, CLI-verified 2026-07-26 — **/ 20 per daemon**, the daemon's `--max-concurrent-tasks` (env `MULTICA_DAEMON_MAX_CONCURRENT_TASKS`) in `multica daemon start --help`, where the flag is shown but the default is not — re-verify).
 - ❌ Approvals ageing invisibly — a pending human decision is a blocked flow, surface it.
 - ❌ Nesting sub-issues deeper than one level — order lives in `stage`, not nesting.
 - ❌ Expecting autopilot to react to "a stage finished" — cron/webhook only.

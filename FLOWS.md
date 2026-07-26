@@ -195,14 +195,32 @@ Step detail and CLI recipes: **`BOOTSTRAP.md §15`**.
 Audit before touching: inventory **every class in the workspace fingerprint** (PLAYBOOKS — agents · squads · skills · labels · autopilots · projects · runtimes · properties · members · project resources), plus statuses,
 **and workspace members**) → gap-check against the invariants and this file → report
 deltas with recommendations (fix now / later / ignore is the user's call) → **run the
-interview delta** (any topic the incumbent setup doesn't already answer — language/tone,
-token economy, avatars, opt-in modules, autonomy, docs home, **where Multica itself runs
-(cloud or self-hosted)**, integrations, stacks,
-resident Mops (in Multica), **brand & design system**, **governance**, **control & expertise**, **budget & currency** — is asked with defaults and wired, exactly as in `/mops init`;
-nothing from bootstrap is skipped just because the project pre-exists — **walk every topic on
-this list out loud before the fix batch, even the ones that resolve to "default, revisit
-later"; never narrow the delta to the two hard gates**) → apply in **approved batches** — full report first, the user can stop after any batch — never duplicating (`--on-conflict skip`; read instructions before
-appending). Respect incumbent conventions unless asked to change them.
+interview delta.**
+
+**Walk every row of this list out loud, in one message.** Each row ends in an answer *or* an
+explicit `default — revisit <trigger>`; a topic the incumbent already answers is still named and
+marked *already set*. The two hard gates **open** the list — they never replace it — and **a
+reply that skips a row is wrong by definition**:
+
+1. **Control & expertise** — hard gate, opens the wave
+2. **Governance** — hard gate, same opening wave (BOOTSTRAP §16)
+3. **Language / tone**
+4. **Token economy**
+5. **Avatars**
+6. **Opt-in modules**
+7. **Autonomy**
+8. **Docs home**
+9. **Where Multica itself runs** (cloud or self-hosted)
+10. **Integrations**
+11. **Stacks**
+12. **Resident Mops** (in Multica)
+13. **Brand & design system**
+14. **Budget & currency**
+
+Every row is asked with defaults and wired exactly as in `/mops init`; nothing from bootstrap is
+skipped just because the project pre-exists. → apply in **approved batches** — full report first,
+the user can stop after any batch — never duplicating (`--on-conflict skip`; read instructions
+before appending). Respect incumbent conventions unless asked to change them.
 
 **Reconcile every human member, not just agents.** Walk `workspace member` and, for each
 person, confirm the delta captures them: recorded role/responsibilities in `docs/TEAM.md`,

@@ -276,9 +276,11 @@ like: information architecture → user flows & journeys → low-fi wireframes �
 the structure** → high-fi → design system. For a snack brand it surfaces something entirely
 different. You are finding *this craft's* process, not applying a stored one.
 
-**2 · Draft it as steps, each with a one-line why.** The why is what lets the owner judge it.
-Low-fi before high-fi *because approving structure on cheap artifacts saves the tokens and
-days that redrawing finished screens costs.*
+**2 · Draft it as a table — one row per step, columns `step · why · tool-or-gap`.** The why is
+what lets the owner judge it (low-fi before high-fi *because approving structure on cheap
+artifacts saves the tokens and days that redrawing finished screens costs*). The table is the
+form that cannot skip a step silently: **every row must end in a tool line, and a step without
+one IS a gap — said so in that cell (`gap`), never left blank.**
 
 **3 · Show the owner: cut, add, reorder.** *"Here's the process I'd run — anything you want
 dropped or added?"* — in their words. This is where a designer who skips low-fi gets caught,
@@ -458,6 +460,24 @@ already — this is assembly order, not new machinery.
    single feature holds one version.
 8. **The invariant stands**: the project must rebuild from repo + workspace alone — memory,
    graph and atlas are derived, never the only copy. Re-test it whenever those layers change.
+9. **Field notes close the loop.** Working on Mops surfaces stumbles the guide never predicted,
+   so each one **lands the moment it happens** in the company's `FIELD-NOTES.md` — append-only,
+   one line per catch (`date · flow · symptom · evidence · fix-candidate`); a correction is a
+   **new entry**, never an edit to an old one. Mops **sweeps them into the workspace himself** at
+   the natural checkpoints (session end, `/mops status`, before a release cut): fresh, actionable
+   entries normalize to JSON with **`source_id = date+slug`** and go in through the same import
+   path (`scripts/import-issues.py`), labelled **`field-note`** — so a re-sweep is idempotent
+   (already-swept lines skip) and the conductor prioritizes them like any backlog. An entry that
+   ships in a release gets its issue **closed with the version in a comment**, so
+   catch → log → backlog → conveyor → release is one visible chain. The machinery already exists
+   (the `source_id` dedup above); this step is the discipline that feeds it.
+10. **A dead executor is a rerun, not a rewrite.** When a console executor dies mid-task — a
+   session limit, a crash — Mops **resurrects it with a state inventory**, never restarts it
+   from scratch: what is *committed*, what is *applied* against its numbered spec/checklist, and
+   what *remains*. Applied work is never redone. It holds for the same reason the invariant does
+   (step 8): the state lives in **artifacts** — the worktree, the commits, the numbered spec —
+   not in the dead session's context, so a fresh executor rebuilds its position from the repo and
+   continues where the last one stopped. Proven twice on this skill's own session-limit deaths.
 
 ## The company guards its own docs
 

@@ -155,7 +155,9 @@ A version bump is not just a changelog entry. Before you tag:
 **Then the cut itself, in order — the last two steps were live misses caught on 2.4.1:**
 
 1. **Bump both** — `SKILL.md` frontmatter and `.claude-plugin/plugin.json`; preflight fails on a mismatch.
-2. **Changelog** — the `## x.y.z` section, since it is the map `/mops upgrade` reads.
+2. **Changelog + README roadmap** — write the `## x.y.z` section (the map `/mops upgrade`
+   reads), and **remove landed items from the README roadmap, refresh the rest** — it is
+   forward-only, so a shipped feature lives in the body and changelog, never as a checked box.
 3. **preflight green** — the checklist above.
 4. **Merge** — a human merges the release branch (self-editing is locked; the loop adopts *after* the gate).
 5. **Tag** the merge commit.

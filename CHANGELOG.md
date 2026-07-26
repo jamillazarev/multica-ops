@@ -1,5 +1,42 @@
 # Changelog
 
+## 2.4.4
+
+**the second STACKS wave + field notes close the dogfood loop**
+
+- **Dogfood playbook, step 9 — field notes** (PLAYBOOKS): every stumble while working on Mops
+  lands in the company's `FIELD-NOTES.md` (append-only; corrections are new entries), and Mops
+  sweeps fresh actionable entries into the workspace at natural checkpoints via the existing
+  import path (`source_id = date+slug`, label `field-note`, idempotent re-sweeps). A shipped
+  entry closes its issue with the version — closing catch → log → backlog → conveyor → release.
+- **STACKS: the second wave of rows.** Product/launch capability — product search, voice
+  STT/TTS (Whisper local), e-commerce (Medusa/Saleor), push (Novu), video hosting
+  (PeerTube/Owncast), programmatic video (Revideo; Remotion **BUSL**-flagged), marketing
+  automation (Mautic/Listmonk), **share-preview debuggers** (per-platform OG re-scrape map) and
+  **build/bug sharing** (Jam.dev · Cloudflare Tunnel · TestFlight + the chat-bot lane). Discovery
+  & ops — where-to-run OSS (Coolify), context compression (Headroom), OSS-alternative catalogs,
+  game engines (Godot), browser control for agents (Playwright MCP), academic sources, feedback
+  portal (Quackback), human-side helpers. Every tool linked, licences verified live 2026-07-26;
+  copyleft (AGPL/GPL), BUSL and dormancy flagged per tool.
+- **STACKS: existing rows enriched.** Twenty leads CRM on its native MCP (+ SuiteCRM/Attio);
+  Jitter in animation; PhotoRoom/Lexica in media; Browse AI/Brand24 in competitive monitoring;
+  Google Trends in SEO; Hemingway in GEO; NN/g in the reference galleries. Free-assets gains a
+  patterns/gradients class (incl. GradientHunt, usage terms flagged) and the `docs/assets.md`
+  manifest discipline, mirrored as asset conformance in MODULES Design QA. New rule: **no AI-text
+  humanizers / AI-detectors** (the marketermilk rejects).
+- **STACKS carries pricing shape, never money figures** — the fal.ai and cf-browser figures are
+  gone, and a header rule pins it: rows describe pricing shape; live numbers are fetched at
+  decision time.
+- **README: "Why a skill, not another CLI agent"** — the doctrine is the value, the loop
+  commoditizes (improvements inherited free), billing rides the owner's harness, the two-seats
+  architecture needs a guest, and it stays auditable text with zero supply-chain surface.
+- **README gains a forward-only Roadmap** — a short teaser of what's next (memory · persona
+  theatre v2 · Product Atlas · `/mops explore` · pipelines-as-projects · …). Shipped items are
+  **deleted** from it, never checked off, so it can't drift from the body and changelog; the
+  release checklist (AGENTS → Cutting a release) now prunes it every cut.
+- **Dead links** — Rijksmuseum moved to `/en/collection`; `verify.py` now treats a 401
+  bot-challenge (Unsplash's within.website) as alive, not dead.
+
 ## 2.4.3
 
 **decided plan smalls + the first STACKS batch — and the licence lands**

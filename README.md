@@ -144,6 +144,38 @@ via telemetry on the first `npx skills add jamillazarev/multica-ops`.
 > monorepo* the skill recommends for YOUR projects (`apps/ site/ marketing/ docs/`)
 > — that guidance lives in [BOOTSTRAP.md §14](BOOTSTRAP.md).
 
+## Why a skill, not another CLI agent
+
+Why not ship Mops as a standalone binary with its own agent loop — a Hermes- or
+OpenClaw-style CLI? Because the value here is the **operating doctrine** — the decision loop,
+the gates, verify-first — not the agent loop underneath it, and that loop is commoditizing:
+as a skill, Mops **inherits every harness improvement for free** instead of maintaining its
+own. Billing rides the harness the owner **already pays for** — no second runtime, no third
+bill. The two-seats design needs Mops to be a **guest inside Multica**, which hosts
+instructions and skills, not third-party binaries — a skill fits that seat; a CLI agent
+doesn't. And a skill is **auditable text with zero supply-chain surface**: every line is
+readable before you run it, with no dependency tree to trust. The escape hatch stays open — if
+skill conventions ever fracture across harnesses, or monetization demands an owned install
+surface, the route is a Claude Agent SDK wrapper that reuses the loop, never a from-scratch
+binary.
+
+## Roadmap
+
+What's next, roughly in order — a teaser, not a backlog. This list is **forward-only**: when
+something ships it leaves here (it's then described above and in the changelog), so nothing is
+ever shown as "done" twice.
+
+- [ ] **Memory system** — provenance-tagged, per-human recall the team rebuilds from the repo.
+- [ ] **Persona theatre v2** — bias-profiled synthetic users beside real participants; verdicts give direction, not magnitude.
+- [ ] **Architecture review + a modular skill family** — split the core, budget what's always loaded.
+- [ ] **Product Atlas** — a living product dossier, with personas walking captured flows.
+- [ ] **`/mops explore`** — one sentence turned into a shaped product direction.
+- [ ] **`/report`** — structured feedback back to the platform, not just a chat message.
+- [ ] **Pipelines-as-projects** — a run with a contract (cadence · dry-run · idempotency · stop conditions), not feature acceptance criteria.
+- [ ] **Multi-instance** — one Mops across many workspaces, cleanly separated.
+
+Order and scope can change; the **CHANGELOG** is the record of what actually shipped.
+
 ## What Mops handles
 
 The whole company, end to end — and the loop closes, it doesn't stop at merge:
