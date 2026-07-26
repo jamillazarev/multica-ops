@@ -12,6 +12,13 @@
   (synthetic personas/experts, direction-only, proto when ungrounded, gate returned). Answers stay
   **sourced and evidence-tiered**; the session honours the token economy (REFERENCE §12, no
   per-chat graph). Home: FLOWS → Consult; row in COMMANDS; situation in USE-CASES.
+- **The consult contract is universal — a property of the conversation, not of Mops.** The default
+  addressee is Mops, but the owner may address **any team agent** (answers from its own craft), **any
+  expert** (its own voice and sources), or **the theatre** (personas react — direction-only,
+  🎭-marked, registered nowhere). The contract holds whoever answers — ephemeral, zero standing
+  footprint, sourced, bridge-on-request — and the economy is **one addressee, no fan-out** (an
+  in-workspace agent rides the team's shared limit). FLOWS → Consult (Who you consult); COMMANDS
+  consult row.
 - **The bridge is bidirectional.** A consultation offers to projectize **only when the answer
   leads there**; and *"let's build it"* is a **first-class transition** — the right shape is
   proposed with a why (`/mops quick` · `/mops init` · an existing workspace) and the consultation
@@ -24,8 +31,8 @@
 - **Evals.** New **scenario 14** (pure question → advice, no creation, ephemeral validation, clean
   conversion); **scenario 1** notes `/mops quick` as the direct route to the shape it already tests.
 - **Deferral, stated not omitted.** `/mops consult` and `/mops quick` **events enter the tracking
-  plan when the telemetry lands** (planned wave) — a stated deferral per the rule that a feature
-  ships with its events, not an omission.
+  plan when the telemetry lands** (planned wave) — the deferral is recorded here rather than left
+  silent.
 
 ## 2.5.1
 

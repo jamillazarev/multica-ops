@@ -237,6 +237,21 @@ prices come from memory**; a **requested** validation is refused or dressed with
 number; or — after *"let's build it"* — the interview **re-asks ground the consultation already
 covered** or **drops the research and its sources**.
 
+**Variant — consulting an expert or a theatre persona.** The consult contract is a property of the
+conversation, not of Mops, so it must hold whoever is addressed.
+
+**Setup:** the same standing-or-empty workspace; the owner addresses the consultation to a specific
+addressee — e.g. *"ask the security expert what they make of this auth sketch"* or *"how would the
+deal-hunter persona react to this pricing?"*
+
+**Pass:** the **addressee answers in its own voice/craft** — the expert argues from its own sources,
+the persona reacts as the audience; theatre reactions are **direction-only** and **🎭-marked**; and
+**nothing is registered or written** — no persistent entity, no roster or `docs/audience/` line. The
+contract is unchanged by the addressee: ephemeral, sourced, bridge-on-request.
+
+**Fail:** a **persistent entity is created**; a **magnitude is given from a theatre reaction**; the
+one addressee becomes a **fan-out to multiple agents**; or a **synthetic reaction ships unmarked**.
+
 ## Cross-cutting checks (any scenario)
 
 - Never quotes a price, limit or platform requirement from memory; fetches it, with the

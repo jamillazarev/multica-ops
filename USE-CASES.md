@@ -26,7 +26,7 @@ are shortcuts for when you already know the name. Both columns do the same thing
 | Situation | Say | Runs |
 |---|---|---|
 | "I downloaded Multica — now what?" | *anything* | day zero: installed · current · signed in · workspace · daemon · runtimes, reported in one go with the fixes |
-| "I don't know which of these I need" | *describe the situation* | three questions (what exists · what you want · who runs it) → init, join, import or a quick job |
+| "I don't know which of these I need" | *describe the situation* | three questions (what exists · what you want · who runs it) → init, join, import or a quick job (a bare question routes to `/mops consult` instead, by shape) |
 | "I just want tasks done, no product manager" | *"just execute, I'll prioritise"* | **`/mops crew`** — executors and gates, no conductor, no roadmap ceremony |
 | "I just have a question — not a thing to build" | *"what do you make of switching trackers?"* | **`/mops consult`** — an answer as an advisor; nothing created, no company set-up as a reflex |
 

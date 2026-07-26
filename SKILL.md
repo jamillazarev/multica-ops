@@ -132,7 +132,7 @@ runtime), then read what they have.
 | nothing yet | **`/mops init`** — build something new |
 | a Multica workspace | **`/mops join`** — audit, then continue it |
 | a backlog elsewhere (Linear/Jira/CSV) | **`/mops import`** — move it here |
-| a question, nothing to build | **`/mops consult`** — advise; no machinery unless the answer leads there |
+| a question, nothing to build | **`/mops consult`** — advise (Mops by default; any agent, expert or persona answers under the same contract); no machinery unless the answer leads there |
 
 **Then the *shape* is chosen inside — not another entrance.** `/mops init` opens with *"quick
 job or a company?"* and the answer picks it: a **company** (conductor, squads, roadmap, full

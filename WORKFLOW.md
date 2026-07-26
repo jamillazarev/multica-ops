@@ -19,6 +19,8 @@ Mermaid renders on GitHub, in Obsidian, and on the docs site.
 flowchart TD
     U["Any first message —<br/>even a bare /mops or 'hi'"] --> DZ["Day zero: installed · current ·<br/>signed in · workspace · daemon · runtimes<br/><i>one ladder with its fixes, not six prompts</i>"]
     DZ --> Q{"Three questions:<br/>what exists · what you want ·<br/>who runs the work"}
+    U -->|"just a question,<br/>nothing to build"| CONSULT["/mops consult — advise,<br/>zero footprint · no machinery<br/>unless the answer leads there"]
+    CONSULT -.->|"'let's build it'<br/>seeds a project"| Q
     Q -->|"nothing, want a team"| SHAPE
     Q -->|"a workspace already"| JOIN["/mops join — audit, then fix<br/>in approved batches"]
     Q -->|"a backlog elsewhere"| IMP["/mops import — mapping shown first,<br/>issues created unassigned"]

@@ -20,8 +20,9 @@ joining an existing one, or touching the live workspace's plumbing. Day-to-day w
 
 Never front-load a giant questionnaire. **The opening is the front door, not this section** —
 day zero first, then the three routing questions (what exists · what you want · who runs the
-work), which pick between `/mops init`, `/mops join`, `/mops import`+crew and a quick job. See "Before
-anything" below. What follows here is the *company* branch once that routing has happened:
+work), which pick between `/mops init`, `/mops join`, `/mops import`+crew and a quick job. **A bare
+question is caught by its shape before the routing even runs — it sits outside the three questions
+and routes to `/mops consult`.** See "Before anything" below. What follows here is the *company* branch once that routing has happened:
 
 - **Quick job** (a utility, one deliverable): 3 questions max — deliverable, repo,
   language. One conductor + 1–2 executors. Done. Everything else uses defaults. **When the
@@ -156,7 +157,7 @@ guide, because an unnamed duty is an unperformed one.
 
 **Owning a slice, not the whole thing.** A frontender who imported one feature, a designer
 on one surface, anyone responsible for a *part* — this is crew mode narrowed to a slice, laid
-over any route, not a fifth entrance. Say what the slice is (a feature, a layer, a directory)
+over any route — a modifier on an entrance, not an entrance of its own. Say what the slice is (a feature, a layer, a directory)
 and everything narrows to it: the board shows only that slice's issues, shaping sizes only its
 crafts, permissions and gates cover only its files. The rest of the project may not even exist
 in this workspace — the owner works their part and hands off at its edge. `/mops crew` with a named
@@ -181,16 +182,25 @@ that is a quick job or a feature.
 by default** — zero-footprint is the natural shape there, it runs async on its own seat, and
 the same sourcing labels apply. Consultation is not a CLI-only mode.
 
+**Who you consult.** The contract is a property of the **conversation**, not of Mops — whoever is
+addressed answers under it. The **default addressee is Mops**, but the owner may address **any team
+agent** (it answers from its own craft), **any expert** (its own voice, its own sources), or **the
+theatre** (personas react — **direction-only** verdicts, **🎭**-marked, registered nowhere; MODULES →
+Persona theatre). The mode is unchanged by who answers: **ephemeral, zero standing footprint**,
+sourcing labels carried, and the bridge on request (*"let's build it"* seeds the project, nothing
+re-asked). **Economy: route to the one addressee, no fan-out** — consulting an in-workspace agent
+rides the team's **shared limit** and Mops says so (REFERENCE §12).
+
 **Mode semantics — zero standing footprint.** No workspace, issue, team, doc, label or agent is
 created; **nothing survives the session** unless the owner asks to persist it, and then it is a
 **single file or note where they say**, nowhere else. The zero is about *persistent entities*,
-not conversation depth: **clarifying, interview-style questions are normal consulting** — under
-the interview craft (past behaviour over hypotheticals, no leading questions). A consultation
+not conversation depth: **clarifying, interview-style questions are normal consulting**
+(past behaviour over hypotheticals, no leading questions). A consultation
 can be one line or a long back-and-forth; it just leaves no trace.
 
 **Research is encouraged; heavy fan-out is announced.** Per the decision loop, spin **sub-agents
 for search and verification** freely — reads are free — and **brief each one narrow** (specific
-questions, grep-not-read, a scoped file list), the conveyor's own practice. Before a *heavy*
+questions, grep-not-read, a scoped file list) to keep each run cheap. Before a *heavy*
 fan-out say what it costs first (**N agents, ~M minutes**), per the core's "ask first when it
 costs"; where the harness allows, **route these verification/search runs to a cheaper tier** —
 they do not need the top model. Every answer carries the **sourcing labels** (verified /
