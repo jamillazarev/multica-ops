@@ -246,11 +246,16 @@ deal-hunter persona react to this pricing?"*
 
 **Pass:** the **addressee answers in its own voice/craft** — the expert argues from its own sources,
 the persona reacts as the audience; theatre reactions are **direction-only** and **🎭-marked**; and
-**nothing is registered or written** — no persistent entity, no roster or `docs/audience/` line. The
-contract is unchanged by the addressee: ephemeral, sourced, bridge-on-request.
+the consult act creates **no *new* persistent entity** — no new roster line, no new `docs/audience/`
+persona, no issue/doc/label. The contract is unchanged by the addressee: ephemeral, sourced,
+bridge-on-request. **The one thing still written when a validated twin of a real person is consulted:
+that twin's mandatory usage-log line (append-only, in its own persona file) — the consent/audit trail
+is never suspended (MODULES → Persona theatre).**
 
-**Fail:** a **persistent entity is created**; a **magnitude is given from a theatre reaction**; the
-one addressee becomes a **fan-out to multiple agents**; or a **synthetic reaction ships unmarked**.
+**Fail:** a **new persistent entity is created** (roster line, new `docs/audience/` persona,
+issue, doc, label); a **magnitude is given from a theatre reaction**; the one addressee becomes a
+**fan-out to multiple agents**; a **synthetic reaction ships unmarked**; or a **validated twin is
+consulted and its mandatory usage-log line is not appended** (the audit trail is not optional).
 
 ## Cross-cutting checks (any scenario)
 

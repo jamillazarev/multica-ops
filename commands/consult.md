@@ -11,5 +11,6 @@ offer to persist or projectize only when the answer leads there.
 **Optional addressee** — `/mops consult [who] <question>`: the contract is a property of the
 conversation, so the default is **Mops** but any addressee answers under it. Name a **team agent**
 (answers from its own craft), an **expert** (its own voice and sources), or the **theatre**
-(personas react — direction-only, 🎭-marked, registered nowhere). Route to the **one** addressee,
-no fan-out. Args: $ARGUMENTS
+(personas react — direction-only, 🎭-marked, registered nowhere — but a consulted validated twin
+still logs its own use per its consent contract, MODULES → Persona theatre). Route to the **one**
+addressee, no fan-out. Args: $ARGUMENTS

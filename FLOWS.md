@@ -186,10 +186,13 @@ the same sourcing labels apply. Consultation is not a CLI-only mode.
 addressed answers under it. The **default addressee is Mops**, but the owner may address **any team
 agent** (it answers from its own craft), **any expert** (its own voice, its own sources), or **the
 theatre** (personas react — **direction-only** verdicts, **🎭**-marked, registered nowhere; MODULES →
-Persona theatre). The mode is unchanged by who answers: **ephemeral, zero standing footprint**,
-sourcing labels carried, and the bridge on request (*"let's build it"* seeds the project, nothing
-re-asked). **Economy: route to the one addressee, no fan-out** — consulting an in-workspace agent
-rides the team's **shared limit** and Mops says so (REFERENCE §12).
+Persona theatre) — where **"registered nowhere" means the consult act itself creates no *additional*
+artifact, never that a twin's audit trail is suspended: a consulted validated twin still appends its
+own usage-log line per its consent contract (MODULES → Persona theatre).** The mode is unchanged by
+who answers: **ephemeral, zero standing footprint**, sourcing labels carried, and the bridge on
+request (*"let's build it"* seeds the project, nothing re-asked). **Economy: route to the one
+addressee, no fan-out** — consulting an in-workspace agent is a task that spends budget and the
+team's **shared limit**, and Mops says so (REFERENCE §7).
 
 **Mode semantics — zero standing footprint.** No workspace, issue, team, doc, label or agent is
 created; **nothing survives the session** unless the owner asks to persist it, and then it is a

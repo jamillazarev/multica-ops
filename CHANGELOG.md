@@ -15,7 +15,8 @@
 - **The consult contract is universal — a property of the conversation, not of Mops.** The default
   addressee is Mops, but the owner may address **any team agent** (answers from its own craft), **any
   expert** (its own voice and sources), or **the theatre** (personas react — direction-only,
-  🎭-marked, registered nowhere). The contract holds whoever answers — ephemeral, zero standing
+  🎭-marked, registered nowhere — a consulted validated twin still logs its own use per its consent
+  contract). The contract holds whoever answers — ephemeral, zero standing
   footprint, sourced, bridge-on-request — and the economy is **one addressee, no fan-out** (an
   in-workspace agent rides the team's shared limit). FLOWS → Consult (Who you consult); COMMANDS
   consult row.
