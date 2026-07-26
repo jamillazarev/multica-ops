@@ -146,19 +146,29 @@ verdicts honest about what a simulation can and cannot tell you. On via `/mops m
 on`; personas live as documents first and become agents only for a round.
 
 **Grounded in the research — which says the grounding *is* the product** (owner-supplied
-sources, read 2026-07-26 — Stanford HAI brief *Simulating Human Behavior with AI Agents*, Park
-et al. May 2025, the 1,000-people generative-agents study; Mahajan's synthetic-users taxonomy;
-carried as facts recorded on that date):
+sources; the primary paper re-verified 2026-07-26 against the current arXiv version — Park et
+al., *LLM Agents Grounded in Self-Reports Enable General-Purpose Simulation of Individuals*
+(arXiv:2411.10109; v1 was *Generative Agent Simulations of 1,000 People*, and the May-2025
+Stanford HAI brief *Simulating Human Behavior with AI Agents* matches the v1 framing);
+Mahajan's synthetic-users taxonomy; carried as facts recorded on that date):
 
-- an LLM given a **2-hour in-depth interview** replicated individuals' survey answers at **~85%
-  normalized accuracy** (ceiling = the person's own two-week test-retest), **14–15 p.p. above
-  demographic- or persona-based agents on the same model** (checked 2026-07-26) — so fidelity
-  comes from **the interview transcript**, not a bio;
-- **demographic personas amplify stereotype bias; interview-grounded agents narrowed
-  demographic-parity gaps** across tasks (checked 2026-07-26) — so a bias profile is
-  **evidence-grounded or it does not ship**;
+- **self-reports ground the fidelity**: agents built from a person's own self-reports replicated
+  their survey answers at **83% (interview-grounded) / 82% (survey-grounded) / 86% (both)** of
+  the person's own two-week test-retest ceiling, vs **74% for demographics-only** (re-verified
+  2026-07-26 against the current arXiv version) — the **interview is the strongest single
+  source** and surveys **add** (86% combined), so the **transcript chain stays the spine and
+  surveys are a legitimate supplement**, not a bio; the interview-vs-demographics gap is **~9
+  p.p.** (83 vs 74) at the abstract level, narrower than the brief's now-superseded estimate;
+- **self-report agents reduce accuracy disparities across racial and ideological groups relative
+  to demographics-only** (current abstract, re-verified 2026-07-26); the stronger **"demographic
+  personas amplify stereotype bias"** phrasing is the **May-2025 Stanford HAI brief's** (brief-era
+  finding, its v3 status unverified) — either way, a bias profile is **evidence-grounded or it
+  does not ship**;
 - **synthetics cluster toward neutral** — they catch direction, miss extremes and magnitudes
-  (Mahajan, checked 2026-07-26) — so a synthetic verdict states **direction, never magnitude**.
+  (Mahajan, checked 2026-07-26; strongest current evidence: LLMs track experimental
+  **directions** at **r≈0.85** while systematically **overestimating effect sizes** — Ashokkumar
+  et al., *Nature* (advance online publication, 2026-07-08), doi:10.1038/s41586-026-10742-x,
+  checked 2026-07-26) — so a synthetic verdict states **direction, never magnitude**.
 
 ### Staging — proto-persona → validated persona
 Two stages, always marked, never blurred:
@@ -191,8 +201,12 @@ source**:
   (that pooled distillation is its grounding artifact) — a segment, not one person;
 - a **proto-persona's** come from **published cognitive-science literature, source named** (a
   documented effect, not a guess);
-- **never assigned from demographics** — that is the tier Stanford measured 14–15 p.p. worse and
-  bias-amplifying (checked 2026-07-26).
+- **never assigned from demographics** — that is the tier the study measured **~9 p.p. worse**
+  (83 vs 74) and with **larger accuracy disparities** across racial/ideological groups
+  (re-verified 2026-07-26; the brief-era "bias-amplifying" framing overstated the gap —
+  superseded by the current version). And **not from a bio paragraph either**: persona-paragraph
+  agents score **0.71 in the current version — below even the demographics baseline** (0.74), so a
+  written "portrait" is the **worst grounding tier**, not a shortcut.
 
 The profile is **core to the audience side, not a lookup table**: a persona with loss aversion
 is a **dark-pattern detector** — a screen that "works" only because it presses her fear is a
