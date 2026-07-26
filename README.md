@@ -144,6 +144,21 @@ via telemetry on the first `npx skills add jamillazarev/multica-ops`.
 > monorepo* the skill recommends for YOUR projects (`apps/ site/ marketing/ docs/`)
 > — that guidance lives in [BOOTSTRAP.md §14](BOOTSTRAP.md).
 
+## Why a skill, not another CLI agent
+
+Why not ship Mops as a standalone binary with its own agent loop — a Hermes- or
+OpenClaw-style CLI? Because the value here is the **operating doctrine** — the decision loop,
+the gates, verify-first — not the agent loop underneath it, and that loop is commoditizing:
+as a skill, Mops **inherits every harness improvement for free** instead of maintaining its
+own. Billing rides the harness the owner **already pays for** — no second runtime, no third
+bill. The two-seats design needs Mops to be a **guest inside Multica**, which hosts
+instructions and skills, not third-party binaries — a skill fits that seat; a CLI agent
+doesn't. And a skill is **auditable text with zero supply-chain surface**: every line is
+readable before you run it, with no dependency tree to trust. The escape hatch stays open — if
+skill conventions ever fracture across harnesses, or monetization demands an owned install
+surface, the route is a Claude Agent SDK wrapper that reuses the loop, never a from-scratch
+binary.
+
 ## What Mops handles
 
 The whole company, end to end — and the loop closes, it doesn't stop at merge:
