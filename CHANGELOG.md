@@ -27,6 +27,10 @@
   destinations *or* events from 2+ platforms), **owner-side knowledge-base apps** beside the docs
   row, and **cross-cutting testing tools** (API clients/mocking, LLM-eval, test data, self-host
   A/B). Licences verified 2026-07-26.
+- **Strip-for-parts + a hosted-media row** — a prebuilt agent is a parts bin, not a hire: take
+  its methods/skill references, clear each through the import gate, rebuild on our own skeleton
+  (ROLES role-builder + PLAYBOOKS import gate). And a new **Generative media (hosted inference)**
+  STACKS row — fal.ai / Replicate over the API, ComfyUI as the self-host end of the ladder.
 - **Smaller truths**: the last blanket-restart wording is gone (content applies on next read; a
   restart is only for a new command or a hook); `thinking_level` *is* `--effort`, and
   `--custom-args` is blocklisted (REFERENCE §10).

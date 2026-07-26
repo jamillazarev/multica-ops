@@ -133,8 +133,8 @@ each is a capability below, not a promise here.
 ## Works beyond Claude Code
 
 The skill is plain **SKILL.md + markdown** — the Agent Skills convention. The
-[skills.sh](https://skills.sh) installer puts it into 18+ harnesses (Claude Code,
-Cursor, Codex, Windsurf, Gemini CLI, Copilot, …); `AGENTS.md` routes any agent that
+[skills.sh](https://skills.sh) installer puts it into Claude Code, Cursor, Codex, Windsurf,
+Gemini CLI, Copilot and the rest of the skills.sh roster; `AGENTS.md` routes any agent that
 lands in the repo. Slash commands are a Claude Code plugin bonus (namespaced: `/multica-ops:mops …`) — everywhere else,
 natural language runs the same flows. Listing on skills.sh is automatic: it appears
 via telemetry on the first `npx skills add jamillazarev/multica-ops`.
