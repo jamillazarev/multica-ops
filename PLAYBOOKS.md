@@ -458,6 +458,17 @@ already — this is assembly order, not new machinery.
    single feature holds one version.
 8. **The invariant stands**: the project must rebuild from repo + workspace alone — memory,
    graph and atlas are derived, never the only copy. Re-test it whenever those layers change.
+9. **Field notes close the loop.** Working on Mops surfaces stumbles the guide never predicted,
+   so each one **lands the moment it happens** in the company's `FIELD-NOTES.md` — append-only,
+   one line per catch (`date · flow · symptom · evidence · fix-candidate`); a correction is a
+   **new entry**, never an edit to an old one. Mops **sweeps them into the workspace himself** at
+   the natural checkpoints (session end, `/mops status`, before a release cut): fresh, actionable
+   entries normalize to JSON with **`source_id = date+slug`** and go in through the same import
+   path (`scripts/import-issues.py`), labelled **`field-note`** — so a re-sweep is idempotent
+   (already-swept lines skip) and the conductor prioritizes them like any backlog. An entry that
+   ships in a release gets its issue **closed with the version in a comment**, so
+   catch → log → backlog → conveyor → release is one visible chain. The machinery already exists
+   (the `source_id` dedup above); this step is the discipline that feeds it.
 
 ## The company guards its own docs
 
