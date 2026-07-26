@@ -71,6 +71,21 @@ def check_pin():
              f"regenerate §10 if the surface moved")
 
 # ── 3. the sources we send agents to must still answer ──────────────────────────
+_BROWSER_UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
+               "(KHTML, like Gecko) Chrome/126.0 Safari/537.36")
+
+def _alive_via_browser_get(u):
+    """Some hosts refuse this script's HEAD — ffmpeg.org resets the connection, dev.vk.com
+    answers 418 — yet serve a normal page to a browser. Confirm liveness with one real GET
+    before believing a source is dead. This stays a *liveness check*, not a blanket pass: a
+    genuinely dead URL 4xx/5xx-es or raises here too, and still warns."""
+    try:
+        req = urllib.request.Request(u, headers={"User-Agent": _BROWSER_UA})
+        with urllib.request.urlopen(req, timeout=20) as r:
+            return r.status < 400
+    except Exception as e:
+        return getattr(e, "code", None) in (403, 405, 429)   # bot-blocked to the GET too, still alive
+
 def check_sources():
     urls = set()
     for f in DOCS:
@@ -88,8 +103,12 @@ def check_sources():
                     ok += 1
         except Exception as e:
             code = getattr(e, "code", None)
-            if code in (401, 403, 405, 429):   # bot-blocked (e.g. Unsplash's within.website
-                ok += 1                         # challenge → 401) or HEAD-averse, not dead
+            if code in (403, 405, 429):                    # pre-existing: bot-blocked / HEAD-averse
+                ok += 1
+            elif code == 401 and "unsplash.com" in u:      # Unsplash's within.website bot challenge —
+                ok += 1                                     # it blocks even a browser GET, so allow by domain
+            elif _alive_via_browser_get(u):                # HEAD-hostile host: confirm alive with a real GET
+                ok += 1
             else:
                 warn(f"source does not resolve: {u} ({code or type(e).__name__})")
     print(f"  sources: {ok}/{len(urls)} resolve")
