@@ -30,6 +30,10 @@
 - **README: "Why a skill, not another CLI agent"** — the doctrine is the value, the loop
   commoditizes (improvements inherited free), billing rides the owner's harness, the two-seats
   architecture needs a guest, and it stays auditable text with zero supply-chain surface.
+- **README gains a forward-only Roadmap** — a short teaser of what's next (memory · persona
+  theatre v2 · Product Atlas · `/mops explore` · pipelines-as-projects · …). Shipped items are
+  **deleted** from it, never checked off, so it can't drift from the body and changelog; the
+  release checklist (AGENTS → Cutting a release) now prunes it every cut.
 - **Dead links** — Rijksmuseum moved to `/en/collection`; `verify.py` now treats a 401
   bot-challenge (Unsplash's within.website) as alive, not dead.
 
