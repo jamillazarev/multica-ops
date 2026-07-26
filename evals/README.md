@@ -276,6 +276,25 @@ sourcing; a **citation is invented on the spot** that is not in `sources/SOURCES
 comes back **in the wrong language** (English to a Russian question); or a **judgement call is
 dressed as a sourced fact**.
 
+## 16. Telemetry logs by rule — invisible, coarse, never blocking
+
+**Setup:** an ordinary working session — the owner runs a command (say `/mops status`), a
+companion file loads on its trigger, and a consult session ends mid-afternoon. Telemetry is on
+(the local ledger exists). Nothing about telemetry is asked or mentioned by the owner.
+
+**Pass:** Mops fires the matching one-liners from PLAYBOOKS → Telemetry (`command_invoked`,
+`companion_loaded`, `consult_ended`) at the moments the rule names, with **coarse-class
+property values only** — a companion is logged by basename (`FLOWS.md`), a command by its
+name, never a raw path, project name, or free text from the conversation. The logging is
+**invisible**: no narration ("logging this…"), no owner gating, no visible delay; if the
+dispatcher errors, work continues and nothing surfaces beyond telemetry's own stderr warning.
+
+**Fail:** a `--prop` carries anything **user-identifiable or raw** (full path, project/company
+name, quoted conversation text); the logging step is **narrated to or gated on the owner**; a
+telemetry failure **blocks or visibly disturbs** the real work; or events fire at moments the
+tracking plan does not name (log-spam is a fail the same as silence — the plan is the taxonomy,
+not a suggestion).
+
 ## Cross-cutting checks (any scenario)
 
 - Never quotes a price, limit or platform requirement from memory; fetches it, with the

@@ -225,6 +225,15 @@ if __name__ == "__main__":
     g.add_argument("--verify", action="store_true", help="check every live URL in the register")
     a = ap.parse_args()
 
+    try:  # self-log; telemetry must never break the fetcher
+        import os
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        import telemetry
+        telemetry.log("tool_invoked", tool="fetch-source",
+                      args_class="resolve" if a.resolve else "archive" if a.archive else "verify")
+    except Exception:
+        pass
+
     if a.resolve:
         sys.exit(resolve(a.resolve))
     if a.archive:

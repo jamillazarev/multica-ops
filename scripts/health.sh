@@ -6,6 +6,9 @@
 # Usage: bash health.sh [<project-id>]
 set -euo pipefail
 cd "$(dirname "$0")"
+# self-log this run; telemetry must never break the health probe
+python3 telemetry.py log tool_invoked --prop tool=health \
+  --prop args_class="$([ -n "${1:-}" ] && echo project_scoped || echo all)" 2>/dev/null || true
 command -v multica >/dev/null 2>&1 || { echo "0 0 -"; exit 0; }
 PROJECT="${1:-}" python3 - <<'PY'
 import json, os, re, sys
