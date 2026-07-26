@@ -1,5 +1,41 @@
 # Changelog
 
+## 2.4.3
+
+**decided plan smalls + the first STACKS batch — and the licence lands**
+
+- **Licence: MIT → Apache-2.0**, with a new `TRADEMARKS.md` — the code is Apache-2.0; the names
+  "Mops"/"multica-ops" and the avatar are reserved (no endorsement-implying use, no fork
+  branding). Integrated third-party tools keep their own licences.
+- **The release ritual is written down** (AGENTS → Cutting a release): bump both files →
+  changelog → preflight → merge → tag → **`gh release create` from the changelog section** →
+  **regenerate and push the docs site**. The last two were live misses on 2.4.1 (tagged with no
+  Release; the site lagged the tag).
+- **Recovery covers the issues a failure produces** — `scripts/resume.sh` now also reruns `todo`
+  issues rolled back by an `agent_error` run (task history tells them from untouched backlog), and
+  gained a `--dry-run`. The 2.4.2 docs already described this; the code now matches.
+- **Autopilots, written up** (BOOTSTRAP §13): `create_issue` vs `run_only`, cron granularity and
+  the ~30s scan lag, the **webhook URL is a credential**, silent failure (no retry, no inbox —
+  subscribe the owner), and the agent-or-squad assignee gap to verify live.
+- **Self-adoption gates** (PLAYBOOKS): guards run in a fresh worktree at the merge SHA, and Mops
+  reports the version it now runs — one version per feature.
+- **STACKS: three researched rows** — Canvas/WebGL effect components, 2D graphics (canvas & SVG),
+  and a **security-scanning row led by the Claude Security plugin** (code projects, on your own
+  Claude inference) — plus a names-as-links sweep so every tool row points at its source.
+- **STACKS: more rows and clauses** — a self-host **team-chat** row (Zulip default), **cookieless
+  web analytics** (Umami/Plausible) wired to the CDP row with a platform-aware trigger (2+
+  destinations *or* events from 2+ platforms), **owner-side knowledge-base apps** beside the docs
+  row, and **cross-cutting testing tools** (API clients/mocking, LLM-eval, test data, self-host
+  A/B). Licences verified 2026-07-26.
+- **Strip-for-parts + a hosted-media row** — a prebuilt agent is a parts bin, not a hire: take
+  its methods/skill references, clear each through the import gate, rebuild on our own skeleton
+  (ROLES role-builder + PLAYBOOKS import gate). And a new **Generative media (hosted inference)**
+  STACKS row — fal.ai / Replicate over the API, ComfyUI as the self-host end of the ladder.
+- **Smaller truths**: the last blanket-restart wording is gone (content applies on next read; a
+  restart is only for a new command or a hook); `thinking_level` *is* `--effort`, and
+  `--custom-args` is blocklisted (REFERENCE §10).
+- **`BACKLOG.md` removed** — its live entries were folded into the plan, so ideas have one home.
+
 ## 2.4.2
 
 **the eval run's fixes — sixteen rules the dogfood day proved missing**

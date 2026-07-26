@@ -27,7 +27,7 @@ staffing plan — see `ROLES.md`.
 - [10. Launch checklist](#10-launch-checklist)
 - [11. Multica docs — go there, don't guess](#11-multica-docs-go-there-dont-guess)
 - [12. External services — connect-or-create, access, secrets](#12-external-services-connect-or-create-access-secrets)
-- [13. Slack / Lark (optional)](#13-slack-lark-optional)
+- [13. Slack / Lark · Autopilots (optional)](#13-slack-lark-autopilots-optional)
 - [14. Workspace = company · multiple members · local runtimes](#14-workspace-company-multiple-members-local-runtimes)
 - [15. Stand-up order (detail)](#15-stand-up-order-detail)
 - [15b. The short command — installed, not offered](#15b-the-short-command-installed-not-offered)
@@ -285,9 +285,11 @@ multica issue comment add <id> --content-stdin      # @-mention = native trigger
 
 Generic versions live in [scripts/](scripts/) — run from the project repo root:
 - **status.sh** — counters by status + assigned/in-flight list.
-- **resume.sh** — `issue rerun` for **interrupted** (`in_progress`/`in_review`) only.
-  ⚠ never rerun `todo`/`backlog` — they wait on stage barriers.
-  `--revive-cancelled` also revives `cancelled` **without** a "Cancel reason" marker.
+- **resume.sh** — `issue rerun` for **interrupted** (`in_progress`/`in_review`) work **and** for
+  `todo` issues rolled back by an `agent_error` run (`issue runs` tells those apart).
+  ⚠ never touches *untouched* `todo`/`backlog` — they wait on stage barriers.
+  `--revive-cancelled` also revives `cancelled` **without** a "Cancel reason" marker; `--dry-run`
+  prints the selection without firing.
 - **health.sh** — for indicators: waiting / limit-stuck / reset time (from run `error`).
 - **issues.py** — paginated, corruption-tolerant issue listing. Use it instead of raw
   `issue list` whenever you need the whole board: it walks `--offset` past the 100-row cap
@@ -341,13 +343,41 @@ Inventory first ("what already exists?"), then per service:
 - Secrets hygiene: never in repo/issues/comments; repos private by default; a key
   that appeared in a chat or log is rotated.
 
-## 13. Slack / Lark (optional)
+## 13. Slack / Lark · Autopilots (optional)
 
 Per-agent bots: each agent can get its own Slack app (Bot token `xoxb-` + App token
 `xapp-`, Socket Mode — no public URL). Members DM the bot, @-mention it in channels,
 or `/issue` to file issues from Slack. Only workspace members can use it (Slack
 identity links to the Multica account on first use). Lark has an analogous
 integration. Offer at setup; connect any time later.
+
+### Autopilots
+
+Scheduled or event-driven runs — **not** conveyor reactions; an autopilot never fires on "a
+stage finished" (that is @mentions and barriers). Offer at setup, default "later".
+
+- **The runbook is read on every run**, so an edit takes effect next run with no redeploy.
+  Output mode is either **`create_issue`** (default, recommended — the run lands as an issue on
+  the board, visible and reviewable) or **`run_only`** (fire-and-forget, **invisible on the
+  board** — use it only when the effect lives elsewhere and you don't need the trace).
+- **Cron is five fields, one-minute granularity, in an IANA timezone** (`Europe/Warsaw`, never a
+  bare offset). The server scans schedules roughly every 30 s, so a run can **start up to ~30 s
+  late** — fine for sweeps, wrong for a hard deadline.
+- **A webhook trigger's URL *is* the credential** — holding it is enough to fire the autopilot.
+  Rotation exists (`autopilot trigger-rotate-url`), but **anyone who can see the autopilot sees
+  its URL**, so treat it like a secret and rotate on member changes. The event filter matches a
+  name resolved in order — the envelope `event` field, then provider headers (`X-GitHub-Event`…),
+  then body fields, then `webhook.received` as the fallback. Responses: `200` accepted;
+  `400`/`401`/`404` rejected; `413` over 256 KiB; `429` throttled.
+- **Failures are silent** — an autopilot task **neither auto-retries nor posts to the inbox**
+  (REFERENCE §7). So run it in `create_issue` mode and **subscribe the owner**, or a broken
+  autopilot goes unnoticed indefinitely.
+- **A manual `autopilot trigger` is tagged source `manual`.** Not yet on the platform (checked
+  v0.4.8): HMAC signing on the trigger, an IP allowlist, API-based triggers — do not design as if
+  they exist.
+- **Assignee gap, verify live:** the app offers an autopilot assignee of **agent *or* squad**,
+  while the docs describe only an agent — confirm on the workspace before promising a
+  squad-assigned autopilot.
 
 ## 14. Workspace = company · multiple members · local runtimes
 

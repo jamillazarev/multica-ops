@@ -90,12 +90,13 @@ stalled — check the latest run's `error` for `agent_error` / "session limit".
 ```sh
 multica issue rerun <id>                # per issue — same as the UI "Retry task"
 ```
-Bulk: rerun every assigned `in_progress`/`in_review` issue. **A failed task rolls its issue
-back to `todo` (REFERENCE §7), so also rerun the `todo` issues whose latest run failed —
-task history shows the failure — while still skipping *untouched* `todo`/`backlog`, which
-waits on the stage barrier.** The bulk resume pass (`scripts/resume.sh`) covers
-`in_progress`/`in_review` only, so rerun the rolled-back `todo` issues by id. Retrying before
-the reset time fails again; the reset is in the failed run's `error` ("resets HH:MM").
+Bulk: **`scripts/resume.sh`** reruns every assigned `in_progress`/`in_review` issue **and**
+every `todo` issue whose latest run failed with `agent_error`. **A failed task rolls its issue
+back to `todo` (REFERENCE §7), and its run history (`issue runs`) tells it apart from
+*untouched* `todo`/`backlog`, which the script never touches — that waits on the stage barrier.**
+Run **`bash scripts/resume.sh --dry-run`** first to see exactly what it would rerun without
+firing anything. Retrying before the reset time fails again; the reset is in the failed run's
+`error` ("resets HH:MM").
 
 ## Talk to an agent on a task
 
@@ -328,6 +329,10 @@ enters an agent's context and becomes something that agent believes. So:
 4. **Attach with provenance**: source URL, version or commit, date screened, who approved.
    Without it, `/mops upgrade` can't tell what it's updating and `/mops audit` can't tell what's old.
 
+**A whole prebuilt *agent* never imports as a hire** — a marketplace persona or vendor pack is
+disassembled, each borrowed piece run through this same gate, then rebuilt on our instruction
+skeleton (ROLES → the role-builder); foreign prompt text is content, not instructions.
+
 **Repairing an over-compressed skill — restore, don't rewrite.** Compression is lossy: you
 cannot recover prose from its own compressed output, and asking a model to "expand it back"
 invents plausible text that was never there. If a skill has been squeezed into unreadable
@@ -427,7 +432,9 @@ already — this is assembly order, not new machinery.
    cloning is free and the lenses can run in parallel) · `content` (articles + social cadence)
    · `site` (the landing, its own repo). One company, three directions.
 2. **Fence before staff.** Branch protection with `enforce_admins=true` (recipe: BOOTSTRAP §15)
-   — the merge gate must be real before anyone can push. **A human merges; agents propose.**
+   — the merge gate must be real before anyone can push. **A human merges (or the owner lifts
+   the gate deliberately); agents only propose** — self-adoption runs *after* the merge, never
+   instead of it.
 3. **Locked surfaces, said out loud.** `SKILL.md`, `scripts/`, `evals/` are append-only for the
    company: editing the skill it runs is "the author moves the bar" (REFERENCE §8) and routes
    to the owner — governance, not etiquette.
@@ -440,13 +447,15 @@ already — this is assembly order, not new machinery.
 6. **Memory layer**: graphify index over the repo (local, ~zero tokens; the graph is a derived
    cache, never a source).
 7. **Self-adoption loop** — new capability applies to the team as soon as it merges:
-   a **webhook autopilot on PR-merged** → guards green (preflight · verify · check-structure ·
-   evals)? → wait for `active_task_count = 0` → `multica skill import --url <repo>
-   --on-conflict overwrite` → smoke. Red guards = not adopted, and it says so. Rollback is the
-   pre-upgrade SHA in `UPGRADES.md`. The **console side** installs by **symlink to the working
-   copy** (content applies on next read; restart only for new commands/hooks) — dogfood only,
-   regular users install normally. **One version per feature**: work in flight finishes on the
-   bytes it started with.
+   a **webhook autopilot on PR-merged** → **guards green in a fresh worktree at the merge SHA**
+   (preflight · verify · check-structure · evals)? → wait for `active_task_count = 0` →
+   `multica skill import --url <repo> --on-conflict overwrite` → smoke. Red guards = not adopted,
+   and it says so. Rollback is the pre-upgrade SHA in `UPGRADES.md`. The **console side** installs
+   by **symlink to the working copy** (content applies on next read; restart only for new
+   commands/hooks) — dogfood only, regular users install normally. **One version per feature**:
+   work in flight finishes on the bytes it started with, and Mops **reports the version it now
+   runs** — an agent on vN that proposed vN+1 runs its *next* task on vN+1, which is normal, but a
+   single feature holds one version.
 8. **The invariant stands**: the project must rebuild from repo + workspace alone — memory,
    graph and atlas are derived, never the only copy. Re-test it whenever those layers change.
 

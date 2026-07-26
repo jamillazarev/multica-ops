@@ -150,8 +150,9 @@ don't restate them in instructions.
 ## 7. Operational practices
 
 - **resume script:** `issue rerun` over assigned **interrupted** work
-  (`in_progress`/`in_review` only — `todo`/`backlog` wait on barriers). Paginate
-  (page = 100) and sanitize control characters before parsing JSON.
+  (`in_progress`/`in_review`) **plus** `todo` issues whose last run failed with `agent_error`
+  (a rollback, told apart by `issue runs`); *untouched* `todo`/`backlog` waits on barriers.
+  Paginate (page = 100) and sanitize control characters before parsing JSON.
 - **status script:** counters by status + assigned/in-flight.
 - **health script:** waiting / limit-stuck / reset time (from the failed run's
   `error` field) — feeds indicators.
@@ -163,7 +164,9 @@ don't restate them in instructions.
   (daemon vanished after dispatch) · `runtime_recovery` (daemon crashed and restarted) ·
   `timeout`. **Not retryable:** `agent_error` — the tool itself errored, **and quota/limit
   exhaustion lands here**. Auto-retry is capped at **two attempts (original + one)**, and
-  **autopilot-triggered tasks never auto-retry** — they have their own cadence.
+  **autopilot-triggered tasks never auto-retry** — they have their own cadence, and a failed
+  autopilot task also **posts nothing to the inbox**, so subscribe the owner or it fails silently
+  (BOOTSTRAP §13).
 - **Timeouts are real numbers:** **5 minutes to dispatch, 2.5 hours to run**. Work that cannot
   finish in one run must be decomposed, not hoped through.
 - **A failed issue-task rolls the issue back `in_progress` → `todo`** — so a board that "went
@@ -331,6 +334,13 @@ exists*):
   conveyor's accept step.
 - **Across workspaces, state the context.** An agent operating on a workspace it doesn't
   belong to must pass the workspace explicitly rather than relying on the default profile.
+- **Agent flags have a floor.** `--thinking-level` is Multica's dial for reasoning effort — the
+  same knob a raw harness exposes as `--effort`, so `thinking_level` *is* effort; tier reasoning
+  through this flag, never through `--custom-args`. `--custom-args` is appended to the tool's
+  command line but **filtered by a blocklist**: `-p`, `--permission-mode`,
+  `--dangerously-skip-permissions` and `--effort` cannot be overridden (the daemon owns them). So
+  the "keep it under ~10 args" advice carries a second half — **some flags are dropped regardless**
+  (agent-flag detail: BOOTSTRAP §2).
 
 **Usage & cost** (see the cost/effort ledger in SKILL.md): `issue usage` and
 `runtime usage` return **tokens** (input/output/cache, per model); `$` and time are

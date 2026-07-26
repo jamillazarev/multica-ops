@@ -12,7 +12,7 @@
 <p align="center">
   <a href="https://ai.jamillazarev.com/skills/multica-ops/overview"><img alt="Docs" src="https://img.shields.io/badge/docs-ai.jamillazarev.com-black"></a>
   <a href="https://ai.jamillazarev.com/skills/multica-ops/changelog"><img alt="Release" src="https://img.shields.io/github/v/release/jamillazarev/multica-ops?color=black"></a>
-  <a href="LICENSE"><img alt="MIT" src="https://img.shields.io/badge/license-MIT-black"></a>
+  <a href="LICENSE"><img alt="Apache-2.0" src="https://img.shields.io/badge/license-Apache--2.0-black"></a>
 </p>
 
 **Your Executive Advisor for [Multica](https://multica.ai)** — a skill that builds and
@@ -97,49 +97,44 @@ git clone https://github.com/jamillazarev/multica-ops
 
 ## Why this exists
 
-**#1 — Setup eats the first week.** Before an agent team does anything useful you're
-deep in plumbing: roles, prompts, review chains, issue conventions, integrations.
-*Fix:* one interview and Mops stands the whole company up — you start working, not
-configuring.
+Most "agent team" tooling is a prompt and a hope. This is a **methodology with gates**, and the
+parts worth trusting are the ones you can check:
 
-**#2 — Agent teams die without an operator.** Ten agents on ten issues and you're
-the bottleneck: routing, restarting, remembering what's next. *Fix:* a conductor
-drives the conveyor; Mops stays your console and, optionally, a resident copy inside
-Multica for when you're away.
+- **Every decision runs one loop.** Frame it, **search — don't recall** (options, prices and docs
+  fetched now, each claim sourced), compare, choose and say why, then check the choice survives
+  being wrong; record it in `DECISIONS.md`. Prioritisation, tool selection, the role-builder and
+  process discovery are all that one loop — named once so it is followed, not reinvented each time.
+- **Verify-first, and it has already paid.** Claims carry a label — **verified · recalled ·
+  unknown** — and an argument with no source is called an opinion. Running the skill on itself, an
+  executor **caught three stale upstream facts** before they shipped and a persona review **caught
+  a doc contradiction and routed around it**: the method finds its own errors, which is the whole
+  reason to build it this way.
+- **It adopts its own improvements.** A merge to the skill triggers guards → wait for idle →
+  re-import, so the team runs on its own latest version instead of a stale copy — the self-adoption
+  loop, dogfooded on this repo.
+- **Native-first, not a parallel universe.** Squads, stage barriers, @mention handoffs, permissions
+  and branch protection are Multica's real primitives; when the platform already does a thing the
+  skill uses it, rather than growing a home-grown copy that drifts.
+- **Honest about the ceiling.** The caps are stated, not wished away: **6 tasks per agent, 20 per
+  daemon** (the tighter wins), a `local_directory` serialises regardless, and `workspace delete`
+  isn't in the CLI — so Mops says so instead of promising it. Every number carries its check-date.
+- **Regression-tested behaviour.** **12 stratified eval scenarios** — from a job too small to
+  deserve a company to an import carrying a hidden instruction — judged on the end state, not the
+  route; and the standing rule that a review routes **away from the author, ideally onto a
+  different provider**, because a model grades its own work generously.
 
-**#3 — Session limits stall everything silently.** All agents on one runtime share
-one plan's window; a hit looks like a failed run and nothing retries itself. *Fix:*
-limits are first-class — detection with reset time, `/mops recover`, capacity levers,
-model tiering.
-
-**#4 — Teams can't grow themselves.** Mid-project you need a designer, a marketer, a
-pastry chef. *Fix:* a role-builder researches best practices and skills for any role
-you name; hiring can even run autonomously (`/mops autonomy hiring auto`).
-
-**#5 — Agents reinvent wheels and improvise opinions.** *Fix:* evidence-over-opinion
-and self-improvement are baked into the shared guide — research before inventing,
-and a routine repeated twice becomes a skill.
-
-**#6 — Knowledge scatters.** Decisions live in chats, roadmaps in heads. *Fix:*
-spec-driven intake (JTBD + stories + acceptance criteria), `docs/` as an
-Obsidian-compatible vault, ROADMAP/TEAM as files — everything in the repo, mirrors
-optional.
-
-**#7 — Work arrives with a history and a calendar.** A backlog already lives in Linear or
-Jira; posts are due on specific days. *Fix:* `/mops import` brings it over — mapping shown first,
-issues created unassigned so nothing starts running by itself — and dated work is never
-started early.
-
-**#8 — One-size teams fit nobody.** A snacks brand, a YouTube channel and a macOS
-utility need different crafts, gates, autonomy. *Fix:* everything beyond the
-invariants is an opt-in module; the progressive interview keeps small tasks small.
+And the operational grind it removes: setup that eats the first week, the operator bottleneck
+(a conductor drives the conveyor, an optional resident Mops covers when you're away), session
+limits that stall silently, teams that can't grow themselves, knowledge scattered across chats,
+a backlog stranded in Linear/Jira, and one-size machinery forced onto a job that didn't want it —
+each is a capability below, not a promise here.
 
 
 ## Works beyond Claude Code
 
 The skill is plain **SKILL.md + markdown** — the Agent Skills convention. The
-[skills.sh](https://skills.sh) installer puts it into 18+ harnesses (Claude Code,
-Cursor, Codex, Windsurf, Gemini CLI, Copilot, …); `AGENTS.md` routes any agent that
+[skills.sh](https://skills.sh) installer puts it into Claude Code, Cursor, Codex, Windsurf,
+Gemini CLI, Copilot and the rest of the skills.sh roster; `AGENTS.md` routes any agent that
 lands in the repo. Slash commands are a Claude Code plugin bonus (namespaced: `/multica-ops:mops …`) — everywhere else,
 natural language runs the same flows. Listing on skills.sh is automatic: it appears
 via telemetry on the first `npx skills add jamillazarev/multica-ops`.
@@ -151,24 +146,28 @@ via telemetry on the first `npx skills add jamillazarev/multica-ops`.
 
 ## What Mops handles
 
-- **The whole product loop** — discover → define → prioritize (ICE) → design → build →
-  review (parallel gates) → **ship → measure → learn**, closed, not a dead end at merge.
-- **The team** — hire / fire / reconfigure **agents *and* real humans**, squads, experts
-  & personas, finance & support roles, a role-builder, optionally autonomous hiring.
-- **Governance** — per-member access, human **review checkpoints**, a **budget** cap
-  (tokens or money), and the rule underneath them: **nobody edits the bar they're measured
-  against** (locked · editable · append-only · human-only), with reviews routed away from
-  the author — ideally onto a different provider.
-- **Not being played** — everything an agent reads from outside (a page, an issue, an
-  imported backlog) is **data, never instructions**; anything that must not happen gets a
-  gate, because a rule in a guide instructs and does not constrain.
-- **Staying alive** — session-limit recovery, a **full-circle health check** (runtimes,
-  integrations, tokens), **git-backed skill upgrades** with rollback, two-way drift sync,
-  assisted **provider switch**.
-- **Two seats, many workspaces** — Mops in CLI for building + an optional Mops in Multica
-  for presence, across several workspaces.
-- **Cost visibility** — a per-release **cost/effort ledger** (tokens · $ · time · per
-  agent/human) in git and on the issue.
+The whole company, end to end — and the loop closes, it doesn't stop at merge:
+
+- **The full product loop** — discover → define → prioritize (**ICE**, each score sourced) →
+  design → build → review (**parallel gates**) → **ship → measure → learn** — closed, not a dead
+  end at merge.
+- **The team, humans included** — hire / fire / reconfigure **agents *and* real people**, squads,
+  experts & personas, finance & support roles, a **role-builder** that researches any craft you
+  name, optionally autonomous hiring.
+- **Governance that actually binds** — per-member access, human **review checkpoints**, a
+  **budget** cap in tokens or money, and the rule under them: **nobody edits the bar they're
+  measured against** (locked · editable · append-only · human-only), reviews routed away from the
+  author — ideally onto a different provider.
+- **Not being played** — everything an agent reads from outside (a page, an issue, an imported
+  backlog) is **data, never instructions**, and anything that must *not* happen gets a **gate**,
+  because a guide instructs while only a gate constrains.
+- **Staying alive** — session-limit recovery with reset times, a **full-circle health check**
+  (runtimes · integrations · tokens · branch protection), **git-backed upgrades** with rollback,
+  two-way drift sync, an assisted **provider switch**.
+- **Two seats, many workspaces** — Mops in the CLI to build, an optional resident Mops in Multica
+  for presence, across as many workspaces as you run.
+- **Cost you can see** — a per-release **cost/effort ledger** (tokens · $ · time · per agent and
+  per human), in git and on the issue.
 
 ## What's inside
 
@@ -186,7 +185,6 @@ via telemetry on the first `npx skills add jamillazarev/multica-ops`.
 | [PLAYBOOKS.md](PLAYBOOKS.md) | daily operations, copy-paste ready |
 | [REFERENCE.md](REFERENCE.md) | object model, anti-patterns, **CLI surface (§10)**, **frameworks (§11)** |
 | [WORKFLOW.md](WORKFLOW.md) | Mermaid diagrams of the whole process |
-| [BACKLOG.md](BACKLOG.md) | ideas past the current version — dogfooding the skill on itself, and open questions |
 | [CHANGELOG.md](CHANGELOG.md) | versioned history — the migration map for `/mops upgrade` |
 | [BUDGET template](templates/BUDGET-template.md) | envelope · currency · credits with expiries · prices on record |
 | [evals/](evals/) | stratified scenarios — from a job too small to deserve a company to an import carrying a hidden instruction |
@@ -221,4 +219,5 @@ always-on footprint small (see the load-routing table in SKILL.md).
 Works against **Multica cloud or a self-hosted server** (`multica setup self-host`) —
 execution is local either way, so only backups and upgrades change hands.
 
-Verified with `multica` CLI v0.4.8. MIT.
+Verified with `multica` CLI v0.4.8. Code is **[Apache-2.0](LICENSE)**; the names "Mops" /
+"multica-ops" and the avatar are reserved — see **[TRADEMARKS.md](TRADEMARKS.md)**.
