@@ -97,6 +97,10 @@ truth. **Curator = the Design squad lead** (or the sole designer).
 - **Design QA checks against the system**: implementations use tokens/components, not
   hardcoded values; a deviation is either fixed or argued into the system. The owner can
   add a human checkpoint on system extensions via `/mops reviews`.
+- **Assets obey the same conformance**: stay within one chosen icon set / illustration
+  style / photo look (mixing reads amateur, exactly as hardcoded values do), widening only
+  on a real gap — and record every shipped asset with its licence in `docs/assets.md`
+  (sources and the licence-first rule live in STACKS → Free assets).
 
 ## Brand — identity, systematized
 
