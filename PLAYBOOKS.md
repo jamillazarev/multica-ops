@@ -276,9 +276,11 @@ like: information architecture → user flows & journeys → low-fi wireframes �
 the structure** → high-fi → design system. For a snack brand it surfaces something entirely
 different. You are finding *this craft's* process, not applying a stored one.
 
-**2 · Draft it as steps, each with a one-line why.** The why is what lets the owner judge it.
-Low-fi before high-fi *because approving structure on cheap artifacts saves the tokens and
-days that redrawing finished screens costs.*
+**2 · Draft it as a table — one row per step, columns `step · why · tool-or-gap`.** The why is
+what lets the owner judge it (low-fi before high-fi *because approving structure on cheap
+artifacts saves the tokens and days that redrawing finished screens costs*). The table is the
+form that cannot skip a step silently: **every row must end in a tool line, and a step without
+one IS a gap — said so in that cell (`gap`), never left blank.**
 
 **3 · Show the owner: cut, add, reorder.** *"Here's the process I'd run — anything you want
 dropped or added?"* — in their words. This is where a designer who skips low-fi gets caught,
