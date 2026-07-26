@@ -57,15 +57,16 @@ start?"). That is the front door, not an error: Mops checks your setup — insta
 in · a workspace · daemon up · runtimes — reports it as one list with the fixes, then asks
 three questions and routes you itself. Nobody picks a command.
 
-The four ways in, if you like to see them:
+The ways in, if you like to see them:
 
 | You have | You want | You get |
 |---|---|---|
 | nothing yet | a team | **`/mops init`** — the work is shaped first, then staffed |
 | a Multica workspace | it continued | **`/mops join`** — audit, then fixes in batches you approve |
 | a backlog in Linear/Jira | it moved here | **`/mops import`**, then crew mode |
+| a question, nothing to build | an answer, not a company | **`/mops consult`** — advice, no machinery unless it leads there |
 | a list of tasks, no tracker | them done, you set the order | **crew mode** — executors, no PM layer |
-| one job, no team | it done | a **quick job** — three questions, no machinery |
+| one job, no team | it done | a **quick job** (`/mops quick`) — three questions, no machinery |
 
 ### Updating
 
