@@ -158,14 +158,17 @@ Mahajan's synthetic-users taxonomy; carried as facts recorded on that date):
   2026-07-26 against the current arXiv version) — the **interview is the strongest single
   source** and surveys **add** (86% combined), so the **transcript chain stays the spine and
   surveys are a legitimate supplement**, not a bio; the interview-vs-demographics gap is **~9
-  p.p.** (83 vs 74) at the abstract level, narrower than the brief-era 14–15 p.p.;
+  p.p.** (83 vs 74) at the abstract level, narrower than the brief's now-superseded estimate;
 - **self-report agents reduce accuracy disparities across racial and ideological groups relative
   to demographics-only** (current abstract, re-verified 2026-07-26); the stronger **"demographic
   personas amplify stereotype bias"** phrasing is the **May-2025 Stanford HAI brief's** (brief-era
   finding, its v3 status unverified) — either way, a bias profile is **evidence-grounded or it
   does not ship**;
 - **synthetics cluster toward neutral** — they catch direction, miss extremes and magnitudes
-  (Mahajan, checked 2026-07-26) — so a synthetic verdict states **direction, never magnitude**.
+  (Mahajan, checked 2026-07-26; strongest current evidence: LLMs track experimental
+  **directions** at **r≈0.85** while systematically **overestimating effect sizes** — Ashokkumar
+  et al., *Nature* (advance online publication, 2026-07-08), doi:10.1038/s41586-026-10742-x,
+  checked 2026-07-26) — so a synthetic verdict states **direction, never magnitude**.
 
 ### Staging — proto-persona → validated persona
 Two stages, always marked, never blurred:
@@ -200,7 +203,10 @@ source**:
   documented effect, not a guess);
 - **never assigned from demographics** — that is the tier the study measured **~9 p.p. worse**
   (83 vs 74) and with **larger accuracy disparities** across racial/ideological groups
-  (re-verified 2026-07-26; the brief-era "bias-amplifying" framing put the gap at 14–15 p.p.).
+  (re-verified 2026-07-26; the brief-era "bias-amplifying" framing overstated the gap —
+  superseded by the current version). And **not from a bio paragraph either**: persona-paragraph
+  agents score **0.71 in the current version — below even the demographics baseline** (0.74), so a
+  written "portrait" is the **worst grounding tier**, not a shortcut.
 
 The profile is **core to the audience side, not a lookup table**: a persona with loss aversion
 is a **dark-pattern detector** — a screen that "works" only because it presses her fear is a
