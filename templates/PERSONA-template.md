@@ -36,7 +36,9 @@ hosted STT only with consent recorded there.
 
 | Bias | Source | How it shows in a decision |
 |---|---|---|
-| {{e.g. loss aversion}} | {{twin: interview transcript §… · proto: cited literature}} | {{the choice where it fires — not "performs it in every reply"}} |
+| {{loss aversion}} | {{twin: own interview transcript §…}} | {{the choice where it fires — not "performs it in every reply"}} |
+| {{anchoring}} | {{non-twin: pooled segment QDA §…}} | {{fixates on the first price shown}} |
+| {{social proof}} | {{proto: cited literature}} | {{follows the option marked "most popular"}} |
 
 **Rules:** a twin's biases come from **its own transcript**; a **validated non-twin's** from the
 **pooled segment transcripts / QDA** (its grounding artifact); a proto-persona's from **named
@@ -52,8 +54,10 @@ demographic-parity gaps; demographic personas amplify stereotype bias — Stanfo
 
 ## Provenance (twins only)
 
-{{Whose data · gathered how · when · under what permission · **hosted-STT consent** (yes/no —
-default is local Whisper). This is the record that makes the twin legitimate.}}
+{{Whose data — a **pseudonym reference** (never the real name — identity lives only in the
+external store's pseudonym → person map) · gathered how · when · under what permission ·
+**hosted-STT consent** (yes/no — default is local Whisper). This is the record that makes the
+twin legitimate.}}
 
 **External-store pointers** — raw audio, full transcript and QDA source live **outside git**; the
 repo holds only pointer + checksum + capture date, and the in-repo file is pseudonymized:
