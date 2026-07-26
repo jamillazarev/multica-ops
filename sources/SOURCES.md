@@ -158,10 +158,10 @@ prints a skeleton, `--archive <url>` triggers a Wayback snapshot, `--verify` wal
 ## Method provenance and standards (references, not evidence claims)
 
 ### method-provenance · adapted methods, nothing embedded
-- **Citation:** cookiy — `user-research-skill` (MIT). agentman — persona-creator (concepts only).
-- **Live:** https://github.com/cookiy-ai/user-research-skill (agentman: repo URL pending owner confirmation)
+- **Citation:** cookiy — `user-research-skill` (MIT). agentman — "Synthetic Persona Creator" skill (concepts only).
+- **Live:** https://github.com/cookiy-ai/user-research-skill · https://agentman.ai/agentskills/skill/synthetic-persona-creator (owner-confirmed 2026-07-27; page verified live: three-layer persona architecture — identity foundation · context seeding · response calibration — plus cohort distribution)
 - **Archive:** http://web.archive.org/web/20260411081018/https://github.com/cookiy-ai/user-research-skill
-- **Licence:** free — cookiy's `user-research-skill` is **MIT** (a copy may be carried later; today only the method shape is adapted, nothing embedded). agentman: **concepts taken, nothing embedded** (no code carried, so no licence obligation).
+- **Licence:** free — cookiy's `user-research-skill` is **MIT** (a copy may be carried later; today only the method shape is adapted, nothing embedded). agentman: **no licence stated on the page**; concepts taken, nothing embedded (no code carried, so no licence obligation).
 - **Distillate:** Method lineage, not evidence. cookiy's MIT skill supplied the **shape** of the qualitative-research flows (its `qualitative-research-planner` → our persona-interview flow, its `synthesize-research-report` → our QDA step), adapted through the import gate. agentman supplied the **calibration and cohort concepts** behind the persona response-calibration layer. Recorded so every adaptation is auditable and no vendor wrapper is smuggled in.
 - **Check-date:** 2026-07-27
 - **Cited-by:** MODULES.md:187, MODULES.md:221, MODULES.md:304; ROLES.md:339
