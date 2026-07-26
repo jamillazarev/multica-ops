@@ -27,6 +27,9 @@
 - **The DoD rule.** A release now carries its tracking-plan diff or states "no events
   needed" as a decision (AGENTS.md release ritual): a feature without its events is a dark
   feature.
+- **Eval scenario 16** guards the one judgment-dependent piece: the Mops-side logging rules
+  in PLAYBOOKS (coarse-class values only, invisible to the owner, never blocking). The
+  scripts' self-logging needs no scenario — it is deterministic code, tested in review.
 
 ## 2.5.3
 
