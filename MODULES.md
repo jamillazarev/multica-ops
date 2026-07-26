@@ -150,7 +150,7 @@ sources; the primary paper re-verified 2026-07-26 against the current arXiv vers
 al., *LLM Agents Grounded in Self-Reports Enable General-Purpose Simulation of Individuals*
 (arXiv:2411.10109; v1 was *Generative Agent Simulations of 1,000 People*, and the May-2025
 Stanford HAI brief *Simulating Human Behavior with AI Agents* matches the v1 framing);
-Mahajan's synthetic-users taxonomy; carried as facts recorded on that date):
+Lewis & Sauro's synthetic-users taxonomy (MeasuringU, 2026); carried as facts recorded on that date):
 
 - **self-reports ground the fidelity**: agents built from a person's own self-reports replicated
   their survey answers at **83% (interview-grounded) / 82% (survey-grounded) / 86% (both)** of
@@ -164,8 +164,9 @@ Mahajan's synthetic-users taxonomy; carried as facts recorded on that date):
   personas amplify stereotype bias"** phrasing is the **May-2025 Stanford HAI brief's** (brief-era
   finding, its v3 status unverified) — either way, a bias profile is **evidence-grounded or it
   does not ship**;
-- **synthetics cluster toward neutral** — they catch direction, miss extremes and magnitudes
-  (Mahajan, checked 2026-07-26; strongest current evidence: LLMs track experimental
+- **synthetics show artificially low variability** — they vary less than real respondents and
+  distort magnitudes, so they catch direction but miss the extremes (Lewis & Sauro, MeasuringU
+  2026, checked 2026-07-27; strongest current evidence: LLMs track experimental
   **directions** at **r≈0.85** while systematically **overestimating effect sizes** — Ashokkumar
   et al., *Nature* (advance online publication, 2026-07-08), doi:10.1038/s41586-026-10742-x,
   checked 2026-07-26) — so a synthetic verdict states **direction, never magnitude**.
@@ -330,8 +331,9 @@ built from a real person's data carries, per `templates/PERSONA-template.md`:
   person's *data*.
 
 ### Direction-only verdicts, and the walk format
-**Synthetic rounds give direction, never magnitude** — synthetics cluster toward neutral and
-miss the extremes (Mahajan, checked 2026-07-26). The verdict *format itself* enforces it: no
+**Synthetic rounds give direction, never magnitude** — synthetics show artificially low
+variability and distort magnitudes (Lewis & Sauro, MeasuringU 2026, checked 2026-07-27). The
+verdict *format itself* enforces it: no
 magnitude claims (pricing sensitivity, score deltas, "23% would churn"), only direction and
 **which bias fired** ("three of five bought on false scarcity" is a signal, not a success). The
 format and its two provenance blocks live in COMMANDS → `/mops validate`. **Findings are weighted

@@ -253,6 +253,18 @@ ship an urgent one alone, keep the note terse and for the audience — same disc
 skill's own `AGENTS.md`). Non-code work has no branches: the version is a date or an edition,
 but the batching and the audience-facing note are identical.
 
+**"Where did you get this?" is a first-class question.** Asked in any phrasing — *"а с чего ты
+взял"*, "source?", "how do you know that works" — Mops answers from `sources/SOURCES.md`, **never
+defensively**: it **names the source**, points at **where to look** (the live URL or the register
+id), and gives a one- or two-line **digest in the conversation's language**. A claim that is *not*
+in the register is said so plainly — a **judgement call**, or **recalled, unverified** — never
+dressed as a sourced fact. The register holds **slow-rotting canon only**; a fast-rotting fact (a
+price, a current cap) is **fetched at the moment it is asked**, not read from the register. The
+register ships with its own fetcher — `python3 scripts/fetch-source.py --resolve <doi|arxiv|url>`
+prints a ready entry skeleton, `--archive <url>` triggers a Wayback snapshot, and `--verify` walks
+every live URL — so an entry is never hand-typed from memory (checked each release, AGENTS.md →
+Cutting a release).
+
 ## 8. Anti-patterns
 
 - ❌ A squad leader executing a whole feature that was addressed **to the squad** — that

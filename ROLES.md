@@ -169,9 +169,11 @@ routine agents build against.
 **Cascade when unsure.** The fit-check is judgement *before* the work; cascading is the
 correction *after* it. If a task's difficulty is genuinely unclear, give it to the lower
 grade and let the **review gate act as the verifier** — a gate that fails may return
-*"needs a higher grade"* rather than a list of fixes. Published routing experiments find
-cheap-first-then-escalate beats guessing upfront on cost per solved task; the same logic
-holds here, where the gates already exist.
+*"needs a higher grade"* rather than a list of fixes. Published cost-routing work backs this:
+FrugalGPT's cascade matches the best single model at up to **−98% cost**, and RouterBench shows
+cheap-first-then-escalate beats any single model **only when the verifier is good** — judge error
+**≤0.1**, deteriorating past 0.2. That caveat is a *strength* here, not a risk: the skill's **review
+gates are that verifier**, so cascading rests on a check that already exists (sources/SOURCES.md).
 
 **Fit-check — every agent checks the task is actually theirs.** Before starting, an agent
 asks: *is this my craft, and my grade?* Three exits, all normal, none a failure:

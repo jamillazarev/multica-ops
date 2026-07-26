@@ -1,5 +1,47 @@
 # Changelog
 
+## 2.5.3
+
+**The sources register v1 — every slow-rotting claim carries its evidence, and "where did you get this?" is answerable**
+
+- **The register.** New `sources/SOURCES.md` — one entry per source in a fixed block form (id ·
+  citation · live URL/DOI/arXiv · archive link · licence · one-paragraph distillate · check-date ·
+  cited-by), so a wrong entry is **visibly wrong**. It carries **slow-rotting canon only**;
+  fast-rotting facts (prices, current caps) stay fetch-at-decision-time rules, never entered.
+  Licence-tiered: free sources may be copied later, copyrighted ones get citation + archive + our
+  distillate, math gets the named formula. Fifteen entries at ship — the persona-theatre evidence
+  pack (Park ×2, Ashokkumar, Lewis & Sauro ×2, Sharma, Tjuatja, Argyle, Wang, Kapania), the routing
+  pack (FrugalGPT, RouterBench), the AGENTS.md-benefit study, and the method-provenance / standards
+  cluster.
+- **The register ships with its fetcher.** New `scripts/fetch-source.py`: `--resolve <doi|arxiv|url>`
+  builds an entry skeleton from the arXiv API / Crossref / landing-page title, `--archive <url>`
+  triggers a Wayback Save Page Now and prints the availability snapshot, `--verify` walks the register
+  and reports dead/moved URLs with the remediation ladder (transient → bot-block → hunt the
+  successor). Wired into the release ritual (AGENTS.md → Cutting a release) alongside `verify.py
+  --live`. The five entries added this release were each resolved through the tool itself.
+- **Two undocumented claims paid down.** SKILL's "published comparisons put LLM-written guide files at
+  no benefit" is now a **single, scoped, sourced** line (a coding-agent-benchmark study: repo context
+  files don't lift success rates, +~20% inference cost, LLM-written slightly worse). ROLES's
+  "published routing experiments" now names **FrugalGPT + RouterBench** and turns the caveat into a
+  strength: cheap-first-then-escalate wins **when the verifier is good** (judge error ≤0.1) — and the
+  skill's review gates are that verifier.
+- **Provenance fix — the Mahajan citation is gone.** "Mahajan's synthetic-users taxonomy," cited by
+  name only in MODULES, could not be located in any venue (ACM Interactions, MeasuringU, NN/g all
+  checked); replaced with **Lewis & Sauro (MeasuringU, 2026)** and reworded to their actual finding —
+  synthetics show **artificially low variability** and distort magnitudes, not "cluster toward
+  neutral." A restore comment sits by the register entry should the owner supply the original link.
+- **Sources on demand — a user-visible feature.** *"Where did you get this?"* in any phrasing is a
+  **first-class question**: Mops answers from the register — names the source, points at the URL / id,
+  digests **in the conversation's language**, never defensively; an unregistered claim is a
+  **judgement call** or **recalled, unverified**, never dressed as sourced. REFERENCE §7 carries the
+  rule; SKILL's "Say what you know" points at the register in place; new **eval scenario 15** tests it
+  against a Russian mid-advice challenge.
+- **Consult follow-ups.** The team guide template now says a **bare question is a consult** (answered
+  from craft, ephemeral, zero standing footprint, sourced; *"let's build it"* → the conductor seeds it
+  as a feature). FLOWS's consult section gains the **artifacts-on-request** rule: no silent temp files
+  ever, the transcript is the record, and an explicit ask writes exactly **one** artifact where the
+  user says (default: the project's `docs/`, else a single named file in cwd).
+
 ## 2.5.2
 
 **Consultation mode — Mops as a pure advisor — plus a direct `/mops quick`**

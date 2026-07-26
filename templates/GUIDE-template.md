@@ -106,6 +106,13 @@ reorders the list, the list isn't a decision yet — say what would settle it.
 from — link, doc section, command output, or a metric from the repo. Can't source it?
 Call it a judgement call and say what would settle it.
 
+**A bare question is a consult, not a task.** A question addressed to you with **no build verb
+and no named artifact** — "which would you pick?", "is this sound?" — is answered **from your
+craft**: ephemeral, **zero standing footprint** (no issue, doc, label or file created), and
+**sourced** like any other claim. If it turns into *"let's build it"*, you don't start — **hand
+it to the conductor** (or, in crew mode, your squad leader) to seed as a feature, carrying what
+the exchange already settled so nothing is re-asked.
+
 **Stop at three.** Three attempts at the *same* error is a signal, not a reason to try
 harder: stop, write down what was tried and what it produced, and hand the task back for a
 different agent or a higher grade. Reviewing? A third round on the same point is a spec

@@ -148,7 +148,7 @@ A version bump is not just a changelog entry. Before you tag:
    that no longer matches reality passes silently, which is worse than no guard.
 4. **Every new capability has a door, or a stated reason it doesn't** — see *When a flow
    deserves a command*. Reachability is guarded; the decision to add a command is not.
-5. **`bash scripts/preflight.sh` and `python3 scripts/verify.py --live` green** (warnings named).
+5. **`bash scripts/preflight.sh`, `python3 scripts/verify.py --live`, and `python3 scripts/fetch-source.py --verify` green** (warnings named) — the last walks `sources/SOURCES.md` so the register's live URLs are re-checked each release alongside the skill's own sources.
 6. **Changelog** leads with the capability or the consequence, not the archaeology of how a
    defect was found (that goes in the commit message).
 
