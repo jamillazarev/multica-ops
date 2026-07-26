@@ -320,8 +320,11 @@ built from a real person's data carries, per `templates/PERSONA-template.md`:
 miss the extremes (Mahajan, checked 2026-07-26). The verdict *format itself* enforces it: no
 magnitude claims (pricing sensitivity, score deltas, "23% would churn"), only direction and
 **which bias fired** ("three of five bought on false scarcity" is a signal, not a success). The
-format and its two provenance blocks live in COMMANDS → `/mops validate`. **And the format
-returns the gate:** the verdict ends with Mops's *labeled* recommendation (a judgement call, with
+format and its two provenance blocks live in COMMANDS → `/mops validate`. **Findings are weighted
+by evidence tier:** a live reaction outweighs a twin's, a twin's outweighs a pooled-validated's,
+and a proto's is a marked guess — the same hypothesis-vs-fact ladder the provenance rules carry,
+applied inside the verdict. **And the format returns the gate:** the verdict ends with Mops's
+*labeled* recommendation (a judgement call, with
 its reasoning) and hands the ship/no-ship decision back to whoever owns it by control level —
 asked "should we ship?", Mops advises, it does not decide, and synthetic findings are proposals,
 never numbered shipping requirements.

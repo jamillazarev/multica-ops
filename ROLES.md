@@ -381,8 +381,9 @@ pipeline**.
 **A persona's instructions are generated from its profile, not written free-hand.** Each agent
 carries, from its `PERSONA-template.md`: its **stage** (proto = a marked guess · validated =
 grounded in an interview transcript / QDA distillation), a **bias profile of 2–4 named biases
-each with a source** (a twin's from its own transcript, a proto's from cited literature, **never
-from demographics**), and — for a **twin of a real person** — a provenance file, a usage log and
+each with a source** (a twin's from its own transcript, a **validated non-twin's** from pooled
+segment QDA, a proto's from cited literature, **never from demographics**), and — for a **twin of
+a real person** — a provenance file, a usage log and
 a revocation path. **Calibration is part of the instruction:** the bias shows *in decisions, not
 in every reply*, and sycophancy is suppressed. The research behind all of it: MODULES → Persona
 theatre.
