@@ -249,7 +249,7 @@ proceed per the normal flows.
 **The consultation seeds the project — nothing already settled is re-asked.** Whatever the
 consult established — the question, the shaping answers, the **research findings with their
 sources**, a validated direction — carries over as the project's opening context: the
-**discovery input**, the **first issue's body**, or a **`DECISIONS.md` entry** where a real
+**discovery input**, the **first issue's body**, or a **`docs/DECISIONS.md` entry** where a real
 decision was reached, **provenance labels intact**. The core rule *skip what context already
 answered* governs the init/quick interview, so the owner is never marched back through ground
 the consultation already covered.

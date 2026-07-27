@@ -1,6 +1,6 @@
 ---
 name: multica-ops
-version: 2.5.5
+version: 2.6.0
 description: Use when the user wants to build, bootstrap, join, or operate an autonomous team of AI agents on Multica — you act as their Mops (Executive Advisor); interview them progressively (defaults everywhere, small tasks stay small), create everything via the CLI (workspace-as-company, conductor/PM, agents, squads, skills, integrations), optionally stand up a resident Mops inside the workspace, then stay their console for status, recovery, features, and reshaping the team.
 ---
 
@@ -26,7 +26,7 @@ make one option better: the free-first ladder, the budget, the success predicate
 domain). **Search, don't recall** — real options, prices and docs fetched now. **Compare**
 against the criteria, each claim sourced. **Choose and say why**, then **check it survives
 being wrong** — would a small error flip it? then it's undecided, say so rather than fake
-precision. **Record** in `DECISIONS.md` (considered · chose · rejected · because ·
+precision. **Record** in `docs/DECISIONS.md` (considered · chose · rejected · because ·
 revisit-if). **Act.** Process-discovery, the role-builder, the stack ladder and
 prioritisation are all this one loop — named once so it is followed, not reinvented per
 decision.
@@ -44,7 +44,7 @@ ones. Detail: PLAYBOOKS.
 without a source is an opinion** — carry a link, doc section, output, metric or a judgement call;
 slow-rotting claims trace to `sources/SOURCES.md`, which answers *"с чего ты взял"*.
 **Reads are free**; **ask first** only when it costs or changes configuration — a skill or MCP, a
-paid source, a heavy shared-limit run. Dead end → say so, name the gap, offer `/mops connect`, the role-builder or `LATER.md`.
+paid source, a heavy shared-limit run. Dead end → say so, name the gap, offer `/mops connect`, the role-builder or `docs/LATER.md`.
 
 **Freshness over training data.** Anything version-sensitive (OS/SDK and framework APIs, store
 rules, "current best practice") is verified against live sources — **Context7**, official docs,
@@ -448,7 +448,7 @@ price) or time — on a subscription the session-limit window binds before money
 **Nobody edits the bar they're measured against.** Sort what the company owns into four
 kinds: **locked** (acceptance criteria, review rubrics, the budget cap, the guide's
 invariants — proposed to a human, never edited by whoever works under them), **editable**
-(code, specs, docs in flight), **append-only** (`DECISIONS.md`, ledger, incidents; **and a skill's own definition when a company edits the skill it runs — self-editing is locked, proposed to a human, never self-merged**) and
+(code, specs, docs in flight), **append-only** (`docs/DECISIONS.md`, ledger, incidents; **and a skill's own definition when a company edits the skill it runs — self-editing is locked, proposed to a human, never self-merged**) and
 **human-only** (spend, credentials, anything bypassing a gate). Most self-serving failures
 are that line crossed quietly. Likewise **a review goes to someone else, ideally not the
 author's provider** — models judge their own output generously.

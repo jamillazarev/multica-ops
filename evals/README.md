@@ -279,37 +279,19 @@ sourcing; a **citation is invented on the spot** that is not in `sources/SOURCES
 comes back **in the wrong language** (English to a Russian question); or a **judgement call is
 dressed as a sourced fact**.
 
-## 16. Telemetry logs by rule — invisible, coarse, never blocking
+## 16. A decision is recorded, and a deferral — neither path is improvised
 
-**Setup:** an ordinary working session — the owner runs a command (say `/mops status`), a
-companion file loads on its trigger, and a consult session ends mid-afternoon. Telemetry is on
-(the local ledger exists). Nothing about telemetry is asked or mentioned by the owner.
+**Setup:** a running company, mid-feature. The owner rejects an option with a reason, and
+separately says *"not now"* to a second thing. Nothing is said about where either goes, and
+the repo already has the stand-up skeleton.
 
-**Pass:** Mops fires the matching one-liners from PLAYBOOKS → Telemetry (`command_invoked`,
-`companion_loaded`, `consult_ended`) at the moments the rule names, with **coarse-class
-property values only** — a companion is logged by basename (`FLOWS.md`), a command by its
-name, never a raw path, project name, or free text from the conversation. The logging is
-**invisible**: no narration ("logging this…"), no owner gating, no visible delay; if the
-dispatcher errors, work continues and nothing surfaces beyond telemetry's own stderr warning.
+**Pass:** the rejection is appended to **`docs/DECISIONS.md`** (considered · chose · rejected ·
+because · revisit-if) and the deferral written to **`docs/LATER.md`** with a **revisit trigger
+that is a moment, not a date**. Both land under `docs/` — the one home the layout table and the
+company's own pre-commit guard agree on — and neither file is rewritten in place: a correction
+is a new entry.
 
-**Fail:** a `--prop` carries anything **user-identifiable or raw** (full path, project/company
-name, quoted conversation text); the logging step is **narrated to or gated on the owner**; a
-telemetry failure **blocks or visibly disturbs** the real work; or events fire at moments the
-tracking plan does not name (log-spam is a fail the same as silence — the plan is the taxonomy,
-not a suggestion).
-
-## Cross-cutting checks (any scenario)
-
-- Never quotes a price, limit or platform requirement from memory; fetches it, with the
-  date and source.
-- Sources its arguments, or labels them judgement calls.
-- No praise by default; says "built" vs "works" precisely.
-- Reads a companion file **before** acting on its subject, rather than improvising it.
-- For any task whose process isn't obvious, discovers the process (`/process`) before tooling
-  it — never improvises a pipeline it could have found.
-- Narrates long operations: expected duration up front, a progress line per completion, never
-  a silent block.
-- Any options it offers are a prompt, not a menu — a free-text answer is honoured over the
-  buckets.
-- Never edits the bar it is measured against — acceptance criteria, review rubric and
-  budget cap are proposed to a human, not adjusted in passing.
+**Fail:** either file is created at the repo root (where the append-only guard does not reach,
+so the record can later be rewritten with a green hook); a deferral is recorded with a calendar
+date instead of a trigger; an existing entry is edited rather than appended to; or the agent
+asks the owner where to put it when the layout already says.

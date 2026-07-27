@@ -1,5 +1,35 @@
 # Changelog
 
+## 2.6.0
+
+**The repo layout is written down as one table, the two documents that had two homes get one, and the telemetry subsystem is removed**
+
+- **The repo layout is a table, not an inventory scattered across five files** (BOOTSTRAP §15
+  step 7). Every path the methodology prescribes, with what it holds, when it is created, its
+  template and what guards it — so an agent never invents a home for something already listed.
+  It also closes two silences: **where bytes physically live** (repo for text and code; files
+  and big blobs to object storage with a pointer, never the DB, never git) and the rule that
+  **a document nobody links is a document nobody reads**.
+- **`docs/DECISIONS.md` and `docs/LATER.md` are the one home for those two.** The corpus wrote
+  them bare in fifteen places and under `docs/` in ten, including the decision law itself — so
+  an agent following it literally created the file at the repo root, **where the append-only
+  guard does not reach**. The record the governance rule calls immutable could be rewritten
+  with a green hook. **Migration:** a company with a root `DECISIONS.md` or `LATER.md` moves it
+  under `docs/` — `git mv DECISIONS.md docs/DECISIONS.md`.
+- **The company's docs guard gains two checks.** `docs/LATER.md` joins the existence check —
+  every "not now" in the methodology hangs on that file and nothing guarded it. And a document
+  under `docs/` that no other document links now **warns**, because an unreachable doc is the
+  project-side form of a capability with no door.
+- **Telemetry is removed** — `TELEMETRY.md`, `telemetry/`, both dispatcher scripts, the logging
+  rules, the per-tool self-logging and the release-ritual step that demanded events with every
+  feature. The in-repo record replaces it: **`docs/FIELD-NOTES.md`** catches a stumble the
+  moment it happens and is swept into the backlog, and the **cost/effort ledger** at each
+  `/mops ship` carries the run's real numbers. Both live in the repo, are readable by a person,
+  and survive the transcript — which the JSONL ledger never was. **Migration:** nothing to do;
+  `MOPS_SESSION_ID` and any local `telemetry/*.jsonl` are simply unused, and can be deleted.
+- Eval scenario 16 replaced: the telemetry-logging scenario is gone, and a new one checks that
+  a decision and a deferral land in their one home, with a trigger rather than a date.
+
 ## 2.5.5
 
 **Five hygiene fixes and a plain-language pass on the word "telemetry"**

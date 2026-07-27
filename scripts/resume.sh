@@ -32,10 +32,6 @@ while [ $# -gt 0 ]; do
   shift
 done
 
-# self-log this run; telemetry must never break resume (cwd is scripts/)
-_ac="default"; [ "$REVIVE" = 1 ] && _ac="revive"; [ "$DRY" = 1 ] && _ac="dry_run"
-python3 telemetry.py log tool_invoked --prop tool=resume --prop args_class="$_ac" 2>/dev/null || true
-
 if [ "$REVIVE" = 1 ]; then
   PROJECT="$PROJECT" DRY="$DRY" python3 - <<'PY'
 import json, os, re, subprocess, sys

@@ -83,7 +83,7 @@ in tokens for what one sentence would have carried.
 > correct, the UI gives no way to disambiguate.
 > **You're up:** the empty and ambiguous-result states — the ambiguous one is new, it
 > wasn't in the original design.
-> **Not done, on purpose:** typo tolerance. Deferred with a trigger in `LATER.md`
+> **Not done, on purpose:** typo tolerance. Deferred with a trigger in `docs/LATER.md`
 > ("if disambiguation doesn't fix the ticket rate").
 
 It states what was built, what proves it, what is deliberately absent, and what the next

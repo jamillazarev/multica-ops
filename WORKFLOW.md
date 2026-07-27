@@ -159,7 +159,7 @@ flowchart TD
     end
     subgraph IMPORT["Import"]
         FIND["find-skills / search"] --> SCAN{"Screen:<br/>commands · exfiltration ·<br/>endpoints · grants · injection"}
-        SCAN -->|critical| REJ["Rejected<br/>→ DECISIONS.md"]
+        SCAN -->|critical| REJ["Rejected<br/>→ docs/DECISIONS.md"]
         SCAN -->|broad access| HUM["Conductor + security reviewer<br/>never auto-approved"]
         SCAN -->|clean| READ["Someone still reads<br/>what it instructs"]
         HUM --> READ

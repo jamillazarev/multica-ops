@@ -44,9 +44,6 @@ say_warn() { echo "  ! $1"; warn=1; }
 
 echo "preflight — multica-ops"
 
-# self-log this run; telemetry must never break preflight (cwd is repo root)
-python3 scripts/telemetry.py log tool_invoked --prop tool=preflight --prop args_class=default 2>/dev/null || true
-
 # 1 · version in SKILL.md == plugin.json
 sv=$(grep -m1 '^version:' SKILL.md | awk '{print $2}')
 pv=$(grep -m1 '"version"' .claude-plugin/plugin.json | sed 's/.*"version": *"\([^"]*\)".*/\1/')

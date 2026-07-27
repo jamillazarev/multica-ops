@@ -116,14 +116,6 @@ def main():
     ap.add_argument("--apply", action="store_true", help="without it, nothing is written")
     a = ap.parse_args()
 
-    try:  # self-log; telemetry must never break an import
-        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-        import telemetry
-        telemetry.log("tool_invoked", tool="import-issues",
-                      args_class="apply" if a.apply else "dry_run")
-    except Exception:
-        pass
-
     items = json.load(open(a.file, encoding="utf-8"))
     missing = [i for i, x in enumerate(items) if not x.get("source_id") or not x.get("title")]
     if missing:

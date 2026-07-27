@@ -139,7 +139,7 @@ role genuinely doesn't need it. Confusing the two is how a floor quietly triples
 - **Context7** — for any role that writes version-sensitive code or config: current
   library/SDK/OS docs instead of a frozen training cutoff.
 - **The docs it must know**: `ROADMAP.md` · `TEAM.md` · `TOOLING.md` (tools, access,
-  target versions) · `LATER.md`, plus `brand/` and `design-system/` when those modules
+  target versions) · `docs/LATER.md`, plus `brand/` and `design-system/` when those modules
   are on. Referenced from the guide, not copy-pasted into instructions.
 
 ## Grades, fit-check and the talent pool
@@ -350,7 +350,7 @@ the *agentman* persona-creator — concepts taken, nothing embedded.
 4. **Decompose the role into tasks** and search per task — tooling usually exists per
    task even when the job title has no list.
 5. Only then **draft a small skill with skill-creator** from step 1's research — and log
-   the gap in `LATER.md` so it gets revisited when the ecosystem catches up.
+   the gap in `docs/LATER.md` so it gets revisited when the ecosystem catches up.
 
 Designers and engineers join from the first decisions (discovery, spec review) — not
 only at their build stage. Bake "tokens / design system / Storybook" style practices in
