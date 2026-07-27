@@ -178,13 +178,20 @@ if [ -f scripts/check-structure.py ]; then
 fi
 
 # 5j · a version bump must bring the tests with it. Evals and the lens review go stale
-# silently — 2.3 shipped with evals a release behind until caught by hand.
+# silently — 2.3 shipped with evals a release behind until caught by hand. Compared against
+# the LAST RELEASE TAG, not HEAD: a working-tree-vs-HEAD check stops firing the moment the
+# bump is committed (FIELD-NOTES 2026-07-27), so the guard went blind after every commit.
 if git rev-parse --verify HEAD >/dev/null 2>&1; then
-  head_ver=$(git show HEAD:SKILL.md 2>/dev/null | grep -m1 "^version:" | tr -dc "0-9.")
-  work_ver=$(grep -m1 "^version:" SKILL.md | tr -dc "0-9.")
-  if [ -n "$head_ver" ] && [ "$head_ver" != "$work_ver" ]; then
-    git diff --quiet HEAD -- evals/README.md 2>/dev/null &&       say_warn "version bumped ${head_ver} → ${work_ver} but evals/README.md is unchanged — refresh the eval scenarios for any new behaviour"
-    say_warn "releasing ${work_ver}: run the four review lenses before tagging (AGENTS.md → Cutting a release)"
+  last_tag=$(git describe --tags --abbrev=0 2>/dev/null)
+  if [ -z "$last_tag" ]; then
+    say_warn "no release tag yet — skipping the version-bump / evals guard (fresh clone)"
+  else
+    tag_ver=$(git show "${last_tag}:SKILL.md" 2>/dev/null | grep -m1 "^version:" | tr -dc "0-9.")
+    work_ver=$(grep -m1 "^version:" SKILL.md | tr -dc "0-9.")
+    if [ -n "$tag_ver" ] && [ "$tag_ver" != "$work_ver" ]; then
+      git diff --quiet "$last_tag" -- evals/README.md 2>/dev/null &&         say_warn "version bumped ${tag_ver} → ${work_ver} since ${last_tag} but evals/README.md is unchanged — refresh the eval scenarios for any new behaviour"
+      say_warn "releasing ${work_ver}: run the four review lenses before tagging (AGENTS.md → Cutting a release)"
+    fi
   fi
 fi
 

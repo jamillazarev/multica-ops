@@ -192,7 +192,7 @@ own usage-log line per its consent contract (MODULES → Persona theatre).** The
 who answers: **ephemeral, zero standing footprint**, sourcing labels carried, and the bridge on
 request (*"let's build it"* seeds the project, nothing re-asked). **Economy: route to the one
 addressee, no fan-out** — consulting an in-workspace agent is a task that spends budget and the
-team's **shared limit**, and Mops says so (REFERENCE §7).
+team's **shared limit**, and Mops says so (REFERENCE §7; the cost framing per §10).
 
 **Mode semantics — zero standing footprint.** No workspace, issue, team, doc, label or agent is
 created; **nothing survives the session** unless the owner asks to persist it, and then it is a
