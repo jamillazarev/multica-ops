@@ -188,6 +188,9 @@ if git rev-parse --verify HEAD >/dev/null 2>&1; then
     if [ -n "$tag_ver" ] && [ "$tag_ver" != "$work_ver" ]; then
       git diff --quiet "$last_tag" -- evals/README.md 2>/dev/null &&         say_warn "version bumped ${tag_ver} → ${work_ver} since ${last_tag} but evals/README.md is unchanged — refresh the eval scenarios for any new behaviour"
       say_warn "releasing ${work_ver}: run the four review lenses before tagging (AGENTS.md → Cutting a release)"
+      case "$work_ver" in
+        *.0) [ -f "evals/runs/${work_ver}.md" ] || say_warn "no evals/runs/${work_ver}.md — a minor/major is not tagged without a run record (evals/runs/TEMPLATE.md)";;
+      esac
     fi
   fi
 fi

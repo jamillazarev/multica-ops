@@ -20,13 +20,21 @@
   every "not now" in the methodology hangs on that file and nothing guarded it. And a document
   under `docs/` that no other document links now **warns**, because an unreachable doc is the
   project-side form of a capability with no door.
+- **Eval runs are recorded** — new `evals/runs/<version>.md`: date · skill version · player and
+  judge tiers · a verdict per scenario with its evidence. Four rules keep it honest — **`not run`
+  is listed, never omitted** (a record that hides its gaps reads as a full pass), a fail must
+  produce a fix or a written decision, records are never rewritten, and a verdict with nothing
+  to point at is an opinion. **A minor or major is not tagged without one**; preflight warns
+  while it is missing, and it fired on this very release. The rubric said what should hold; until
+  now nothing said whether it did.
 - **Telemetry is removed** — `TELEMETRY.md`, `telemetry/`, both dispatcher scripts, the logging
   rules, the per-tool self-logging and the release-ritual step that demanded events with every
-  feature. The in-repo record replaces it: **`docs/FIELD-NOTES.md`** catches a stumble the
-  moment it happens and is swept into the backlog, and the **cost/effort ledger** at each
-  `/mops ship` carries the run's real numbers. Both live in the repo, are readable by a person,
-  and survive the transcript — which the JSONL ledger never was. **Migration:** nothing to do;
-  `MOPS_SESSION_ID` and any local `telemetry/*.jsonl` are simply unused, and can be deleted.
+  feature. Six of its seven events were **the agent reporting on its own behaviour**, and the
+  tracking plan admitted Mops may forget — so a zero was indistinguishable from a miss. The
+  in-repo records replace it and answer better: the **run record** above turns *"how often"* into
+  *"does it hold"*, **`docs/FIELD-NOTES.md`** catches friction the moment it happens, and the
+  **cost/effort ledger** at each `/mops ship` carries the real numbers. **Migration:** nothing to
+  do; `MOPS_SESSION_ID` and any local `telemetry/*.jsonl` are simply unused, and can be deleted.
 - Eval scenario 16 replaced: the telemetry-logging scenario is gone, and a new one checks that
   a decision and a deferral land in their one home, with a trigger rather than a date.
 

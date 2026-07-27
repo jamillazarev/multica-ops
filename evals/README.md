@@ -22,6 +22,25 @@ expectations below are written as *what must be true afterwards*.
 a set made only of hard cases hides the failure that matters most in practice, which is
 over-serving someone who asked for very little.
 
+## The rubric is here; the record of a run is in `runs/`
+
+These scenarios are what gets checked. **What actually happened when they were checked lives
+in `evals/runs/<version>.md`** — date · skill version · player and judge tiers · one verdict
+per scenario · the evidence behind each. Format and rules: `runs/TEMPLATE.md`.
+
+Four rules make the record worth having, and each exists because its absence produces a
+confident lie:
+
+- **`not run` is listed, never omitted** — a record that hides its gaps reads as a full pass.
+- **A fail produces something** — a fix commit, or a written decision to accept it. A fail with
+  no consequence repeats next release.
+- **Never rewritten** — a later run is a new file; forward-only, like the changelog.
+- **Evidence, not assertion** — a verdict with nothing to point at is an opinion.
+
+**A minor or major release is not tagged without one** (AGENTS.md → *Cutting a release*);
+preflight warns while it is missing. A patch may reuse the previous record when nothing it
+touched is covered by a scenario — said out loud in that record's *why this run*, not assumed.
+
 **Run them after every compression.** Shrinking a file is verified by line count and
 preflight; that the *behaviour* survived is verified only here.
 

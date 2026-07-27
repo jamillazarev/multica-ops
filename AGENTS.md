@@ -134,9 +134,13 @@ rule now prevents.)
 
 A version bump is not just a changelog entry. Before you tag:
 
-1. **Refresh the evals.** Every new behaviour needs a scenario, or it has no regression test —
-   evals go stale silently (2.3 shipped a release behind until caught by hand). preflight warns
-   when the version bumped and `evals/README.md` didn't.
+1. **Refresh the evals, then run them and record the run.** Every new behaviour needs a
+   scenario, or it has no regression test — evals go stale silently (2.3 shipped a release
+   behind until caught by hand). preflight warns when the version bumped and
+   `evals/README.md` didn't. **A minor or major is not tagged without
+   `evals/runs/<version>.md`** — date, player and judge tiers, a verdict per scenario with its
+   evidence, and `not run` listed rather than omitted (`evals/runs/TEMPLATE.md`). The rubric
+   says what should hold; the run record is the only place saying whether it did.
 2. **Run the four review lenses** (deletion · adversarial · contradiction · cold-read) on the
    changed skill — they find the class of defect no script can: a sentence that parses, links
    and is false. This is not optional for a minor or major; a patch can skip it.
