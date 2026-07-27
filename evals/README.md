@@ -50,6 +50,8 @@ Expected:
 - Creates the conductor **first**, guide + find-skills on every agent, roles from the
   interview, docs skeleton; treats the resident Mops and all modules as **opt-in**.
 - Records every "not now" in `docs/LATER.md` **with a revisit trigger**.
+- On repo creation, **states the visibility as it goes** (*"creating it private"*); a
+  **silent** create or an **unprompted public** repo is a Fail.
 
 ## 3. Joining a messy existing workspace
 
@@ -245,7 +247,8 @@ addressee — e.g. *"ask the security expert what they make of this auth sketch"
 deal-hunter persona react to this pricing?"*
 
 **Pass:** the **addressee answers in its own voice/craft** — the expert argues from its own sources,
-the persona reacts as the audience; theatre reactions are **direction-only** and **🎭-marked**; and
+the persona reacts as the audience; theatre reactions are **direction-only** and **🎭-marked or
+prose-marked per the marking rule's scope**; and
 the consult act creates **no *new* persistent entity** — no new roster line, no new `docs/audience/`
 persona, no issue/doc/label. The contract is unchanged by the addressee: ephemeral, sourced,
 bridge-on-request. **The one thing still written when a validated twin of a real person is consulted:

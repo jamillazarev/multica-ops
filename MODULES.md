@@ -261,6 +261,11 @@ beyond a convention (squads and agents carry name/description/avatar, not tags):
 
 - **Name prefix 🎭** — theatre squads, and persona agents when the squad mode is used, carry a
   **🎭 prefix** in the name, visible on every board and in `agent list` / `squad list`.
+- **Docs-only consults — prose-marking satisfies the rule.** The glyph binds to **entity
+  names**, so where no theatre squad or persona-agent exists (a pure consult over
+  `docs/audience/`), marking a synthetic reaction **in prose** — *«синтетическая реакция,
+  гипотеза, не факт»*-style — satisfies the marking rule. That is **the marking rule's scope**:
+  🎭 on entities, prose where there are none.
 - **A machine-readable first line** of the squad/agent description:
   `theatre: personas · axis: <segment|cohort|situational>` — the same shape the temp-agent rule
   already uses (`TEMP — …` as the description's first line, ROLES → Mark temporary agents), so
