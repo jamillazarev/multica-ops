@@ -168,8 +168,8 @@ binary.
 
 ## Roadmap
 
-The skill is feature-complete for its current shape; maintenance and fixes continue. The
-**CHANGELOG** is the record of what actually shipped.
+Forward-only: what shipped lives in the body of this file and in the **CHANGELOG**, never as
+a checked box here. The CHANGELOG is the record — and the migration map `/mops upgrade` reads.
 
 ## What Mops handles
 

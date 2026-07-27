@@ -2,7 +2,7 @@
 
 ## 2.5.5
 
-**Five hygiene fixes and a plain-language pass on the word "telemetry" — the last feature-bearing release before the skill freezes to maintenance**
+**Five hygiene fixes and a plain-language pass on the word "telemetry"**
 
 - **Repo visibility is stated at creation.** When Mops creates a repository it now says the
   visibility out loud — *"creating it private"* — so private-by-default is visible, not
