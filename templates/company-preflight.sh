@@ -57,7 +57,7 @@ echo "preflight — docs"
 
 # 1 · the docs the guide promises must exist. An agent told to read a file that
 #     isn't there improvises, and improvisation is how conventions drift.
-for f in docs/ROADMAP.md docs/TEAM.md docs/TOOLING.md docs/DECISIONS.md; do
+for f in docs/ROADMAP.md docs/TEAM.md docs/TOOLING.md docs/DECISIONS.md docs/LATER.md; do
   [ -f "$f" ] || say_fail "$f is missing — the guide tells every agent it exists"
 done
 if git ls-files | grep -qE '\.(ts|tsx|js|py|go|rs|swift|kt|rb|java)$'; then
@@ -107,6 +107,19 @@ if [ -f docs/ARCHITECTURE.md ]; then
 — either map it or say why it doesn't matter"
   done
 fi
+
+# 4b · a document nobody links is a document nobody reads. The skeleton files are
+#      referenced by the guide itself; anything else under docs/ has to be reachable
+#      from at least one other document, or it was written into a drawer.
+for f in $(git ls-files 'docs/*.md' 'docs/**/*.md' 2>/dev/null); do
+  case "$f" in
+    docs/ROADMAP.md|docs/TEAM.md|docs/TOOLING.md|docs/DECISIONS.md|docs/LATER.md|\
+docs/ARCHITECTURE.md|docs/BUDGET.md|docs/ECONOMICS.md|docs/README.md) continue;;
+  esac
+  base=$(basename "$f")
+  git grep -qF "$base" -- '*.md' ":!$f" 2>/dev/null \
+    || say_warn "nothing links \`$f\` — link it from the doc it belongs under, or delete it"
+done
 
 # 5b · skills born in this repo stay modular (templates/SKILL-SCAFFOLD.md): a budgeted
 #      router core + companions. Catches the monolith while it is still one commit old.

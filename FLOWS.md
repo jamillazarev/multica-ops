@@ -92,6 +92,13 @@ when a rung needs a fix. Only then the three routing questions (what exists · w
 want · who runs the work), because `/mops init` into an existing workspace duplicates a conductor
 and `/mops join` on an empty one does nothing.
 
+**The shape question is asked alone, and answered, before the first wave.** *"Quick job or a
+company?"* decides **how much of the checklist is asked at all**, so folding it into a wave with
+four other questions makes the owner answer company questions to find out whether they wanted a
+company — the failure the batching rule was never meant to license. One question, its answer,
+then waves. (Eval scenario 2 caught exactly this: both rules satisfied literally, the intent
+lost.)
+
 **Crew mode short-circuits the rest**: no conductor, no discovery, no roadmap — stand up the
 executors, the guide, the gates the owner wants, and stop. It is the default offer after
 `/mops import` **when no conductor is standing**.
@@ -126,7 +133,9 @@ company is always shaped. Only a quick job skips shaping.
 **Re-runnable, because plans move.** When scope changes materially the shaping runs again
 and the team is re-sized — the same signal as the utilization review, arriving earlier. A
 **quick job skips this entirely**: shaping a one-hour task is the ceremony this skill exists
-to avoid.
+to avoid — but **say once that the fuller shape exists and is one word away**. Skipping the
+machinery is the point; leaving the owner unaware it was ever an option is not, and they should
+not have to discover it on the third small job.
 
 ## Crew mode — a team without a management layer
 
@@ -249,7 +258,7 @@ proceed per the normal flows.
 **The consultation seeds the project — nothing already settled is re-asked.** Whatever the
 consult established — the question, the shaping answers, the **research findings with their
 sources**, a validated direction — carries over as the project's opening context: the
-**discovery input**, the **first issue's body**, or a **`DECISIONS.md` entry** where a real
+**discovery input**, the **first issue's body**, or a **`docs/DECISIONS.md` entry** where a real
 decision was reached, **provenance labels intact**. The core rule *skip what context already
 answered* governs the init/quick interview, so the owner is never marched back through ground
 the consultation already covered.

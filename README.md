@@ -103,7 +103,7 @@ parts worth trusting are the ones you can check:
 
 - **Every decision runs one loop.** Frame it, **search — don't recall** (options, prices and docs
   fetched now, each claim sourced), compare, choose and say why, then check the choice survives
-  being wrong; record it in `DECISIONS.md`. Prioritisation, tool selection, the role-builder and
+  being wrong; record it in `docs/DECISIONS.md`. Prioritisation, tool selection, the role-builder and
   process discovery are all that one loop — named once so it is followed, not reinvented each time.
 - **Verify-first, and it has already paid.** Claims carry a label — **verified · recalled ·
   unknown** — and an argument with no source is called an opinion. Running the skill on itself, an
@@ -119,10 +119,13 @@ parts worth trusting are the ones you can check:
 - **Honest about the ceiling.** The caps are stated, not wished away: **6 tasks per agent, 20 per
   daemon** (the tighter wins), a `local_directory` serialises regardless, and `workspace delete`
   isn't in the CLI — so Mops says so instead of promising it. Every number carries its check-date.
-- **Regression-tested behaviour.** **13 stratified eval scenarios** — from a job too small to
-  deserve a company to an import carrying a hidden instruction — judged on the end state, not the
-  route; and the standing rule that a review routes **away from the author, ideally onto a
-  different provider**, because a model grades its own work generously.
+- **Regression-tested behaviour, and the runs are on record.** **16 stratified eval scenarios** —
+  from a job too small to deserve a company to an import carrying a hidden instruction — judged on
+  the end state, not the route, by a judge that did not write the transcript and a player that
+  never saw the rubric. Each release records its run in **`evals/runs/<version>.md`** with
+  `not run` listed rather than omitted, so a green release is a claim you can check rather than
+  one you take on trust; a minor or major is not tagged without one. Reviews route **away from the
+  author, ideally onto a different provider**, because a model grades its own work generously.
 - **The subsystems compound.** The parts feed each other, and the ones that already do are worth
   naming: a **stumble becomes a field note becomes a backlog item becomes a release** (the
   dogfood loop, live since 2.4.4); an **eval scenario hardens into a rule** the moment a weaker
@@ -212,10 +215,9 @@ The whole company, end to end — and the loop closes, it doesn't stop at merge:
 | [PLAYBOOKS.md](PLAYBOOKS.md) | daily operations, copy-paste ready |
 | [REFERENCE.md](REFERENCE.md) | object model, anti-patterns, **CLI surface (§10)**, **frameworks (§11)** |
 | [WORKFLOW.md](WORKFLOW.md) | Mermaid diagrams of the whole process |
-| [TELEMETRY.md](TELEMETRY.md) | local-only usage log — everything stays on your machine, nothing is ever sent anywhere; what's collected, where it lives, one-variable off switch |
 | [CHANGELOG.md](CHANGELOG.md) | versioned history — the migration map for `/mops upgrade` |
 | [BUDGET template](templates/BUDGET-template.md) | envelope · currency · credits with expiries · prices on record |
-| [evals/](evals/) | stratified scenarios — from a job too small to deserve a company to an import carrying a hidden instruction |
+| [evals/](evals/) | stratified scenarios — from a job too small to deserve a company to an import carrying a hidden instruction — plus `runs/`, the recorded verdicts per release |
 | [templates/](templates/) · [scripts/](scripts/) | guide · roadmap · brand · component docs · **decisions log · architecture map · tooling register · team roster** · **a docs guard for the companies Mops builds** · ops helpers · **resumable backlog import** |
 
 Contributing? Run **`bash scripts/preflight.sh --install`** once. The pre-commit hook holds
