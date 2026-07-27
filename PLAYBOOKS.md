@@ -732,7 +732,8 @@ Anything the team can't do yet → find-skills or the role-builder, before ship 
 
 ## Telemetry — logging events by rule
 
-The skill measures itself so decisions rest on usage, not memory. Two kinds of events:
+The skill measures itself so decisions rest on usage, not memory — into a **local ledger,
+nothing leaves the machine**. Two kinds of events:
 **script-driven** ones fire on their own (each ops helper self-logs its `tool_invoked`),
 and **model-side** ones only Mops can see — those Mops logs by rule, below. The taxonomy
 is fixed once in `telemetry/TRACKING-PLAN.md`; what is collected and how to switch it off

@@ -1,5 +1,42 @@
 # Changelog
 
+## 2.5.5
+
+**Five hygiene fixes and a plain-language pass on the word "telemetry"**
+
+- **Repo visibility is stated at creation.** When Mops creates a repository it now says the
+  visibility out loud — *"creating it private"* — so private-by-default is visible, not
+  assumed; and **turning a repo public is an outward action**, owner-confirmed like any of the
+  four owner-gated kinds, never a silent flip (BOOTSTRAP §16). The owner always knows what a
+  repo's audience is at the moment it comes into being.
+- **🎭 prose-marking is codified.** In a docs-only consult where no theatre squad or
+  persona-agent exists, marking a synthetic reaction **in prose** (*«синтетическая реакция,
+  гипотеза, не факт»*) now explicitly satisfies the marking rule — the literal glyph binds to
+  entity names where those exist (MODULES → Persona theatre). Eval scenario 14's bar reads
+  "🎭-marked or prose-marked per the marking rule's scope" to match. Closes the 2.5.2 judge's
+  finding that the expectation must be written, not inferred.
+- **Citations match what they support.** FLOWS' cost note now cites *"REFERENCE §7; the cost
+  framing per §10"* — the shared-limit mechanic is §7, but the exact "spends budget and shared
+  limit" wording lives in §10, so a reader following either pointer lands on the right thing.
+- **The preflight eval-guard can fire again.** The "version bumped but evals unchanged" check
+  compared the working tree against HEAD, so it went blind the moment the bump was committed
+  (FIELD-NOTES 2026-07-27). It now compares the current version against the last release tag
+  and checks evals since that tag, degrading gracefully to a skip when no tag exists — the
+  guard actually guards releases now, still only a warning.
+- **A structure false-positive is gone.** The "says N things but M follow" heuristic in
+  `check-structure.py` walked past section boundaries, so an unrelated list two sections down
+  counted against a preceding "one thing:" sentence. The counter now stops at the next heading
+  or horizontal rule; the evals:251 false positive disappears and no new warnings appear on
+  the corpus.
+- **Telemetry wording: local-only stated first everywhere the word appears** — the ledger is a
+  file on your machine, full stop. TELEMETRY.md opens on it, the README row leads with it (the
+  PostHog detail stays inside TELEMETRY.md, where it is explained as wire-cut), and the
+  PLAYBOOKS section's opening line carries it too. The word should never read as "data leaks
+  somewhere".
+- **No new eval scenario** — the items are rubric clarifications and tooling fixes; the one new
+  instructed behaviour (the visibility statement) is guarded by a bar line added to the
+  existing bootstrap scenario, not a scenario of its own.
+
 ## 2.5.4
 
 **The telemetry core — fully local, events never deferred, viewing layer as generated markdown**

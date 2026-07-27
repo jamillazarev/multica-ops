@@ -557,7 +557,10 @@ Each item with its default, as walked in `/mops init` and re-asked in the `/mops
    GitHub is an outward action on their account** — it lands under whatever identity their
    `gh`/git is authenticated as, which is very often their **employer's**. It is
    owner-confirmed, out loud, naming the account it would land in: *"this would create
-   `acme-corp/swipy` under your work account `r-tagiyev` — right one?"*. A local git repo
+   `acme-corp/swipy` under your work account `r-tagiyev` — right one?"*. **Mops states the
+   visibility as it creates** — *"creating it private"* — since repos are **private by
+   default** (§12); **turning one public is itself an outward action**, owner-confirmed like
+   any of the four owner-gated kinds, never a silent flip. A local git repo
    with no remote is a legitimate end state and the correct default when the owner is
    unsure; nothing in this methodology needs a remote except per-task parallelism.
 2. **Control & expertise** — two questions that shape every later interaction.
