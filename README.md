@@ -168,19 +168,8 @@ binary.
 
 ## Roadmap
 
-What's next, roughly in order — a teaser, not a backlog. This list is **forward-only**: when
-something ships it leaves here (it's then described above and in the changelog), so nothing is
-ever shown as "done" twice.
-
-- [ ] **Memory system** — provenance-tagged, per-human recall the team rebuilds from the repo.
-- [ ] **Architecture review + a modular skill family** — split the core, budget what's always loaded.
-- [ ] **Product Atlas** — a living product dossier, with personas walking captured flows.
-- [ ] **`/mops explore`** — surface-captures a live product into repo-stored maps (steps + screenshots).
-- [ ] **`/report`** — structured feedback back to the platform, not just a chat message.
-- [ ] **Pipelines-as-projects** — a run with a contract (cadence · dry-run · idempotency · stop conditions), not feature acceptance criteria.
-- [ ] **Multi-instance** — one Mops across many workspaces, cleanly separated.
-
-Order and scope can change; the **CHANGELOG** is the record of what actually shipped.
+Forward-only: what shipped lives in the body of this file and in the **CHANGELOG**, never as
+a checked box here. The CHANGELOG is the record — and the migration map `/mops upgrade` reads.
 
 ## What Mops handles
 
