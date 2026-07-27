@@ -84,6 +84,10 @@ for f in DOCS:
         got, j = 0, i
         while j < len(lines):
             nl = lines[j]
+            # a list belonging to a different section is not this sentence's count —
+            # stop at the next heading (any level) or horizontal rule, whichever comes first.
+            if re.match(r"^#{1,6}\s", nl) or re.match(r"^ {0,3}(-{3,}|\*{3,}|_{3,})\s*$", nl):
+                break
             if re.match(r"^\s*([-*]|\d+\.) ", nl):
                 got += 1
             elif nl.strip() and not nl.startswith("  ") and got:

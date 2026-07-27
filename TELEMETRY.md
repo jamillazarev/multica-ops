@@ -1,5 +1,8 @@
 # Telemetry — local, and staying local
 
+**Nothing ever leaves your machine.** The ledger is a local file; there is no endpoint, no
+upload, no phone-home — the code contains no network call (verified in review).
+
 The skill measures itself so decisions rest on usage, not memory: which commands run,
 which companion files load, which tools go cold, how the conveyor and consults flow. This
 release is the **telemetry core, fully local** — everything below stays on the machine.
