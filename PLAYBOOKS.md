@@ -32,6 +32,7 @@ control characters that break `json.loads` — sanitize with
 - [Human onboarding / offboarding](#human-onboarding-offboarding)
 - [Cost/effort ledger (at /ship and /measure)](#costeffort-ledger-at-ship-and-measure)
 - [Resident Mops — install / refresh](#resident-mops-install-refresh)
+- [Two agents disagree — settle the spec, not the argument](#two-agents-disagree-settle-the-spec-not-the-argument)
 - [Fixing an agent that keeps getting it wrong](#fixing-an-agent-that-keeps-getting-it-wrong)
 - [Skill load per agent (in /audit)](#skill-load-per-agent-in-audit)
 - [Utilization review (in /audit, or on a leader's request)](#utilization-review-in-audit-or-on-a-leaders-request)
@@ -576,6 +577,47 @@ second copy. Then `agent create` (name **Mops**) → `agent skills` attach (+ fi
 → `agent avatar` per chosen library (Mops in Multica keeps `assets/mops-avatar.png`) → subtitle "Executive Advisor · resident" → rights
 per autonomy choice → kickoff (pinned issue + first message = decisions summary).
 
+
+## Two agents disagree — settle the spec, not the argument
+
+A disagreement in a task thread is bounded like every other loop in this skill: **two exchanges
+on one point, and the third is a signal rather than another opinion.** The diagnosis is the same
+one the review gate already uses — **a third pass on the same point means the brief is
+ambiguous**, not that one of them is wrong. Two capable agents arguing usually means the task
+admitted both readings.
+
+What Mops (or whoever holds the rung above them) does:
+
+1. **Stop it at the third exchange, and stop it for free** — set the issue `blocked` and say why
+   in one line. A comment wakes nobody (REFERENCE §2: only assignment, `@`-mention, chat and
+   autopilot do), so the **status** is what halts round four and the comment only explains it.
+   `@`-mentioning to call the halt spends two more runs to stop spending runs. The ceiling is a
+   rule, not a mood, so nobody has to decide whether an argument "feels long enough".
+2. **Read the escalation for the ambiguity, not the verdict.** A good escalation names the
+   line and both readings with what each costs; *"they couldn't agree"* is not one — send it
+   back for the question, since a summary of an argument makes the next person re-run it.
+3. **Settle it by fixing the artifact**, not by picking a side in the thread — and mind which
+   artifact. The **spec and the task's wording** are editable in flight: correct them in **that
+   same task** (docs-follow-decisions), because a verdict living only in a comment is re-litigated
+   the next time someone reads the issue without the thread. The **DoD and acceptance criteria are
+   locked** — proposed to the owner, never edited by whoever is measured against them, and that
+   bar includes the conductor and Mops. Most spec disputes turn out to be DoD disputes, so this is
+   the common case, not the exception: Mops brings the owner **one** settled wording, not two
+   competing ones.
+4. **Price it.** `@`-mentioning an agent is a run that spends budget, so the runs on that issue
+   *are* the bill — "this point cost six runs" is a grouping, not an estimate. Report it with the
+   fix; a ceiling nobody prices drifts back up.
+5. **If the same two disagree twice on different points**, the defect is upstream of both: their
+   briefs overlap, or one owns a decision the other is being asked to make. That is a routing
+   fix (`/mops squad`), not another settlement.
+
+**Where it escalates.** Up the standing chain — agent → squad leader → conductor → Mops → owner —
+and **it stops at the first rung that can edit the spec**, which is usually the conductor. Crew
+mode has no conductor, so it ends at the owner, who already holds the third-review-round call.
+
+**Never let it ride on thread length.** A thread that gets long enough to rotate is a storage
+event, not a cost control: the spend has already happened by then, and the argument is invisible
+to anyone reading the issue afterwards.
 
 ## Fixing an agent that keeps getting it wrong
 

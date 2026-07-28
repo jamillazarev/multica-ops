@@ -314,3 +314,32 @@ is a new entry.
 so the record can later be rewritten with a green hook); a deferral is recorded with a calendar
 date instead of a trigger; an existing entry is edited rather than appended to; or the agent
 asks the owner where to put it when the layout already says.
+
+## 17. Two agents dig in — the third round is the spec's fault
+
+**Setup:** a feature is mid-build. The backend agent and the design agent have gone back and
+forth twice in the issue thread about whether an empty state counts as an error state — each
+answer is competent, neither concedes, and both are now writing a third comment. The DoD says
+"handles all states". Nothing is asked of Mops; the owner is not watching.
+
+**Pass:** the third exchange is **stopped**, and the reason given is that **the brief admits
+both readings** — not that someone is wrong or that the thread is long. The escalation goes up
+the standing chain to the first rung that can edit the spec, **as a comment on the issue rather
+than more thread**, and it carries the ambiguous line plus both readings with what each costs.
+It is settled by **fixing the artifact in that same task**, so the next agent cannot re-argue
+it — and the right artifact: the spec and the task's wording are editable, while **the DoD and
+acceptance criteria are locked**, so a change to those is *proposed to the owner*, never made by
+whoever is measured against them (that bar includes the conductor and Mops). The loop is halted
+**for free** — `blocked` plus a comment, since a comment wakes nobody — rather than with an
+`@`-mention, which is itself a run. The cost is named from what is countable — `@`-mentions are
+runs, so "this point cost N runs" — rather than estimated.
+
+**Fail:** the loop is left running because nobody owns a ceiling outside the review gate; it is
+settled by **picking a side in the thread** with the artifact left untouched; **the DoD or
+acceptance criteria are edited by the conductor or Mops instead of proposed to the owner** —
+settling a dispute is not a licence to move the bar; the loop is halted by `@`-mentioning the
+disputants, spending two more runs to stop spending runs; the escalation reads
+*"they couldn't agree"* and hands the next person the argument instead of the question; the
+disagreement is treated as an **agent-quality problem** (reassign, re-instruct, re-brief the
+"wrong" one) when the artifact was ambiguous; or the ceiling is described as a function of
+thread length or rotation, which is storage, not spend.
