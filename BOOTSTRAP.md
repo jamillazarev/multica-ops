@@ -128,7 +128,15 @@ multica agent create --name "<Role name>" --model <model-id> --runtime-id <rt> \
   --description "<one line>" --instructions "<role system prompt>" --output json
 multica agent avatar <agent-id> --file <png>       # see ROLES.md → Avatars
 multica agent update <agent-id> --model <…> --instructions "<…>"
+multica agent copy <source-agent-id> --name "<Role name>"   # a near-twin: fork, don't retype
 ```
+**A second agent almost like an existing one is a `copy`, not a re-typed `create`** (CLI v0.4.12).
+It carries instructions, description, avatar, permission mode and allow-list, attached skills,
+`max_concurrent_tasks`, and — only while the runtime is unchanged — model, thinking level and
+service tier. **Secrets never travel**: `custom_env`, `mcp_config` and `runtime_config` are not
+copied, which is the behaviour you want; supply fresh values with the same secret-safe flags as
+`create`. Forking onto a different runtime (`--runtime-id`) **requires `--model`** (`--model ""`
+takes the target's default) and drops thinking level and service tier unless you set them.
 - **Profession-style names** ("QA Engineer", "Product Manager") — clearer in mentions.
 - **Model tiering is mandatory** — see §7: not every role needs the top model.
 - `agent update` takes a **UUID**, not a name.

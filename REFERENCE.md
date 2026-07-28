@@ -270,7 +270,13 @@ Cutting a release).
 - ❌ A squad leader executing a whole feature that was addressed **to the squad** — that
   serializes everyone behind one agent. Assigned directly, the same agent works normally.
 - ❌ Circular @-mentions between agents (indirect cycles are not blocked).
-- ❌ Review ping-pong — the same work bounced a third time; that's an unclear spec, escalate.
+- ❌ Ping-pong on one point past two exchanges — work bounced a third time at the gate, **or two
+  agents still disagreeing in a thread**. Both are the same defect: an unclear spec, not a quality
+  problem. Escalate naming the ambiguous line and both readings, as an issue comment rather than
+  more thread, and settle it by **editing the spec or DoD in that task**.
+- ❌ A dispute nobody priced — `@`-mentioning an agent **is a run that spends budget**, so "this
+  point cost N runs" is countable by ordinary grouping. A ceiling counted only in rounds and never
+  in spend is a wish, not a limit.
 - ❌ The author moves the bar — acceptance criteria, review rubric or budget edited by
   whoever is being measured against them. Propose to a human; never adjust in passing.
 - ❌ Self-review, or review by the author's own provider — models are generous with their
@@ -300,7 +306,7 @@ Cutting a release).
 
 This map makes multica-ops a **complete CLI-competence layer**: an agent loading the
 skill knows not just the method but **every command that exists**. It's the full surface
-of `multica` **v0.4.8** — but it lists *what exists*, not exact flags, since the CLI
+of `multica` **v0.4.12** — but it lists *what exists*, not exact flags, since the CLI
 evolves, so **always confirm with `multica <group> <cmd> --help`** and consult
 https://multica.ai/docs. **Precedence: live `--help` wins over this map** — on any
 mismatch trust the CLI, and regenerate this section when the skill is upgraded
@@ -308,7 +314,7 @@ mismatch trust the CLI, and regenerate this section when the skill is upgraded
 or explain any of the below directly, no methodology assumed.
 
 **Work objects**
-- `agent` — archive · avatar · create · env · get · list · restore · skills · tasks · update
+- `agent` — archive · avatar · **copy** · create · env · get · list · restore · skills · tasks · update
 - `squad` — activity · create · delete · get · list · member · update
 - `project` — create · delete · get · list · resource (add/list/remove/update) · status · update
 - `issue` — assign · cancel-task · children · comment (add/delete/list/resolve/unresolve) · create · get · label · list · metadata · property · pull-requests · reorder · rerun · run-messages · runs · search · status · subscriber (add/list/remove) · update · usage

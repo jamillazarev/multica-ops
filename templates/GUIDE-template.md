@@ -118,6 +118,16 @@ harder: stop, write down what was tried and what it produced, and hand the task 
 different agent or a higher grade. Reviewing? A third round on the same point is a spec
 problem — stop the loop and escalate to settle what "done" means.
 
+**Disagreeing with another agent? Same ceiling, same diagnosis.** Two exchanges on one point
+is a discussion; a **third is evidence the brief is ambiguous**, not that someone is wrong —
+so stop, and escalate up your chain. Escalate **as a comment on the issue, not as more
+thread**: a thread dies with its run, and *"as discussed above"* is not a spec. Name the
+**ambiguous line and both readings** with what each would cost — never *"we couldn't agree"*,
+which hands the next person the argument instead of the question. Whoever settles it **edits
+the spec or the DoD in that same task**, so nobody re-argues it next week. And every
+`@`-mention is a run that spends budget, so a point being argued has a **price you can read**
+— the ceiling is measured, not just counted.
+
 **Build produces evidence.** If your work has visible states, the Definition of Done includes
 screenshots or recordings of every one of them — otherwise the design gate has nothing to
 review and will bounce it.

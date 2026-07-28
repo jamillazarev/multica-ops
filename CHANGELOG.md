@@ -1,5 +1,37 @@
 # Changelog
 
+## 2.6.1
+
+**Two agents disagreeing had no ceiling — now they have the one the review gate already used**
+
+- **A disagreement between agents is bounded at two exchanges.** The three-round rule existed,
+  but only for a *review* bounced a third time and for one agent grinding three times at one
+  error. Two capable agents arguing in a task thread fitted neither, so nothing stopped it —
+  and thread rotation is a **storage** event, so the spend is already gone by the time a long
+  thread notices itself. The ceiling now generalizes, and so does the diagnosis: **a third pass
+  on one point means the brief admits both readings**, not that someone is wrong.
+- **It escalates as a comment on the issue, not as more thread** — a thread dies with its run
+  and *"as discussed above"* is not a spec. The escalation carries the **ambiguous line and both
+  readings with what each costs**; *"they couldn't agree"* is sent back, because a summary of an
+  argument makes the next person re-run it.
+- **It is settled by editing the artifact** — spec, DoD or acceptance criteria, in that same
+  task — so nobody re-argues it next week. It stops at the first rung that can make that edit,
+  usually the conductor; crew mode ends at the owner, who already holds the third-review-round
+  call.
+- **The ceiling is priced, not just counted.** `@`-mentioning an agent is a run that spends
+  budget, so "this point cost N runs" is ordinary grouping rather than an estimate — a limit
+  counted only in rounds is a wish.
+- **CLI map re-pinned to v0.4.12**, and the surface gained something worth using: **`agent copy`**
+  forks an existing agent's portable config into a new one — instructions, description, avatar,
+  permission mode and allow-list, attached skills, concurrency, and (same runtime only) model and
+  thinking level. **Secrets deliberately do not travel** — `custom_env`, `mcp_config`,
+  `runtime_config` are never copied. So a second agent almost like an existing one is a fork, not
+  a retyped `create` (BOOTSTRAP §2). Closes #15.
+- The rule ships in **`templates/GUIDE-template.md`**, because the disputants are agents: a rule
+  only Mops can read governs only the tasks Mops is in. Anti-patterns generalized in REFERENCE
+  §8, the operating recipe in PLAYBOOKS, and eval scenario **17** covers it.
+
+
 ## 2.6.0
 
 **The repo layout is written down as one table, the two documents that had two homes get one, and the telemetry subsystem is removed**

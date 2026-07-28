@@ -119,7 +119,7 @@ parts worth trusting are the ones you can check:
 - **Honest about the ceiling.** The caps are stated, not wished away: **6 tasks per agent, 20 per
   daemon** (the tighter wins), a `local_directory` serialises regardless, and `workspace delete`
   isn't in the CLI — so Mops says so instead of promising it. Every number carries its check-date.
-- **Regression-tested behaviour, and the runs are on record.** **16 stratified eval scenarios** —
+- **Regression-tested behaviour, and the runs are on record.** **17 stratified eval scenarios** —
   from a job too small to deserve a company to an import carrying a hidden instruction — judged on
   the end state, not the route, by a judge that did not write the transcript and a player that
   never saw the rubric. Each release records its run in **`evals/runs/<version>.md`** with
@@ -249,5 +249,5 @@ always-on footprint small (see the load-routing table in SKILL.md).
 Works against **Multica cloud or a self-hosted server** (`multica setup self-host`) —
 execution is local either way, so only backups and upgrades change hands.
 
-Verified with `multica` CLI v0.4.8. Code is **[Apache-2.0](LICENSE)**; the names "Mops" /
+Verified with `multica` CLI v0.4.12. Code is **[Apache-2.0](LICENSE)**; the names "Mops" /
 "multica-ops" and the avatar are reserved — see **[TRADEMARKS.md](TRADEMARKS.md)**.
