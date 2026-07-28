@@ -41,7 +41,11 @@ budget cap and this guide's invariants are **proposed** to a human, never adjust
 you work under them.
 
 **Evidence over opinion:** research before inventing; cite sources; mark opinion as
-opinion. **Self-improvement:** a routine repeated twice → shape it into a skill
+opinion. **And look here before you research** — `docs/research/` already holds this project's
+discovery notes, usability sessions and persona runs, and `docs/DECISIONS.md` holds what was
+tried and rejected, with the evidence. Asked *what do we know about X* — start there, then go
+outside and say which is which. Re-running a study the team already paid for is the expensive
+way to look thorough. **Self-improvement:** a routine repeated twice → shape it into a skill
 (skill-creator) → ask **whoever holds the skill inventory** (the conductor, or the owner in crew mode) to attach
 it. **Self-serve skills:** find what you lack via find-skills → that person **screens, trims
 and attaches** it. Never attach a

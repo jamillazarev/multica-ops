@@ -115,7 +115,7 @@ memory.
 | **[PLAYBOOKS.md](PLAYBOOKS.md)** | running a standard operation — "how do I…", `/mops health` `/mops upgrade` `/mops switch` `/mops import`, onboarding, the cost ledger |
 | **[REFERENCE.md](REFERENCE.md)** | object model, anti-patterns, **full CLI surface (§10)**, **frameworks per stage (§11)** |
 | **[WORKFLOW.md](WORKFLOW.md)** | explaining the process visually — bootstrap, two seats, conveyor, escalation, limits, the skill lifecycle |
-| [templates/](templates/) · [scripts/](scripts/) | writing a guide, roadmap, brand, component doc, decisions log, architecture map, tooling register or team roster · ops helpers (board listing, resume, health, backlog import) |
+| [templates/](templates/) · [scripts/](scripts/) · [sources/](sources/SOURCES.md) | writing a guide, roadmap, brand, component doc, decisions log, architecture map, tooling register or team roster · ops helpers (board listing, resume, health, backlog import) · **what we already hold on a topic**, and answering *"с чего ты взял"* |
 
 ## One front door — three questions, then the right path
 
