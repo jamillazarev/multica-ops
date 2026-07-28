@@ -20,7 +20,10 @@ copyrightable. Each entry states its tier.
 
 **Upkeep.** `scripts/fetch-source.py` builds and checks these entries: `--resolve <doi|arxiv|url>`
 prints a skeleton, `--archive <url>` triggers a Wayback snapshot, `--verify` walks every live URL.
-`--verify` runs each release (AGENTS.md → Cutting a release).
+`--verify-citations` walks the **other** edge — every cited-by back into the doc that cites it —
+naming any pointer a rewrite left behind, and any entry the skill no longer cites at all (one
+parked for a later release stays named every run, which is the point: a deferral nobody is
+reminded of is a deletion). Both run each release (AGENTS.md → Cutting a release).
 
 ---
 
@@ -70,7 +73,7 @@ prints a skeleton, `--archive <url>` triggers a Wayback snapshot, `--verify` wal
 - **Licence:** copyrighted (MeasuringU) — cite + archive + our distillate
 - **Distillate:** Reviews ~12 recent experiments with synthetic users and finds mixed results, with synthetic responses showing **artificially low variability** and **distorted magnitudes** relative to real respondents — so they can indicate direction but not the size of an effect. (Their framing — low variability and distortion — is what the skill states, *not* "clustering toward neutral.")
 - **Check-date:** 2026-07-27
-- **Cited-by:** MODULES.md:168, MODULES.md:335
+- **Cited-by:** MODULES.md:168, MODULES.md:340
 
 <!-- Mahajan restore point: MODULES.md previously credited a "Mahajan synthetic-users taxonomy"
      cited by name only. Research (2026-07-27) could not locate any such work in the checked
@@ -164,7 +167,7 @@ prints a skeleton, `--archive <url>` triggers a Wayback snapshot, `--verify` wal
 - **Licence:** free — cookiy's `user-research-skill` is **MIT** (a copy may be carried later; today only the method shape is adapted, nothing embedded). agentman: **no licence stated on the page**; concepts taken, nothing embedded (no code carried, so no licence obligation).
 - **Distillate:** Method lineage, not evidence. cookiy's MIT skill supplied the **shape** of the qualitative-research flows (its `qualitative-research-planner` → our persona-interview flow, its `synthesize-research-report` → our QDA step), adapted through the import gate. agentman supplied the **calibration and cohort concepts** behind the persona response-calibration layer. Recorded so every adaptation is auditable and no vendor wrapper is smuggled in.
 - **Check-date:** 2026-07-27
-- **Cited-by:** MODULES.md:187, MODULES.md:221, MODULES.md:304; ROLES.md:339
+- **Cited-by:** MODULES.md:187, MODULES.md:221, MODULES.md:309; ROLES.md:339
 
 ### standards-cluster · named review standards
 - **Citation:** Nielsen, J. "10 Usability Heuristics for User Interface Design" (NN/g). W3C, "Web Content Accessibility Guidelines (WCAG)." Wharton, Rieman, Lewis & Polson, "The Cognitive Walkthrough Method" (1994).
