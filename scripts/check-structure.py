@@ -138,18 +138,68 @@ try:
 except OSError:
     pass
 
-# g · every docs file the stand-up creates needs a template, or an explicit exemption.
-EXEMPT = {"LATER", "ECONOMICS", "analytics"}
+# g · every template the stand-up skeleton declares must exist. Read from the table's own
+# Template column, not from the prose around it: the previous regex stopped at the first blank
+# line and so saw one path out of nineteen, passing green on almost nothing checked. Hence the
+# empty-table guard below — a check that silently reads nothing is worse than no check.
+DECLARED = set()
 try:
     boot = open("BOOTSTRAP.md", encoding="utf-8").read()
-    step = re.search(r"^7\. \*\*Labels\*\*.*?(?=\n\n|\n## )", boot, re.S | re.M)
-    if step:
-        for name in set(re.findall(r"`docs/([A-Z][A-Za-z]*)\.md`", step.group(0))):
-            if name in EXEMPT:
-                continue
-            if not os.path.exists(f"templates/{name}-template.md"):
-                warn(f"docs/{name}.md is in the stand-up skeleton with no templates/{name}-template.md")
+    rows = re.findall(r"^\s*\|\s*`(docs/[^`]+)`\s*\|[^|]*\|[^|]*\|\s*([^|]*?)\s*\|", boot, re.M)
+    if not rows:
+        fail("BOOTSTRAP: the repo-layout table has no `docs/…` rows — the template guard is blind")
+    for path, tmpl in rows:
+        name = tmpl.split()[0] if tmpl.strip() else ""
+        if not name or name.startswith("—"):
+            continue  # the row declares no template, deliberately
+        DECLARED.add(name)
+        if not os.path.exists(f"templates/{name}-template.md"):
+            fail(f"BOOTSTRAP: {path} declares template '{name}' — templates/{name}-template.md is missing")
 except OSError:
+    pass
+
+# i · a file nothing points at is a file nobody opens. Links were checked forwards only, so a
+# store could sit in the repo with every link inside it valid and no door into it — worse than
+# a dangling link, because the chain reads as intact from both ends while nothing traverses it.
+# Reachable = named (by path or filename) in some other tracked file, or declared in the
+# skeleton table above. The exemptions are the paths something *outside* this repo reaches by
+# convention; each says who reaches it, so an obsolete exemption is legible rather than silent.
+CONVENTION = {
+    "commands/": "the plugin loads the directory; check f2 owns the COMMANDS.md row",
+    "evals/runs/": "release records, reached by version in preflight 5j",
+    ".github/workflows/": "run by GitHub, by path",
+    ".claude-plugin/": "read by the plugin loader, by name",
+    "scripts/tests/": "collected by the test runner",
+    "assets/": "used by the docs site, the social preview and the plugin listing — none in this repo",
+    ".gitignore": "read by git",
+}
+try:
+    tracked = subprocess.run(["git", "ls-files"], capture_output=True, text=True, check=True)
+    paths = [p for p in tracked.stdout.split("\n") if p]
+    # CHANGELOG is history, not a pointer: a file whose only mention is its own release note is
+    # orphaned in the live documentation, which is exactly the state we are looking for.
+    corpus = {}
+    for p in paths:
+        if p == "CHANGELOG.md" or p.endswith((".png", ".jpg", ".ico")):
+            continue
+        try:
+            corpus[p] = open(p, encoding="utf-8", errors="ignore").read()
+        except OSError:
+            pass
+    for p in paths:
+        if any(p == k or p.startswith(k) for k in CONVENTION):
+            continue
+        base = os.path.basename(p)
+        if base.endswith("-template.md") and base[:-len("-template.md")] in DECLARED:
+            continue  # declared in the skeleton table, which check g holds to its word
+        # Match on a name boundary, or a guard reports reachability it never established:
+        # `SKILL-SCAFFOLD.md` ends with the name `OLD.md`. A leading path segment is fine —
+        # `${CLAUDE_PLUGIN_ROOT}/templates/mops-alias.md` is a reference like any other.
+        named = re.compile(r"(?<![\w-])(?:%s|%s)" % (re.escape(p), re.escape(base)))
+        if not any(named.search(t) for q, t in corpus.items() if q != p):
+            warn(f"{p} is reachable from nothing — no other file names it, and it is not "
+                 f"one of the convention-reached paths")
+except (OSError, subprocess.CalledProcessError):
     pass
 
 # h · every `multica <group> <sub>` the docs promise must exist in the installed CLI.

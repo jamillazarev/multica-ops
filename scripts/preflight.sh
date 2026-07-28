@@ -57,10 +57,21 @@ for f in $(ls *.md | grep -vE '^(README|CHANGELOG)\.md$'); do
   grep -q "$f" README.md || say_fail "README.md does not mention $f"
 done
 
-# 4 · internal .md links resolve
-for l in $(grep -rohE '\]\([A-Za-z0-9_.-]+\.md\)' ./*.md templates/*.md 2>/dev/null | sed 's/](//;s/)//' | sort -u); do
-  [ -f "$l" ] || say_fail "broken link: $l"
-done
+# 4 · internal .md links resolve — from every doc we ship, not only the root ones, and
+# including links that carry a path (`](templates/X.md)`): the filename-only pattern skipped
+# those silently, so a whole class of link could rot inside the check's own blind spot.
+link_bad=$(python3 - <<'PYEOF'
+import glob, os, re
+bad = []
+for f in (glob.glob("*.md") + glob.glob("templates/*.md") + glob.glob("commands/*.md")
+          + glob.glob("evals/*.md") + glob.glob("evals/runs/*.md") + glob.glob("sources/*.md")):
+    for l in re.findall(r"\]\(([A-Za-z0-9_./-]+\.md)(?:#[^)]*)?\)", open(f, encoding="utf-8").read()):
+        if not (os.path.exists(l) or os.path.exists(os.path.join(os.path.dirname(f), l))):
+            bad.append(f"broken link in {f}: {l}")
+print("\n".join(sorted(set(bad))))
+PYEOF
+)
+[ -n "$link_bad" ] && while IFS= read -r l; do say_fail "$l"; done <<< "$link_bad"
 
 # 5a · official guidance: SKILL.md body under 500 lines
 lines=$(wc -l < SKILL.md | tr -d ' ')
@@ -145,6 +156,7 @@ PYEOF
 for f in scripts/*; do
   b=$(basename "$f")
   [ "$b" = "preflight.sh" ] && continue
+  git check-ignore -q "$f" && continue   # build artifacts (__pycache__) are not documentation
   grep -rql -- "$b" ./*.md 2>/dev/null || say_warn "scripts/$b is not mentioned in any doc"
 done
 
@@ -163,7 +175,7 @@ PYEOF
 )
 [ -n "$gt_bad" ] && say_warn "$gt_bad"
 
-# 5i · structural integrity — eight classes of defect that each shipped once.
+# 5i · structural integrity — nine classes of defect that each shipped once.
 # Deterministic ones fail, heuristic ones warn. See scripts/check-structure.py.
 if [ -f scripts/check-structure.py ]; then
   while IFS= read -r line; do
