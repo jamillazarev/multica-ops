@@ -588,14 +588,22 @@ admitted both readings.
 
 What Mops (or whoever holds the rung above them) does:
 
-1. **Stop it at the third exchange**, and say why in one line — the ceiling is a rule, not a
-   mood, so nobody has to decide whether this argument "feels long enough".
+1. **Stop it at the third exchange, and stop it for free** — set the issue `blocked` and say why
+   in one line. A comment wakes nobody (REFERENCE §2: only assignment, `@`-mention, chat and
+   autopilot do), so the **status** is what halts round four and the comment only explains it.
+   `@`-mentioning to call the halt spends two more runs to stop spending runs. The ceiling is a
+   rule, not a mood, so nobody has to decide whether an argument "feels long enough".
 2. **Read the escalation for the ambiguity, not the verdict.** A good escalation names the
    line and both readings with what each costs; *"they couldn't agree"* is not one — send it
    back for the question, since a summary of an argument makes the next person re-run it.
-3. **Settle it by editing the artifact**, not by picking a side in the thread: the spec, the DoD,
-   or the acceptance criteria in **that same task** (docs-follow-decisions). A verdict that lives
-   only in a comment is re-litigated the next time someone reads the issue without the thread.
+3. **Settle it by fixing the artifact**, not by picking a side in the thread — and mind which
+   artifact. The **spec and the task's wording** are editable in flight: correct them in **that
+   same task** (docs-follow-decisions), because a verdict living only in a comment is re-litigated
+   the next time someone reads the issue without the thread. The **DoD and acceptance criteria are
+   locked** — proposed to the owner, never edited by whoever is measured against them, and that
+   bar includes the conductor and Mops. Most spec disputes turn out to be DoD disputes, so this is
+   the common case, not the exception: Mops brings the owner **one** settled wording, not two
+   competing ones.
 4. **Price it.** `@`-mentioning an agent is a run that spends budget, so the runs on that issue
    *are* the bill — "this point cost six runs" is a grouping, not an estimate. Report it with the
    fix; a ceiling nobody prices drifts back up.

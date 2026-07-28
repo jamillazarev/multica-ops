@@ -27,6 +27,14 @@
   thinking level. **Secrets deliberately do not travel** — `custom_env`, `mcp_config`,
   `runtime_config` are never copied. So a second agent almost like an existing one is a fork, not
   a retyped `create` (BOOTSTRAP §2). Closes #15.
+- **Stopping the loop is free; arguing is not.** The halt is a status change — `blocked` plus a
+  comment, since a comment wakes nobody (only assignment, `@`-mention, chat and autopilot are
+  triggers) — never an `@`-mention, which is itself a run: spending two more runs to stop spending
+  runs is the one trade nobody meant to make.
+- **Settling a dispute is not a licence to move the bar.** The spec and the task's wording are
+  editable in flight; the **DoD and acceptance criteria are locked** — proposed to the owner,
+  never edited by whoever is measured against them, and that includes the conductor and Mops.
+  Most spec disputes turn out to be DoD disputes, so this is the common case.
 - The rule ships in **`templates/GUIDE-template.md`**, because the disputants are agents: a rule
   only Mops can read governs only the tasks Mops is in. Anti-patterns generalized in REFERENCE
   §8, the operating recipe in PLAYBOOKS, and eval scenario **17** covers it.

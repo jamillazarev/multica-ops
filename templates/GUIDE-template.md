@@ -123,10 +123,19 @@ is a discussion; a **third is evidence the brief is ambiguous**, not that someon
 so stop, and escalate up your chain. Escalate **as a comment on the issue, not as more
 thread**: a thread dies with its run, and *"as discussed above"* is not a spec. Name the
 **ambiguous line and both readings** with what each would cost — never *"we couldn't agree"*,
-which hands the next person the argument instead of the question. Whoever settles it **edits
-the spec or the DoD in that same task**, so nobody re-argues it next week. And every
-`@`-mention is a run that spends budget, so a point being argued has a **price you can read**
-— the ceiling is measured, not just counted.
+which hands the next person the argument instead of the question.
+
+**Stopping is free; arguing is not.** Set the issue `blocked` and say why in a comment — a
+comment wakes nobody, so the status is what actually stops round four. Do **not** `@`-mention
+to call the halt: a mention is a run that spends budget, and spending two more runs to stop
+spending runs is the one trade nobody meant to make. That same arithmetic is why a disputed
+point has a **price you can read** — the ceiling is measured, not just counted.
+
+**Then fix the artifact, and mind which kind it is.** The **spec and the task's own wording**
+are editable in flight — correct them in that same task so nobody re-argues it next week. The
+**DoD and the acceptance criteria are locked**: they are *proposed* to the owner and never
+edited by whoever is measured against them, which includes you, your leader and the conductor.
+Settling a dispute is not a licence to move the bar.
 
 **Build produces evidence.** If your work has visible states, the Definition of Done includes
 screenshots or recordings of every one of them — otherwise the design gate has nothing to

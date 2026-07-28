@@ -277,6 +277,11 @@ Cutting a release).
 - ❌ A dispute nobody priced — `@`-mentioning an agent **is a run that spends budget**, so "this
   point cost N runs" is countable by ordinary grouping. A ceiling counted only in rounds and never
   in spend is a wish, not a limit.
+- ❌ Paying to stop paying — halting a loop with an `@`-mention, which is itself a run. A comment
+  wakes nobody (§2), so `blocked` + a comment stops it for free.
+- ❌ Settling a dispute by rewriting the bar — the spec and the task's wording are editable, the
+  **DoD and acceptance criteria are not**: those are proposed to the owner, and "we had to settle
+  it" is not an exemption from that.
 - ❌ The author moves the bar — acceptance criteria, review rubric or budget edited by
   whoever is being measured against them. Propose to a human; never adjust in passing.
 - ❌ Self-review, or review by the author's own provider — models are generous with their
