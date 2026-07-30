@@ -1,0 +1,15 @@
+# Same checks as the local pre-commit hook, enforced on every push/PR.
+name: preflight
+on: [push, pull_request]
+# This job only reads the tree. Without this block the job inherits the repository
+# default, which on an older repo is write-all — a token far stronger than the work.
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      # Pinned to a commit, not a tag: a tag is mutable, so `@v4` means "whatever that
+      # tag points at the day CI runs" — the supply-chain hole every scanner flags.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - run: bash scripts/preflight.sh
