@@ -58,7 +58,8 @@ item riding along in the batch.
 
 | User says | You do |
 |---|---|
-| "what's the status?" | `bash scripts/status.sh` + `daemon status --output json`; summarize: working/waiting/limit-stuck (+ reset time from `scripts/health.sh`) |
+| "what's the status?" | `bash scripts/status.sh` + `runtime list` (**not** `daemon status` — it answers about the CLI's own profile; REFERENCE §runtime); summarize: working/waiting/limit-stuck (+ reset time from `scripts/health.sh`) |
+| "am I on the latest? did the update land?" | **`bash scripts/find-installs.sh`** — every install of this skill on the machine, its version and its update route, with **broken symlinks and silently-stale copies flagged** and a non-zero exit. Run it **before** updating and again after: *"updated everywhere"* is a claim about a generated list, never about memory. On its first run here it found a symlink into `~/.agents/skills/multica-ops`, a directory that does not exist — wired into a harness since July and resolving to nothing |
 | "resume / continue everyone" | `multica daemon start` (requeues interrupted) + `bash scripts/resume.sh` |
 | "everything stalled, fix it" | triage below → usually limit: report reset time; after reset `bash scripts/resume.sh --revive-cancelled` |
 | "start feature X" | find the issue, `issue assign … --to "<Conductor>"`, confirm the spend |
