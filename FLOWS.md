@@ -300,6 +300,48 @@ Step detail and CLI recipes: **`BOOTSTRAP.md §15`**.
 
 ## Joining an existing setup
 
+**Two arrivals wear the same clothes, and this branches before anything is touched.**
+
+**Is there a workspace at all?** *Read it from the ground, never ask* — `workspace list`, and
+whether this project appears in one.
+
+- **There is one** → the audit below: the workspace fingerprint, gap-check, interview delta.
+- **There is none** → the project exists but the company does not. **The audit target is the
+  project**: the repository and its history, the tracker the work lives in today, the
+  conventions the team already follows — then the workspace is created and the same interview
+  delta runs. **This is the ordinary case for moving an old project onto the process**, and it
+  is the same door: *I am arriving at something that already exists.*
+
+**And are you the successor or a guest?** This is about **their repository**, not the workspace
+— the workspace is yours by construction, which is why the record always has a home here and
+the only question is what lands in *their* tree.
+
+| | Successor | Guest |
+|---|---|---|
+| what you become | the project's operator | a contributor passing through |
+| the deliverable | a project that runs | one bounded piece, through their process |
+| their conventions | respected by choice | **binding** — read `CONTRIBUTING`, match what the tree does |
+| the debt list | produced, for them | **not produced** — an unsolicited audit of a stranger's repository is the opposite of contributing |
+| our files in their tree | yes, once the docs home says so | **none** — not a guide, not a map, not an ignored file |
+| where the record lives | the workspace, and artifacts by the docs-home answer | **the workspace only** |
+
+**Read it from the ground:** whose remote it is, whether `CODEOWNERS`, a pull-request template
+or a contributor guide exist, whether `docs/` carries recent commits from many hands.
+**Ambiguity is guest** — a guest who turns out to be the successor loses nothing, while the
+reverse means our files in a repository that was never ours, possibly already in review.
+
+**The debt list — the part that is usually missing.** An audit that produces a list of
+observations produces nothing: it lives until the end of the scroll. **Every finding is either
+`blocking` or `deferrable`, it says which, and it names the consequence** — *"this blocks the
+first release because X"* rather than *"consider fixing X"*. Deferrable findings land in
+`docs/LATER.md` with a **revisit trigger that is a moment, not a date**; blocking ones become
+issues. **Carried from `opsinist` with its measurement rather than as a proven mechanic:** the
+scenario for this scores **0 of 2 and 0 of 5 across two rounds** there — runs audit, and then
+fix something before the owner has seen the list, or hand over a list with no verdict on any
+row. Treat it as a rule that needs structure, not as one that works.
+
+---
+
 Audit before touching: inventory **every class in the workspace fingerprint** (PLAYBOOKS — agents · squads · skills · labels · autopilots · projects · runtimes · properties · members · project resources), plus statuses,
 **and workspace members**) → gap-check against the invariants and this file → report
 deltas with recommendations (fix now / later / ignore is the user's call) → **run the
