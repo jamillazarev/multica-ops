@@ -74,6 +74,28 @@ sub-issue, not another level.
   — measured 2026-08-01, five of five runs stopped at the missing capability and none invented
   a way past it.
 
+- **Where secrets actually live, and the sentence to read before putting one there.** There is
+  **no workspace credential store** — the only place is the agent's own `custom_env`
+  (`agent env get|set`), and integrations like GitHub and Slack are connected separately, per
+  agent. What the platform does protect is **who and when**: *"only workspace `owner`s and
+  `admin`s can unlock and modify values"*, *"every read or change leaves an audit record"*, and
+  list and detail endpoints **no longer return values at all — only an opaque count** (docs →
+  Create and configure an agent, checked 2026-08-01).
+
+  **And the part that decides what you put there:** *"`custom_env` values are stored in
+  plaintext in the Multica server database."* Not encrypted at rest, not held on your machine —
+  **plaintext, on the vendor's side, injected into the tool when the runtime starts.** Access is
+  narrow and audited; the storage is not sealed. **Say this out loud before an owner hands over
+  a production key**, because the honest reading is *"this is a credential the vendor's database
+  holds in the clear"*, and that is a decision, not a detail.
+
+  **So the shape of what goes in changes.** Prefer a credential that is **scoped and
+  short-lived** — a deploy key for one repository, a token with one permission, something
+  rotatable in a minute — over a long-lived key that opens everything. Rotate on member changes,
+  because an admin who leaves has read them all and every read is only *recorded*, not
+  prevented. And **the strongest control is still the one measured**: an agent that never needed
+  the key does not get it, and then no storage question arises at all.
+
 - **MCP is per agent, and there is no workspace level.** `--mcp-config` sits on the agent; a
   workspace has no MCP surface (`workspace update` has no such flag). So **a server that
   "everyone should have" is added to every agent one at a time, and to each new hire after** —
