@@ -217,6 +217,13 @@ the project's `docs/` where a workspace exists, else a **single named file in th
 is deliberate and placed; everything else stays **zero-footprint**, and the rule ends there for that
 one artifact only — no scratch files spun up unasked along the way.
 
+**Open `templates/ANSWER-template.md` before answering.** It holds the three shapes a question
+without a thing to build actually arrives in — **choose between named options · find me
+something · how long, how much** — and a slot left empty there is a visible hole rather than a
+silent one. **Measured in `opsinist` 2026-07-31:** six consultation scenarios failed 5 of 5 by
+ending in a list of options with the choice handed back, and every one of those answers was
+right about its subject and one step short of answering. **Both seats**, chat included.
+
 **Research is encouraged; heavy fan-out is announced.** Per the decision loop, spin **sub-agents
 for search and verification** freely — reads are free — and **brief each one narrow** (specific
 questions, grep-not-read, a scoped file list) to keep each run cheap. Before a *heavy*
