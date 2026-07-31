@@ -380,6 +380,18 @@ stage finished" (that is @mentions and barriers). Offer at setup, default "later
 - **Failures are silent** — an autopilot task **neither auto-retries nor posts to the inbox**
   (REFERENCE §7). So run it in `create_issue` mode and **subscribe the owner**, or a broken
   autopilot goes unnoticed indefinitely.
+- **The platform tells you when it will fire, and not whether anything will run.**
+  `autopilot trigger-add <id> --kind schedule --cron … --timezone …` (**the id is positional —
+  `--id` is rejected**) returns **`next_run_at`**, a concrete UTC instant. Quote it back rather
+  than saying *"weekly"* — a promise with a timestamp can be checked. **But `active` plus a
+  `next_run_at` means the server will wake it, not that work will happen**: the assignee runs on
+  a runtime, and **a `local` runtime is a process on somebody's machine**. Before promising a
+  schedule, confirm the executor answers — **`runtime list`**, status `online` with a fresh
+  `last_seen`, **not `daemon status`**, which reports on the CLI's own profile and says
+  `stopped` while the desktop app's daemon keeps six runtimes online (REFERENCE → readiness,
+  measured 2026-08-01). **Verified end to end the same day**: created in `create_issue` mode,
+  scheduled, `next_run_at` returned, then deleted — the mechanism is real, and so is the
+  condition.
 - **A manual `autopilot trigger` is tagged source `manual`.** Not yet on the platform (checked
   v0.4.8): HMAC signing on the trigger, an IP allowlist, API-based triggers — do not design as if
   they exist.

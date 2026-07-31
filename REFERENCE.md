@@ -52,6 +52,37 @@ sub-issue, not another level.
   `issue property`. **Agents read and write them with validation** — so *Severity*, *Environment*
   or *Channel* becomes a field, not a sentence buried in a description that every agent parses
   differently. Prefer a property over prose whenever something is later filtered or counted.
+- **An agent has fewer fields than a role needs, and where the rest goes is not a matter of
+  taste.** The platform gives `--description`, `--instructions`, `--model`, `--runtime-id`,
+  `--skills`, `--mcp-config`, `--custom-env`, `--max-concurrent-tasks`, `--permission-mode`.
+  It has **no field for type, grade, autonomy or the evidence behind them** — and the temptation
+  is to put them all in the instructions, which is the one place they must not go.
+
+  | What | Where | Why not elsewhere |
+  |---|---|---|
+  | **type** (worker · expert · persona · human) and **grade** | **`--description`** | it is a **routing fact** — what the squad leader reads when deciding whom to `@`-mention. It describes the agent *to others* |
+  | **how the craft is practised** — its rules, its definition of done | **`--instructions`** | this is what the agent reads *about itself*, and it should be about the work |
+  | **autonomy — which gates it clears unasked, and the runs behind that** | **a decision record**, keyed by agent name — plus, where it is real, **`--permission-mode`** and **what is absent from `--custom-env`** | there is no field for it, and a claim about trust belongs where its evidence is |
+
+  **Grade never enters the instructions as an identity.** *"You are a junior engineer"* is not
+  metadata, it is a behavioural instruction, and a model told it is junior acts junior. The
+  leader needs to know the grade; the agent does not need to be told who it is. **The
+  description is read by whoever routes; the instructions are read by whoever works.**
+
+  **And the enforceable half is not a field at all.** Autonomy written into instructions is a
+  request; autonomy expressed as *this agent's environment has no deploy credentials* is a fact
+  — measured 2026-08-01, five of five runs stopped at the missing capability and none invented
+  a way past it.
+
+- **MCP is per agent, and there is no workspace level.** `--mcp-config` sits on the agent; a
+  workspace has no MCP surface (`workspace update` has no such flag). So **a server that
+  "everyone should have" is added to every agent one at a time, and to each new hire after** —
+  that is the real cost of an integration here, and it is worth saying before a team of eight
+  is standing. Two consequences: agents also **inherit the runtime's local MCP servers and
+  skills**, so the inventory is *runtime plus agent*, never agent alone; and **`mcp_config` is
+  secret material** (it usually carries tokens) — pass it by file or stdin, never on the command
+  line where the shell history and `ps` can see it.
+
 - **What attaches where — three different things that feel alike.** **Resources belong to a
   project and to nothing else**: `project resource add --type github_repo | local_directory` is
   *what agents work on*. A workspace has no resources, and neither does an agent. **The agent
