@@ -52,6 +52,33 @@ sub-issue, not another level.
   `issue property`. **Agents read and write them with validation** — so *Severity*, *Environment*
   or *Channel* becomes a field, not a sentence buried in a description that every agent parses
   differently. Prefer a property over prose whenever something is later filtered or counted.
+- **Where a field lives, when the methodology asks for more than the platform has.** The budget
+  is twenty, so a slot is spent only on something that passes **both** tests: **it is later
+  filtered or counted**, *and* **it cannot be filled cheaply with a lie**. Everything else has a
+  cheaper home.
+
+  | Home | What belongs there | Cost |
+  |---|---|---|
+  | **a typed property** | stage · evidence rung · check-date · source URL · ICE components · wave | one of twenty, workspace-wide, owner-created |
+  | **a label** | issue **type** and **discipline** — they select the ladder and the DoD, and labels are free and unlimited | none |
+  | **a named line in the description or a comment** | anything narrative: the reasoning, the assumption, what a page said | none, but unparseable and it drifts |
+  | **nowhere** | a field nobody filters, counts or reads | the honest option, and usually the right one |
+
+  **The core set is six to eight, not eighteen, and the reason is today's measurement rather
+  than taste.** A *"DoD met"* checkbox is exactly the shape that failed in `opsinist` on
+  2026-08-01: a gate asking for evidence the constrained party can author was satisfied three
+  times by authoring it — once with a real email address typed under `Approved by:`. **A field
+  the agent ticks about its own work is a prompt, not a record.** So completion is read from
+  what the platform observed — runs, review comments, a merged PR — and never from a box the
+  worker checked. Leaving twelve slots free is not caution; the owner's own fields are the ones
+  the company actually runs on.
+
+- **Referring to something that lives in the platform: the identifier, plus one line of
+  substance.** `TES-1` is stable and short, so link it — **and write the sentence so it reads
+  without following the link.** *"TES-1 — the pricing push, blocked on a missing repo binding"*
+  survives a deleted workspace, a member who lacks access, and a reader offline; *"see TES-1"*
+  becomes a riddle the moment any of those is true. **Never copy the content**: that is a second
+  place where the truth can live, and it is the thing this skill deliberately does not do.
 - **Resolvable comment threads.** `issue comment resolve|unresolve` is the platform's own
   "this objection is settled" — cheaper than a sub-issue for a single point of review.
 - **Subscribers.** `issue subscriber add|remove`. Auto-subscription is generous (create, get
