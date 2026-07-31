@@ -10,6 +10,7 @@ work already lives somewhere else.
 - [Design system — the system follows solutions](#design-system-the-system-follows-solutions)
 - [Brand — identity, systematized](#brand-identity-systematized)
 - [Persona theatre — synthetic and live audiences](#persona-theatre-synthetic-and-live-audiences)
+- [HQ — the workspace above the workspaces (opt-in, and not on day one)](#hq-the-workspace-above-the-workspaces-opt-in-and-not-on-day-one)
 - [External tracker bridge (opt-in — offered only if you already use one)](#external-tracker-bridge-opt-in-offered-only-if-you-already-use-one)
 
 ## Design work — structure before pixels, and a gate that catches garbage
@@ -415,3 +416,47 @@ Run it **after the import creates the issues** (`/multica-ops:import` Pass 3 —
 **unassigned**, so the pass sits between creation and assignment, never before creation), and
 again on anything imported that reaches `todo` without having been through the pass — that is
 the moment it actually starts costing money.
+
+## HQ — the workspace above the workspaces (opt-in, and not on day one)
+
+**The problem it solves is narrow and real.** Everything about *a* company has a home: issues,
+comments, runs, properties, the board. **Decisions that span companies have none** — which
+workspace a thing belongs in, whether to split one in two, a standard applied everywhere, what
+two of them do differently. The platform has no level above the workspace, so those decisions
+end up in a chat that nobody can search next month.
+
+**Create it when the second workspace appears, not before.** One company needs no HQ, and an
+empty workspace is a slot of clutter with its own membership to maintain. This is the same
+`twice` bar the rest of the skill uses: the need is real on the second occurrence, not on the
+first anticipation.
+
+**Its membership is the point, not its cost.** Roles are workspace-level and access is not
+scoped to projects (REFERENCE → the workspace is the boundary of visibility), so a separate
+workspace is **the only way to choose who sees company-level decisions**. Invite the people who
+make them; nobody else is looking at the wrong thing by accident.
+
+**What goes in — decisions that touch more than one workspace:**
+
+- which workspace a new product, client or experiment belongs in, and why
+- splitting one workspace in two, or merging — with what moved and what did not
+- a standard applied everywhere: naming, the field set, the review bar, the model tier floor
+- a comparison between workspaces that led somewhere
+
+**What does not go in — anything with a home in its own workspace.** A decision about one
+product is an issue there. Copying it up creates **a second place where the truth can live**,
+and reconciling two records is a job nobody signed up for. **If you cannot say which single
+workspace it belongs to, it belongs here; otherwise it does not.**
+
+**Referring across the boundary: `<workspace-slug>/<KEY>`, plus a line of substance.** Issue
+keys are unique **within** a workspace — `TES-1` means different things in two companies — so a
+cross-workspace reference carries the slug, and the sentence still reads without following it:
+*"`4teem/ACM-12` — the shared design-token decision, taken so both products stop diverging"*.
+
+**It does not need the methodology's field budget.** HQ holds decisions, not delivery: no
+stages, no waves, no evidence rungs on a board that has no runs. Leave its twenty properties
+free, or spend two on what the owner actually filters by.
+
+**And it is not a second board.** No work is executed here, no conductor runs it, no autopilot
+sweeps it. **It is where the reasoning above the companies is written down so it can be found**
+— and if that is not what it is being used for, it has become a fourth place to look, which is
+worse than none.
