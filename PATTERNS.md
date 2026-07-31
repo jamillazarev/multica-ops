@@ -78,6 +78,16 @@ real, not cosmetic.
 *Applies to:* a sub-issue that needs sub-issues → its own issue · a quick job → a crew → a
 company · a workspace skill that proved itself → its own repo (`/multica-ops:skill release`) · a
 runbook procedure → a skill.
+*And seeing it is not doing it.* **A transition noticed ends in a named offer, never in an open
+question** — *"this becomes X, carrying what it already produced — yes?"* Measured in `opsinist`
+2026-07-31: runs recognised every seam unprompted, named the recurrence bar and the crafts
+involved, **and moved none of them**, closing with *"finish it as it stands, or step back?"* —
+an answer that reads as competent status while the hour quietly becomes a roadmap. The
+destinations here are the platform's own, so the offer can name them exactly: the outgrown
+sub-issue **loses its parent link and keeps its key**; the friction seen twice becomes a
+**`tooling` issue with both dates in it**; the milestone that spans crafts becomes its own
+issue with the children's keys intact. **The owner still chooses — but between named acts, not
+between moods.**
 
 **10 · Ages like a request.** Anything pending carries its age and surfaces past a
 threshold, because a wait nobody chased and a wait everybody forgot look identical from

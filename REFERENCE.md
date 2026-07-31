@@ -159,6 +159,36 @@ design review catch different failures). Gate only what a feature can violate.
 Ordering: **within** a feature — `--stage` barriers (native); **between** features —
 an external backlog document agents read; there is no `--depends-on`.
 
+**Depth is not capped, and that is the thing to design around.** Measured `2026-08-01`: six
+levels of `--parent` were accepted, each with `parent_issue_id` set, and the UI renders every
+one of them — but **as a chain, not a tree**: an issue shows *"Sub-issue of X"* upward and its
+**direct** children downward. So `TES-10` at the root of a six-level chain displays `0/1`.
+**Nothing rolls up.**
+
+**That is exactly the shape `opsinist` names as broken by depth** — *"the old one-level limit
+came from a system where the barrier was a number on the child, and depth broke it"*. Here
+`--stage` **is** a number on the child, and the barrier wakes **one** parent. The consequences
+are worth stating rather than discovering:
+
+- **Each parent orders its own children correctly.** The mechanism is sound one hop at a time.
+- **Nothing aggregates across hops.** A root cannot tell you how much is outstanding beneath it,
+  and no counter goes red because work sits four levels down.
+- **So deep work is real, locally ordered, and invisible in aggregate** — the same silhouette as
+  every other silent failure this skill guards: it does not error, it just is not seen.
+
+**Therefore promote, and not because nesting is forbidden.** §9 holds here for a mechanical
+reason rather than a stylistic one: **you may nest as deep as you like, and only two levels
+report.** A sub-issue that has grown children of its own is work that has left the board's
+arithmetic, and promoting it is what puts it back.
+
+**One vocabulary note, because `opsinist` deliberately splits what this platform merges.** There,
+the **stage ladder** (the named lifecycle per issue type — discovery → build → review → ship) and
+the **wave** (the barrier between siblings) are two different things, kept apart because
+conflating them hid bugs. Multica has **one `--stage` ordinal doing both jobs**, and this
+document uses the word in both senses. That is workable and it is not free: when someone says
+*"stage 2"*, ask whether they mean the second rung of the ladder or the second barrier group,
+because on a cross-discipline feature those are different numbers.
+
 ## 5. The full flow (Kanban)
 
 ```
@@ -319,6 +349,21 @@ register ships with its own fetcher — `python3 scripts/fetch-source.py --resol
 prints a ready entry skeleton, `--archive <url>` triggers a Wayback snapshot, and `--verify` walks
 every live URL — so an entry is never hand-typed from memory (checked each release, AGENTS.md →
 Cutting a release).
+
+**And a record is a pointer: the thing it points at outranks it.** Every register, property and
+summary here describes something that exists somewhere else — a licence file, a live page, a
+directory, the code. **The row is what somebody typed on the day they typed it**, and when the
+two disagree the artifact wins silently unless someone opens it. So **before acting on what a
+record says about an artifact, open the artifact** whenever it is reachable — in this tree or
+one fetch away — and where it is not, say so rather than proceeding on the description.
+**Measured in `opsinist` 2026-07-31, five scenarios, every instance:** a run listed `vendor/`
+and never opened the licence beside it, so a Business Source License recorded as `MIT` survived
+into a paid product · a run read a source entry and a decision and never fetched the dead link
+between them · a run bought stock photography without opening the asset log one directory away ·
+a run regenerated a table over a hand edit it never inspected · a run declared a payment step
+built without checking that the function it calls is defined nowhere. **None of those runs was
+careless about its reasoning** — each read a description and acted on it, which is the cheapest
+possible move and looks identical to diligence in a transcript.
 
 ## 8. Anti-patterns
 
