@@ -22,6 +22,48 @@ expectations below are written as *what must be true afterwards*.
 a set made only of hard cases hides the failure that matters most in practice, which is
 over-serving someone who asked for very little.
 
+**Score a pass-rate, not pass-or-fail — N ≥ 5 per scenario.** One run of a nondeterministic
+actor is an anecdote. A 95%-reliable suite scored once goes red for no reason, and a suite
+nobody trusts is dead. **The regression in the rate is the signal**, which is why a scenario's
+line reads `2/5`, never `fail`. Ported from `opsinist`, where the first N=1 rounds produced
+round-to-round comparisons that could not tell a real repair from noise — and the first N=5
+round settled several arguments that a year of re-reading would not have.
+
+**`void` is a verdict, and it is not `fail`.** A run that measured nothing — the player
+described a workspace it was not given, the task died on a quota, the environment was
+misconfigured — is **invalid, not failing**. Counting it either way is worse than having no
+number. On this platform the commonest cause is documented rather than guessed: **quota
+exhaustion lands in `agent_error` and is not auto-retried** (REFERENCE §runtime), so a run
+whose task ends that way is `void` by inspection, re-dispatched after the reset, and never
+graded.
+
+**The shape of a run — a form, because "run the evals" gets performed as reading them.** Every
+row is required; a run missing one is **not a weaker run, it is not evidence**.
+
+| | What it means here | Why it is required |
+|---|---|---|
+| **fixture** | a real workspace encoding **this** situation, built before the run — issues, agents, squads, properties, and their state | a fixture that encodes something else does not fail the scenario, it **invalidates the run** — and it looks like a result |
+| **isolation** | a **test workspace of its own**, and no reach into the owner's real ones. The console acts on one workspace at a time, so **confirm which one before dispatching** | a player that can see a real company reports on it, and nothing in the transcript marks that it did |
+| **player** | a tier below the team's floor, **never shown the rubric**, given only what a user would say | a player who knows the assertion writes to it |
+| **assertion** | **mechanical wherever the platform allows**: `issue get` status, `issue runs` outcome, whether a comment exists, whether a property is set | "did it behave well" is an opinion; a status field is not |
+| **judge** | did not produce the transcript and did not write the thing under test | a judge who wrote it reads generously |
+| **cleanup** | **everything the run created, and it does not delete the way a filesystem does** — issues have no `delete`, they are `update --status cancelled`; agents **archive**; properties **archive** (values preserved, and archiving is what frees a slot against the cap of 20); autopilots **delete**, and a live schedule left behind fires next week | a probe left in a workspace is indistinguishable from real work a month later, and a forgotten autopilot spends quota on nobody's behalf |
+| **result** | a pass-rate over N ≥ 5, `void` excluded from the rate | one run of a nondeterministic actor is an anecdote |
+
+**Runs cost real quota here, and that changes the arithmetic.** A local fixture is free to
+rebuild; a workspace run spends the same limit the company runs on. So **the cheap assertions
+come first** — what the tree says afterwards, read mechanically — and a player is dispatched
+only for what only a player can answer.
+
+**The skill under test is frozen for the duration of a round.** A fix found mid-round waits for
+the round to end. **A pass-rate over a corpus that changed underneath it describes nothing**,
+and afterwards nothing says which text was scored.
+
+**A criterion that can be reasoned around will be.** Write assertions as facts to check, not
+judgements to reach. Measured in `opsinist`: a judge passed *"a record exists"* by deciding that
+a commit in someone else's repository counted, while the filesystem said no record had been
+created.
+
 ## The rubric is here; the record of a run is in `runs/`
 
 These scenarios are what gets checked. **What actually happened when they were checked lives
