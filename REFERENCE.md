@@ -52,6 +52,44 @@ sub-issue, not another level.
   `issue property`. **Agents read and write them with validation** — so *Severity*, *Environment*
   or *Channel* becomes a field, not a sentence buried in a description that every agent parses
   differently. Prefer a property over prose whenever something is later filtered or counted.
+- **What attaches where — three different things that feel alike.** **Resources belong to a
+  project and to nothing else**: `project resource add --type github_repo | local_directory` is
+  *what agents work on*. A workspace has no resources, and neither does an agent. **The agent
+  carries capability instead** — `agent skills` (what it can do), `agent env` (secrets, audited),
+  `--mcp-config` (servers). **The workspace carries containment and context.**
+
+  **So an agent is not bound to a repository — the issue's project is.** Which code a run
+  touches is decided by where the issue lives, not by who executes it. Measured 2026-08-01: an
+  agent asked to push to production answered *"this workspace has no project resources bound (no
+  `github_repo`)"* — it stopped at the resource, not at permissions. **And the resource type is
+  a parallelism decision, not a taste one**: `github_repo` clones per task into an isolated
+  worktree, while `local_directory` is serialized by a per-directory lock — one task at a time,
+  forever.
+
+- **`workspace --context` is a real agent-facing surface, and this skill was not using it.**
+  The field is described as *background information and context for AI agents working in this
+  workspace*, and **it reaches them**: measured 2026-08-01 by putting a fact that exists nowhere
+  else into it — an invented codename and channel — and asking an agent, which answered with
+  both. **It differs from the shared guide skill in the way that matters**: a skill is attached
+  per agent, so it can be forgotten on a new one and it spends that agent's skill budget, while
+  the context is had by everyone in the workspace by virtue of being there.
+
+  **So split them by what travels.** **Workspace context — what this company is**: the domain,
+  its vocabulary, the channels, the things never done here. **The guide skill — how work is done
+  here**: the rules, the definition of done, escalation, handoff — because a skill can be
+  released and imported into another workspace and the context cannot. **And a project has no
+  such field** (`--description`, `--lead`, `--repo` only), so anything true of one project and
+  not the company travels in the issue or in a craft skill.
+
+- **Self-development lands where it is used, and the decision about it lands in HQ.** Skills are
+  **workspace-scoped** (`skill list` lists them *in the workspace*), so a routine that earned a
+  skill gets one **where the routine happens** — never in HQ, which runs no work and would give
+  it no user. It leaves the workspace by **release, not by relocation**: `skill import` reads a
+  URL (clawhub.ai, skills.sh, github.com) or a local archive, so a skill that proved itself
+  becomes its own repository and is imported wherever it is wanted
+  (`/multica-ops:skill release`). **The tool lives where it is used; the judgement that everyone
+  should have it is a company-level decision** → MODULES → HQ.
+
 - **The workspace is the boundary of visibility — the project is not.** Roles are `owner` ·
   `admin` · `member` and they are **workspace-level**: *"Roles only control workspace settings
   and team management; day-to-day collaboration — creating issues, writing comments — is open to
