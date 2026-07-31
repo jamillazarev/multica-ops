@@ -52,6 +52,25 @@ sub-issue, not another level.
   `issue property`. **Agents read and write them with validation** — so *Severity*, *Environment*
   or *Channel* becomes a field, not a sentence buried in a description that every agent parses
   differently. Prefer a property over prose whenever something is later filtered or counted.
+- **The workspace is the boundary of visibility — the project is not.** Roles are `owner` ·
+  `admin` · `member` and they are **workspace-level**: *"Roles only control workspace settings
+  and team management; day-to-day collaboration — creating issues, writing comments — is open to
+  all members"*, and **access is not scoped to a project or an issue** (docs → Members and
+  roles, checked 2026-08-01; `workspace member invite --role member|admin`, owner not
+  grantable). **So you cannot invite someone into a project.** A contractor brought in for one
+  thing sees the whole company: every project, every issue, every comment.
+
+  **Which makes the workspace the unit of everything** — team, custom fields, automations, and
+  now confidentiality. **Two things that must not see each other are two workspaces, never two
+  projects**, and that is a decision to take before the first invitation rather than after.
+
+  **The one real partition runs on the other axis: agent Access.** *"Roles do not decide who can
+  run an agent. Each agent has its own Access scope, and `owner` and `admin` cannot bypass it to
+  run agents they were not granted."* So a **person** cannot be fenced, and an **agent** can —
+  by `--permission-mode private | public_to` with an explicit allow-list. That is the same law
+  as everywhere else here: **the enforceable boundary is a capability, not a rule about who
+  ought to look.**
+
 - **Where a field lives, when the methodology asks for more than the platform has.** The budget
   is twenty, so a slot is spent only on something that passes **both** tests: **it is later
   filtered or counted**, *and* **it cannot be filled cheaply with a lie**. Everything else has a
