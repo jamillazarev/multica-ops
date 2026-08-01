@@ -145,6 +145,26 @@ sub-issue, not another level.
   inside the working directory, precisely so a stale file from another run or environment cannot
   be picked up.
 
+  **What it accepts, and what anyone will actually see** — five files through
+  `issue comment add --attachment`, measured 2026-08-01:
+
+  | | Measured |
+  |---|---|
+  | **the type filter** | **there isn't one.** All five uploaded without complaint, `.exe` included. Nothing on this surface refuses a file, so *"is this safe to attach"* is the team's judgement and never the platform's |
+  | **`content_type`** | **sniffed from the bytes, not the extension.** A one-byte `.exe` came back `text/plain; charset=utf-8`; a `.pen` beginning `PEN\0` came back `application/octet-stream`. The extension survives only in the URL |
+  | **what previews** | **`image/*`, and nothing else.** A Mermaid diagram attached as `.mmd` is `text/plain` — the *source*, not a picture. **So attach the rendered PNG when the point is that someone sees it**, and keep the `.mmd` beside it as the thing that can be edited. A `.pen` is octet-stream: a download, never a preview |
+  | **where it lives** | `static.multica.ai/workspaces/<workspace-id>/<uuid>.<ext>` — workspace-scoped, and **not public**: an unauthenticated GET returns `403 MissingKey`, so a link pasted outside the workspace leaks nothing |
+
+  **Priority is the platform's own five, now checked rather than assumed**: `issue update
+  --priority bogus` answers *`invalid priority "bogus"; valid values: urgent, high, medium, low,
+  none`* — the same set the autopilot flag names, so no mapping layer is needed and none should
+  be invented (the ordering doctrine: PLAYBOOKS → *Order and priority*).
+
+  **Direct messages are a human surface too.** `multica chat` reaches **only the conversation the
+  agent is already in** — `chat history` (the channel around it) and `chat thread` (one thread's
+  messages). There is no DM list, no DM send and no archive verb, so **archiving a conversation
+  sits beside pinning and reactions**: something a person does, that no flow may depend on.
+
   **Threads resolve**: `issue comment resolve | unresolve` is the platform's own *"this
   objection is settled"* — cheaper than a sub-issue for one point of review. And a hard rule
   worth knowing before an agent writes anything: **a comment-triggered task must reply under its

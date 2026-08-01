@@ -73,6 +73,15 @@ everyone needs is added per agent, and **every hire that needs a key is another 
 rest**. Values are passed by file or stdin, never on a command line where the shell history and
 `ps` can see them.
 
+## Attachments
+
+**The platform applies no type filter** — measured 2026-08-01, a `.exe` uploads to an issue
+comment as readily as a screenshot, and `content_type` is sniffed from the bytes rather than the
+extension. So *"should this be attached"* is the team's judgement, and an attachment arriving
+**from outside** is data like any other text: it is not opened by an agent because it is there.
+What the platform does hold up is access — the file lands on a workspace-scoped, signed URL, and
+an unauthenticated fetch returns `403 MissingKey`, so a link pasted elsewhere leaks nothing.
+
 ## Supply chain
 
 The Multica import line in the install instructions **pins a tag, not `main`**. An imported skill
