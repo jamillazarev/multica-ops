@@ -29,6 +29,20 @@ and routes to `/multica-ops:consult`.** See "Before anything" below. What follow
   craft itself hinges on control level — a design quick job, where the intake and sign-off
   depend on it — control surfaces as a *stated default* ("checkpoints unless you say
   otherwise") inside the cap, not a fourth question.**
+  **A quick job skips discovery, never the project's own record.** `docs/TOOLING.md`,
+  `docs/DECISIONS.md`, `docs/design-system/`, `sources/` — reading four files costs less than
+  one wrong question, and **a question the record already answers reads as not having looked,
+  because it is.** Measured twice in `opsinist` on the same fixture: asked for stock photos in a
+  project whose register held a commissioned shoot, a licensed type pair and a
+  one-icon-set rule, two runs asked the owner what the brand constraints were and named none of
+  it — both while obeying the cap on questions.
+  **Then what only the owner holds is asked, in one short message, however small the job is** —
+  their taste, their names and numbers, what they do not want, and **anything the job would add
+  to what they own** (a dependency, a hosted font, an account). A palette or a set of services
+  chosen for them is not a smaller version of the work, it is different work, and saying so
+  afterwards is not the same as asking. Also measured: a run classified a one-page fix as quick,
+  correctly, then picked the colours, the fonts and the services for a therapy practice and
+  surfaced all three as notes at the end.
 - **Company/product**: walk the full checklist below, but **every question carries a
   default** the user can accept with one word; bundle related questions; skip what
   the context already answers. Ask in waves (next wave only when the previous

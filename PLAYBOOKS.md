@@ -252,6 +252,21 @@ Linear, Jira, GitHub Issues, Trello, Notion, a CSV — same three passes. **Ther
 bulk-import command**: the CLI creates issues one at a time, so an import is a script, and
 a script that will be interrupted must be **resumable**.
 
+**First, check it is one.** Three different jobs arrive wearing this word, and each sets a
+different meaning for *success* — getting that wrong is how every improvement reads as a defect:
+
+| | Expects | Example |
+|---|---|---|
+| **a move** | **1:1** — the same work, a different board | a backlog leaves Linear and Linear is archived |
+| **a conversion** | **lossy by nature, and the losses are named** | a document tree into issues; a numeric priority onto a named one |
+| **"copy it and make ours better"** | **not an import at all** — an ordinary feature whose DoD says *better at X*, never *matches* | rebuilding someone's intake the way it should have worked |
+
+For the third, the original is attached as a **resource to look at**, with its `why` — not as a
+target to match. And **a round trip is not a synchronisation**: *"and back again"* is two
+conversions whose second source is the already-degraded copy, so losses compound while the
+operation looks like a restoration. If both sides genuinely must live, that is the **standing
+bridge**, which is a different thing with a direction of truth per field (MODULES).
+
 **Pass 1 — extract.** Pull the source into flat JSON: id, title, body, state, labels,
 assignee, priority, dates, parent, URL. Linear has an MCP server and a GraphQL API (key
 lives in `mcp_config`/`custom-env`, **never in the repo**); GitHub has `gh issue list
@@ -1065,3 +1080,14 @@ check the platform's current docs rather than recalling them).
 - **Physical batch**: labels · barcodes · compliance marks · shipping docs.
 
 Anything the team can't do yet → find-skills or the role-builder, before ship day.
+
+**And everything published *from* the project ships in the same release.** A docs site, a
+generated API reference, a listing on a registry, a shareable social image — each is derived
+from the source, and **a derived surface left behind does not go blank: it keeps confidently
+stating the previous version.** So they regenerate as a step of the release, **from the ref
+being tagged and never from the working tree** — a regen with an unmerged branch checked out
+publishes unreleased content, which is a lesson learned once and expensively. This skill's own
+ritual carries the same step for the same reason (AGENTS → *Cutting a release*, step 7: a
+previous release's site lagged its tag exactly this way), and the social image is the one people
+forget — **it is a cached copy of your positioning on someone else's server**, stale from the
+moment the tagline changes.
