@@ -7,9 +7,10 @@ also the migration map `/multica-ops:upgrade` reads.
 
 **Carried across from the sibling project `opsinist`, where each of these was measured — against
 its corpus, not this one's.** Same mechanics, different substrate: the workspace lives in Multica,
-the company's record lives in git. **Nothing here has been measured against this corpus**, and
-`evals/runs/0.3.0.md` says so rather than implying otherwise; scenarios 23 and 24 are the rubric
-for the two new behaviours and have no round yet.
+the company's record lives in git. **Almost nothing here has been measured against this corpus**,
+and `evals/runs/0.3.0.md` says which is which rather than implying: **scenarios 23 and 24 were
+run, each failing first and passing after one change**, and the other twenty-two have no round in
+this release. **Both passes are N=1**, and the record carries the reason that is thin.
 
 **Reviewed by the four lenses before tagging, by someone who did not write it — sixteen findings,
 four blocking, all fixed.** The blocking ones are worth naming because each would have misfired
@@ -33,6 +34,23 @@ packaged from evidence, de-identified, and **written to a file outside your repo
 defect is not in your product, so it does not belong in your history — with its path said out
 loud and the routes named. **You post it, never us.** Multica has no feedback mechanism of its
 own (checked in its docs the same day), which is what makes this worth a door here.
+
+**And the file is written before anything is missing.** Scenario 23 caught the first version
+refusing to invent a task record it did not have — correctly — and then **stopping to ask for it,
+leaving the report as chat text**, which is the single outcome this flow exists to prevent.
+Anything unknown is now marked `unknown` in the file, and the offer to fill it comes after. **A
+missing field is not a reason to withhold the artefact.**
+
+**A migration you never ran is noticed on any message, not only on a command.** `UPGRADES.md`
+having no line for the running version now reaches the session as a fact, before the first
+message, from a hook that **only ever reports what the log says** — it makes no claim you could
+forge, and it is silent when the log is current. The law that a project is checked before it is
+acted on lives in the always-loaded core rather than in a companion, for a reason measured here:
+scenario 24 asked *"what's next?"* against exactly that state and the run **read no companion at
+all**, so the rules it needed were in a file nothing had opened. **A rule in a file nothing routes
+to is a rule nothing executes.** After the change the same question produced the whole flow —
+delta, log line, guide bumped, additions needing nothing named as such. **Once**, on a mid tier;
+`evals/runs/0.3.0.md` carries what argues against reading it as more.
 
 **A migration that creates every document the release names makes the workspace worse.** Two
 places said *"create every docs file the new version expects"*; they now say **name** them and
