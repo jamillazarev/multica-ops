@@ -74,6 +74,47 @@ sub-issue, not another level.
   — measured 2026-08-01, five of five runs stopped at the missing capability and none invented
   a way past it.
 
+- **Removing things: the verbs differ per entity, and the CLI is not the UI.** There is no single
+  *delete*, and assuming one is how a cleanup reports success it did not have.
+
+  | Entity | CLI | Note |
+  |---|---|---|
+  | **project · skill · autopilot · label** | `delete` | actually gone |
+  | **squad** | `delete` — **and its own help says *(archive)*** | the word is delete, the effect is archival |
+  | **agent · property** | `archive` only | reversible (`agent restore`, `property unarchive`); a property's **values are preserved**, and archiving is what frees a slot against the cap of 20 |
+  | **issue** | **none** | `update --status cancelled` is the CLI's whole answer — **the UI has *Delete issue***, so a person can do what an agent cannot |
+  | **workspace** | **none** | the UI has *Delete workspace*; from the console it is not deletable |
+  | **attachment** | **none** | `download` and `upload` only |
+
+  **So `opsinist`'s deletion law lands here with teeth rather than as advice**: *enumerate every
+  destination before removing anything, and name what cannot be deleted at all.* On this
+  platform that list is not rhetorical — an agent asked to *"delete this project"* **cannot**
+  remove the issues or the workspace, and saying *"done"* would be false. Cancel is not delete,
+  archive is not delete, and **a cleanup that reports completion while a workspace still stands
+  is the failure that rule exists for.**
+
+- **Attachments, threads and the affordances that have no CLI at all.**
+
+  **Attaching**: `issue create` and `issue comment add` both take `--attachment <path>`
+  (repeatable) and `--attachment-id <uuid>` to bind something already uploaded;
+  `attachment upload` is **for a chat reply only** (`--task`), and `attachment download` pulls
+  one back. **`--allow-external-file` is off by default and should stay off** — the path must be
+  inside the working directory, precisely so a stale file from another run or environment cannot
+  be picked up.
+
+  **Threads resolve**: `issue comment resolve | unresolve` is the platform's own *"this
+  objection is settled"* — cheaper than a sub-issue for one point of review. And a hard rule
+  worth knowing before an agent writes anything: **a comment-triggered task must reply under its
+  trigger comment** — `--parent` is required, and omitting it to post at top level is rejected.
+
+  **What exists in the product and not in the CLI: reactions, pinning, relations.** They are in
+  the interface — emoji on issues and messages, pinning a thread message, an issue, a chat
+  message or a project, and the *Relations* menu — and **the console cannot reach any of them**.
+  So they are **human affordances**, and no flow here may depend on one: an agent cannot pin a
+  decision, cannot react, and **cannot read or write a relation**. Ordering between issues stays
+  what it was — `--stage` barriers within a feature, a backlog document between them, and no
+  `--depends-on` (§4).
+
 - **Where secrets actually live, and the sentence to read before putting one there.** There is
   **no workspace credential store** — the only place is the agent's own `custom_env`
   (`agent env get|set`), and integrations like GitHub and Slack are connected separately, per
