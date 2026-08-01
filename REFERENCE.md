@@ -264,7 +264,14 @@ sub-issue, not another level.
   the interface — emoji on issues and messages, pinning a thread message, an issue, a chat
   message or a project, and the *Relations* menu — and **the console cannot reach any of them**.
   So they are **human affordances**, and no flow here may depend on one: an agent cannot pin a
-  decision, cannot react, and **cannot read or write a relation**. Ordering between issues stays
+  decision, cannot react, and **cannot read or write a relation**. **Reactions are the one that is
+  half-open, and the half matters.** No verb anywhere in the CLI writes one — every subcommand's
+  help was swept for it, 2026-08-01 — but a comment object **carries a populated `reactions`
+  array**, filling the moment a person reacts with `emoji`, `actor_id`, `actor_type` and
+  `created_at`. So **an agent can read the room and cannot join it**: three 👍 on a proposal are
+  legible to it as agreement, and it has no way to add a fourth. **Issues have no reactions field
+  at all** — `issue get` does not return one, so the emoji a person puts on an *issue* is
+  invisible to the console entirely, unlike the ones on comments. Ordering between issues stays
   what it was — `--stage` barriers within a feature, a backlog document between them, and no
   `--depends-on` (§4).
 
