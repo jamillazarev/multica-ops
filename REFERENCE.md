@@ -177,7 +177,7 @@ sub-issue, not another level.
   |---|---|---|
   | **raster & vector images** | `.png` `.jpg` `.gif` `.svg` | **rendered inline.** An **animated GIF animates** and an **SVG with a SMIL `<animate>` animates** — both arrive as an `<img>`, which plays them |
   | **PDF** | `.pdf` | **a real viewer** — page thumbnails, page counter, zoom, rotate, text selection, print. The strongest preview on the platform |
-  | **HTML** | `.html` | rendered **in an iframe**, inline SVG included |
+  | **HTML** | `.html` | rendered **in an iframe**, inline SVG included — and it is `srcdoc` with `sandbox="allow-scripts"`, so see *HTML is the escape hatch* below |
   | **text of any kind** | `.mmd` `.mermaid` `.txt` `.md` `.csv` `.json` `.rivet-project` `.pen` | a file row with an eye → the **source as monospace text**. Includes Lottie (`.json`), a Rivet graph, and a real `.pen` |
   | **video and audio** | `.mp4` `.webm` `.mp3` | **a file row. No player, no poster frame, no scrubber** — the reader downloads it or sees nothing |
   | **archives, Office, unknown binary** | `.zip` `.docx` `.xlsx` `.pptx` `.riv` | **download only, no eye.** Office files are ZIPs, so they sniff `application/zip` and inherit that. (`.riv` here was a synthetic stand-in for Rive — the class is *unknown binary*, not Rive specifically) |
@@ -210,6 +210,22 @@ sub-issue, not another level.
   So *"I put the Figma link in the issue"* means a link and nothing more — for a human as much as
   for an agent. If the point is that someone sees the design, a frame has to be exported and
   attached.
+
+  **HTML is the escape hatch, and it is a real one.** An attached `.html` is rendered as
+  **`srcdoc` in an `<iframe sandbox="allow-scripts">`** (read off the DOM, 2026-08-01), which
+  means an embed *can* be carried in by hand: **nested iframes are permitted, external
+  subresources load, and JavaScript executes** — a probe page proved all three, printing *"script
+  DID run"* beside an image fetched from another host. Whether a given provider then appears is
+  **the provider's decision, not Multica's**: a YouTube `/embed/` frame painted its player area,
+  while a Figma community `?embed_host=` frame came back blank, which is `X-Frame-Options` /
+  `frame-ancestors` doing its job upstream.
+
+  **What the sandbox withholds is the part that matters.** There is **no `allow-same-origin`**, so
+  the frame runs in an opaque origin — no cookies, no access to the parent page, no storage — and
+  no `allow-forms`, `allow-popups` or `allow-top-navigation`. So the technique is legitimate for
+  *your own* page, and an HTML file **arriving from somewhere else executes its author's code the
+  moment someone opens the issue**. That is the sharpest reason the no-type-filter finding is in
+  SECURITY.md rather than only here.
 
   **And the extension and the sniffed type can disagree, with the extension winning the inline
   render.** Mermaid text saved as `text-pretending-to-be.png` arrives `text/plain` and renders as
