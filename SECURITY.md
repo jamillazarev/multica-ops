@@ -98,8 +98,10 @@ external subresources load, and nested iframes are permitted**. What the sandbox
 what keeps it survivable: **no `allow-same-origin`**, so the frame is an opaque origin with no
 cookies, no parent access and no storage, plus no forms, popups or top-level navigation.
 
-So this is a legitimate way to carry an embed *you wrote yourself* — and it means **an HTML file
-that arrived from anywhere else runs its author's code the moment a person opens the issue**.
+The `origin: null` that comes with it also defeats third-party embeds — their own bundles are
+CORS-refused — so the useful case is a **self-contained** page you wrote. What it does not defeat
+is the code in the file itself: **an HTML file that arrived from anywhere else runs its author's
+JavaScript the moment a person opens the issue**.
 Combined with the absence of any type filter, that is the one attachment case where *"just attach
 it and look"* is not a neutral act.
 

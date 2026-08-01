@@ -646,12 +646,14 @@ through the CLI or a person types them into the editor (both measured, with URLs
 *"I put the Figma link in the issue"* therefore shows a link and nothing else; a frame has to be
 exported and attached for anyone to see the design.
 
-**There is one escape hatch and it works: an attached `.html`.** It renders as `srcdoc` in an
-`<iframe sandbox="allow-scripts">`, so nested iframes, external images and JavaScript all work —
-a hand-written page can carry a real embed. Two conditions: the **provider** decides whether it
-appears (YouTube's `/embed/` painted, a Figma community embed came back blank — that is
-`frame-ancestors` upstream, not Multica), and **the same door runs a stranger's code**, which is
-why an HTML file you did not write is not a thing to attach and open (SECURITY.md).
+**An attached `.html` is a half-open door.** It renders as `srcdoc` in an
+`<iframe sandbox="allow-scripts">`, so a **self-contained** page works: its own HTML and CSS,
+inline SVG, plain `<img>` from any host, self-contained JavaScript. **A third-party embed does
+not** — a Figma or YouTube iframe inside it loads and then dies on its own bundles, because a
+sandbox without `allow-same-origin` presents `origin: null` and every CORS fetch is refused
+(`200 (OK)` beside `net::ERR_FAILED` in the console). That is Multica's sandbox, not the
+provider's framing policy, so no embed URL fixes it. And the same door **runs a stranger's code**,
+which is why an HTML file you did not write is not a thing to attach and open (SECURITY.md).
 
 ## Order and priority — one list is authored, five are views
 

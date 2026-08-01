@@ -211,21 +211,33 @@ sub-issue, not another level.
   for an agent. If the point is that someone sees the design, a frame has to be exported and
   attached.
 
-  **HTML is the escape hatch, and it is a real one.** An attached `.html` is rendered as
-  **`srcdoc` in an `<iframe sandbox="allow-scripts">`** (read off the DOM, 2026-08-01), which
-  means an embed *can* be carried in by hand: **nested iframes are permitted, external
-  subresources load, and JavaScript executes** — a probe page proved all three, printing *"script
-  DID run"* beside an image fetched from another host. Whether a given provider then appears is
-  **the provider's decision, not Multica's**: a YouTube `/embed/` frame painted its player area,
-  while a Figma community `?embed_host=` frame came back blank, which is `X-Frame-Options` /
-  `frame-ancestors` doing its job upstream.
+  **HTML is an escape hatch, but not for third-party embeds — and the reason is `origin: null`.**
+  An attached `.html` is rendered as **`srcdoc` in an `<iframe sandbox="allow-scripts">`** (read
+  off the DOM, 2026-08-01). Scripts run, external **images** load, and nested iframes are
+  permitted — a probe page printed *"script DID run"* beside an image fetched from another host.
+  But a Figma or YouTube embed placed inside it **loads and then fails to start**, and the console
+  says exactly why:
 
-  **What the sandbox withholds is the part that matters.** There is **no `allow-same-origin`**, so
-  the frame runs in an opaque origin — no cookies, no access to the parent page, no storage — and
-  no `allow-forms`, `allow-popups` or `allow-top-navigation`. So the technique is legitimate for
-  *your own* page, and an HTML file **arriving from somewhere else executes its author's code the
-  moment someone opens the issue**. That is the sharpest reason the no-type-filter finding is in
-  SECURITY.md rather than only here.
+  ```
+  Cache storage is disabled because the context is sandboxed and lacks the 'allow-same-origin' flag
+  Access to script at 'https://www.figma.com/webpack-artifacts/…' from origin 'null'
+    has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header
+  GET https://www.figma.com/webpack-artifacts/… net::ERR_FAILED 200 (OK)
+  Uncaught ReferenceError: writeEmbed is not defined
+  ```
+
+  **`200 (OK)` beside `ERR_FAILED` is the whole story**: the provider served the document, and the
+  browser then rejected its own bundles because a sandbox without `allow-same-origin` presents
+  **`origin: null`**, which no CORS policy allows. So this is **Multica's sandbox, not the
+  provider's `X-Frame-Options`** — a distinction worth keeping, because it means no amount of
+  choosing the right embed URL fixes it. **What works inside an attached page is what needs no
+  same-origin context:** its own HTML and CSS, inline SVG, plain `<img>` from any host, and
+  self-contained JavaScript. A script-driven third-party app is not on that list.
+
+  **The sandbox withholds the rest too** — no cookies, no parent access, no storage, no forms,
+  popups or top-level navigation. Which is what keeps the other edge survivable: an HTML file
+  **arriving from somewhere else still executes its author's code the moment someone opens the
+  issue**, and that is why the missing type filter is in SECURITY.md rather than only here.
 
   **And the extension and the sniffed type can disagree, with the extension winning the inline
   render.** Mermaid text saved as `text-pretending-to-be.png` arrives `text/plain` and renders as
