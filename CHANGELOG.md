@@ -3,6 +3,35 @@
 Newest first. Each entry leads with what you can now do, not with which files moved. This is
 also the migration map `/multica-ops:upgrade` reads.
 
+## 0.3.1 — 2026-08-02
+
+**Your guide now states which version operates this company, and something checks it.** The line
+did not exist before — `UPGRADES.md` was the only record, and it is the one a migration writes.
+So a run could write the log line, leave everything else, and **the session-start check would go
+quiet precisely because the log is what it reads**. The disagreement was not merely unfixed; it
+was made invisible.
+
+**Measured, three runs each side.** Before: the guide was bumped **0 of 3**, and two of those runs
+wrote their log line anyway. After — a hook that names both files in one fact, a template line
+that says what it means, and a flow that makes it the first mechanical item — **2 of 3**. The
+hook still only reports what two files say, so there is nothing here a session could forge.
+
+**A delta that stops for your approval now writes `deferred` instead of nothing.** Waiting is
+right; waiting silently leaves the same trace as never having looked, and the next session
+re-derives the whole delta and asks you again. **One run met that branch after the change and
+still wrote nothing** — recorded in `evals/runs/0.3.0.md` as a miss, not as a fix.
+
+**`--thinking-level` runs backwards for reaction personas, and only the tier half was written
+down.** A real person gives a landing page thirty seconds; a persona at high effort writes the
+considered essay nobody would have written — articulate, plausible, and evidence of nothing. Set
+it low for reaction personas; raise it only for the adversarial ones, where taking an argument
+apart *is* the job.
+
+**Two harnesses install as a symlink into `~/.agents/skills/multica-ops`.** Found on a real
+machine: if no route ever created that directory, Factory's and Pi's links are **broken while
+looking installed**. `scripts/find-installs.sh` reports them as `BROKEN`; `INSTALL.md` now says
+what to put there.
+
 ## 0.3.0 — 2026-08-01
 
 **Carried across from the sibling project `opsinist`, where each of these was measured — against

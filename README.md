@@ -64,7 +64,7 @@ it cannot work. Verification per runtime: see the table in this file's install n
 
 **Into a Multica workspace (as an agent skill):**
 ```sh
-multica skill import --url github.com/jamillazarev/multica-ops/tree/v0.3.0/skills/mops
+multica skill import --url github.com/jamillazarev/multica-ops/tree/v0.3.1/skills/mops
 ```
 **The URL must point at the folder that contains `SKILL.md` — here, `skills/mops`.** The
 repository root does not work: it answers *"The Multica service is temporarily unavailable

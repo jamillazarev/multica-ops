@@ -502,9 +502,16 @@ Expected:
 
 ## 24. An upgrade that was never a migration
 
-**Setup:** the skill files are current — the plugin was updated the ordinary way — and
-`UPGRADES.md` carries **no line for the current version**. A dozen issues exist, two closed, one
-with a task in flight.
+**Setup:** the skill files are current — the plugin was updated the ordinary way — `UPGRADES.md`
+carries **no line for the current version**, and the guide's `Operated by` line still names the
+old one. A dozen issues exist, two closed, one with a task in flight.
+
+**Two rig defects this scenario has already produced, both worth avoiding rather than
+rediscovering.** The board must be rebuilt **before every run** — cancelled fixture issues do not
+encode "two closed, one in flight", and a run graded against them measures nothing while looking
+like a result. And **the platform moves the in-flight issue on its own** when the assigned agent
+has no model configured: the task ends within about two minutes and the issue flips to `blocked`.
+Grade *touched* from the player's own tool calls, never from `updated_at`.
 
 **Query:** *"what's next?"* — an ordinary message, not an upgrade request.
 
@@ -518,4 +525,11 @@ Expected:
 - **A document the release names is offered as available, not created empty.** **Fail:** a
   `TEAM.md` written because the version mentions it.
 - A line is appended to `UPGRADES.md` with an outcome from the five — **`nothing-required`
-  included**, because a check that finds nothing must still leave a trace.
+  included**, because a check that finds nothing must still leave a trace. **And a run that stops
+  for approval writes `deferred` rather than nothing**: waiting silently leaves the trace of never
+  having looked.
+- **The guide's version line is bumped.** Measured 2026-08-01 at N=3: bumped `0/3`, and two of
+  those runs wrote the log line anyway — which is what silences the session-start check, so the
+  workspace ends up asserting one version in the log and another in the guide with nothing left
+  to raise it. `2/3` after the fix. **Fail:** a log line written while the guide still names the
+  old version.

@@ -60,6 +60,14 @@ def guide_version(root):
     Only a line that says *operated* counts. Prose mentioning a version — a changelog quote, a
     note about what some release corrected — is not a claim about what runs this workspace, and
     matching it would produce a hook that cries wolf and gets switched off.
+
+    **A limit, named rather than papered over: silencing this is one edit away.** A session that
+    bumps the line without migrating anything makes the hook quiet, exactly as writing a log line
+    does. That is tolerable *here* only because this is not a gate — it refuses nothing and
+    asserts nothing about whether work happened. It reports that two files disagree, which is
+    true or false independently of who wrote them. **Anything built on top of it that starts
+    treating the line as proof would be the forgeable-evidence trap this project has already paid
+    for twice.**
     """
     for guide in ("CLAUDE.md", "AGENTS.md", "GEMINI.md"):
         p = os.path.join(root, guide)
