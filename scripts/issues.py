@@ -9,7 +9,11 @@ Usage:
   python3 issues.py <project-id>   # one project
   MULTICA_PROJECT_FILTER=<substr> python3 issues.py   # projects whose title contains substr
 
-Prints TSV: id, status, assignee_id, assignee_type, parent_issue_id, title.
+Prints TSV: id, status, assignee_id, assignee_type, parent_issue_id, title, updated_at.
+
+`updated_at` is *last touched*, not *waiting since*: the platform stores no
+status-change timestamp, so renaming a blocked issue resets its age. It is the best
+signal available and status.sh labels it as an age, not as a promise.
 """
 import json
 import os
@@ -149,4 +153,5 @@ if __name__ == "__main__":
                 i.get("assignee_type") or "",
                 i.get("parent_issue_id") or "",
                 (i.get("title") or "").replace("\t", " "),
+                i.get("updated_at") or "",
             ]))

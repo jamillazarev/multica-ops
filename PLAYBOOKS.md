@@ -90,6 +90,14 @@ multica issue usage <id>                # token spend per issue
 Health triage: daemon `running` + `active_task_count 0` + issues `in_progress` =
 stalled — check the latest run's `error` for `agent_error` / "session limit".
 
+**Waiting work must not look alive, which is what makes the "needs you" half countable.**
+An escalation that stays `in_progress` is indistinguishable from an agent actually working, so
+**anything waiting on a human is set `blocked` with the reason in a comment** — and
+`bash scripts/status.sh` lists exactly those, oldest first, with an age. **The age is
+`updated_at`, i.e. last touched**: the platform stores no status-change timestamp, so renaming a
+blocked issue resets its clock. Read it as *"nothing has happened here for N days"* and say it
+that way — the honest version of the number is still the number that starts the conversation.
+
 **Report it in two parts, because they differ in kind — and open with a countable line.**
 *"3 need you · 2 running · 1 stopped · 4 closed since Tuesday"* — the owner learns **whether**
 something needs them before reading **what**. Then: **needs you** — the open requests
@@ -886,6 +894,9 @@ What Mops (or whoever holds the rung above them) does:
 **Where it escalates.** Up the standing chain — agent → squad leader → conductor → Mops → owner —
 and **it stops at the first rung that can edit the spec**, which is usually the conductor. Crew
 mode has no conductor, so it ends at the owner, who already holds the third-review-round call.
+**The moment it reaches a human it is set `blocked`**, not left `in_progress`: an escalation that
+still looks like work in progress is one nobody counts, and *"needs you"* is the half of the
+status read that must not be guessable (*See what's going on*).
 
 **Never let it ride on thread length.** A thread that gets long enough to rotate is a storage
 event, not a cost control: the spend has already happened by then, and the argument is invisible
