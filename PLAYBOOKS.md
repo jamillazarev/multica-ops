@@ -599,6 +599,32 @@ source; unknown models → custom rates). List-price estimate, not an invoice.
 Write `docs/analytics/<release>.md` (tokens · $ · time · per agent/human) + a summary
 comment on the issue (`issue comment add`).
 
+**`issue usage` counts that issue's own runs and does not roll up its sub-issues.** Measured
+2026-08-01: a child that ran once reported `990` output and `223,287` cache-read tokens; its
+parent, in the same breath, reported **zeros in every column**. Since a feature is the thing
+that *hands work to sub-issues*, **asking a feature what it cost returns nothing while the work
+is real** — and a release report built on the feature's own row says the release was free. **So
+a feature's cost is the sum over its sub-issues, walked**, exactly as the board's counters must
+be walked rather than trusted (REFERENCE → depth is not capped). A number that came from one
+`issue usage` call on a parent is not an answer, it is an artefact of where the runs happened.
+
+**And that same measurement is the argument for four numbers rather than one.** `223,287` cache
+reads against `990` output tokens is the ordinary ratio, not an outlier — **a single total is
+dominated by cache reads and hides the only lever that moves the bill.** Report input · output ·
+cache-read · cache-write, or report nothing useful.
+
+**The answer's shape, not just the file's contents.** These rules live here and the answer is
+produced by an agent, which is the gap `opsinist` measured: the boundary sentence existed in its
+corpus and **five runs in five produced the numbers and never said it**. So a cost answer has
+slots, and a missing one is visible:
+
+1. **whose runs** — this issue's own, or summed over its sub-issues, and **which of the two you
+   did**
+2. **four token numbers**, never one total
+3. **the trend, not the level** — *"$212 of $300, and the weekly rate doubled"*
+4. **whose number this is** — ours is a **list-price estimate computed from run records**; the
+   invoice is the vendor's, and any paid service a run drove is **outside it entirely**
+
 **Slice the waste, not only the spend — same data, one more group-by.** The numbers above
 answer *how much was spent*; these answer *how much was wasted*, from the same
 `issue runs` / `issue usage` records:
