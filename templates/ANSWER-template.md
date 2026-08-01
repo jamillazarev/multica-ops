@@ -27,7 +27,7 @@ sentence per slot beats a page without them.
 | **the pick** | one of them, named in the first sentence — or **the condition that decides**, stated so the owner can answer it from what they already know |
 | **why this one here** | the property of *their* situation that moved it, not the general merits |
 | **what it costs them** | what they give up by taking the pick — every real choice has one |
-| **what the claim rests on** | fetched with its date, or `unknown`. A price, a limit or a tier recalled from memory is `unknown` (REFERENCE → freshness) |
+| **what the claim rests on** | fetched with its date, or `unknown`. A price, a limit or a tier recalled from memory is `unknown` (REFERENCE → fetched at the moment it is asked) |
 | **what they already hold** | read from the workspace before the search — an existing choice outranks a better default |
 | **when to revisit** | the moment that would change the answer, never a date |
 

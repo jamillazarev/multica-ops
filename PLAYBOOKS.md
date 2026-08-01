@@ -1002,6 +1002,17 @@ made the change for the *why*, and write that reason into `TOOLING.md` / `TEAM.m
 guide. Wire the same check as a nightly autopilot so unexplained drift opens an issue
 instead of ageing quietly.
 
+**A sync writes the platform's facts into the docs — and the docs hold facts the platform has
+no field for.** `TEAM.md`'s agent table is where this bites: name, squad and model tier come
+from the workspace, but **craft, grade and *Owns* exist nowhere in it** (REFERENCE §2 — no field
+for type, grade or autonomy), so a table regenerated from `agent list` erases three of its six
+columns while looking more authoritative than what it replaced. **The platform wins on its own
+fields, the file wins on ours, and a row where the two disagree is reported rather than
+resolved** — it is a question for whoever made the change, and the answer goes back into the
+file. This is a measured failure rather than a hypothetical one: in `opsinist` a run
+regenerated the team table and silently overwrote the hand edit it was supposed to report
+(REFERENCE §7).
+
 ## Economics — what the company actually costs
 
 The cost/effort ledger covers **model spend**; the company also pays for **services**.

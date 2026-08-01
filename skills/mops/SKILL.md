@@ -321,7 +321,8 @@ ROADMAP. **`/multica-ops:mops measure`** pulls those metrics, compares to target
 becomes a **Learn item** on the roadmap: the loop closes at Measure → Learn, not at
 Accept. **`/multica-ops:bug`** jumps the queue (minimal spec straight to Build + Review, owner
 notified) and starts by **building a deterministic pass/fail signal** — no repro, ask for
-artifacts rather than guess. **`/multica-ops:mops feedback`** is captured and triaged into four
+artifacts rather than guess; **it skips the queue, not the gates** — *"no time to explain, just
+publish it"* buys no speed on spend, outward or destructive. **`/multica-ops:mops feedback`** is captured and triaged into four
 dispositions — accept · decline with a reason · duplicate · snooze (COMMANDS).
 
 **Launch completeness is analyzed up front, not discovered at the end**: before the first

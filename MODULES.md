@@ -10,8 +10,8 @@ work already lives somewhere else.
 - [Design system — the system follows solutions](#design-system-the-system-follows-solutions)
 - [Brand — identity, systematized](#brand-identity-systematized)
 - [Persona theatre — synthetic and live audiences](#persona-theatre-synthetic-and-live-audiences)
-- [HQ — the workspace above the workspaces (opt-in, and not on day one)](#hq-the-workspace-above-the-workspaces-opt-in-and-not-on-day-one)
 - [External tracker bridge (opt-in — offered only if you already use one)](#external-tracker-bridge-opt-in-offered-only-if-you-already-use-one)
+- [HQ — the workspace above the workspaces (opt-in, and not on day one)](#hq-the-workspace-above-the-workspaces-opt-in-and-not-on-day-one)
 
 ## Design work — structure before pixels, and a gate that catches garbage
 
