@@ -134,14 +134,14 @@ fi
 gdir="$HOME_DIR/.gemini/extensions/$NAME"
 if [ -e "$gdir" ]; then
   v=$(read_version "$gdir")
-  add "$gdir" "extension, Gemini CLI" "publish a GitHub release, then gemini extensions install <url> --consent (update follows releases, not tags)" "" "$v"
+  add "$gdir" "extension, Gemini CLI" "uninstall then gemini extensions install <url> --consent — update follows RELEASES, not tags, and \`extensions update\` hangs (2026-08-01: killed at 120s and again at 240s; uninstall+install took seconds)" "" "$v"
 fi
 
 # Antigravity, global location.
 adir="$HOME_DIR/.gemini/config/plugins/$NAME"
 if [ -e "$adir" ]; then
   v=$(read_version "$adir")
-  add "$adir" "plugin, Antigravity" "re-copy the source, or agy plugin install <url>" "" "$v"
+  add "$adir" "plugin, Antigravity" "git pull --ff-only in place if it is a clone (it usually is — checked 2026-08-01), else re-copy the source or agy plugin install <url>" "" "$v"
 fi
 
 # hermes: a mount in config.yaml is an install even though no file lands anywhere — and it
