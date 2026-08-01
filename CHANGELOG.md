@@ -8,9 +8,11 @@ also the migration map `/multica-ops:upgrade` reads.
 **Carried across from the sibling project `opsinist`, where each of these was measured — against
 its corpus, not this one's.** Same mechanics, different substrate: the workspace lives in Multica,
 the company's record lives in git. **Almost nothing here has been measured against this corpus**,
-and `evals/runs/0.3.0.md` says which is which rather than implying: **scenarios 23 and 24 were
-run, each failing first and passing after one change**, and the other twenty-two have no round in
-this release. **Both passes are N=1**, and the record carries the reason that is thin.
+and `evals/runs/0.3.0.md` says which is which rather than implying: **scenario 23 failed and then
+passed after one change (N=1 each side); scenario 24 was run three times and only half of it was
+ever presented** — the board lacked the closed and in-flight issues the scenario requires, so
+three of its five expectations measured nothing. The other twenty-two have no round in this
+release.
 
 **Reviewed by the four lenses before tagging, by someone who did not write it — sixteen findings,
 four blocking, all fixed.** The blocking ones are worth naming because each would have misfired
