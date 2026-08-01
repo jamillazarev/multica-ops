@@ -26,6 +26,7 @@ control characters that break `json.loads` — sanitize with
 - [The skill lifecycle (/skill)](#the-skill-lifecycle-skill)
 - [Running a company on this skill itself (dogfood)](#running-a-company-on-this-skill-itself-dogfood)
 - [The company guards its own docs](#the-company-guards-its-own-docs)
+- [Showing work — the preview and the original](#showing-work-the-preview-and-the-original)
 - [Order and priority — one list is authored, five are views](#order-and-priority-one-list-is-authored-five-are-views)
 - [The audit is dispatched, not performed (/audit)](#the-audit-is-dispatched-not-performed-audit)
 - [Health sweep (/health)](#health-sweep-health)
@@ -606,6 +607,43 @@ broken the same thing twice — the same evidence bar as making a skill.
 whose truth lives in Notion points the existence check there. The one guard not to drop is
 append-only: it is the only one protecting knowledge that cannot be reconstructed.
 
+## Showing work — the preview and the original
+
+**Multica previews four classes and nothing else** (REFERENCE → attachments): images, PDF, HTML,
+and text-as-source. Video, audio, Office files, archives, design files and unknown binaries land
+as a download nobody opens. So the rule is one line, and it is a lookup rather than a judgement:
+
+> **If the file is not one the platform can show, attach a rendition of it *and* the original —
+> rendition first, original last. If no rendition is possible, say so in the comment.**
+
+```sh
+bash scripts/preview.sh <file>     # prints what to attach, in order
+```
+
+It **produces the rendition or refuses with a reason**, which is the difference between this and
+a rule that merely asks: `exit 0` something previewable exists · `exit 2` the renderer is not
+installed, and the install line is on stderr · `exit 3` nothing can be rendered, so the comment
+has to say that in words. What it does per class, measured on this machine 2026-08-01:
+
+| The file is | What gets attached |
+|---|---|
+| png · jpg · gif · svg · pdf · html | **itself** — the platform renders it, and an animated GIF or a SMIL SVG animates |
+| **Mermaid** | the diagram goes in the **comment body** inside a ` ```mermaid ` fence, where it renders; the `.mmd` rides along only when the source must travel |
+| **Office** (docx · xlsx · pptx) | a **page render via QuickLook**, then the original. Office files are ZIPs, so the platform shows nothing for them — a **PDF rendition works equally well** and previews with a real page viewer |
+| **video** | a **poster frame** *and* a **6-second looping GIF** (ffmpeg), then the original — the GIF is the part that shows what happens, since there is no player |
+| **`.pen` / `.fig`** | needs OpenPencil, and neither route is free: the MCP export wants the app running, the CLI is Bun-only. The script says which, and prints where the frame ids live (`.children[].id` — a `.pen` is plain JSON) |
+| **Rive · audio · archives · unknown** | **nothing** — and that is the answer the comment carries, with what it is and what to do with it |
+
+**Order is the whole convention and the platform honours it exactly**: attachments render in the
+order the `--attachment` flags are given, several images stack vertically in that order, and a
+thumbnail carries no filename — so when the sequence means something, **number it in the comment
+text**, because the pictures cannot say it themselves.
+
+**Nothing else embeds.** A Figma or FigJam link, Notion, YouTube, Loom, a Google Doc, a GitHub PR
+— all render as plain hyperlinks (measured). Only a **Multica issue URL** becomes a live chip with
+its identifier, title and status. *"I put the Figma link in the issue"* therefore shows a link and
+nothing else; a frame has to be exported and attached for anyone to see the design.
+
 ## Order and priority — one list is authored, five are views
 
 ```sh
@@ -913,7 +951,7 @@ edited every time argue for asking more — and Mops says so itself.
 
 ## Resident Mops — install / refresh
 
-`multica skill list` → absent: `skill import --url github.com/jamillazarev/multica-ops/tree/v0.2.1/skills/mops`;
+`multica skill list` → absent: `skill import --url github.com/jamillazarev/multica-ops/tree/v0.2.0/skills/mops`;
 present: compare versions — same → skip, older → the Skill-upgrade recipe above. Never a
 second copy. Then `agent create` (name **Mops**) → `agent skills` attach (+ find-skills)
 → `agent avatar` per chosen library (Mops in Multica keeps `assets/mops-avatar.png`) → subtitle "Executive Advisor · resident" → rights

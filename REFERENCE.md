@@ -168,6 +168,38 @@ sub-issue, not another level.
   | **a real `.pen` design file** | it is **JSON text**, so it arrives `text/plain` and opens in that same modal as **its source** — frames, ids, fills. Readable, never a rendered design. **Export a PNG or SVG for the picture and let the `.pen` travel beside it** as the editable thing |
   | **`application/zip`, `application/octet-stream`** | **download only, no eye at all** — nothing to look at without leaving Multica |
 
+  **The full matrix, measured 2026-08-01 across 39 attachments on one issue.** The documentation
+  says only *"Comments support formatting, code blocks, links, and attachments"* — no types, no
+  previews — so this table is the source, and it is what the tree showed rather than what a
+  header implied:
+
+  | Class | Files tried | What happens |
+  |---|---|---|
+  | **raster & vector images** | `.png` `.jpg` `.gif` `.svg` | **rendered inline.** An **animated GIF animates** and an **SVG with a SMIL `<animate>` animates** — both arrive as an `<img>`, which plays them |
+  | **PDF** | `.pdf` | **a real viewer** — page thumbnails, page counter, zoom, rotate, text selection, print. The strongest preview on the platform |
+  | **HTML** | `.html` | rendered **in an iframe**, inline SVG included |
+  | **text of any kind** | `.mmd` `.mermaid` `.txt` `.md` `.csv` `.json` `.rivet-project` `.pen` | a file row with an eye → the **source as monospace text**. Includes Lottie (`.json`), a Rivet graph, and a real `.pen` |
+  | **video and audio** | `.mp4` `.webm` `.mp3` | **a file row. No player, no poster frame, no scrubber** — the reader downloads it or sees nothing |
+  | **archives, Office, unknown binary** | `.zip` `.docx` `.xlsx` `.pptx` `.riv` | **download only, no eye.** Office files are ZIPs, so they sniff `application/zip` and inherit that. (`.riv` here was a synthetic stand-in for Rive — the class is *unknown binary*, not Rive specifically) |
+
+  **So Word and Excel get their preview by rendering a PDF beside them**, which is the same
+  two-attachment shape as everything else: the readable rendition first, the original second.
+  **Untested and therefore unclaimed:** animated WebP.
+
+  **Attachment order is preserved verbatim, which is what makes the two-attachment convention
+  work.** Passing `--attachment picture.png --attachment source.mmd` renders the thumbnail above
+  the file row; swapping the two flags swaps the render. Several images **stack vertically in the
+  order given** — no gallery, no grid, no lightbox strip — and **a thumbnail shows no filename**,
+  so when order carries meaning the comment body has to number them in words.
+
+  **Nothing else embeds. Multica unfurls only its own issues.** Bare links to a Figma design, a
+  FigJam board, a Figma community file, Notion, `notion.site`, YouTube, Loom, a Google Doc and a
+  GitHub pull request all render as **plain hyperlinks** — no card, no preview, no iframe, and
+  putting one alone on its own line changes nothing. A **Multica issue URL** becomes a live chip
+  carrying its identifier, title and status. So *"I put the Figma link in the issue"* means a
+  link and nothing more; if the point is that someone sees the design, a frame has to be exported
+  and attached.
+
   **And the extension and the sniffed type can disagree, with the extension winning the inline
   render.** Mermaid text saved as `text-pretending-to-be.png` arrives `text/plain` and renders as
   a **broken image icon**; a real PNG saved as `image-pretending-to-be.pen` arrives `image/png`
