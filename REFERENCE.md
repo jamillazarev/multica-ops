@@ -258,6 +258,30 @@ and *"it does not hold the loop"* stops being a rule it could work around.
 | Executor | Agent, squad member | ✅ |
 | Review gate / cross-cutting reviewer | Agent invoked by `@`-mention | ✅ |
 
+**Addressing and assignment are one act here, and that is the whole reason a leader exists.**
+Elsewhere the ask may go to a group while accountability stays exactly one, and a written
+routing rule converts between them. **Multica collapses them** — you assign to the squad — so
+something has to do the converting, and that something is **an agent**. Three consequences
+follow, and none of them is cosmetic:
+
+- **Routing costs a run.** Every squad assignment wakes the leader before any work begins:
+  tokens, latency, a line in the ledger. A written rule costs nothing. So **a squad of one, or a
+  squad whose routing is obvious, is pure overhead** — assign to the agent.
+- **The decision is a judgement, so it has to leave a trace.** A rule can be read; a judgement
+  cannot, unless it is written down. **`multica squad activity --reason` is exactly that trace**
+  and it is the difference between a routed board and an unexplained one — *"went to the
+  backend agent because the failure is in the query planner"* rather than a mention appearing
+  from nowhere.
+- **The routing quality lives in the member roles, not in the leader's instructions.**
+  `squad member add --role "<what this one is for>"` is what the leader reads when it decides.
+  Telling the leader to *"route well"* is a rule that asks; giving it accurate member roles is
+  the input it actually uses. **Effort belongs in the roles.**
+
+**And a mention is a dispatch, not a nudge.** `@`-mentioning an agent **creates a task** — it
+spends a run and the shared limit. That is why the mention ceiling exists and why *"let me loop
+in the others"* is not a free gesture: **exactly one holder per assignment comes for free here,
+and every extra addressee is a run.**
+
 Nuance: **when woken as the squad**, a leader does not implement — it delegates via mention and records
 `multica squad activity`. Solo work goes to an agent directly. At the **sub-issue**
 level everyone executes, including leads — "the lead doesn't code" applies only to a
