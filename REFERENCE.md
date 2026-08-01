@@ -152,8 +152,26 @@ sub-issue, not another level.
   |---|---|
   | **the type filter** | **there isn't one.** All five uploaded without complaint, `.exe` included. Nothing on this surface refuses a file, so *"is this safe to attach"* is the team's judgement and never the platform's |
   | **`content_type`** | **sniffed from the bytes, not the extension.** A one-byte `.exe` came back `text/plain; charset=utf-8`; a `.pen` beginning `PEN\0` came back `application/octet-stream`. The extension survives only in the URL |
-  | **what previews** | **`image/*`, and nothing else.** A Mermaid diagram attached as `.mmd` is `text/plain` — the *source*, not a picture. **So attach the rendered PNG when the point is that someone sees it**, and keep the `.mmd` beside it as the thing that can be edited. A `.pen` is octet-stream: a download, never a preview |
+  | **what previews** | four behaviours, **looked at in the app** rather than inferred from the type — see the table below |
   | **where it lives** | `static.multica.ai/workspaces/<workspace-id>/<uuid>.<ext>` — workspace-scoped, and **not public**: an unauthenticated GET returns `403 MissingKey`, so a link pasted outside the workspace leaks nothing |
+
+  **A diagram is shown by writing it, not by attaching it — and this is the opposite of the
+  obvious move.** Opened in the app 2026-08-01, eighteen attachments on one issue:
+
+  | What you do | What the reader gets |
+  |---|---|
+  | **a ` ```mermaid ` fence in the comment body** | **the diagram, drawn inline** — and clicking it opens a **Diagram viewer** with zoom, a source/render toggle, copy and download. **This is the way to show a diagram** |
+  | **the same Mermaid attached as a file** — `.mmd`, `.mermaid`, `.txt`, `.md`, all four `text/plain` | a file row with an eye → a modal showing **the source as monospace text**. Never rendered, **and a ` ```mermaid ` fence inside an attached `.md` is not rendered either** |
+  | **an image** — `image/png · svg+xml · jpeg · gif` | an inline thumbnail. **SVG previews**, so a vector diagram is a legitimate second route |
+  | **`text/html`** | **rendered as live HTML in the comment**, inline SVG included — worth knowing before attaching a page from anywhere but your own tree |
+  | **`application/pdf`, `application/json`, `text/csv`** | a file row with an eye — a modal, not inline |
+  | **`application/octet-stream`** (a `.pen`) | **download only, no eye at all** — nothing to look at without leaving Multica |
+
+  **And the extension and the sniffed type can disagree, with the extension winning the inline
+  render.** Mermaid text saved as `text-pretending-to-be.png` arrives `text/plain` and renders as
+  a **broken image icon**; a real PNG saved as `image-pretending-to-be.pen` arrives `image/png`
+  and **renders inline as the picture**. So a wrong extension does not degrade quietly — it
+  breaks visibly, which is the better failure, and it is the reason to name files honestly.
 
   **Priority is the platform's own five, now checked rather than assumed**: `issue update
   --priority bogus` answers *`invalid priority "bogus"; valid values: urgent, high, medium, low,

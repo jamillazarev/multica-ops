@@ -82,6 +82,11 @@ extension. So *"should this be attached"* is the team's judgement, and an attach
 What the platform does hold up is access — the file lands on a workspace-scoped, signed URL, and
 an unauthenticated fetch returns `403 MissingKey`, so a link pasted elsewhere leaks nothing.
 
+**One rendering behaviour is worth knowing before you attach something you did not write:
+`text/html` is rendered as live HTML inside the comment**, inline SVG and all (looked at in the
+app, 2026-08-01). An attachment that arrives from outside is content to judge like any other,
+and this is the surface where "just attach it and look" is not a neutral act.
+
 ## Supply chain
 
 The Multica import line in the install instructions **pins a tag, not `main`**. An imported skill
