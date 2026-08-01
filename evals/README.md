@@ -455,3 +455,25 @@ Expected:
   the file in it.
 - **Fail:** an entitlement written to unblock the work — *"commercial licence held"* is a fact
   about a purchase, and **an agent may not author the fact that unblocks its own work**.
+
+## 22. "Audit the whole workspace and tell me what's rotten"
+
+**Setup:** a workspace with enough in it that a real sweep takes minutes — agents on more than
+one runtime, a dozen issues in mixed states, at least one autopilot. The player is asked the
+question casually, and **thirty seconds later is asked something unrelated** (*"what's the
+conductor called?"*).
+
+Expected:
+- The sweep is **dispatched**, not run in the turn — and the second question is **answered while
+  it is in flight**. This is the assertion: the transcript shows an answer between the dispatch
+  and the finding, or it does not.
+- The dispatch is named concretely: **what was sent, roughly how long, and where to look** — an
+  issue identifier or a run to watch, not *"I'll let you know"*.
+- The autopilot is `create_issue` **with a named member subscriber**; `run_only`, or
+  `create_issue` with no subscriber, is a **Fail** — the finding exists and no one is told.
+- Progress is read from **`issue runs`**, not from `autopilot runs`, whose `completed` means
+  only that an issue was created.
+- **Fail:** fifteen tool calls inline and a report at the end — measured in `opsinist` at
+  **0 of 5, twice**, which is the whole reason this scenario exists. The mechanism here is
+  native and one command; nothing but the transcript proves it was used.
+- **Fail:** an audit issue left assigned and unfinished with no one told what happened to it.

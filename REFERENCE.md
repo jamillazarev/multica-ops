@@ -105,13 +105,17 @@ sub-issue, not another level.
   **Removing *someone else* is not** — it is taking them off a thread they were told about, and
   it is the owner's call, said out loud, not a tidy-up an agent performs while reducing noise.
 
-  **One tension to resolve by measurement, not by editing.** The documentation lists *agent run
-  failures* and *autopilot activity* among inbox sources, while this skill states that an
-  autopilot task **posts nothing to the inbox**. The likely reconciliation is that the two are
-  about different modes — a `create_issue` run produces an issue whose subscribers are notified,
-  while `run_only` produces nothing to subscribe to — **but that is a guess and it is written
-  here as one.** Until someone watches a failing autopilot in both modes, the safe instruction
-  stands: `create_issue`, with a named subscriber.
+  **The tension between this and the documentation was a guess; it is now measured.** The docs
+  list *agent run failures* and *autopilot activity* among inbox sources, while this skill said
+  an autopilot task **posts nothing to the inbox**. Both modes were run 2026-08-01 (PLAYBOOKS →
+  *The audit is dispatched*), and what differs is what exists to be notified about, not the
+  channel: **`create_issue` creates a subscribable object**, and the member named in
+  `--subscriber` lands on the issue with `reason: "autopilot"` alongside the agent's own
+  `reason: "creator"`; **`run_only` creates nothing** — the entire answer sits in
+  `autopilot runs → result.output`, and the `--subscriber` that mode accepts without complaint
+  has no issue to attach to. So the instruction is unchanged and now has a reason:
+  `create_issue`, with a named subscriber. **Still unmeasured: a *failing* autopilot** — whether
+  the failure itself reaches a subscriber, or only the issue's existence did.
 
 - **Removing things: the verbs differ per entity, and the CLI is not the UI.** There is no single
   *delete*, and assuming one is how a cleanup reports success it did not have.

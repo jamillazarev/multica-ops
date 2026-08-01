@@ -368,6 +368,10 @@ stage finished" (that is @mentions and barriers). Offer at setup, default "later
   Output mode is either **`create_issue`** (default, recommended — the run lands as an issue on
   the board, visible and reviewable) or **`run_only`** (fire-and-forget, **invisible on the
   board** — use it only when the effect lives elsewhere and you don't need the trace).
+  **`--priority` is accepted and stored nowhere** (measured 2026-08-01): it is in `--help` on
+  both `create` and `update` with a default of `none`, it never appears in `autopilot get`, and
+  an issue created after `autopilot update --priority urgent` came out `priority: none`. An
+  autopilot's issues arrive unprioritised — set it on the issue, or it is not set.
 - **Cron is five fields, one-minute granularity, in an IANA timezone** (`Europe/Warsaw`, never a
   bare offset). The server scans schedules roughly every 30 s, so a run can **start up to ~30 s
   late** — fine for sweeps, wrong for a hard deadline.
@@ -392,7 +396,12 @@ stage finished" (that is @mentions and barriers). Offer at setup, default "later
   measured 2026-08-01). **Verified end to end the same day**: created in `create_issue` mode,
   scheduled, `next_run_at` returned, then deleted — the mechanism is real, and so is the
   condition.
-- **A manual `autopilot trigger` is tagged source `manual`.** Not yet on the platform (checked
+- **A manual `autopilot trigger` is tagged source `manual`, and it is how work gets dispatched
+  out of a conversation.** An autopilot needs **no trigger to exist** — created with
+  `triggers: []` it is already `status: active`, and `autopilot trigger <id>` fires it,
+  returning in about a second with `{"status":"issue_created","issue_id":…}` while the agent
+  runs on. A schedule is for the sweeps nobody is watching; the same object serves both
+  (measured 2026-08-01 → PLAYBOOKS *The audit is dispatched*). Not yet on the platform (checked
   v0.4.8): HMAC signing on the trigger, an IP allowlist, API-based triggers — do not design as if
   they exist.
 - **Assignee gap, verify live:** the app offers an autopilot assignee of **agent *or* squad**,

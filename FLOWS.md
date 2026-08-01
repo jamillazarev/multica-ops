@@ -452,6 +452,16 @@ up and reversible where they can break things. Recipes: **PLAYBOOKS**.
 - **`/multica-ops:mops health`** — full-circle sweep of what fails silently: runtimes (+ **which agents
   sit on a degraded one**), integrations/MCP probes (**the probe list = `docs/TOOLING.md`**), **branch protection on the default branch** where a remote exists, API tokens/secrets, **free-tier headroom** (usage vs the ceiling recorded per service), daemon, limits.
   Output: component → status → who it blocks → fix. `/multica-ops:audit` pulls it in.
+- **A full audit is dispatched, not performed in the turn** — it is minutes of work, and a
+  conversation that blocks for it holds the owner hostage to a sweep they asked for casually.
+  The dispatch is native: an autopilot in `create_issue` mode, triggered manually, **returns in
+  about a second with the issue it created** while the agent works on (measured 2026-08-01, from
+  trigger to a written finding in ninety seconds). Say **what was sent, roughly how long, and
+  where to see it**, then stay answerable while it runs. **Two halves, and the second is the one
+  that gets dropped:** `create_issue` gives the finding a home, and **`--subscriber <member>`
+  gives it a reader** — the autopilot's issue is authored by the agent, your own actions don't
+  notify you, and an audit nobody is subscribed to reports into an empty room. Subscribers are
+  **members only**; the resident Mops cannot be one. Recipe: PLAYBOOKS.
 - **Version checks cover three layers, not one**: **multica-ops** itself, every
   **imported skill**, and the **tooling** registered in `docs/TOOLING.md` (MCP servers,
   CLIs — their own releases and breaking changes). Proactively at `/multica-ops:status` (weekly at

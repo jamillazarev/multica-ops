@@ -26,6 +26,7 @@ control characters that break `json.loads` — sanitize with
 - [The skill lifecycle (/skill)](#the-skill-lifecycle-skill)
 - [Running a company on this skill itself (dogfood)](#running-a-company-on-this-skill-itself-dogfood)
 - [The company guards its own docs](#the-company-guards-its-own-docs)
+- [The audit is dispatched, not performed (/audit)](#the-audit-is-dispatched-not-performed-audit)
 - [Health sweep (/health)](#health-sweep-health)
 - [Skill upgrade (/upgrade)](#skill-upgrade-upgrade)
 - [Provider switch (/switch)](#provider-switch-switch)
@@ -541,6 +542,61 @@ broken the same thing twice — the same evidence bar as making a skill.
 **Adapt it, don't preserve it.** A company with no code drops the architecture check; one
 whose truth lives in Notion points the existence check there. The one guard not to drop is
 append-only: it is the only one protecting knowledge that cannot be reconstructed.
+
+## The audit is dispatched, not performed (`/audit`)
+
+A sweep over a whole workspace is minutes of work, and a console that performs it in the turn
+has taken the owner hostage to something they asked for casually. Here the dispatch is native
+and it is one command.
+
+```sh
+# Once per workspace — the auditor exists as a handle. No trigger is required.
+multica autopilot create --title "Audit" --mode create_issue --agent "<Auditor>" \
+  --issue-title-template "Audit {{date}}" \
+  --subscriber "<owner>" \
+  --description "<the sweep itself — read on every run, edited without a redeploy>"
+
+# The dispatch. Returns in about a second, with the issue it created.
+multica autopilot trigger <autopilot-id>    # → {"status":"issue_created","issue_id":"…"}
+
+# Where to watch: the issue, not the autopilot
+multica issue runs <issue-id>               # queued → running → completed
+multica issue comment list <issue-id>       # the findings land here
+```
+
+Then say three things and stay answerable: **what was sent, roughly how long, and where to see
+it.**
+
+**Measured end to end 2026-08-01 in workspace `TES`.** `trigger` returned at `00:21:59`; the
+agent's run shows `dispatched_at 00:22:00`, `started_at 00:22:01`, `completed` at `00:23:30`.
+Ninety seconds of work, and the console was free for every one of them. The agent renamed the
+issue itself — `Audit 2026-08-01` → *"Workspace audit: stalled issues (2026-08-01)"*, because
+the platform appends *"After starting work, rename this issue to accurately reflect what you are
+doing"* to every description it generates — posted the findings as one comment, and left the
+issue in `in_review`. **In `opsinist` the same request scored 0 of 5, twice**, running fifteen
+tool calls inline while the owner's next question waited.
+
+Four things the flags do and do not do, measured the same day:
+
+| | What is true |
+|---|---|
+| **the trigger is optional** | created with `triggers: []` and `status: active`, and `autopilot trigger` fired it. A scheduled sweep and an on-demand one are **the same object** — add `trigger-add` only when it should also run unwatched |
+| **`--subscriber` takes members only** | `--subscriber test` (an agent) is refused: `resolve subscriber "test": no member found matching "test"`. **The resident Mops cannot be subscribed to its own audit** — the addressee is a person, or nobody |
+| **without it the room is empty** | with a subscriber the issue carries two: the member with `reason: "autopilot"`, the agent with `reason: "creator"`. Without one, **only the agent** — and your own actions don't notify you (REFERENCE §7), so the finding is filed and no one is told |
+| **`--priority` is inert** | it is in `--help` on `create` and `update` with a default of `none`, it is **absent from `autopilot get`**, and an issue created after `autopilot update --priority urgent` still came out `priority: none`. Set it on the issue afterwards or it is not set |
+
+**The mode decides whether the finding survives the run.** `run_only` puts the whole answer in
+`autopilot runs → result.output` and creates nothing else — no issue, no comment, and the
+`--subscriber` it accepts has nothing to attach to. `create_issue` leaves `result: null` on the
+autopilot run, because the content is on the issue. The two histories answer different
+questions: **`autopilot runs` says whether it fired, `issue runs` says whether it worked** — and
+a flow that reads the first to learn the second reads `completed` off a record that only means
+an issue was created.
+
+**What this does not fix.** Nothing on the platform stops a console from running the sweep
+inline anyway; dispatch is the cheap path, not a gate. What makes it checkable is the
+transcript — the owner's next message is answered while the run is in flight, or it is not
+(evals §22).
 
 ## Health sweep (`/health`)
 
