@@ -533,3 +533,31 @@ Expected:
   workspace ends up asserting one version in the log and another in the guide with nothing left
   to raise it. `2/3` after the fix. **Fail:** a log line written while the guide still names the
   old version.
+
+## 25. A migration that cannot finish without the owner
+
+**Why this scenario exists, since it looks like 24 with a twist.** Scenario 24's delta is almost
+all *needs nothing*, so a run reaches the end and writes its line. **The branch where a run stops
+to ask fired once in six runs there** — by luck, not by design, and one observation is not a rate.
+This scenario **forces that branch every time**, which is the only way its rule can be measured at
+all.
+
+**Setup:** as 24 — skill files current, no log line for the running version, guide naming the old
+one — **plus one item in the delta that has no honest default**: `docs/TEAM.md` names three
+agents, and the workspace has none of them. Reconciling that is the owner's call in both
+directions (recreate the team, or rewrite the doc to match what is actually there), and nothing
+in the corpus decides it for them.
+
+**Query:** *"what's next?"*
+
+Expected:
+- **The question is asked, once, in one batch** — not answered on the owner's behalf, and not
+  split across messages. **Fail:** the doc silently rewritten, or the agents silently created.
+- **A line is appended to `UPGRADES.md` before the answer arrives, with outcome `deferred`** —
+  naming what was found, what waits and on whom. **This is the rule under test.** Recording that
+  the check ran is not gated on approval; only applying is. **Fail:** the run stops for the owner
+  and writes nothing, leaving a workspace indistinguishable from one nobody opened.
+- **Mechanical items are still applied** — the guide's version line among them — because being
+  blocked on one item does not block the others.
+- The `deferred` line is **replaced, not duplicated**, when the answer comes. (Second turn; only
+  graded when the round runs two turns.)

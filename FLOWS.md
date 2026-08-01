@@ -536,12 +536,15 @@ up and reversible where they can break things. Recipes: **PLAYBOOKS**.
   nothing left to raise it. **Bump the line in the same breath as writing the log, or the log is
   the thing that hides the problem.**
 
-- **A delta that stops for approval still writes its line — with outcome `deferred`.** Waiting
-  for the owner is right and the flow asks for it. But a run that pauses and writes nothing
-  leaves **the same trace as a run that never happened**: the next session re-derives the whole
-  delta, re-asks, and the owner sees the same list twice with no record that they already saw it.
-  `deferred` names what was found, what is waiting, and on whom — and it is replaced, not
-  duplicated, when the answer arrives.
+- **Recording that you checked is never gated on approval. Only applying is.** The log line is
+  not a change to the company — it is the record that somebody looked — so it is written on
+  **every** check, whatever the check found: `nothing-required` when nothing followed,
+  **`deferred` when something did and you are waiting on the owner**. Measured 2026-08-01: a run
+  that produced the whole delta, asked its one real question and wrote nothing left a workspace
+  **indistinguishable from one nobody had opened** — so the next session re-derived everything
+  and asked again. **The two acts have different gates, and treating them as one act is exactly
+  what loses the record.** A `deferred` line names what was found, what waits and on whom, and is
+  **replaced, not duplicated**, when the answer arrives.
 
 - **"You do not have X" is three facts, and only two are findings.** The release just added it ·
   it was never used and this release makes it load-bearing · **the owner turned it off or declined

@@ -786,7 +786,9 @@ transcript — the owner's next message is answered while the run is in flight, 
    a workspace whose skill files were swapped and whose migration never ran looks identical to
    one that migrated cleanly, and `UPGRADES.md` is the only place that can tell them apart.
    **A check that finds nothing still writes its line** (`nothing-required`) — otherwise
-   *checked and clean* and *never checked* leave the same trace. A re-run after a failure
+   *checked and clean* and *never checked* leave the same trace. **And a check that found
+   something and is waiting on the owner writes `deferred`**: the line records the *checking*,
+   which nothing gates — **approval gates applying, not recording**. A re-run after a failure
    **appends**; it never edits the line above. A `declined` line's reason lives in
    `docs/DECISIONS.md` with its revisit-if, a `deferred` one's in `docs/LATER.md` with a moment
    for a trigger — **and neither is re-offered until that moment**, because an upgrade that

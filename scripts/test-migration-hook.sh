@@ -45,6 +45,16 @@ say "both stale → one message naming both"       "bump the version line" "$G"
 printf 'Operated by multica-ops **0.0.1**.\n' > "$G/AGENTS.md"; rm "$G/CLAUDE.md"
 say "the guide may be AGENTS.md"                 "AGENTS.md" "$G"
 
+
+# A record's grammar is a paragraph. Measured 2026-08-02: a correct entry wrapped over four
+# lines was read as absent, which would have nagged forever about a migration that happened.
+W2="$T/wrap"; mkdir -p "$W2"; git -C "$W2" init -q
+printf 'Operated by multica-ops **%s**.\n' "$V" > "$W2/CLAUDE.md"
+printf '# Upgrades\n\n- 2026-08-02 · multica-ops %s · pre-upgrade SHA abc\n  impact: guide version line only.\n  Outcome: applied.\n' "$V" > "$W2/UPGRADES.md"
+say "a wrapped entry counts as a line"           "EMPTY" "$W2"
+printf '# Upgrades\n\n- 2026-08-02 · multica-ops %s · pre-upgrade SHA abc\n  impact: none yet.\n\n- 2026-07-01 · 0.1.0 · applied\n' "$V" > "$W2/UPGRADES.md"
+say "an entry with no outcome word still speaks" "no line for version" "$W2"
+
 say "outside a git repo → silent"                "EMPTY" "$T"
 printf 'not json' | python3 "$H" >/dev/null 2>&1 && pass=$((pass+1)) || { fail=$((fail+1)); echo "FAIL: broken stdin must fail open"; }
 printf '{"hook_event_name":"Stop","cwd":"%s"}' "$W" | python3 "$H" >/dev/null 2>&1 && pass=$((pass+1)) || { fail=$((fail+1)); echo "FAIL: a non-SessionStart event must pass through"; }

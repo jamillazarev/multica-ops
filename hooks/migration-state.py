@@ -14,6 +14,14 @@ So the state is delivered as a fact before the first message rather than left as
 remember. This hook **reports and never refuses**: it makes no claim the session could forge,
 because it only reads a file and says what is in it. Silent whenever there is nothing to say — a
 hook that speaks every session is noise. Every internal error fails open.
+
+**What this hook must never sound like.** Measured 2026-08-02, scenario 25: a wording that said
+recording *"is not gated on approval"* was read by a run as **an injection attempt** — a system
+message pushing file edits through without the owner's say-so — and it refused the entire flow,
+correctly by its own lights. **A message that disclaims the owner's approval has the exact shape
+of an attack, and the more carefully a model reads, the more reliably it will refuse.** So this
+text names *what to record* and never *whose permission is unnecessary*. One run in two tripped
+on it, which is a coin flip, which is broken.
 """
 import json
 import os
@@ -84,6 +92,31 @@ def guide_version(root):
     return None
 
 
+def log_entries(txt):
+    """`UPGRADES.md` as entries, not as physical lines.
+
+    Measured 2026-08-02, scenario 25: a run wrote a correct four-line entry — version on the
+    first line, `Outcome: applied.` on the fourth — and a per-line check called it **absent**,
+    so the hook would have nagged forever about a migration that had happened. **A record's
+    grammar is a paragraph, and anything reading it a line at a time is reading a different
+    file.** An entry starts at a `-` bullet and runs until the next one.
+    """
+    entries, cur = [], []
+    for line in txt.split("\n"):
+        if line.lstrip().startswith(("- ", "* ")):
+            if cur:
+                entries.append(" ".join(cur))
+            cur = [line.strip()]
+        elif cur and line.strip():
+            cur.append(line.strip())
+        elif cur:
+            entries.append(" ".join(cur))
+            cur = []
+    if cur:
+        entries.append(" ".join(cur))
+    return entries
+
+
 def main():
     try:
         payload = json.load(sys.stdin)
@@ -125,7 +158,7 @@ def main():
     except Exception:
         out()
 
-    logged = any(v in line and any(o in line for o in OUTCOMES) for line in txt.split("\n"))
+    logged = any(v in e and any(o in e for o in OUTCOMES) for e in log_entries(txt))
 
     # The guide is checked whether or not the log is current, because the failure this exists to
     # catch is precisely the two disagreeing: a log that names the running version while the file
@@ -147,8 +180,9 @@ def main():
                 f"to the version now running it, and swapping the skill's files is not migrating "
                 f"the company. Before acting on it, say so, run the migration delta (FLOWS.md → "
                 f"*Getting current*) — one list split by whether it needs the owner — **bump the "
-                f"version line in `{name}`**, and append a line with its outcome, "
-                f"`nothing-required` and `deferred` included.\n")
+                f"version line in `{name}`**, and append a line with its outcome. If the check "
+                f"ends with a question for the owner, the outcome word for that is "
+                f"`deferred`.\n")
         sys.exit(0)
 
     if logged:
@@ -159,7 +193,8 @@ def main():
         f"recorded as migrated to the version now running it — and swapping the skill's files is "
         f"not migrating the company. Before acting on it, say so, run the migration delta "
         f"(FLOWS.md → *Getting current*) — one list split by whether it needs the owner — and "
-        f"append a line with its outcome, `nothing-required` and `deferred` included.\n")
+        f"append a line with its outcome. If the check ends with a question for the owner, "
+        f"the outcome word for that is `deferred`.\n")
     sys.exit(0)
 
 
