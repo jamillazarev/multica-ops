@@ -148,6 +148,15 @@ Turns the **Personas module** (ROLES → Personas squad) from "a few document pe
 verdicts honest about what a simulation can and cannot tell you. On via `/multica-ops:mops module personas
 on`; personas live as documents first and become agents only for a round.
 
+**Documents first is a cost rule, not a style preference — and on this platform it is
+measurable.** A persona that exists as an agent sits in `agent list`, in the squad leader's
+routing, and in **the same assignee namespace as everyone who does the work**: `issue assign
+--to` matches members, agents and squads together and **refuses an ambiguous name, listing every
+candidate** (measured 2026-08-01, where one agent and one squad sharing a name made every fuzzy
+match fail). Thirty standing personas against eight workers is the over-loaded skill list
+wearing a different costume. **Count them like hires and archive them when the round ends** —
+the round is what they were created for.
+
 **Grounded in the research — which says the grounding *is* the product** (owner-supplied
 sources; the primary paper re-verified 2026-07-26 against the current arXiv version — Park et
 al., *LLM Agents Grounded in Self-Reports Enable General-Purpose Simulation of Individuals*
@@ -339,6 +348,13 @@ built from a real person's data carries, per `templates/PERSONA-template.md`:
   person's *data*.
 
 ### Direction-only verdicts, and the walk format
+**Said before the round runs, not after it.** When the request itself implies numbers — *"test
+it on a sample"*, *"what percentage would drop off"*, *"what would most people say"* — what a
+synthetic round can and cannot give is stated **before anything is spent**, together with the
+honest alternative: **synthetics find the angles worth putting to real people**. Producing a
+plausible percentage and disclaiming it afterwards is worse than not producing it, because the
+number is what gets repeated and the disclaimer is not.
+
 **Synthetic rounds give direction, never magnitude** — synthetics show artificially low
 variability and distort magnitudes (Lewis & Sauro, MeasuringU 2026, checked 2026-07-27). The
 verdict *format itself* enforces it: no
