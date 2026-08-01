@@ -3,6 +3,44 @@
 Newest first. Each entry leads with what you can now do, not with which files moved. This is
 also the migration map `/multica-ops:upgrade` reads.
 
+## 0.2.1 — 2026-08-01
+
+**A correction release. Two things 0.2.0 published were wrong, and both were wrong in the same
+way — a cause asserted without looking at the evidence that was available.**
+
+**Why nothing embeds, correctly this time.** 0.2.0 blamed the blank Figma frame on the provider's
+`X-Frame-Options`. The console says otherwise: `200 (OK)` beside `net::ERR_FAILED`, and
+*"Access to script at 'https://www.figma.com/webpack-artifacts/…' from origin `null` has been
+blocked by CORS policy"*. The documents were served and the browser then refused their own
+bundles, because the attachment sandbox has no `allow-same-origin` and therefore presents origin
+`null`. **It is Multica's sandbox, not the provider's framing policy** — so no choice of embed URL
+fixes it, and links stay links.
+
+**HTML is a half-open door.** An attached `.html` is `srcdoc` inside
+`<iframe sandbox="allow-scripts">`: a **self-contained** page works — its own markup and CSS,
+inline SVG, a plain `<img>` from any host, self-contained JavaScript — while a third-party embed
+starves on the same `origin: null`. The other edge is unchanged and now stated plainly in
+SECURITY.md: **an HTML file you did not write runs its author's JavaScript when someone opens the
+issue.**
+
+**Agents can read reactions and cannot leave one.** No verb anywhere in the CLI writes one — every
+subcommand's help was swept — but a comment's `reactions` array populates with `emoji`, `actor_id`,
+`actor_type` and `created_at`. **Issues carry no reactions field at all**, so *"wait for a 👍 on the
+issue"* is unimplementable while the same rule on a comment is fine.
+
+**Choosing a visual tool is choosing whether an agent can ever show its work.** Because links do not
+embed and only images, PDF, HTML and text render, *agent-drivable* now has a stricter reading for
+anything visual: **is there an official export to an image, and what does it require?** Four tiers
+with measurements — a headless API (Figma's `GET /v1/images/:key`, no desktop app, 32 MP, assets
+expiring after 30 days), an **editor bridge** that needs a person with the app open (Pen.dev's MCP
+refuses with `failed to connect to running Pencil app`), **another runtime** (the OpenPencil CLI is
+Bun-only; `npx` dies with `Bun is not defined`), and **no official export at all** (Rive), where the
+picture is a human deliverable. Mermaid needs none of it, since a fence renders in the comment.
+
+**Also:** the `.pen` format is not "plain JSON you can read" — the vendor states those files are
+encrypted and are to be read only through its tools; the one examined happened to be readable, which
+is a property of that file.
+
 ## 0.2.0 — 2026-08-01
 
 **Everything below was measured against the live platform, and the entries that matter most are

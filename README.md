@@ -64,7 +64,7 @@ it cannot work. Verification per runtime: see the table in this file's install n
 
 **Into a Multica workspace (as an agent skill):**
 ```sh
-multica skill import --url github.com/jamillazarev/multica-ops/tree/v0.2.0/skills/mops
+multica skill import --url github.com/jamillazarev/multica-ops/tree/v0.2.1/skills/mops
 ```
 **The URL must point at the folder that contains `SKILL.md` — here, `skills/mops`.** The
 repository root does not work: it answers *"The Multica service is temporarily unavailable
@@ -265,6 +265,14 @@ The whole company, end to end — and the loop closes, it doesn't stop at merge:
 - **Cost you can see** — a per-release **cost/effort ledger** (tokens · $ · time · per agent and
   per human), in git and on the issue — **and the waste named, not only the spend**: what went to
   runs that produced nothing, second attempts, and expensive settings that bought nothing.
+- **Work that can actually be looked at** — Multica previews **images, PDF, HTML and text, and
+  nothing else**: a video is a file row with no player, Office files are ZIPs with no preview, a
+  design file opens as source, and **no link embeds** — not Figma, not Notion, not YouTube. So the
+  rule is a lookup rather than a judgement: **attach a rendition *and* the original**, rendition
+  first. `scripts/preview.sh` produces it or **exits non-zero with the reason**, and a diagram
+  needs neither — a ` ```mermaid ` fence renders as a diagram in the comment itself. Every line of
+  that was measured against the live platform, because the documentation says only *"comments
+  support formatting, code blocks, links, and attachments"*.
 
 ## What the ledger looks like
 
@@ -322,6 +330,7 @@ Stated rather than wished away, each with its check-date where it can move:
 | [SKILL.md](skills/mops/SKILL.md) | **the always-loaded core** — interview → stand up → conveyor → console |
 | [INSTALL.md](INSTALL.md) | getting started, step by step — install, day zero, first run, updating |
 | [SECURITY.md](SECURITY.md) | what this reaches, what is gated, what is `prose-only` — written for whoever audits it |
+| [scripts/preview.sh](scripts/preview.sh) | makes a file visible in Multica, or refuses with a named reason — the attachment rule as a script rather than a request |
 | [GLOSSARY.md](GLOSSARY.md) | one word, one meaning — and the pairs that look alike and are not |
 | [PATTERNS.md](PATTERNS.md) | the recurring forms, named once — a rule that instantiates one cites it and stops |
 | [USE-CASES.md](USE-CASES.md) | situation → what to say → which command |
