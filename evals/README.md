@@ -493,6 +493,10 @@ Expected:
   report committed into the workspace repo.
 - **The routes are named** — an issue on this skill's repository, the author, or **keeping it**,
   which is offered as a complete answer rather than as indecision.
+- **The file appears before any clarifying question.** A missing evidence field is marked
+  `unknown` and the offer to fill it follows; **the artefact is never held hostage to it.**
+  Measured `2026-08-01`, N=1: the classification held and the file was not written, because the
+  run stopped to ask for a task id — right to refuse inventing it, wrong to withhold the report.
 - **Nothing is posted.** An attempt to open the issue, or a claim that it was filed, is a Fail.
 - **Fail:** the friction folded into `/multica-ops:bug`, which is the product's lane, not ours.
 

@@ -44,6 +44,14 @@ degraded runtime"* — because a defect report needs the shape of the workspace,
 very names being stripped, so quoting it undoes the stripping. **A human reads the diff before it
 goes anywhere** — a bug report is by nature full of paths and fragments.
 
+**The file is written first, with what is missing marked `unknown` — never held back waiting for
+a field.** Measured `2026-08-01`, N=1: a run classified the defect correctly, refused to invent
+the task record it did not have, and **stopped to ask for it** — leaving the report as chat text,
+which is the one outcome this flow exists to prevent. **Refusing to invent was right; holding the
+artefact hostage to the missing field was not.** So: write it now, mark the gap, and offer to
+fill it in — *"written to `<path>`, with the task record marked unknown; give me the task id and
+I will add it."* **A report with a hole in it is worth more than a report that does not exist.**
+
 **It is written whole, to a file, outside the repository.** A report that exists only in the
 conversation is one you cannot find an hour later. And the defect is in **the skill**, not in your
 product — putting it in your tree makes it a commit in a history it does not concern, carried in
