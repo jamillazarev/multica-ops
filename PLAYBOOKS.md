@@ -26,6 +26,7 @@ control characters that break `json.loads` — sanitize with
 - [The skill lifecycle (/skill)](#the-skill-lifecycle-skill)
 - [Running a company on this skill itself (dogfood)](#running-a-company-on-this-skill-itself-dogfood)
 - [The company guards its own docs](#the-company-guards-its-own-docs)
+- [Order and priority — one list is authored, five are views](#order-and-priority-one-list-is-authored-five-are-views)
 - [The audit is dispatched, not performed (/audit)](#the-audit-is-dispatched-not-performed-audit)
 - [Health sweep (/health)](#health-sweep-health)
 - [Skill upgrade (/upgrade)](#skill-upgrade-upgrade)
@@ -604,6 +605,52 @@ broken the same thing twice — the same evidence bar as making a skill.
 **Adapt it, don't preserve it.** A company with no code drops the architecture check; one
 whose truth lives in Notion points the existence check there. The one guard not to drop is
 append-only: it is the only one protecting knowledge that cannot be reconstructed.
+
+## Order and priority — one list is authored, five are views
+
+```sh
+multica issue reorder <id> --top | --bottom | --before <id> | --after <id>
+multica issue list --sort position|title|created_at|start_date|due_date|priority
+```
+
+**Priority is a property of one issue; order is a relation between issues, and only one of the
+six sorts above is authored.** `position` is the list somebody keeps; the other five are
+generated readings of it. Two sources of order drift within a week and then nobody knows which
+is true — so when they disagree, **say which rule applied out loud**: a score ranks *what is
+worth doing*, a date says *when it stops being optional*, and an outside commitment wins
+outright. **Dates beat priority** — a date is a constraint, a priority is a preference.
+
+**Priority is opt-in, and four rules keep it from rotting.** `none` is the default and the
+platform is content to leave it there: **mark what stands out instead of numbering everything**,
+because the moment priority is mandatory everything becomes `medium` and the field means
+nothing. **An agent never raises the priority of its own issue** — the same class as never
+editing the bar you are measured against. And **inflation is checked, not banned**: forbidding
+"too much urgent" is useless, since sometimes it genuinely is on fire, while *not noticing that
+everything became urgent* is the failure — so `/multica-ops:audit` counts the share of `urgent`
+and asks which of the two it is.
+
+Four things the platform does with `position`, measured 2026-08-01 in a live workspace:
+
+- **A new issue lands at the top of its column, not the bottom.** Three issues created in order
+  took `position` `-7`, `-8`, `-9`, and lower sorts first — so an untouched backlog reads
+  newest-first, and *"top of the list"* means *"most recently filed"* until somebody reorders.
+- **The authored order is per column.** `issue reorder --before` across columns is refused:
+  *"is in the \"blocked\" column but … is in \"todo\"; move one with `multica issue status`
+  first"*. There is no way to say *this comes before that* between two columns.
+- **The number survives the move.** An issue sent `todo → in_progress → todo` kept `position:
+  -9` unchanged — so a status change silently re-ranks it against a different set of
+  neighbours rather than putting it anywhere in particular.
+- **`issue reorder` prints a human line before its JSON** (`Issue TES-25 reordered.` then the
+  object) — the BOOTSTRAP §8 trap, on a named command. Parse from the first `{`.
+
+**And `parent` is the only relation an agent can write, so it must keep meaning one thing.**
+Relations proper — *blocks*, *duplicates*, *relates to* — exist in the interface and **not in the
+CLI** (REFERENCE §2), which leaves `--parent` and `--stage` as the whole vocabulary. **`parent`
+is *part of*; it is not *waits for*.** Using it for a dependency is how a hierarchy stops
+describing anything, and the honest alternatives are the `--stage` barrier inside a feature and,
+between features, `blocked` plus a comment naming what is being waited on — which then ages
+where someone will see it (*See what's going on*). A wait nobody chased and a wait everybody
+forgot look identical from outside.
 
 ## The audit is dispatched, not performed (`/audit`)
 
