@@ -162,6 +162,17 @@ multica squad update <squad-id> --instructions "<updated routing map>"
 New discipline entirely? ≥2 members → create a squad with a routing leader; solo →
 lone agent, assign work directly.
 
+**A hire is not finished when the agent exists — it is finished when it can reach its tools.**
+There is **no workspace-level MCP and no shared key store** (REFERENCE §7): `mcp_config` and
+`custom_env` are per-agent fields, so an agent hired into a team that already uses Figma or
+Linear **starts with none of it** and stalls on its first real task looking capable. So the
+same breath that creates the agent copies what its craft needs from `docs/TOOLING.md` — the
+recipe is *Connect an external service* below, and it is **owner/admin only**, which means the
+hire has a step Mops cannot perform alone. Say that at proposal time rather than discovering it
+at the first run. And count it honestly: **every hire that needs a key is another copy of that
+key at rest** in the vendor's database, so *"who else already has this"* is a fair question to
+ask before adding the fourth one.
+
 ## Give an agent a capability (skill)
 
 ```sh

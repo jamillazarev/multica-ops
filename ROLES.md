@@ -334,7 +334,10 @@ package — skills · tooling · resources**, not just skills:
    and the **reference galleries in STACKS** (design/brand/UX). Links go into its
    instructions; data access via `mcp_config`.
 5. **Propose the package** (model tier · skills · tooling · resources · squad) → create
-   on approval → record in `TEAM.md` and `TOOLING.md`.
+   on approval → record in `TEAM.md` and `TOOLING.md`. **The proposal names the task that
+   needs this craft now** — a hire whose justification is *"we'll need it"* belongs in
+   `docs/LATER.md` with a revisit trigger, because an agent here has no project scope to sit
+   quietly in (FLOWS → *Shape the work*) and arrives holding its own credentials.
 
 **A prebuilt agent is a parts bin, not a hire.** When discovery turns up a *ready-made* agent — a
 marketplace persona, an `awesome-agent` repo, a vendor pack — take the methods and skill

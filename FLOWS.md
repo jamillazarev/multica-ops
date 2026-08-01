@@ -130,6 +130,21 @@ company is always shaped. Only a quick job skips shaping.
   regress."* Numbers follow the work — five agents or fifty — and the owner can argue with
   reasoning they can see.
 
+**Every role in the proposal names the work that needs it *now*, and a role justified by
+*"we'll need it"* is listed rather than hired** — `docs/LATER.md`, with a revisit trigger that
+is a moment, not a date. `opsinist` states this harder — *never in a batch, a project starts
+with the advisor and nothing else* — and **that half is deliberately not adopted here**: a
+workspace is a company, and standing one up is the flow. What carries over is the reason, and on
+this platform it is stronger than there. **A hire is workspace-wide by construction:**
+`agent create` has no project flag, and neither does `agent update` or `squad create` (checked
+2026-08-01), so an agent hired for one project sits in every project's mention list, every
+routing decision and every roster read — there is no scope to hide it in. And **each agent
+carries its own `mcp_config` and `custom_env`**, so a speculative hire is also another copy of
+the company's credentials at rest in the vendor's database (REFERENCE §secrets). The
+counterweight is real and worth saying to the owner: **over-hiring is reversible** —
+`agent archive` and `restore` return configuration, skills and tier intact — so the failure this
+guards against is not the unfixable one, it is the quiet one, where nobody ever revisits.
+
 **Re-runnable, because plans move.** When scope changes materially the shaping runs again
 and the team is re-sized — the same signal as the utilization review, arriving earlier. A
 **quick job skips this entirely**: shaping a one-hour task is the ceremony this skill exists
