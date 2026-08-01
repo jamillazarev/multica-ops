@@ -58,6 +58,12 @@ import re-measured 2026-08-01). Three things worth knowing before you paste:
   of one name, and **the installed plugin wins while the copy reads "not loaded"**. No duplicate
   commands, and the copy still serves every *other* harness from `~/.agents/skills/`; delete
   `~/.claude/skills/multica-ops` if you want the message gone.
+- **`~/.agents/skills/multica-ops` is load-bearing even if you never chose it.** Found on a real
+  machine 2026-08-01: **Factory and Pi both install as a symlink into that path**, and if no
+  route ever created it, both links are **broken while looking installed** — the directory
+  listing shows the name, and nothing resolves. `scripts/find-installs.sh` reports them as
+  `BROKEN`, which is how these two were found. **If you use either harness, put the repository
+  there** (a clone, or `rsync -a --delete --exclude .git`) and the links come alive.
 
 In Claude Code the commands arrive **namespaced** — `/multica-ops:init`, `/multica-ops:status`,
 and `/multica-ops:mops <anything>` as the free-text front door. The prefix is how plugin commands
