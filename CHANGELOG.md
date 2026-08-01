@@ -3,6 +3,37 @@
 Newest first. Each entry leads with what you can now do, not with which files moved. This is
 also the migration map `/multica-ops:upgrade` reads.
 
+## 0.3.2 — 2026-08-02
+
+**Recording that a check ran is not the same act as applying what it found, and only the second
+one waits for you.** The log line says somebody looked; the changes need your word. Treating them
+as one act is what loses the record: a run that built the whole delta, asked its one real
+question and wrote nothing left a workspace **indistinguishable from one nobody had opened**, so
+the next session re-derived everything and asked again. Waiting is now `deferred` — what was
+found, what waits, on whom — **replaced, not duplicated**, when the answer comes.
+
+**A log entry may wrap, and the check reads entries now rather than lines.** A correct four-line
+entry — version on the first line, `Outcome: applied.` on the fourth — was read as **absent**,
+which would have nagged forever about a migration that had already happened. **A record's grammar
+is a paragraph.**
+
+**The session-start message no longer says approval is not needed, because a run read that as an
+attack.** The wording *"recording is not gated on approval"*, arriving cold in a system message,
+is **an instruction to push file edits through without the owner's say-so** — the exact shape of
+a prompt injection. A run said so, declined to touch anything, and offered to make the edit
+visibly if asked. **It was right.** One run in two tripped on it. The hook now carries the
+vocabulary and never the claim that permission is unnecessary.
+
+**Scenario 25 joins the rubric**, for a case scenario 24 could not force: a migration that cannot
+finish without the owner. `evals/runs/0.3.0.md` records what it measured and — more usefully —
+what it **failed** to isolate, since three of its runs judged the blocking item to sit outside
+the migration and were defensible in doing so.
+
+**And the rig's isolation now covers the config, not only the workspace**: run under the author's
+own configuration, a player answered *"what's next?"* by opening **a different operations skill
+installed on the same machine** and running that one's flow instead. **A shared config is how
+another plugin gets a vote.**
+
 ## 0.3.1 — 2026-08-02
 
 **Your guide now states which version operates this company, and something checks it.** The line
