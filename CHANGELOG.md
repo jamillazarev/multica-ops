@@ -3,11 +3,23 @@
 Newest first. Each entry leads with what you can now do, not with which files moved. This is
 also the migration map `/multica-ops:upgrade` reads.
 
-## 0.2.2 — 2026-08-01
+## 0.3.0 — 2026-08-01
 
-**Carried across from the sibling project, where each of these was measured rather than
-reasoned about.** Same mechanics, different substrate: the workspace lives in Multica, the
-company's record lives in git, and the findings apply to both.
+**Carried across from the sibling project `opsinist`, where each of these was measured — against
+its corpus, not this one's.** Same mechanics, different substrate: the workspace lives in Multica,
+the company's record lives in git. **Nothing here has been measured against this corpus**, and
+`evals/runs/0.3.0.md` says so rather than implying otherwise; scenarios 23 and 24 are the rubric
+for the two new behaviours and have no round yet.
+
+**Reviewed by the four lenses before tagging, by someone who did not write it — sixteen findings,
+four blocking, all fixed.** The blocking ones are worth naming because each would have misfired
+in a live workspace: the new *documents arrive when they have content* rule **contradicted
+`company-preflight.sh`**, which fails a commit when a stand-up document is missing, so an obedient
+workspace could not have committed; the rule's **mechanism did not travel** (a hook holds it next
+door, nothing holds it here — it is `prose-only` now, and says so); the migration **outcome was
+written before it could be known**; and *"swept at the next audit"* **named a sweeper that does
+not sweep**. A carried number had also been flattened toward its worse value, and is restored to
+what was measured.
 
 ---
 

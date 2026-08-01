@@ -181,7 +181,7 @@ are shortcuts for when you already know the name. Both columns do the same thing
 
 | Situation | Just say | What happens |
 |---|---|---|
-| "this is broken and I think it's your fault, not mine" | *"report this"* — or `/multica-ops:report` | **you are not asked to classify it.** From the evidence: your product's defect → the urgent lane · your workspace's friction → a field note, swept at the next audit, an issue on the **second** occurrence · **this skill's or Multica's** → packaged from evidence, de-identified, **written to a file outside your repository** with its path said and the routes named |
+| "this is broken and I think it's your fault, not mine" | *"report this"* — or `/multica-ops:report` | **you are not asked to classify it.** From the evidence: your product's defect → the urgent lane · your workspace's friction → a field note, swept at the checkpoints PLAYBOOKS names, an issue on the **second** occurrence · **this skill's or Multica's** → packaged from evidence, de-identified, **written to a file outside your repository** with its path said and the routes named |
 | "I hit this twice now" | *"it happened again"* | the second occurrence is what earns an issue — **once is a note, twice is a pattern**, and both occasions are named in it |
 | "I don't want to file anything publicly" | *"keep it"* | **a complete answer.** The file stays where it was written, the friction is recorded, and it can go later |
 

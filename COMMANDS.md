@@ -5,7 +5,14 @@ asks when ambiguous. **Every command is namespaced** (`/multica-ops:<verb>`) bec
 how plugin commands work: the prefix is what stops two plugins colliding over one verb. There
 is **no bare `/<verb>`**, and outside Claude Code there are no slash commands at all.
 
-**Eighteen doors, and the palette is the point.** A verb earns a door when it is **its own
+**Three doors accept the same opening sentence, and the order is fixed.** *Something is broken*
+goes to **`bug`** when it is a defect in the product and reproducible — that lane jumps the queue.
+*Someone told us something* goes to **`mops feedback`**, which triages into accept · decline with
+a reason · duplicate · snooze. **`report`** is for everything else that went wrong, including
+when you cannot tell which of the two it is — **it decides from the evidence and may route into
+`bug` itself, but never skips `feedback`'s triage on the way.**
+
+**Nineteen doors, and the palette is the point.** A verb earns a door when it is **its own
 flow, reached by name, repeatedly** — never as a synonym for another door, and never as a
 phase inside one. Everything else is **a sentence to the dispatcher**, which costs nothing to
 keep and is listed further down so the capability stays findable.
@@ -15,7 +22,7 @@ flows below (`/multica-ops:mops brand`, `/multica-ops:mops move crossfeed to the
 *Where* column: 🖥️ console (heavy/machine/interactive) · 🏢 Mops in Multica (presence/async) ·
 ⇆ either.
 
-## The eighteen
+## The nineteen
 
 | Command | Where | Routes to |
 |---|---|---|
@@ -34,7 +41,7 @@ flows below (`/multica-ops:mops brand`, `/multica-ops:mops move crossfeed to the
 | `/multica-ops:hire <role\|person>` | 🖥️ | add to the team — Mops asks **agent or real person**. Agent → the role-builder. Person → `workspace member invite` (owner-confirmed, outward) → access and review checkpoints → recorded in TEAM.md |
 | `/multica-ops:fire <agent\|member>` | 🖥️ | offboard — **surface the risk first** (open issues, squad leadership, sole-owner skills, held checkpoints) → reassign → archive. **Removing a real member is the owner's own action in the Multica app**, and Mops says so |
 | `/multica-ops:audit` | 🖥️ | health **and** opportunities: token burn, limit-killed runs, tier misfits, stalled work, hygiene, mention cycles, secrets, design-system drift · **process improvements** · **integrity checks** (facts past their check-date, gates where author and reviewer coincide, edits to locked surfaces, unsourced ICE scores) · **the waste slices** (PLAYBOOKS → ledger) · **the gates table** (each `enforced_by` still true — PLAYBOOKS → Gates). Pulls in the health sweep. Output: finding → recommendation → impact |
-| `/multica-ops:report <text>` | ⇆ | **something went wrong, or made the work harder — and you do not have to know whose defect it is.** Decided from the evidence: a defect in **your product** goes to the urgent lane (`bug`); friction in **your workspace** becomes a line in `docs/FIELD-NOTES.md`, swept at the next `audit`, an issue on the **second** occurrence with both named; friction in **this skill or Multica** is packaged from evidence, de-identified, and **written to a file outside your repository** with its path said and the routes named. **You post it, never us** |
+| `/multica-ops:report <text>` | 🖥️ | **something went wrong, or made the work harder — and you do not have to know whose defect it is.** Decided from the evidence: a defect in **your product** goes to the urgent lane (`bug`); friction in **your workspace** becomes a line in `docs/FIELD-NOTES.md`, swept at the next `audit`, an issue on the **second** occurrence with both named; friction in **this skill or Multica** is packaged from evidence, de-identified, and **written to a file outside your repository** with its path said and the routes named. **You post it, never us** |
 | `/multica-ops:upgrade [skill\|all]` | 🖥️ | **the one command for getting current**, four layers: this skill's bytes (**Mops runs it; content applies on next read** — a restart only for a new or renamed command or a hook), the workspace migration, imported skills, and the CLI locally and on runtimes — **reported, not run**, and only when `active_task_count` is 0. Re-screen → dry-run → back up → apply → reconcile → verify/rollback, then the plain-language tour of what changed |
 | `/multica-ops:skill <create\|import\|optimize\|release>` | 🖥️ | the toolkit's lifecycle: **create** (a routine seen twice), **import** (screen for danger and injection → trim → attach with provenance), **optimize** (fail-closed compression; `NOT_COMPRESSIBLE` is a valid answer), **release** (proven → de-identified → its own repo → re-imported). PLAYBOOKS |
 | `/multica-ops:cli <command>` | 🖥️ | **raw Multica CLI escape hatch** — run or explain any `multica …` command directly, no methodology assumed. Backed by REFERENCE §10; destructive and outward commands still need owner sign-off |

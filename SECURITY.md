@@ -30,26 +30,40 @@ capability is found**; a sentence reaches the same place.
 | What it is | Where it goes |
 |---|---|
 | a defect in **your product** | the urgent lane — `/multica-ops:bug`, reproduced before it is fixed |
-| friction in **your workspace** — a flow that fought you, a step that repeats | a line in `docs/FIELD-NOTES.md`, append-only, **swept at the next `/multica-ops:audit`**; a **second** occurrence earns an issue with both occasions named in it |
+| friction in **your workspace** — a flow that fought you, a step that repeats | a line in `docs/FIELD-NOTES.md`, append-only, **swept at the checkpoints PLAYBOOKS names — session end, `/multica-ops:status`, before a release cut**; a **second** occurrence earns an issue with both occasions named in it |
 | friction in **this skill or in Multica** | packaged and handed to you to send |
 
 **The package is assembled from evidence, not from memory:** version · the flow · the symptom ·
-the task record with model, attempt and outcome · the state of the files involved · the workspace
-fingerprint where it is relevant. **De-identified with the same discipline as releasing a skill**
-— workspace names, internal paths, issue keys and above all anything secret — and **a human reads
-the diff before it goes anywhere.**
+the task record with model, attempt and outcome · the state of the files involved.
+
+**De-identified means a specific thing here, not a disposition.** What goes: company and project
+names, member and agent names, internal paths, issue keys, URLs of private services, **and above
+all anything secret**. What survives: **counts and shapes** — *"eleven issues, two agents on a
+degraded runtime"* — because a defect report needs the shape of the workspace, not its census.
+**The workspace fingerprint does not travel**: `docs/.workspace-state.json` is a hash over the
+very names being stripped, so quoting it undoes the stripping. **A human reads the diff before it
+goes anywhere** — a bug report is by nature full of paths and fragments.
 
 **It is written whole, to a file, outside the repository.** A report that exists only in the
 conversation is one you cannot find an hour later. And the defect is in **the skill**, not in your
 product — putting it in your tree makes it a commit in a history it does not concern, carried in
 every clone. **The default is your downloads folder**, `~/Downloads/multica-ops-report-<date>-<flow>.md`,
-and **the path is stated in the reply** rather than left to be discovered.
+and **the path is stated in the reply** rather than left to be discovered. **Where there is no
+such folder** — a container, CI, a bare shell — it goes where the owner names, and **the fallback
+is announced rather than chosen silently**.
+
+**This flow needs a local filesystem, so it belongs to the console seat, not the board.** The
+resident Mops inside Multica imports `skills/mops/SKILL.md` only and has no disk: asked there, it
+**collects the evidence and hands it over** for the console to write out, and says so.
 
 **Then the routes are named, because *"there is no channel"* is the sentence that ends in
 silence:** an issue on **`github.com/jamillazarev/multica-ops/issues`** · straight to the author
 if you know them · **keep it and send nothing, which is a complete answer** — the file stays, the
-friction is recorded, and it can go later. **A defect in Multica itself** goes to its own
-channels rather than here, and the package says which of the two it is.
+friction is recorded, and it can go later. **A defect in Multica itself** is packaged the
+same way and goes to **Multica's own community routes** — its documentation lists Discord, GitHub
+and X, and **no product feedback mechanism**, checked `2026-08-01` at `multica.ai/docs`. The
+package is made here either way, and **the report says which of the two it is about**, the skill
+or the platform, because the reader is a different person.
 
 **We do not send it, on any route.** Publishing is outward and from your account: we produce the
 file, say where it is, and name the ways.

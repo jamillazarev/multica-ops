@@ -779,8 +779,10 @@ transcript — the owner's next message is answered while the run is in flight, 
       (captures instructions, skills, model, tier). Autopilots likewise via
       `multica autopilot list --output json`.
    Then `git commit`; append `UPGRADES.md`: date · source/version · **pre-upgrade SHA** ·
-   impact line · **outcome, one of five: `applied` · `nothing-required` · `declined` ·
-   `deferred` · `failed`**. The outcome is what turns a rollback record into a **migration log**:
+   impact line. **The outcome is appended at verify (step 4), not here** — at backup time
+   `applied` and `failed` are both unknown, and a line written before its outcome is a line
+   nobody can trust. **One of five: `applied` · `nothing-required` · `declined` · `deferred` ·
+   `failed`.** The outcome is what turns a rollback record into a **migration log**:
    a workspace whose skill files were swapped and whose migration never ran looks identical to
    one that migrated cleanly, and `UPGRADES.md` is the only place that can tell them apart.
    **A check that finds nothing still writes its line** (`nothing-required`) — otherwise
@@ -792,8 +794,11 @@ transcript — the owner's next message is answered while the run is in flight, 
 3. Apply: `multica skill import --url <src> --on-conflict overwrite` → rewrite affected
    instructions/autopilots/guide. For multica-ops itself: refresh the Mops agent + `/multica-ops:mops sync`.
 4. Verify (agents keep skills, autopilots intact); breakage → re-import from the SHA.
+   **Then append the outcome to the `UPGRADES.md` line opened in step 2** — including
+   `nothing-required`, because a check that finds nothing must still leave a trace, or *checked
+   and clean* and *never checked* read identically.
 5. **multica-ops itself?** Migrate: read new CHANGELOG/diff → `/multica-ops:join`-style delta
-   (create every docs file the new version expects — BOOTSTRAP §15 step 7 is the list —
+   (name the docs files the new version expects — BOOTSTRAP §15 step 7 is the list — creating the stand-up five and offering the rest as available —
    update guide rules, refresh the Mops agent's
    instructions + `/multica-ops:mops sync`) → report the adaptations.
 
@@ -971,7 +976,7 @@ edited every time argue for asking more — and Mops says so itself.
 
 ## Resident Mops — install / refresh
 
-`multica skill list` → absent: `skill import --url github.com/jamillazarev/multica-ops/tree/v0.2.2/skills/mops`;
+`multica skill list` → absent: `skill import --url github.com/jamillazarev/multica-ops/tree/v0.3.0/skills/mops`;
 present: compare versions — same → skip, older → the Skill-upgrade recipe above. Never a
 second copy. Then `agent create` (name **Mops**) → `agent skills` attach (+ find-skills)
 → `agent avatar` per chosen library (Mops in Multica keeps `assets/mops-avatar.png`) → subtitle "Executive Advisor · resident" → rights

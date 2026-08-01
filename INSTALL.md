@@ -38,7 +38,7 @@ claude plugin marketplace add jamillazarev/multica-ops
 claude plugin install multica-ops@multica-ops
 
 # into a Multica workspace, as an agent skill
-multica skill import --url github.com/jamillazarev/multica-ops/tree/v0.2.2/skills/mops
+multica skill import --url github.com/jamillazarev/multica-ops/tree/v0.3.0/skills/mops
 ```
 
 **All three were run end to end — measured, not assumed** (the first two on 2026-07-31, the
@@ -134,10 +134,19 @@ symlink or a silently stale copy**.
 
 ## Make the skill load, at both ends of the model range
 
-**Add a trigger rule to your workspace `AGENTS.md`** — open the `multica-ops` skill before acting
-on requests about running the company, its issues, agents, squads, budgets or shipping, **on
-anything that spends, ships, deletes or changes the shape of the team**, and on questions about
-how to run work.
+**Add a trigger rule to the always-on surface your runtime reads** — open the `multica-ops` skill
+before acting on requests about running the company, its issues, agents, squads, budgets or
+shipping, **on anything that spends, ships, deletes or changes the shape of the team**, and on
+questions about how to run work.
+
+**Which surface, per runtime** — this repository already ships two of them:
+
+| Runtime | The surface | 
+|---|---|
+| Antigravity | `rules/multica-ops.md`, shipped here and always on |
+| Gemini CLI | `GEMINI.md`, shipped here |
+| Claude Code / Codex in a repo | that repo's `CLAUDE.md` or `AGENTS.md` |
+| **the Multica workspace itself** | **the shared guide and the Mops agent's instructions** — there is no `AGENTS.md` in a workspace; the workspace is the company, not a git checkout |
 
 **Both ends need it, for opposite reasons.** A light model may not open the skill because it does
 not connect the request to it. **A strong one may not open it because it does not need to**:

@@ -1,6 +1,6 @@
 ---
 name: mops
-version: 0.2.2
+version: 0.3.0
 description: Use when the user wants to build, bootstrap, join, or operate an autonomous team of AI agents on Multica — you act as their Mops (Executive Advisor); interview them progressively (defaults everywhere, small tasks stay small), create everything via the CLI (workspace-as-company, conductor/PM, agents, squads, skills, integrations), optionally stand up a resident Mops inside the workspace, then stay their console for status, recovery, features, and reshaping the team.
 ---
 
@@ -113,6 +113,7 @@ memory.
 | **[MODULES.md](../../MODULES.md)** | an opt-in module is on — design system or brand (`/multica-ops:mops brand`, design work), the **persona theatre** (bias-profiled synthetic + live audiences — `/multica-ops:mops audience`, `/multica-ops:mops validate`), or an **external tracker bridge** (a backlog in Linear/Jira, and the quality pass after `/multica-ops:import`) |
 | **[EXAMPLES.md](../../EXAMPLES.md)** | writing an issue, handoff, review, ledger entry, status or decision record — the weak-vs-strong bar, not the shape |
 | **[USE-CASES.md](../../USE-CASES.md)** | the user describes a situation rather than naming a command — match it to the flow |
+| **[SECURITY.md](../../SECURITY.md)** | `/multica-ops:report`, screening an imported skill, credentials, external text, attachments |
 | **[COMMANDS.md](../../COMMANDS.md)** | the user asks what commands exist (`/multica-ops:mops`) or you need a command's exact scope |
 | **[PLAYBOOKS.md](../../PLAYBOOKS.md)** | running a standard operation — "how do I…", `/multica-ops:mops health` `/multica-ops:upgrade` `/multica-ops:mops switch` `/multica-ops:import`, onboarding, the cost ledger |
 | **[REFERENCE.md](../../REFERENCE.md)** | object model, anti-patterns, **full CLI surface (§10)**, **frameworks per stage (§11)** |
@@ -320,10 +321,9 @@ announces — deploy and announce are outward, so **owner-confirmed** — and re
 ROADMAP. **`/multica-ops:mops measure`** pulls those metrics, compares to target, and a miss or a
 surprise becomes a **Learn item**: the loop closes at Measure → Learn, not at Accept. **`/multica-ops:bug`** jumps the queue (minimal spec straight to Build + Review, owner notified)
 and starts by **building a deterministic pass/fail signal** — no repro, ask for artifacts rather
-than guess; **it skips the queue, not the gates**: *"just publish it"* buys no speed on a gate. **`/multica-ops:mops feedback`** is triaged into four dispositions — accept · decline · duplicate
-· snooze (COMMANDS). **`/multica-ops:report`** runs the other way and never asks whose defect it
-is: the product's goes to `bug`, the workspace's becomes a field note, **this skill's is packaged
-outside their repo** (SECURITY).
+than guess; **it skips the queue, not the gates**: *"just publish it"* buys no speed on spend,
+outward or destructive. **`/multica-ops:mops feedback`** is triaged into four dispositions — accept · decline **with a reason** ·
+duplicate · snooze (COMMANDS). **`/multica-ops:report`** never asks whose defect it is: the product's to `bug`, the workspace's a field note, **this skill's packaged outside their repo** (SECURITY).
 
 **Launch completeness is analyzed up front, not discovered at the end**: before the first
 release and re-checked at every `/multica-ops:ship`, the conductor researches the medium's actual
@@ -485,12 +485,12 @@ Claude Code commands are **namespaced**, always: there is no bare `/mops`, and o
 Code no slash commands at all — quoting a command the reader does not have is what produced
 the first "unknown command" report.
 
-**Eighteen doors** — a verb earns one when it is its own flow, reached by name, repeatedly:
+**Nineteen doors** — a verb earns one when it is its own flow, reached by name, repeatedly:
 `/multica-ops:mops <anything>` (the free-text front door) · `/multica-ops:init`
 `/multica-ops:join` `/multica-ops:import` `/multica-ops:quick` `/multica-ops:consult` ·
 `/multica-ops:status` `/multica-ops:next` `/multica-ops:feature` `/multica-ops:ship`
 `/multica-ops:bug` `/multica-ops:recover` · `/multica-ops:hire` `/multica-ops:fire` ·
-`/multica-ops:audit` `/multica-ops:upgrade` `/multica-ops:skill` `/multica-ops:cli`.
+`/multica-ops:audit` `/multica-ops:upgrade` `/multica-ops:skill` `/multica-ops:cli` `/multica-ops:report`.
 
 **Every other flow is a sentence** through that dispatcher — nothing lost a capability, only a
 door, because **a door is paid for in every session by every agent**. Both lists: [COMMANDS.md](../../COMMANDS.md).

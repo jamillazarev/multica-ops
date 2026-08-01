@@ -10,6 +10,7 @@ joining an existing one, or touching the live workspace's plumbing. Day-to-day w
 - [Before anything: day zero, then the routing question](#before-anything-day-zero-then-the-routing-question)
 - [Shape the work, then propose the team](#shape-the-work-then-propose-the-team)
 - [Crew mode — a team without a management layer](#crew-mode-a-team-without-a-management-layer)
+- [The tier Mops cannot raise](#the-tier-mops-cannot-raise)
 - [Consult — advice, no machinery](#consult-advice-no-machinery)
 - [Stand up, in this order](#stand-up-in-this-order)
 - [Joining an existing setup](#joining-an-existing-setup)
@@ -204,6 +205,29 @@ scope is the shape; adding the rest of the project later is an expansion, not a 
 **Where it stops being right:** when the owner starts asking *what* should be next rather
 than telling. That is the moment to offer a conductor, once, with the reason.
 
+## The tier Mops cannot raise
+
+**Dispatched work is tiered by its agent's configuration; the console cannot re-tier itself,
+because Mops *is* the session.** It is tempting to treat tier as the runtime's problem precisely
+because everything else here is — but anything Mops performs **in its own turn** is the owner's
+choice of model, made before the session and usually without knowing it was a choice: a
+migration, a `/multica-ops:join` delta, an audit's reasoning half, cutting a feature into a spec.
+
+**So it is said in one line before the work**: *"this is judgement-heavy and I am doing it here —
+if a stronger tier is available in this runtime, now is the moment to switch."* **Named as a
+tier, never as a product**, since the runtime may not be the one this was written on. **An offer,
+not a gate**: the work proceeds either way, and where it proceeded light the output says where it
+was unsure. **A limitation stated before the work is a choice; the same one stated afterwards is
+an excuse.**
+
+**The evidence, and its boundary.** In the sibling project `opsinist`, three migration scenarios
+re-run one tier up moved `0/5 → 3/5` and `0/5 → 4/5` **against its own text, unchanged** — and
+the scenario asking a run to *volunteer* something did not move, because a stronger model does
+the work better without becoming more willing. **This project's equivalents are unmeasured**:
+`evals/README.md` has the scenarios, `evals/runs/` has no round for them.
+
+---
+
 ## Consult — advice, no machinery
 
 Sometimes the owner arrives with a **question, not a thing to build** — *"what do you make of
@@ -258,21 +282,7 @@ for search and verification** freely — reads are free — and **brief each one
 questions, grep-not-read, a scoped file list) to keep each run cheap. Before a *heavy*
 fan-out say what it costs first (**N agents, ~M minutes**), per the core's "ask first when it
 costs"; where the harness allows, **route these verification/search runs to a cheaper tier** —
-they do not need the top model.
-
-**And the one tier no setting can raise is Mops's own, because Mops *is* the session.** Dispatched
-work is tiered by its agent's configuration; **the console cannot re-tier itself**, and it is
-tempting to treat the tier as the runtime's problem precisely because everything else here is.
-Anything Mops performs in its own turn — a migration, a join delta, an audit's reasoning half,
-cutting a feature into a spec — **is the owner's choice of model, made before the session and
-usually without knowing it was a choice.** So it is said in one line **before** the work: *"this
-is judgement-heavy and I am doing it here — if a stronger tier is available in this runtime, now
-is the moment to switch."* **Named as a tier, never as a product**, since the runtime may not be
-the one this was written on. **An offer, not a gate**: the work proceeds either way, and where it
-proceeded light the output says where it was unsure. Measured in the sibling project: three
-migration scenarios re-run one tier up moved `0/5 → 3/5` and `0/5 → 4/5` **with no change to the
-text they read** — and the one asking a run to *volunteer* something did not move at all, because
-a stronger model does the work better without becoming more willing. Every answer carries the **evidence rungs** (measured ›
+they do not need the top model. Every answer carries the **evidence rungs** (measured ›
 cited › recalled › judgement call, or `unknown`) and the audience tiers; a tool or price
 claim is fetched, never recalled.
 
@@ -532,14 +542,23 @@ up and reversible where they can break things. Recipes: **PLAYBOOKS**.
   recommended. **Open and unstarted converts with the batch.** The counts go in the list
   separately: *"forty-two issues affected"* makes the safe pile look like the risky one.
 
-- **A document the release names arrives when it has something to hold.** The release names a
-  file, so the migration creates it, and the owner gains an empty `TEAM.md` from a version they
-  installed rather than a team they hired. **The delta names such a file as available, not as
-  missing** — it is written at the first decision, the first deferral, the first role, whichever
-  it is for. **A migration that leaves a workspace with more empty documents than it had made the
-  workspace worse**, however faithfully it followed the changelog. Measured in the sibling
-  project on the tier owners actually use: standing one up produced **ten to thirteen files
-  before any work existed**, and the first unit of work arrived in the third turn.
+- **A document the release names arrives when it has something to hold — outside the stand-up
+  five.** The release names a file, so the migration creates it, and the owner gains an empty
+  document from a version they installed rather than from work that needed it. **The delta names
+  such a file as available, not as missing.** **The exception is deliberate and load-bearing**:
+  `docs/ROADMAP.md`, `TEAM.md`, `TOOLING.md`, `DECISIONS.md` and `LATER.md` are created at
+  stand-up and **guarded by `company-preflight.sh`**, which fails a commit when one is missing,
+  because the guide tells every agent they exist (BOOTSTRAP §15 step 7). A rule that suppressed
+  those would make an obedient workspace unable to commit. **Everything the guard does not name
+  waits for content.**
+- **And this rule is `prose-only` here.** In the sibling project a hook refuses the write; nothing
+  in this corpus performs it, so it is a rule an agent follows rather than a gate that stops one,
+  and it belongs in the gates table as such rather than being believed. **A migration that leaves a workspace with more empty documents than it had made the
+  workspace worse**, however faithfully it followed the changelog. Measured in the sibling project
+  `opsinist`, on the tier owners actually use and against **its** text, not this one's: two runs,
+  **ten to thirteen files before any work existed**, the first unit of work arriving in turn two
+  of one run and turn three of the other. **The problem is what was measured; the fix is a
+  judgement call** — its confirming measurement is deferred there, unrun.
 
 - **Rollback is a normal outcome, not a failure.** Upgrades and migrations do break
   things; that's why every one commits a restore point first (`docs/skill-backups/` +
