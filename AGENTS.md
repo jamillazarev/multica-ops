@@ -144,7 +144,10 @@ A version bump is not just a changelog entry. Before you tag:
 2. **Run the four review lenses** (deletion · adversarial · contradiction · cold-read) on the
    changed skill — they find the class of defect no script can: a sentence that parses, links
    and is false. This is not optional for a minor or major; a patch can skip it.
-3. **Keep the guards current — they rot too.** A new capability usually needs a new check, and
+3. **Keep the guards current — they rot too.** **The shipped hooks are tested by mutation** —
+   `bash scripts/test-migration-hook.sh` — each rule shown speaking on the mutant and silent on
+   its honest twin, because a hook that cannot be wrong is decoration and this one only ever
+   *reports*, so its whole value is being right about when it speaks. A new capability usually needs a new check, and
    this session's guards were mostly added *reactively*, after a defect shipped. Ask *before*:
    does this change need a guard, or break an existing one's assumption? The rot surfaces are
    the guards' own hardcoded lists — `verify.py`'s `STRUCTURAL`/`IGNORE` object sets and `SMOKE`

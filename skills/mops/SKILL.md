@@ -318,12 +318,12 @@ The conveyor doesn't end at merge: discovery set **success metrics**, and a feat
 done until it's shipped and measured against them. **`/multica-ops:ship`** with gates green cuts the
 release, deploys (or hands to the deploying agent), writes release notes, tags and
 announces — deploy and announce are outward, so **owner-confirmed** — and records it in
-ROADMAP. **`/multica-ops:mops measure`** pulls those metrics, compares to target, and a miss or a
-surprise becomes a **Learn item**: the loop closes at Measure → Learn, not at Accept. **`/multica-ops:bug`** jumps the queue (minimal spec straight to Build + Review, owner notified)
-and starts by **building a deterministic pass/fail signal** — no repro, ask for artifacts rather
-than guess; **it skips the queue, not the gates**: *"just publish it"* buys no speed on spend,
-outward or destructive. **`/multica-ops:mops feedback`** is triaged into four dispositions — accept · decline **with a reason** ·
-duplicate · snooze (COMMANDS). **`/multica-ops:report`** never asks whose defect it is: the product's to `bug`, the workspace's a field note, **this skill's packaged outside their repo** (SECURITY).
+ROADMAP. **`/multica-ops:mops measure`** pulls those metrics; a miss becomes a **Learn item** — the loop closes at Measure → Learn, not at Accept. **`/multica-ops:bug`** jumps the queue (minimal spec → Build + Review, owner notified) and starts
+by **building a deterministic pass/fail signal** — no repro, ask for artifacts rather than guess;
+**it skips the queue, not the gates**: *"just publish it"* buys no speed on spend, outward or
+destructive. **Before acting on a workspace, check it was migrated to the version running it** — on any message, not only a command: *"what's next?"* opens no door and still acts. **Swapping the files is not migrating the company**, and `UPGRADES.md` is the only thing that tells them apart. No line for this version → say so, run the delta (FLOWS → *Getting current*), append the outcome.
+
+**`/multica-ops:mops feedback`** is triaged four ways — accept · decline **with a reason** · duplicate · snooze (COMMANDS). **`/multica-ops:report`** never asks whose defect it is: the product's to `bug`, the workspace's a field note, **this skill's packaged outside their repo** (SECURITY).
 
 **Launch completeness is analyzed up front, not discovered at the end**: before the first
 release and re-checked at every `/multica-ops:ship`, the conductor researches the medium's actual
