@@ -192,13 +192,24 @@ sub-issue, not another level.
   order given** — no gallery, no grid, no lightbox strip — and **a thumbnail shows no filename**,
   so when order carries meaning the comment body has to number them in words.
 
-  **Nothing else embeds. Multica unfurls only its own issues.** Bare links to a Figma design, a
-  FigJam board, a Figma community file, Notion, `notion.site`, YouTube, Loom, a Google Doc and a
-  GitHub pull request all render as **plain hyperlinks** — no card, no preview, no iframe, and
-  putting one alone on its own line changes nothing. A **Multica issue URL** becomes a live chip
-  carrying its identifier, title and status. So *"I put the Figma link in the issue"* means a
-  link and nothing more; if the point is that someone sees the design, a frame has to be exported
-  and attached.
+  **There is no unfurl service here at all, and that is the mechanism rather than a list of
+  unlucky domains.** URLs are **auto-linked** — a text transform with no network fetch — while a
+  **Multica issue URL** resolves *internally* into a live chip carrying its identifier, title and
+  status, which needs no outside call either. Nothing reaches out to build a card, so nothing
+  external can produce one.
+
+  **Tested two ways, because the first way was not evidence.** The first probe used **invented
+  ids** (`figma.com/design/abc123XYZ/…`, a made-up Notion page) — and a fetch-based unfurl would
+  fall back to a plain link on a dead URL anyway, so that run could not tell "no unfurler" from
+  "no such page". Re-run with **URLs that resolve** — a real YouTube video, a real GitHub pull
+  request, the Figma community's Material 3 kit, Notion's public templates — all still plain
+  links. And **typed into the comment editor rather than posted through the CLI**, a Figma link
+  auto-links in the composer and produces no card either, which rules out the other likely
+  explanation: that embeds are made at paste time and an API-created comment simply skips them.
+
+  So *"I put the Figma link in the issue"* means a link and nothing more — for a human as much as
+  for an agent. If the point is that someone sees the design, a frame has to be exported and
+  attached.
 
   **And the extension and the sniffed type can disagree, with the extension winning the inline
   render.** Mermaid text saved as `text-pretending-to-be.png` arrives `text/plain` and renders as

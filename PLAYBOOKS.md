@@ -639,10 +639,12 @@ order the `--attachment` flags are given, several images stack vertically in tha
 thumbnail carries no filename — so when the sequence means something, **number it in the comment
 text**, because the pictures cannot say it themselves.
 
-**Nothing else embeds.** A Figma or FigJam link, Notion, YouTube, Loom, a Google Doc, a GitHub PR
-— all render as plain hyperlinks (measured). Only a **Multica issue URL** becomes a live chip with
-its identifier, title and status. *"I put the Figma link in the issue"* therefore shows a link and
-nothing else; a frame has to be exported and attached for anyone to see the design.
+**Nothing else embeds, because there is no unfurler** — URLs are auto-linked, and a Multica issue
+URL resolves internally into a chip, but nothing fetches a page to build a card. Figma, FigJam,
+Notion, YouTube, Loom, Google Docs and a GitHub PR are plain links whether an agent posts them
+through the CLI or a person types them into the editor (both measured, with URLs that resolve).
+*"I put the Figma link in the issue"* therefore shows a link and nothing else; a frame has to be
+exported and attached for anyone to see the design.
 
 ## Order and priority — one list is authored, five are views
 
