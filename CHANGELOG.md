@@ -3,6 +3,74 @@
 Newest first. Each entry leads with what you can now do, not with which files moved. This is
 also the migration map `/multica-ops:upgrade` reads.
 
+## 0.2.0 — 2026-08-01
+
+**Everything below was measured against the live platform, and the entries that matter most are
+the ones that corrected something this skill already said.**
+
+---
+
+**The install line on the front page had stopped working.** `multica skill import --url
+github.com/jamillazarev/multica-ops` answers *"The Multica service is temporarily unavailable"* —
+this CLI mislabelling a 502 — because the URL must point at the folder holding `SKILL.md`.
+Corrected everywhere to `…/tree/v0.2.0/skills/mops`, and **pinned to the tag rather than `main`**:
+an imported skill becomes agent instructions, so a moving ref means the content behind your agents
+can change without you moving. Preflight now fails if that line drifts from the released version.
+Two sentences explaining it were false in the same way — `skills/mops/SKILL.md` does not sit at
+the repository root and never has; the real mechanism is the plugin manifest at the root beside a
+corpus in `skills/mops/`.
+
+**An audit is dispatched, not performed in the turn.** An autopilot in `create_issue` mode,
+triggered manually, returns in about a second with the issue it created while the agent works on —
+measured end to end: trigger at 00:21:59, finding written at 00:23:30, console free throughout.
+**The second half of that instruction is `--subscriber`**, and it is the half that gets dropped:
+the autopilot's issue is authored by the agent, your own actions don't notify you, and subscribers
+are **members only** — the resident Mops cannot be subscribed to its own audit. Four flag facts
+came with it, including `--priority`, which is accepted at create and update, appears in `--help`,
+and is stored nowhere.
+
+**The resume after a limit can be scheduled instead of waited for.** A limit hit at 02:10 that
+resets at 07:00 costs five hours of a stopped team and needs only a person at the console. Cron is
+exactly five fields, a pinned date is annual rather than one-shot, and the resumer has exactly one
+shot because an autopilot task never auto-retries — so it is scheduled *after* the reset and its
+trigger is deleted once it fires. **`next_run_at` promises nothing**: a disabled trigger and a
+paused autopilot both keep reporting one.
+
+**Waiting work stopped looking alive.** `blocked` is a status someone set, with a reason — and it
+was being listed beside `in_progress` with no age anywhere, while the `/status` door promised
+"ages and what the wait costs". `status.sh` now has a *Waiting on a human* section, oldest first,
+and the age is named for what it measures: `updated_at`, i.e. last touched, because the platform
+stores no status-change timestamp.
+
+**A hire has no project to sit quietly in.** `agent create` has no project flag, nor does `agent
+update` or `squad create` — so every role in a proposal names the work that needs it now, and
+anything justified by "we'll need it" is listed in `LATER.md` instead. And a hire is not finished
+when the agent exists: `mcp_config` and `custom_env` are per-agent with no workspace level, so an
+agent hired into a team that already uses a tool arrives with none of it and stalls on its first
+task looking capable.
+
+**Five of the six sorts are readings; only `position` was written by anyone.** Priority is opt-in,
+dates beat priority, and inflation is counted rather than forbidden. Measured: a new issue lands at
+the *top* of its column, the authored order is per column (`reorder --before` across columns is
+refused), and the position number survives a status change, so a move silently re-ranks against
+different neighbours.
+
+**`SECURITY.md`, written for whoever audits this.** What it reaches, what is actually gated with
+an honest `enforced_by`, what is `prose-only` by name, where credentials live and how they sit at
+rest, and a plain note on the 2026-07-30 scans: two of those alerts name files that have never
+existed in this repository at any commit.
+
+**`INSTALL.md`, and a site that cannot drift again.** The docs site carried two hand-written pages
+with no source in the repo; they were two days behind it, which is how a front page came to publish
+a broken command. Both are generated now, and the generator refuses any page without a source.
+
+**Also:** the urgent lane skips the queue and not the gates · a sync may not overwrite columns the
+platform has no field for (craft, grade, *Owns* exist nowhere in a workspace) · "import" separated
+into a move, a conversion, and "make ours better", which is not an import · a quick job reads the
+project's own record before it asks · a synthetic round says what it cannot give *before* it
+spends · derived surfaces regenerate from the tagged ref · eval scenario 22, and an honest run
+record that names the debt it did not pay.
+
 ## 0.1.0 — 2026-07-31
 
 **First release.** One version, one entry, and it says what it means: complete enough to run a

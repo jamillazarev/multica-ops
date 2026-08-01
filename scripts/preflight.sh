@@ -49,6 +49,16 @@ sv=$(grep -m1 '^version:' skills/mops/SKILL.md | awk '{print $2}')
 pv=$(grep -m1 '"version"' .claude-plugin/plugin.json | sed 's/.*"version": *"\([^"]*\)".*/\1/')
 [ "$sv" = "$pv" ] || say_fail "version mismatch: skills/mops/SKILL.md=$sv plugin.json=$pv"
 
+# 1b · the documented skill-import URL pins THIS version, not a moving ref.
+#      An import becomes agent instructions, so `tree/main` means the content behind someone's
+#      agents can change without them moving — the substance of the auditors' W012 finding,
+#      2026-07-30. A pin only works if it is maintained, so the maintenance is a check.
+bad_ref=$(grep -rhoE 'multica-ops/tree/[A-Za-z0-9._-]+/skills/mops' -- *.md 2>/dev/null | sort -u \
+          | grep -v "multica-ops/tree/v${sv}/skills/mops" || true)
+[ -n "$bad_ref" ] && while IFS= read -r r; do
+  say_fail "import URL is not pinned to v$sv: $r"
+done <<< "$bad_ref"
+
 # 2 · CHANGELOG documents this version (it is the migration map for /upgrade)
 grep -q "^## ${sv}\b" CHANGELOG.md || say_fail "CHANGELOG.md has no '## $sv' section"
 

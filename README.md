@@ -64,12 +64,16 @@ it cannot work. Verification per runtime: see the table in this file's install n
 
 **Into a Multica workspace (as an agent skill):**
 ```sh
-multica skill import --url github.com/jamillazarev/multica-ops/tree/main/skills/mops
+multica skill import --url github.com/jamillazarev/multica-ops/tree/v0.2.0/skills/mops
 ```
 **The URL must point at the folder that contains `SKILL.md` — here, `skills/mops`.** The
 repository root does not work: it answers *"The Multica service is temporarily unavailable
-(server error)"*, which is the CLI mislabelling a 502 (`--debug` shows the truth). Measured both
-ways on 2026-08-01 — the root failed, `…/tree/main/skills/mops` imported the skill.
+(server error)"*, which is the CLI mislabelling a 502 (`--debug` shows the truth). Measured all
+three ways on 2026-08-01 — the root failed, `…/tree/main/skills/mops` imported, and
+`…/tree/v0.1.0/skills/mops` imported with `"ref": "v0.1.0"` recorded in its origin block.
+**The line above pins a tag rather than `main` on purpose**: an import becomes agent
+instructions, so a moving ref means the content behind your agents can change without you
+moving. A tag cannot. Preflight fails if this line drifts from the released version.
 
 Then just say what you need. In Claude Code the commands arrive **namespaced** —
 `/multica-ops:status`, `/multica-ops:ship`, and `/multica-ops:mops <anything>` as the free-text
@@ -224,8 +228,9 @@ as a skill, Mops **inherits every harness improvement for free** instead of main
 own. Billing rides the harness the owner **already pays for** — no second runtime, no third
 bill. The two-seats design needs Mops to be a **guest inside Multica**, which hosts
 instructions and skills, not third-party binaries — a skill fits that seat; a CLI agent
-doesn't. And a skill is **auditable text with zero supply-chain surface**: every line is
-readable before you run it, with no dependency tree to trust. The escape hatch stays open — if
+doesn't. And a skill is **auditable text**: every line is readable before you
+run it, and it carries **no dependency tree of its own** — the trust it does ask for is named
+in [SECURITY.md](SECURITY.md), which is the honest version of "zero supply-chain surface". The escape hatch stays open — if
 skill conventions ever fracture across harnesses, or monetization demands an owned install
 surface, the route is a Claude Agent SDK wrapper that reuses the loop, never a from-scratch
 binary.
@@ -316,6 +321,7 @@ Stated rather than wished away, each with its check-date where it can move:
 |---|---|
 | [SKILL.md](skills/mops/SKILL.md) | **the always-loaded core** — interview → stand up → conveyor → console |
 | [INSTALL.md](INSTALL.md) | getting started, step by step — install, day zero, first run, updating |
+| [SECURITY.md](SECURITY.md) | what this reaches, what is gated, what is `prose-only` — written for whoever audits it |
 | [GLOSSARY.md](GLOSSARY.md) | one word, one meaning — and the pairs that look alike and are not |
 | [PATTERNS.md](PATTERNS.md) | the recurring forms, named once — a rule that instantiates one cites it and stops |
 | [USE-CASES.md](USE-CASES.md) | situation → what to say → which command |
