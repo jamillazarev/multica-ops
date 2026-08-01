@@ -62,16 +62,21 @@ case "$ext" in
     echo "${base}-preview.gif"; echo "${base}-poster.png"; echo "$f"; exit 0 ;;
 
   pen|fig)
-    # A .pen is JSON, so its frame list is readable with no tooling — but rendering needs
-    # OpenPencil, and measured 2026-08-01 neither route is free: the MCP export needs the app
-    # running ("failed to connect to running Pencil app"), and the CLI is Bun-only
-    # (`npx @open-pencil/cli` dies with "Bun is not defined").
+    # Rendering is the vendor's job, never ours. Two official routes, both measured 2026-08-01,
+    # and both carry a requirement worth knowing before a team adopts the tool (STACKS →
+    # picking a visual tool):
+    #   • the Pencil MCP is an EDITOR BRIDGE — `export_nodes` answers "failed to connect to
+    #     running Pencil app" unless somebody has it open, so it is not an unattended pipeline;
+    #   • the OpenPencil CLI is headless but BUN-ONLY — under node it dies with
+    #     "Bun is not defined", twice confirmed, so `bun add -g @open-pencil/cli` is the price.
+    # Do not parse the file to draw it yourself: the vendor states .pen files are encrypted and
+    # are to be read only through its own tools.
     if command -v openpencil >/dev/null 2>&1; then
       openpencil export "$f" -o "${base}.png" >/dev/null 2>&1 && { echo "${base}.png"; echo "$f"; exit 0; }
     fi
-    say "no renderer for $ext. Either open it in the Pencil app and export via MCP, or"
-    say "  bun add -g @open-pencil/cli   then   openpencil export $f --node <id> -o NN-<name>.png"
-    say "the frame ids are plain JSON inside the file: .children[].id"
+    say "no headless renderer for $ext here. Either:"
+    say "  • open it in the Pencil app, then export the frames through its MCP, or"
+    say "  • bun add -g @open-pencil/cli  then  openpencil export $f --node <id> -o NN-<name>.png"
     exit 2 ;;
 
   riv)

@@ -17,6 +17,7 @@ quoting.
 
 - [Services by need](#services-by-need)
 - [Default libraries — AI-fluent stacks](#default-libraries-ai-fluent-stacks)
+- [Picking a visual tool — can an agent get a picture out of it?](#picking-a-visual-tool-can-an-agent-get-a-picture-out-of-it)
 - [A vertical you are not in](#a-vertical-you-are-not-in)
 - [Testing — every stage of the loop, per platform](#testing-every-stage-of-the-loop-per-platform)
 - [Security defaults (digital products)](#security-defaults-digital-products)
@@ -176,6 +177,34 @@ APIs, so agents code against today's versions, not a frozen training cutoff.
 
 Rule of thumb: deviate from these only when the project itself dictates (a DSP app
 is C/Swift no matter what LLMs prefer) — and record the deviation in the guide.
+
+## Picking a visual tool — can an agent get a picture out of it?
+
+**On Multica a design that cannot become an image cannot be shown at all.** Links do not embed,
+and only images, PDF, HTML and text render (REFERENCE → attachments). So for anything visual the
+selection ladder's *agent-drivable* rung means something stricter than "has an MCP": **is there an
+official export to an image, and what does that export require?** Ask it before adoption, not on
+the day someone needs to show a screen — the answer is a property of the tool and it does not
+change later.
+
+Three tiers, and the difference is who has to be present:
+
+| Tier | What it means | Measured example |
+|---|---|---|
+| **headless API or CLI** | an agent exports unattended, at any hour, with a credential | **Figma**: `GET /v1/images/:key?ids=…&format=jpg\|png\|svg\|pdf&scale=0.01–4`, scope `file_content:read` — official, no desktop app. Limits are documented: **32 megapixels**, and **rendered assets expire after 30 days**, so an export is a fresh call rather than a stored URL |
+| **editor bridge** | the tool's MCP drives a **running application**, so a person must have it open | **Pen.dev / OpenPencil**: `export_nodes` refuses with `failed to connect to running Pencil app` when nothing is open (measured 2026-08-01). Real, and not automatable overnight |
+| **another runtime** | headless, but it drags a toolchain onto every machine that needs it | **OpenPencil CLI** is **Bun-only** — `npx @open-pencil/cli … export` dies with `Bun is not defined` (measured twice). `bun add -g @open-pencil/cli` is the price of the headless route |
+| **no official export** | the picture is a **human** deliverable, and the flow has to say so | **Rive**: export a GIF or MP4 from the editor by hand |
+
+**Two consequences worth stating out loud when the tool is chosen.** A team on an editor-bridge
+tool has **no unattended visual pipeline** — every screenshot in every issue costs a person
+opening an app, which is exactly the operator bottleneck this methodology exists to remove. And a
+tool whose export needs a second runtime makes that runtime part of the team's environment
+fingerprint, not an afterthought (PLAYBOOKS → *Workspace fingerprint*).
+
+**Mermaid is the exception that proves the point**: it needs no export at all, because a
+` ```mermaid ` fence renders as a diagram in the comment itself. When a picture only has to
+communicate structure, that is the cheapest visual tool on the platform.
 
 ## A vertical you are not in
 

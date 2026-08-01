@@ -165,7 +165,7 @@ sub-issue, not another level.
   | **an image** — `image/png · svg+xml · jpeg · gif` | an inline thumbnail. **SVG previews**, so a vector diagram is a legitimate second route |
   | **`text/html`** | **rendered as live HTML in the comment**, inline SVG included — worth knowing before attaching a page from anywhere but your own tree |
   | **`application/pdf`, `application/json`, `text/csv`** | a file row with an eye — a modal, not inline |
-  | **a real `.pen` design file** | it is **JSON text**, so it arrives `text/plain` and opens in that same modal as **its source** — frames, ids, fills. Readable, never a rendered design. **Export a PNG or SVG for the picture and let the `.pen` travel beside it** as the editable thing |
+  | **a real `.pen` design file** | arrives `text/plain` and opens in that same modal as **source**, never as a rendered design. The one on hand was readable JSON, but **the vendor states `.pen` files are encrypted and are to be read only through its own tools** — so treat readability as a property of that file, not of the format, and get the picture from the official export (STACKS → *picking a visual tool*) |
   | **`application/zip`, `application/octet-stream`** | **download only, no eye at all** — nothing to look at without leaving Multica |
 
   **The full matrix, measured 2026-08-01 across 39 attachments on one issue.** The documentation
