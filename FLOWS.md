@@ -528,6 +528,21 @@ up and reversible where they can break things. Recipes: **PLAYBOOKS**.
   question per message. What **needs nothing** is named anyway, so the silence is visible rather
   than assumed. **A mixed list makes the owner read every line to find the two that concern them.**
 
+- **The guide's own version line is the first mechanical item, every time.** The guide says which
+  version operates this company; a migration that leaves it naming the old one has not finished,
+  whatever else it did. Measured 2026-08-01 at N=3: **no run bumped it**, two of the three then
+  wrote a log line, and a log line is exactly what makes the session-start check go quiet — so
+  the workspace ended up asserting one version in `UPGRADES.md` and another in the guide, with
+  nothing left to raise it. **Bump the line in the same breath as writing the log, or the log is
+  the thing that hides the problem.**
+
+- **A delta that stops for approval still writes its line — with outcome `deferred`.** Waiting
+  for the owner is right and the flow asks for it. But a run that pauses and writes nothing
+  leaves **the same trace as a run that never happened**: the next session re-derives the whole
+  delta, re-asks, and the owner sees the same list twice with no record that they already saw it.
+  `deferred` names what was found, what is waiting, and on whom — and it is replaced, not
+  duplicated, when the answer arrives.
+
 - **"You do not have X" is three facts, and only two are findings.** The release just added it ·
   it was never used and this release makes it load-bearing · **the owner turned it off or declined
   it before**. The middle one is an **adoption, not a migration**: offered with its price,

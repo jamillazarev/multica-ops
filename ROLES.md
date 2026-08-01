@@ -415,6 +415,14 @@ and keep them on a **cheap tier**: simulating a reaction is not reasoning-heavy 
 Reserve a stronger model only for a persona whose job is adversarial (a sceptical expert
 buyer picking apart pricing).
 
+**And `--thinking-level` runs backwards here, which the tier advice alone does not cover.** For a
+worker, more reasoning effort is a quality lever. For a persona it is a **fidelity** lever
+pointing the wrong way: a real person gives a landing page thirty seconds and leaves, so a
+persona at high effort writes the considered essay nobody would have written — **articulate,
+plausible, and evidence of nothing**. Set it **low** for reaction personas and raise it only for
+the adversarial ones, where picking an argument apart *is* the job. Effort and model are two
+dials, not one.
+
 **Synthesis over volume, and it stays direction-only.** Five personas agreeing is not evidence;
 what matters is where they *diverge* and why. The UX researcher collects the runs into one
 verdict — the disagreements, the moments people stalled, the words they used — and it lands in
