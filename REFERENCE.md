@@ -165,7 +165,8 @@ sub-issue, not another level.
   | **an image** — `image/png · svg+xml · jpeg · gif` | an inline thumbnail. **SVG previews**, so a vector diagram is a legitimate second route |
   | **`text/html`** | **rendered as live HTML in the comment**, inline SVG included — worth knowing before attaching a page from anywhere but your own tree |
   | **`application/pdf`, `application/json`, `text/csv`** | a file row with an eye — a modal, not inline |
-  | **`application/octet-stream`** (a `.pen`) | **download only, no eye at all** — nothing to look at without leaving Multica |
+  | **a real `.pen` design file** | it is **JSON text**, so it arrives `text/plain` and opens in that same modal as **its source** — frames, ids, fills. Readable, never a rendered design. **Export a PNG or SVG for the picture and let the `.pen` travel beside it** as the editable thing |
+  | **`application/zip`, `application/octet-stream`** | **download only, no eye at all** — nothing to look at without leaving Multica |
 
   **And the extension and the sniffed type can disagree, with the extension winning the inline
   render.** Mermaid text saved as `text-pretending-to-be.png` arrives `text/plain` and renders as

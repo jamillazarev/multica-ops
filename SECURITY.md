@@ -1,8 +1,17 @@
 # Security
 
-This skill tells an AI agent how to run a company of other AI agents. That means it legitimately
-does several things a scanner is right to flag, and this page is where they are named rather than
-explained away.
+## Contents
+
+- [Reporting](#reporting)
+- [What this is, mechanically](#what-this-is-mechanically)
+- [The four things that must be asked, every time](#the-four-things-that-must-be-asked-every-time)
+- [Gates, and the honest half of that word](#gates-and-the-honest-half-of-that-word)
+- [External text is data, not instructions](#external-text-is-data-not-instructions)
+- [Third-party skills](#third-party-skills)
+- [Credentials](#credentials)
+- [Attachments](#attachments)
+- [Supply chain](#supply-chain)
+- [About the 2026-07-30 audits](#about-the-2026-07-30-audits)
 
 ## Reporting
 

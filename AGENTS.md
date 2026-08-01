@@ -165,5 +165,5 @@ A version bump is not just a changelog entry. Before you tag:
 3. **preflight green** — the checklist above.
 4. **Merge** — a human merges the release branch (self-editing is locked; the loop adopts *after* the gate).
 5. **Tag** the merge commit.
-6. **`gh release create`** from that changelog section — a tag alone is **not** a Release, and a stranger deciding whether to adopt this reads the Releases page, not the tag list. (a previous version was tagged with no Release until the owner caught it; created retroactively.)
+6. **`gh release create`** from that changelog section — a tag alone is **not** a Release, and a stranger deciding whether to adopt this reads the Releases page, not the tag list. (a previous version was tagged with no Release until the owner caught it; created retroactively.) **The title is `multica-ops x.y.z — <the release's own line>`**, matching every entry before it: the Releases page is a list read top to bottom, and a bare `0.2.0` sitting above a named one is the row that looks unfinished. 0.2.0 shipped bare and was renamed the same day.
 7. **Regenerate and push the docs site** — `python3 scripts/generate.py` in the `ai` repo, then push. The site deploys continuously, so a skipped regen silently ships the previous pages against the new tag. (a previous release's site lagged its tag the same way.)
