@@ -74,6 +74,45 @@ sub-issue, not another level.
   — measured 2026-08-01, five of five runs stopped at the missing capability and none invented
   a way past it.
 
+- **The inbox is a human channel with rules that decide whether anyone hears you.** It is
+  *"not a full activity log — it flags where something changed that needs your attention"*, and
+  it collects assignments and reassignments, changes to **subscribed** issues (comments, status,
+  priority, dates, assignee), `@`-mentions, reactions to what you created, agent run failures
+  and autopilot activity. **Agents never read it** — there is no CLI surface for it at all.
+
+  **Three of its rules change how a flow must be built:**
+
+  1. **"Your own actions don't notify you."** So an autopilot that files a finding as an issue
+     **notifies nobody by creating it** — it is the author. This is precisely why
+     `autopilot create --subscriber <member>` exists, and why *"run it in `create_issue` mode"*
+     is only half the instruction: **the other half is naming who is subscribed**, or the
+     auditor reports into an empty room.
+  2. **Notifications on one issue merge into one entry.** A quiet issue and a frantic one look
+     the same in the list, so **the inbox tells you *where* to look, never *how much* happened**
+     — the activity is on the issue.
+  3. **Each group can be switched off** (Settings → Notifications: assignments · status changes ·
+     comments and mentions · priority and dates · agent activity). **So "the owner will see it"
+     is an assumption about their settings**, not a property of the system, and anything that
+     must not be missed needs a second channel rather than a louder first one.
+
+  **Subscription is the dial, and it has a CLI while the inbox does not.**
+  `issue subscriber add | list | remove` — *"defaults to the caller"* — so an agent **can
+  subscribe and unsubscribe itself and others**, and **unsubscribing is a real act with a real
+  consequence**: it silences a channel for a person who may be relying on it. Auto-subscription
+  is generous (creating, being assigned, commenting, being mentioned) and **reassignment does
+  not unsubscribe**, so the list grows quietly and a noisy issue is usually an over-subscribed
+  one rather than a busy one. **Two rules follow.** Removing *yourself* is ordinary hygiene.
+  **Removing *someone else* is not** — it is taking them off a thread they were told about, and
+  it is the owner's call, said out loud, not a tidy-up an agent performs while reducing noise.
+
+  **One tension to resolve by measurement, not by editing.** The documentation lists *agent run
+  failures* and *autopilot activity* among inbox sources, while this skill states that an
+  autopilot task **posts nothing to the inbox**. The likely reconciliation is that the two are
+  about different modes — a `create_issue` run produces an issue whose subscribers are notified,
+  while `run_only` produces nothing to subscribe to — **but that is a guess and it is written
+  here as one.** Until someone watches a failing autopilot in both modes, the safe instruction
+  stands: `create_issue`, with a named subscriber.
+
 - **Removing things: the verbs differ per entity, and the CLI is not the UI.** There is no single
   *delete*, and assuming one is how a cleanup reports success it did not have.
 
