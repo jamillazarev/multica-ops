@@ -3,6 +3,28 @@
 Newest first. Each entry leads with what you can now do, not with which files moved. This is
 also the migration map `/multica-ops:upgrade` reads.
 
+## 0.2.1 — 2026-08-01
+
+**A correction release, and the correction is the entry.** 0.2.0 shipped a claim about
+attachments that was inferred from an HTTP header instead of looked at, and the site published it.
+
+**A diagram is shown by writing it, not by attaching it.** A ` ```mermaid ` fence **in the comment
+body renders as a drawn diagram**, and clicking it opens a viewer with zoom, a source/render
+toggle, copy and download. The same Mermaid **attached as a file never renders** — `.mmd`,
+`.mermaid`, `.txt` and `.md` all arrive `text/plain` and open a modal showing the source as text,
+and a fence *inside* an attached `.md` is not rendered either. SVG previews inline, so a vector
+diagram is a legitimate second route. `text/html` is rendered as **live HTML** in the comment,
+which is in SECURITY.md because it changes what attaching a file from outside means. And a real
+`.pen` is **JSON text**: readable in the preview as its own source, never a rendered design, so
+the picture is an exported PNG or SVG with the `.pen` beside it.
+
+Extension and sniffed type can disagree, and the inline renderer trusts the extension: Mermaid
+text saved as `.png` renders as a **broken image**, while a real PNG saved as `.pen` renders as
+the picture. A wrong name breaks visibly rather than quietly.
+
+**Also:** the release title format is in the ritual now (0.2.0 shipped as a bare `0.2.0` above a
+named 0.1.0 and was renamed the same day) · `SECURITY.md` gained the Contents its length requires.
+
 ## 0.2.0 — 2026-08-01
 
 **Everything below was measured against the live platform, and the entries that matter most are
