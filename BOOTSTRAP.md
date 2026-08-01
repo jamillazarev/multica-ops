@@ -396,14 +396,38 @@ stage finished" (that is @mentions and barriers). Offer at setup, default "later
   measured 2026-08-01). **Verified end to end the same day**: created in `create_issue` mode,
   scheduled, `next_run_at` returned, then deleted — the mechanism is real, and so is the
   condition.
+- **`next_run_at` is cron arithmetic, not a promise — there are three independent switches and
+  the timestamp reflects none of them.** Measured 2026-08-01: a trigger set to
+  `enabled: false` still reported `next_run_at: 2026-08-02T05:05:00Z`, and pausing the whole
+  autopilot did not change it either. So **read `enabled` on the trigger and `status` on the
+  autopilot before quoting the instant** — three things must be on (autopilot `active`, trigger
+  `enabled`, the assignee's runtime answering), and the timestamp is computed from the cron
+  alone. **`paused` is a real off-switch on both paths**: a paused autopilot refuses a manual
+  run too — `Invalid request: autopilot is not active` — which makes it the way to stop a
+  misbehaving autopilot without losing its runbook.
+- **Cron here is exactly five fields, and a pinned date is annual rather than one-shot.** A
+  six-field expression is rejected outright (`parse cron: expected exactly 5 fields, found 6`),
+  the timezone conversion is done for you (`5 7 2 8 *` in `Europe/Warsaw` → `next_run_at`
+  `2026-08-02T05:05:00Z`), and a date already past **rolls to next year** (`0 0 1 1 *` →
+  `2027-01-01`). So a schedule pinned to a one-time moment fires again in twelve months unless
+  its trigger is deleted after it runs.
+- **The trigger verbs do not take the same arguments.** `trigger-add <autopilot-id>` takes one
+  positional; **`trigger-update` and `trigger-delete` take two — `<autopilot-id> <trigger-id>`**,
+  and passing only the trigger id fails with `accepts 2 args, received 1`. `--enabled` is a
+  boolean that defaults to true, so **disabling requires `--enabled=false`**: the space form is
+  read as a third positional and dies with `accepts 2 args, received 3`.
 - **A manual `autopilot trigger` is tagged source `manual`, and it is how work gets dispatched
   out of a conversation.** An autopilot needs **no trigger to exist** — created with
   `triggers: []` it is already `status: active`, and `autopilot trigger <id>` fires it,
   returning in about a second with `{"status":"issue_created","issue_id":…}` while the agent
   runs on. A schedule is for the sweeps nobody is watching; the same object serves both
-  (measured 2026-08-01 → PLAYBOOKS *The audit is dispatched*). Not yet on the platform (checked
-  v0.4.8): HMAC signing on the trigger, an IP allowlist, API-based triggers — do not design as if
-  they exist.
+  (measured 2026-08-01 → PLAYBOOKS *The audit is dispatched*). Not reachable from the CLI
+  (checked v0.4.12): HMAC signing on the trigger, an IP allowlist, API-based triggers — do not
+  design as if they exist. **Signing is in the data model and not in the CLI**: a webhook
+  trigger comes back carrying `has_signing_secret: false`, `signing_secret_hint: null` and
+  `provider: "generic"`, and no flag on `trigger-add` or `trigger-update` sets any of them. Read
+  that as *the platform intends to have it*, not as *we have it* — the URL is still the whole
+  credential today.
 - **Assignee gap, verify live:** the app offers an autopilot assignee of **agent *or* squad**,
   while the docs describe only an agent — confirm on the workspace before promising a
   squad-assigned autopilot.

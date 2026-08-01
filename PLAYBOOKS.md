@@ -114,6 +114,34 @@ Run **`bash scripts/resume.sh --dry-run`** first to see exactly what it would re
 firing anything. Retrying before the reset time fails again; the reset is in the failed run's
 `error` ("resets HH:MM").
 
+**The reset is a known future moment, so offer to schedule the resume instead of waiting for
+someone to be awake for it.** A limit hit at 02:10 that resets at 07:00 costs five hours of a
+whole team standing still, and the only thing missing is a person at the console:
+
+```sh
+# an agent that carries the CLI skill; the runbook is the description, read on every run
+multica autopilot create --title "Resume after limit" --mode create_issue --agent "<Ops>" \
+  --subscriber "<owner>" \
+  --description "Rerun every issue whose latest run failed with agent_error. Report what resumed."
+multica autopilot trigger-add <autopilot-id> --kind schedule \
+  --cron "20 7 2 8 *" --timezone "Europe/Warsaw"    # 07:20, twenty past the reset
+# after it has fired — the trigger is positional and so is the autopilot
+multica autopilot trigger-delete <autopilot-id> <trigger-id>
+```
+
+Three measured constraints shape that (2026-08-01):
+
+- **It has exactly one shot.** An autopilot-triggered task **never auto-retries** (REFERENCE §7),
+  so a resumer scheduled a minute early dies with `agent_error` and nothing brings it back.
+  Schedule it **after** the reset with margin — the server scans schedules roughly every 30 s,
+  so late is normal and early is fatal.
+- **A pinned date is annual, not one-shot** — `0 0 1 1 *` on a date already past returned
+  `next_run_at: 2027-01-01`. Delete the trigger once it has fired, or the resume runs again next
+  year against a workspace that has moved on.
+- **`next_run_at` does not mean it will fire.** A disabled trigger and a paused autopilot both
+  keep reporting one (BOOTSTRAP §13), so check `enabled` and `status` before telling the owner
+  their team comes back at 07:20.
+
 ## Talk to an agent on a task
 
 ```sh

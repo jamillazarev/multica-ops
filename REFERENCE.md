@@ -488,7 +488,9 @@ don't restate them in instructions.
   exhaustion lands here**. Auto-retry is capped at **two attempts (original + one)**, and
   **autopilot-triggered tasks never auto-retry** — they have their own cadence, and a failed
   autopilot task also **posts nothing to the inbox**, so subscribe the owner or it fails silently
-  (BOOTSTRAP §13).
+  (BOOTSTRAP §13). **Which makes anything scheduled around a limit reset a one-shot**: fire it a
+  minute early and it lands in `agent_error` with nothing behind it (PLAYBOOKS → *Recover after
+  a session limit*).
 - **Timeouts are real numbers:** **5 minutes to dispatch, 2.5 hours to run** (platform watchdog
   defaults; the run cap is the `--agent-timeout` watchdog, env `MULTICA_AGENT_TIMEOUT`, in
   `multica daemon start --help` — the flag is shown, the default is not, so re-verify; checked
