@@ -85,7 +85,7 @@ flowchart TD
     S3 --> DQA["Design QA gate"]
     S3 --> SEC["Security gate"]
     QA & DQA & SEC --> ACC["Stage 4 · Accept<br/>merge · archive"]
-    ACC --> SHIP["Ship<br/>deploy · release notes · tag"]
+    ACC --> SHIP["Ship<br/>deploy · release notes · tag<br/>+ every derived surface regenerated<br/><i>from the tagged ref</i>"]
     SHIP --> MEAS["Measure<br/>vs success metrics"]
     MEAS --> LEARN["Learn<br/>→ ROADMAP.md"]
     LEARN -->|non-stop mode| NEXT["Next feature<br/>from ROADMAP.md"]
@@ -105,7 +105,7 @@ flowchart BT
     EXEC["Executor agent"] --> LEAD["Squad leader"]
     LEAD --> PM["Conductor (PM)"]
     PM --> MOPS["Mops"]
-    MOPS --> OWNER["Owner"]
+    MOPS --> OWNER["Owner<br/><i>the issue is set <b>blocked</b> here —<br/>waiting work must not look alive</i>"]
     EXEC -.->|"destructive only:<br/>delete · publish · spend"| OWNER
 ```
 
@@ -114,8 +114,12 @@ flowchart BT
 ```mermaid
 flowchart TD
     RUN["Run fails: <b>agent_error</b><br/><i>not auto-retried — nothing<br/>brings it back on its own</i>"] --> CHK{"Comment says<br/>resets HH:MM?"}
-    CHK -->|yes| WAIT["Wait for reset<br/>(retry before it fails again)"]
+    CHK -->|yes| WHO{"Will anyone be<br/>at the console then?"}
+    WHO -->|yes| WAIT["Wait for reset<br/>(retry before it fails again)"]
+    WHO -->|"no — it resets at 07:00"| SCHED["Autopilot, cron pinned<br/><b>after</b> the reset<br/><i>one shot: an autopilot task<br/>never auto-retries</i>"]
+    SCHED --> DEL["Delete the trigger once fired<br/><i>a pinned date recurs annually</i>"]
     WAIT --> RERUN["issue rerun<br/>= Retry task"]
+    SCHED --> RERUN
     CHK -->|no| DIAG["Read run error<br/>+ daemon logs<br/>(~/.multica/daemon.log)"]
     RERUN --> OK["Work resumes<br/>from repo state"]
 ```

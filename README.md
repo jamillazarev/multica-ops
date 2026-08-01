@@ -24,7 +24,8 @@ limits, features, roadmap, hiring, upgrades.
 
 ## Install
 
-**All three routes below were run end to end on 2026-07-31 — measured, not assumed.**
+**Every route below was run end to end — measured, not assumed** (the harness installs on
+2026-07-31, the Multica import re-measured 2026-08-01).
 
 **Any agent (universal, via [skills.sh](https://skills.sh)):**
 ```sh
@@ -43,12 +44,13 @@ claude plugin install multica-ops@multica-ops
 Two commands, two steps. **In-session, `/plugin` opens the same thing as a menu** — there,
 paste **only the source** (`jamillazarev/multica-ops`) into its *Add Marketplace* field, then
 install from the list; pasting both lines into that one field is an error it hands straight
-back. **Pick one route per harness, not both.** Because `skills/mops/SKILL.md` sits at this repo's root,
-skills.sh copies the whole repository — plugin manifest included — so Claude Code sees two
-plugins of one name and **the installed plugin wins while the copy reads "not loaded"**
-(measured 2026-07-31). That is the tidy case: no duplicate commands, and the skills.sh copy
-still serves every *other* harness from `~/.agents/skills/`. Remove `~/.claude/skills/multica-ops`
-if you want the message gone.
+back. **Pick one route per harness, not both.** The **plugin manifest (`.claude-plugin/`) sits at
+the repository root** while the corpus sits in `skills/mops/`, and a skills.sh install names the
+*repository* rather than a folder — so it copies the manifest along with everything else, Claude
+Code sees two plugins of one name, and **the installed plugin wins while the copy reads "not
+loaded"** (measured 2026-07-31). That is the tidy case: no duplicate commands, and the skills.sh
+copy still serves every *other* harness from `~/.agents/skills/`. Remove
+`~/.claude/skills/multica-ops` if you want the message gone.
 
 **Gemini CLI · Google Antigravity · Codex** — the same directory carries their manifests:
 ```sh
@@ -62,11 +64,12 @@ it cannot work. Verification per runtime: see the table in this file's install n
 
 **Into a Multica workspace (as an agent skill):**
 ```sh
-multica skill import --url github.com/jamillazarev/multica-ops
+multica skill import --url github.com/jamillazarev/multica-ops/tree/main/skills/mops
 ```
-The repo-root URL is correct **here** because `skills/mops/SKILL.md` sits at the root; for a multi-skill
-repository the URL must point at the folder containing `skills/mops/SKILL.md`, or the root 502s
-(BOOTSTRAP §4).
+**The URL must point at the folder that contains `SKILL.md` — here, `skills/mops`.** The
+repository root does not work: it answers *"The Multica service is temporarily unavailable
+(server error)"*, which is the CLI mislabelling a 502 (`--debug` shows the truth). Measured both
+ways on 2026-08-01 — the root failed, `…/tree/main/skills/mops` imported the skill.
 
 Then just say what you need. In Claude Code the commands arrive **namespaced** —
 `/multica-ops:status`, `/multica-ops:ship`, and `/multica-ops:mops <anything>` as the free-text
@@ -145,7 +148,7 @@ parts worth trusting are the ones you can check:
 - **Honest about the ceiling.** The caps are stated, not wished away: **6 tasks per agent, 20 per
   daemon** (the tighter wins), a `local_directory` serialises regardless, and `workspace delete`
   isn't in the CLI — so Mops says so instead of promising it. Every number carries its check-date.
-- **Regression-tested behaviour, and the runs are on record.** **17 stratified eval scenarios** —
+- **Regression-tested behaviour, and the runs are on record.** **22 stratified eval scenarios** —
   from a job too small to deserve a company to an import carrying a hidden instruction — judged on
   the end state, not the route, by a judge that did not write the transcript and a player that
   never saw the rubric. Each release records its run in **`evals/runs/<version>.md`** with
@@ -173,6 +176,27 @@ limits that stall silently, teams that can't grow themselves, knowledge scattere
 a backlog stranded in Linear/Jira, and one-size machinery forced onto a job that didn't want it —
 each is a capability below, not a promise here.
 
+
+## It finds the right *process*, not just the right tool
+
+Ask it to design an app and it doesn't guess: it researches how that craft actually works —
+information architecture, user flows, low-fi wireframes, **your approval of the structure**, then
+high-fidelity screens composed from a real component library rather than hand-written HTML — shows
+you the process so you can cut or add steps, and finds a skill or tool for each. The same
+**process discovery** runs for a launch, a migration or a content pipeline: anywhere there is a
+"how", so the team doesn't improvise and hand you gradient placeholders. And the design gate
+*rejects* bad work instead of rubber-stamping it — Mops never signs off design itself, you do, at
+the checkpoint your control level set.
+
+## Two seats, one advisor
+
+Mops is **one advisor with one name**, reachable in two places. **In the CLI** — where you build:
+full machine reach (shell, git, the `multica` CLI, deploy), instant chat, its own quota. **In
+Multica** — an optional resident agent carrying this same skill, present in the workspace while
+you are away from the console: async, sharing the team's session limit, best for status, `@Mops`
+advice on an issue, and being the escalation vertex. They do not share live chat memory and you
+cannot write into an agent's chat, so **the bridge is written state** — the repo and issue
+comments. The test that keeps it honest: the project must rebuild from repo + workspace alone.
 
 ## Works beyond Claude Code
 
@@ -237,6 +261,23 @@ The whole company, end to end — and the loop closes, it doesn't stop at merge:
   per human), in git and on the issue — **and the waste named, not only the spend**: what went to
   runs that produced nothing, second attempts, and expensive settings that bought nothing.
 
+## What the ledger looks like
+
+An **illustrative** month for a twelve-agent company on a $300 envelope — the *shape* the ledger
+gives you, not a measurement of anything:
+
+| | |
+|---|---|
+| **$280 / $300** | spent against the envelope · ~180M tokens · 240 tasks |
+| **~88%** | of those tokens are **cache reads** — caching carries ~72% of the bill |
+| **per agent** | who burned what is itemized, so an expensive role is visible rather than suspected |
+| **per feature** | model and service cost divided by what actually shipped |
+
+Every number above is made up to show the columns; **your numbers come from `issue usage` and
+`runtime usage`** at list prices, written into `docs/analytics/<release>.md` and onto the issue,
+so *"what did this feature cost"* has an answer. A shrinking budget re-proposes the stack instead
+of only raising an alarm.
+
 ## How you would know it is working
 
 **Success here shows up as an absence.** Nothing was decided twice. Nothing was rebuilt that was
@@ -274,13 +315,14 @@ Stated rather than wished away, each with its check-date where it can move:
 | File | Purpose |
 |---|---|
 | [SKILL.md](skills/mops/SKILL.md) | **the always-loaded core** — interview → stand up → conveyor → console |
+| [INSTALL.md](INSTALL.md) | getting started, step by step — install, day zero, first run, updating |
 | [GLOSSARY.md](GLOSSARY.md) | one word, one meaning — and the pairs that look alike and are not |
 | [PATTERNS.md](PATTERNS.md) | the recurring forms, named once — a rule that instantiates one cites it and stops |
 | [USE-CASES.md](USE-CASES.md) | situation → what to say → which command |
 | [EXAMPLES.md](EXAMPLES.md) | worked examples — the same issue, handoff, review or ledger done weakly and done well |
 | [COMMANDS.md](COMMANDS.md) | every command, its aliases and the surface it runs best on |
 | [STACKS.md](STACKS.md) | services, libraries, audio/DSP, testing, security, reference galleries |
-| [MODULES.md](MODULES.md) | opt-in modules: design system · brand · external tracker bridge |
+| [MODULES.md](MODULES.md) | opt-in modules: design work · design system · brand · persona theatre · tracker bridge · HQ |
 | [FLOWS.md](FLOWS.md) | the full procedures for `/multica-ops:init`, `/multica-ops:join`, `/multica-ops:mops health`, `/multica-ops:upgrade`, `/multica-ops:mops switch` |
 | [BOOTSTRAP.md](BOOTSTRAP.md) | zero-to-team CLI recipes, capacity levers, real-hours traps |
 | [ROLES.md](ROLES.md) | role catalog with curated skill packs + generic role-builder |
