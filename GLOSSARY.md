@@ -25,6 +25,8 @@ it; a term used in one file is that file's business.
 | **blocked** (board) · **stuck** (run) | `blocked` is **a status someone set, with a reason**; stuck is **a failed run** (`agent_error`, limits) that rolled the issue back | a decision, or a failure? |
 | **architecture map** · **product map** | `docs/ARCHITECTURE.md` is **where the implementation lives** — a worker's map of the tree; `docs/MAP.md` is **how the product is walked** — the moves and the things, in the product's own words (`/multica-ops:mops map`) | does it name files, or moves? |
 | **verified/recalled/unknown** · **measured/cited/recalled/judgement** | **one scale, not two — the three-way labelling is retired.** Claims carry measured › cited › recalled › judgement call, plus `unknown` | — |
+| **migration** · **adoption** | a migration moves what a workspace **already has** onto a newer shape; an adoption is taking up something it **never used**, which a release can make load-bearing. The first is applied on approval; the second is **offered with its price and may be declined for good** | is there something to convert, or something to start? |
+| **update** · **upgrade** *(bytes vs workspace)* | new bytes arriving on the machine is not the workspace moving onto them — **swapping the skill files is not migrating the company**, and the two are indistinguishable until `UPGRADES.md` says which happened | did anything in the workspace change? |
 
 ## Terms with one home
 

@@ -3,6 +3,77 @@
 Newest first. Each entry leads with what you can now do, not with which files moved. This is
 also the migration map `/multica-ops:upgrade` reads.
 
+## 0.2.2 — 2026-08-01
+
+**Carried across from the sibling project, where each of these was measured rather than
+reasoned about.** Same mechanics, different substrate: the workspace lives in Multica, the
+company's record lives in git, and the findings apply to both.
+
+---
+
+**`/multica-ops:report` — you do not have to know whose defect it is.** The moment someone wants
+to report a problem is the moment they least want to compose a request, and the capability is one
+they have no reason to know exists. **A door is how a capability is found.** Three destinations,
+decided from the evidence: a defect in **your product** goes to the urgent lane; friction in
+**your workspace** becomes a line in `docs/FIELD-NOTES.md`, swept at the next audit, earning an
+issue on the **second** occurrence with both named; friction in **this skill or in Multica** is
+packaged from evidence, de-identified, and **written to a file outside your repository** — the
+defect is not in your product, so it does not belong in your history — with its path said out
+loud and the routes named. **You post it, never us.** Multica has no feedback mechanism of its
+own (checked in its docs the same day), which is what makes this worth a door here.
+
+**A migration that creates every document the release names makes the workspace worse.** Two
+places said *"create every docs file the new version expects"*; they now say **name** them and
+**create only the ones with something to hold**, listing the rest as **available, not missing**.
+Measured in the sibling project on the tier owners actually use: standing a workspace up produced
+**ten to thirteen files before any work existed**, and the first unit of work arrived in the
+third turn.
+
+**The delta is one list, split by *does this need you?*** Mechanical items are applied on approval
+and reported; items needing an answer are asked **in one batch**; items needing nothing are named
+so the silence is visible. **A mixed list makes the owner read every line to find the two that
+concern them.**
+
+**"You do not have X" is three facts, and only two are findings.** Newly added · never used and
+now load-bearing · **already declined**. The middle is an **adoption**, not a migration — offered
+with its price and **declinable for good**, recorded against a moment rather than re-raised next
+release.
+
+**Issues are not one pile.** **Closed issues are never rewritten** — a closed issue records what
+happened under the shape then in force. **An issue with a task in flight is not touched and not
+even offered**, because the offer would interrupt a running agent. Started-but-idle is the
+owner's choice; open-and-unstarted converts with the batch. **The counts go in the list
+separately.**
+
+**`UPGRADES.md` becomes a migration log, not only a restore point.** Every line now carries an
+outcome — `applied` · `nothing-required` · `declined` · `deferred` · `failed`. **Swapping the
+skill files is not migrating the company**, and until now nothing could tell the two apart: a
+workspace whose migration never ran looked identical to one that migrated cleanly. **A check that
+finds nothing still writes its line**, or *checked and clean* and *never checked* leave the same
+trace.
+
+**The one tier no setting can raise is Mops's own, because Mops *is* the session.** Dispatched
+work is tiered by its agent's configuration — and it is tempting to treat tier as the runtime's
+problem precisely because everything else here is. Anything Mops performs in its own turn says so
+**before** starting and offers the moment to switch, **named as a tier, never as a product**. An
+offer, not a gate. Measured next door: three migration scenarios one tier up moved `0/5 → 3/5`
+and `0/5 → 4/5` **with no change to the text they read**.
+
+**And the anchor is load-bearing at both ends of the model range.** A light model may not open
+the skill because it does not connect the request to it; **a strong one may not open it because
+it does not need to** — three runs of a build request on a high tier invoked nothing and read
+nothing, writing and compiling the app instead. **Capability suppresses recourse to a
+methodology.**
+
+**Prioritisation names its alternatives and their questions.** ICE stays the default; **RICE**
+(reach known and sourced), **WSJF** (what to do next under a constraint where delay costs
+differently), **Kano** (whether to build at all), **MoSCoW** (a scope being negotiated) and
+**Eisenhower** (a person's day, not a roadmap) each carry the question they answer. **The
+framework is chosen before the scores** — running two and keeping the flattering answer is a way
+of arriving where you were already going.
+
+---
+
 ## 0.2.1 — 2026-08-01
 
 **A correction release. Two things 0.2.0 published were wrong, and both were wrong in the same

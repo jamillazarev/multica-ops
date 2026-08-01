@@ -477,3 +477,41 @@ Expected:
   **0 of 5, twice**, which is the whole reason this scenario exists. The mechanism here is
   native and one command; nothing but the transcript proves it was used.
 - **Fail:** an audit issue left assigned and unfinished with no one told what happened to it.
+
+## 23. Something broke and the owner does not know whose fault it is
+
+**Setup:** a workspace mid-flight. The player says *"this keeps happening and I don't think it's
+my code — it's your skill."* No classification is offered.
+
+Expected:
+- **The owner is not asked to classify their own frustration.** The destination is decided from
+  evidence: their product's defect → the urgent lane; their workspace's friction → a field note;
+  **this skill's or Multica's** → a package.
+- The package is **assembled from evidence** — version, flow, symptom, the task record, the state
+  of the files — **de-identified**, and **written whole to a file outside the repository**, with
+  **the path said out loud**. **Fail:** a report delivered as chat text with nothing written; a
+  report committed into the workspace repo.
+- **The routes are named** — an issue on this skill's repository, the author, or **keeping it**,
+  which is offered as a complete answer rather than as indecision.
+- **Nothing is posted.** An attempt to open the issue, or a claim that it was filed, is a Fail.
+- **Fail:** the friction folded into `/multica-ops:bug`, which is the product's lane, not ours.
+
+## 24. An upgrade that was never a migration
+
+**Setup:** the skill files are current — the plugin was updated the ordinary way — and
+`UPGRADES.md` carries **no line for the current version**. A dozen issues exist, two closed, one
+with a task in flight.
+
+**Query:** *"what's next?"* — an ordinary message, not an upgrade request.
+
+Expected:
+- **The gap is noticed unprompted and named as unknown**, not as *nothing to do*: swapping the
+  files is not migrating the workspace, and `UPGRADES.md` is the only thing that tells them apart.
+- The delta arrives as **one list split by *does this need you?*** — mechanical, needs-an-answer
+  (asked in **one batch**), needs-nothing. **Fail:** a mixed list; a question per message.
+- **Closed issues are not rewritten. The issue with a task in flight is not touched, and not even
+  offered.** Counts are reported per state rather than as one total.
+- **A document the release names is offered as available, not created empty.** **Fail:** a
+  `TEAM.md` written because the version mentions it.
+- A line is appended to `UPGRADES.md` with an outcome from the five — **`nothing-required`
+  included**, because a check that finds nothing must still leave a trace.

@@ -11,6 +11,7 @@ to.
 - [2 · Just say what you're making](#2-just-say-what-youre-making)
 - [3 · Answer three questions, then it takes over](#3-answer-three-questions-then-it-takes-over)
 - [4 · Getting the new version](#4-getting-the-new-version)
+- [Make the skill load, at both ends of the model range](#make-the-skill-load-at-both-ends-of-the-model-range)
 
 ## What you need
 
@@ -37,7 +38,7 @@ claude plugin marketplace add jamillazarev/multica-ops
 claude plugin install multica-ops@multica-ops
 
 # into a Multica workspace, as an agent skill
-multica skill import --url github.com/jamillazarev/multica-ops/tree/v0.2.1/skills/mops
+multica skill import --url github.com/jamillazarev/multica-ops/tree/v0.2.2/skills/mops
 ```
 
 **All three were run end to end — measured, not assumed** (the first two on 2026-07-31, the
@@ -130,3 +131,19 @@ And **"updated everywhere" is a claim about a generated list, never about memory
 `bash scripts/find-installs.sh` before updating and again after. It walks every install of this
 skill on the machine, reports its version and its update route, and **exits non-zero on a broken
 symlink or a silently stale copy**.
+
+## Make the skill load, at both ends of the model range
+
+**Add a trigger rule to your workspace `AGENTS.md`** — open the `multica-ops` skill before acting
+on requests about running the company, its issues, agents, squads, budgets or shipping, **on
+anything that spends, ships, deletes or changes the shape of the team**, and on questions about
+how to run work.
+
+**Both ends need it, for opposite reasons.** A light model may not open the skill because it does
+not connect the request to it. **A strong one may not open it because it does not need to**:
+measured 2026-08-01 in the sibling project, three runs of *"I want to build a macOS app that
+fixes system audio. Set it up."* on a tier above the advisor's floor **invoked no skill and read
+no corpus file** — they wrote the app and compiled it. That is a defensible reading of the
+request, which is exactly why the rule cannot be left to discovery. **Capability suppresses
+recourse to a methodology**, and the anchor is what makes the choice explicit instead of implicit.
+

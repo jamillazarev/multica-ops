@@ -3,6 +3,7 @@
 ## Contents
 
 - [Reporting](#reporting)
+- [Reporting a defect in this skill](#reporting-a-defect-in-this-skill)
 - [What this is, mechanically](#what-this-is-mechanically)
 - [The four things that must be asked, every time](#the-four-things-that-must-be-asked-every-time)
 - [Gates, and the honest half of that word](#gates-and-the-honest-half-of-that-word)
@@ -16,6 +17,42 @@
 ## Reporting
 
 Security issues: **me@jamillazarev.com**. Please do not open a public issue first.
+
+## Reporting a defect in this skill
+
+**`/multica-ops:report`, and you do not have to know whose defect it is.** The moment someone
+wants to report a problem is the moment they least want to compose a request — they are already
+annoyed, and the capability is one they have no reason to know exists. **A door is how a
+capability is found**; a sentence reaches the same place.
+
+**Three destinations, decided from the evidence rather than asked of you:**
+
+| What it is | Where it goes |
+|---|---|
+| a defect in **your product** | the urgent lane — `/multica-ops:bug`, reproduced before it is fixed |
+| friction in **your workspace** — a flow that fought you, a step that repeats | a line in `docs/FIELD-NOTES.md`, append-only, **swept at the next `/multica-ops:audit`**; a **second** occurrence earns an issue with both occasions named in it |
+| friction in **this skill or in Multica** | packaged and handed to you to send |
+
+**The package is assembled from evidence, not from memory:** version · the flow · the symptom ·
+the task record with model, attempt and outcome · the state of the files involved · the workspace
+fingerprint where it is relevant. **De-identified with the same discipline as releasing a skill**
+— workspace names, internal paths, issue keys and above all anything secret — and **a human reads
+the diff before it goes anywhere.**
+
+**It is written whole, to a file, outside the repository.** A report that exists only in the
+conversation is one you cannot find an hour later. And the defect is in **the skill**, not in your
+product — putting it in your tree makes it a commit in a history it does not concern, carried in
+every clone. **The default is your downloads folder**, `~/Downloads/multica-ops-report-<date>-<flow>.md`,
+and **the path is stated in the reply** rather than left to be discovered.
+
+**Then the routes are named, because *"there is no channel"* is the sentence that ends in
+silence:** an issue on **`github.com/jamillazarev/multica-ops/issues`** · straight to the author
+if you know them · **keep it and send nothing, which is a complete answer** — the file stays, the
+friction is recorded, and it can go later. **A defect in Multica itself** goes to its own
+channels rather than here, and the package says which of the two it is.
+
+**We do not send it, on any route.** Publishing is outward and from your account: we produce the
+file, say where it is, and name the ways.
 
 ## What this is, mechanically
 

@@ -1,6 +1,6 @@
 ---
 name: mops
-version: 0.2.1
+version: 0.2.2
 description: Use when the user wants to build, bootstrap, join, or operate an autonomous team of AI agents on Multica — you act as their Mops (Executive Advisor); interview them progressively (defaults everywhere, small tasks stay small), create everything via the CLI (workspace-as-company, conductor/PM, agents, squads, skills, integrations), optionally stand up a resident Mops inside the workspace, then stay their console for status, recovery, features, and reshaping the team.
 ---
 
@@ -317,13 +317,13 @@ The conveyor doesn't end at merge: discovery set **success metrics**, and a feat
 done until it's shipped and measured against them. **`/multica-ops:ship`** with gates green cuts the
 release, deploys (or hands to the deploying agent), writes release notes, tags and
 announces — deploy and announce are outward, so **owner-confirmed** — and records it in
-ROADMAP. **`/multica-ops:mops measure`** pulls those metrics, compares to target, and a miss or a surprise
-becomes a **Learn item** on the roadmap: the loop closes at Measure → Learn, not at
-Accept. **`/multica-ops:bug`** jumps the queue (minimal spec straight to Build + Review, owner
-notified) and starts by **building a deterministic pass/fail signal** — no repro, ask for
-artifacts rather than guess; **it skips the queue, not the gates** — *"no time to explain, just
-publish it"* buys no speed on spend, outward or destructive. **`/multica-ops:mops feedback`** is captured and triaged into four
-dispositions — accept · decline with a reason · duplicate · snooze (COMMANDS).
+ROADMAP. **`/multica-ops:mops measure`** pulls those metrics, compares to target, and a miss or a
+surprise becomes a **Learn item**: the loop closes at Measure → Learn, not at Accept. **`/multica-ops:bug`** jumps the queue (minimal spec straight to Build + Review, owner notified)
+and starts by **building a deterministic pass/fail signal** — no repro, ask for artifacts rather
+than guess; **it skips the queue, not the gates**: *"just publish it"* buys no speed on a gate. **`/multica-ops:mops feedback`** is triaged into four dispositions — accept · decline · duplicate
+· snooze (COMMANDS). **`/multica-ops:report`** runs the other way and never asks whose defect it
+is: the product's goes to `bug`, the workspace's becomes a field note, **this skill's is packaged
+outside their repo** (SECURITY).
 
 **Launch completeness is analyzed up front, not discovered at the end**: before the first
 release and re-checked at every `/multica-ops:ship`, the conductor researches the medium's actual
