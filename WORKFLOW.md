@@ -11,6 +11,7 @@ Mermaid renders on GitHub, in Obsidian, and on the docs site.
 - [Escalation & control](#escalation-control)
 - [Session limits — detect and recover](#session-limits-detect-and-recover)
 - [Getting current — what /upgrade actually walks](#getting-current-what-upgrade-actually-walks)
+- [Something went wrong — whose defect is it?](#something-went-wrong-whose-defect-is-it)
 - [The skill lifecycle — gates, not ceremony](#the-skill-lifecycle-gates-not-ceremony)
 
 ## From first message to a working company
@@ -152,6 +153,32 @@ flowchart TD
 > Two things this picture exists to prevent: **new bytes without a migration** (half the
 > company on one version, half on another), and **a CLI replaced under a running agent**,
 > which produces failures that look like the agent's fault.
+
+## Something went wrong — whose defect is it?
+
+**The person who just hit it should not have to classify it.** The door decides, from evidence.
+
+```mermaid
+flowchart TD
+    F["friction: something broke,<br/>or made the work harder"] --> Q{"does it stop you now?"}
+    Q -->|"yes"| B["the urgent lane —<br/>a blocking issue on your product"]
+    Q -->|"no"| W{"whose defect?<br/>decided here, not asked"}
+    W -->|"your workspace"| N["a field note in docs/FIELD-NOTES.md<br/>one line, append-only"]
+    N --> S["swept at session end · /status ·<br/>before a release cut"]
+    S --> T{"seen twice?"}
+    T -->|"yes"| ISSUE["an issue, with BOTH occasions named in it"]
+    T -->|"no"| KEEP["stays a note"]
+    W -->|"this skill, or Multica"| P["assembled from evidence:<br/>version · flow · symptom · workspace state · files"]
+    P --> D["de-identified, a human reads the diff"]
+    D --> FILE["written WHOLE to a file<br/>OUTSIDE your repository · path said out loud"]
+    FILE --> R["routes named: an issue · the author · keep it"]
+    R --> YOU[["you post it — never us"]]
+```
+
+> **`/multica-ops:report` is the door**, and a sentence reaches the same place. **The file is
+> written before anything is missing** — a field it cannot know is marked `unknown` and the offer
+> to fill it comes after, because a missing field is not a reason to withhold the artefact.
+> Measured: scenario 23 caught the first version stopping to ask, leaving the report as chat text.
 
 ## The skill lifecycle — gates, not ceremony
 
