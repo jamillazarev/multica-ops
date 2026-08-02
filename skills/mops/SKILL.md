@@ -109,7 +109,7 @@ memory.
 | **[FLOWS.md](../../FLOWS.md)** | running `/multica-ops:init`, `/multica-ops:join`, `/multica-ops:mops health`, `/multica-ops:upgrade` or `/multica-ops:mops switch` — the full procedures |
 | **[BOOTSTRAP.md](../../BOOTSTRAP.md)** | standing a team up (`/multica-ops:init`), capacity/limit levers, CLI traps, the stand-up detail (§15) |
 | **[ROLES.md](../../ROLES.md)** | hiring or reshaping anyone (`/multica-ops:hire` `/multica-ops:mops update` `/multica-ops:mops squad`), skill packs, experts/personas, avatars |
-| **[STACKS.md](../../STACKS.md)** | choosing any tool/service/library — services, AI-fluent libraries, audio & DSP, testing, security, reference galleries |
+| **[STACKS.md](../../STACKS.md)** | choosing any tool/service/library — services, AI-fluent libraries, audio & DSP, testing, security, reference galleries. **Searched by need, never read whole**: it is the longest file here and one row is usually the whole answer |
 | **[MODULES.md](../../MODULES.md)** | an opt-in module is on — design system or brand (`/multica-ops:mops brand`, design work), the **persona theatre** (bias-profiled synthetic + live audiences — `/multica-ops:mops audience`, `/multica-ops:mops validate`), or an **external tracker bridge** (a backlog in Linear/Jira, and the quality pass after `/multica-ops:import`) |
 | **[EXAMPLES.md](../../EXAMPLES.md)** | writing an issue, handoff, review, ledger entry, status or decision record — the weak-vs-strong bar, not the shape |
 | **[USE-CASES.md](../../USE-CASES.md)** | the user describes a situation rather than naming a command — match it to the flow |
