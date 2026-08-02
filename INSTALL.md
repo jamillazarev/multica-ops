@@ -38,7 +38,7 @@ claude plugin marketplace add jamillazarev/multica-ops
 claude plugin install multica-ops@multica-ops
 
 # into a Multica workspace, as an agent skill
-multica skill import --url github.com/jamillazarev/multica-ops/tree/v0.3.2/skills/mops
+multica skill import --url github.com/jamillazarev/multica-ops/tree/v0.3.3/skills/mops
 ```
 
 **All three were run end to end — measured, not assumed** (the first two on 2026-07-31, the

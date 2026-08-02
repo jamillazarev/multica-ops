@@ -1,6 +1,6 @@
 {
   "name": "multica-ops",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Mops, your Executive Advisor for Multica — build and run an autonomous company of AI agents: interview, bootstrap, conveyor, console.",
   "contextFileName": "GEMINI.md"
 }

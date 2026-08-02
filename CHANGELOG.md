@@ -3,6 +3,30 @@
 Newest first. Each entry leads with what you can now do, not with which files moved. This is
 also the migration map `/multica-ops:upgrade` reads.
 
+## 0.3.3 — 2026-08-02
+
+**Forty new tools and services, and this file's list is now the same list as the sibling
+project's** — 406 links on each side, none only on one, checked mechanically rather than by eye.
+The drift ran one way: `opsinist` carried twenty-two this file lacked and this file carried none
+it lacked, so the academic sources, licence reading, behavioural reference, saliency work and
+structured comparison arrived here as their own **Evidence** section.
+
+**Nine new categories**, picked because they are what a company on this platform keeps building:
+**agent and chat interface components** · **icon sets** · **data tables** · **billing and pricing
+UI** · **deep research as a bounded job** · **cloning a page you are allowed to clone** · the
+**utility layer** between a framework and a component kit · **calling an API by hand** · **review
+workflow for stacked changes**.
+
+**Three things are recorded as blockers, not details.** Several agent-UI libraries **state no
+licence** — copy-paste components become your source, so that is unlicensed code in the
+company's repository. One block library is **paid**, named as the single non-free entry rather
+than quietly dropped. **Prisma's licence is read at its repository, not its site**, which sells a
+different product.
+
+**"Load the row, not the file."** This is the longest document here and almost none of it is
+about the task in hand. The rule is in the file *and* in the core's routing entry, because a rule
+inside a long file is only read after paying for the whole file.
+
 ## 0.3.2 — 2026-08-02
 
 **Recording that a check ran is not the same act as applying what it found, and only the second
