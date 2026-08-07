@@ -29,6 +29,7 @@ Stdlib only — no network library beyond urllib, so it runs anywhere Python doe
 """
 import argparse
 import datetime
+import hashlib
 import json
 import re
 import sys
@@ -277,6 +278,78 @@ def _anchors(e):
             {w.lower() for w in substance} - _STOP)
 
 
+def _anchor(heading):
+    """A markdown heading → its anchor slug. Same rule the Contents check uses, deliberately:
+    two slug rules in one repository is a bug waiting for its first mismatched link."""
+    a = re.sub(r"`|\*\*|\*|\[|\]|\(|\)", "", heading)
+    a = re.sub(r"[^\w\s-]", "", a, flags=re.U).strip().lower()
+    return re.sub(r"\s+", "-", a)
+
+
+def section_of(path, anchor):
+    """The text of one section: its heading down to the next heading of the same or higher level.
+
+    Returns `(heading_line_number, text)` or `None`. A section is the unit a claim actually lives
+    in — a line number names a position, which is why it rots on the next paragraph inserted
+    above it, while a section survives everything except an edit to the claim itself.
+    """
+    try:
+        lines = open(path, encoding="utf-8").read().split("\n")
+    except OSError:
+        return None
+    start = level = None
+    for i, line in enumerate(lines):
+        m = re.match(r"^(#{1,6})\s+(.+?)\s*$", line)
+        if not m:
+            continue
+        if start is None:
+            if _anchor(m.group(2)) == anchor:
+                start, level = i, len(m.group(1))
+            continue
+        if len(m.group(1)) <= level:
+            return start + 1, "\n".join(lines[start:i])
+    if start is not None:
+        return start + 1, "\n".join(lines[start:])
+    return None
+
+
+def content_hash(text):
+    """A short hash of a section's substance — whitespace collapsed, so a reflow is not a change.
+
+    Eight hex characters: enough that a collision is not a practical worry for a register of
+    this size, short enough to sit inside a citation without making it unreadable.
+    """
+    return hashlib.sha256(re.sub(r"\s+", " ", text).strip().encode("utf-8")).hexdigest()[:8]
+
+
+def cite(target):
+    """Mint an anchored citation for `<file>#<anchor>` — the durable form, printed ready to paste.
+
+    `file:line` names a position and a position moves; this names the claim and carries proof of
+    what it said. Measured here on 2026-08-07: **11 of 23 line-number back-pointers no longer
+    landed on their claim**, with no edit to the register in between — the docs had simply been
+    written in.
+    """
+    if "#" not in target:
+        print("usage: --cite <file.md>#<anchor-slug>", file=sys.stderr)
+        return 2
+    path, anchor = target.split("#", 1)
+    got = section_of(path, anchor)
+    if not got:
+        print(f"! no section `#{anchor}` in {path}", file=sys.stderr)
+        try:
+            heads = re.findall(r"^#{1,6}\s+(.+?)\s*$", open(path, encoding="utf-8").read(), re.M)
+            near = [_anchor(h) for h in heads if anchor.split("-")[0] in _anchor(h)]
+            if near:
+                print("  did you mean: " + " · ".join(f"#{n}" for n in near[:5]), file=sys.stderr)
+        except OSError:
+            pass
+        return 1
+    _, text = got
+    print(f"{path}#{anchor} (sha:{content_hash(text)}, checked {datetime.date.today()})")
+    return 0
+
+
 def verify_citations():
     """The register's other edge. Every entry names the `file:line` that cites it, and nothing
     ever checked that the line still does — a doc gains three paragraphs and the pointer
@@ -307,8 +380,29 @@ def verify_citations():
             cur[m.group(1).lower().replace("cited-by", "cited")] = m.group(2)
 
     files, bad, drift, uncited, checked = {}, 0, 0, [], 0
+    stale = 0
     for e in entries:
+        # The durable form first: `file.md#anchor (sha:…, checked …)`. A section survives edits
+        # above it, and the hash means a passage rewritten *under* its citation turns the fact
+        # **unknown** rather than quietly wrong — which is the failure the line-number form
+        # cannot even see. Mint one with `--cite <file.md>#<anchor>`.
+        anchored = re.findall(r"([\w./-]+\.md)#([\w-]+)\s*\(sha:([0-9a-f]+)", e["cited"])
+        for path, anchor, want in anchored:
+            checked += 1
+            got = section_of(path, anchor)
+            if not got:
+                print(f"  ✗ {e['id']} → {path}#{anchor} — no such section"); bad += 1; continue
+            line_no, text = got
+            have = content_hash(text)
+            if have != want:
+                print(f"  ! {e['id']} → {path}#{anchor} (line {line_no}) — the passage changed "
+                      f"under its citation (sha:{want} → sha:{have}). **The fact is `unknown` "
+                      f"until re-read**: check the section still says what the entry claims, "
+                      f"then re-mint with --cite")
+                stale += 1
         pointers = re.findall(r"([\w./-]+\.md):(\d+)", e["cited"])
+        if anchored and not pointers:
+            continue
         if not pointers:
             uncited.append(f"{e['id']} — Cited-by: {e['cited'] or '(empty)'}")
             continue
@@ -344,10 +438,15 @@ def verify_citations():
 
     for u in uncited:
         print(f"  ! uncited: {u}")
-    print(f"  citations: {checked - bad - drift}/{checked} back-pointers land on their claim"
+    print(f"  citations: {checked - bad - drift - stale}/{checked} back-pointers land on their claim"
           + (f", {len(uncited)} entr{'y' if len(uncited) == 1 else 'ies'} cited by nothing" if uncited else ""))
     if drift:
-        print("  remediation: move the line number to the nearest match above, or re-cite the claim")
+        print("  remediation: move the line number to the nearest match above, or re-cite the claim —"
+              " better, re-cite it anchored: `python3 scripts/fetch-source.py --cite <file.md>#<anchor>`,"
+              " which does not rot when the file is written in")
+    if stale:
+        print(f"  {stale} anchored citation{'s' if stale > 1 else ''} point at a passage that has"
+              " changed — re-read it before the claim is used again")
     return 1 if bad else 0
 
 
@@ -359,7 +458,12 @@ if __name__ == "__main__":
     g.add_argument("--verify", action="store_true", help="check every live URL in the register")
     g.add_argument("--verify-citations", action="store_true",
                    help="check every Cited-by back-pointer still lands on its claim")
+    g.add_argument("--cite", metavar="FILE#ANCHOR",
+                   help="mint a durable anchored citation: file.md#anchor (sha:…, checked …)")
     a = ap.parse_args()
+
+    if a.cite:
+        sys.exit(cite(a.cite))
 
     if a.resolve:
         sys.exit(resolve(a.resolve))

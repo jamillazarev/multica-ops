@@ -1,382 +1,228 @@
 <p align="center">
-  <img src="assets/mops-docs.png" alt="Mops — your Executive Advisor" width="250">
+  <img src="assets/mops-docs.png" alt="Mops — your Executive Advisor" width="240">
 </p>
 
 <h1 align="center">multica-ops</h1>
 
 <p align="center">
-  Meet <b>Mops</b> 🐶 — the pug behind the ops. One word gets you everything:<br>
-  just say what you need — or <code>/multica-ops:status</code>
+  Meet <b>Mops</b> 🐶 — your Executive Advisor for <a href="https://multica.ai">Multica</a>.<br>
+  Say what you need; it shapes the work <b>before</b> staffing it, runs the company, and stays your console.<br>
+  Built on the platform's own primitives, not beside them — gates that name what enforces them, evidence on every claim.
 </p>
 
 <p align="center">
-  <a href="https://ai.jamillazarev.com/skills/multica-ops/overview"><img alt="Docs" src="https://img.shields.io/badge/docs-ai.jamillazarev.com-black"></a>
-  <a href="https://ai.jamillazarev.com/skills/multica-ops/changelog"><img alt="Release" src="https://img.shields.io/github/v/release/jamillazarev/multica-ops?color=black"></a>
-  <a href="LICENSE"><img alt="Apache-2.0" src="https://img.shields.io/badge/license-Apache--2.0-black"></a>
+  <a href="https://ai.jamillazarev.com/skills/multica-ops/overview"><img alt="docs" src="https://img.shields.io/badge/docs-ai.jamillazarev.com-black"></a>
+  <a href="https://github.com/jamillazarev/multica-ops/releases/latest"><img alt="release" src="https://img.shields.io/github/v/release/jamillazarev/multica-ops?label=release&amp;color=black"></a>
+  <a href="LICENSE"><img alt="license" src="https://img.shields.io/github/license/jamillazarev/multica-ops?label=license&amp;color=black"></a>
+  <a href="https://github.com/jamillazarev/multica-ops/actions/workflows/preflight.yml?query=branch%3Amain"><img alt="preflight" src="https://github.com/jamillazarev/multica-ops/actions/workflows/preflight.yml/badge.svg?branch=main"></a>
+  <a href="https://ai.jamillazarev.com/skills/multica-ops/coverage"><img alt="coverage map" src="https://img.shields.io/badge/coverage-map-black"></a>
 </p>
 
-**Your Executive Advisor for [Multica](https://multica.ai)** — a skill that builds and
-runs an autonomous company of AI agents: meets you at whatever you have — a blank slate, a live workspace, a Linear backlog, or just
-a list of tasks — and routes you without making you pick a command. It shapes the work before
-staffing it, runs a full company (conductor/PM, squads, skills, gates) **or** a plain crew
-with no manager when that's all you want, and stays your console: status, recovery after
-limits, features, roadmap, hiring, upgrades.
+---
 
-## Install
+Most "agent team" tooling is a prompt and a hope. This is **an operations department in
+markdown, sitting on a real platform** — Multica owns the issues, agents, squads, stage barriers
+and runs; this skill owns the method that uses them. Sixteen trigger-loaded files you can read,
+diff and delete, **including the parts it admits nothing enforces**.
 
-**Every route below was run end to end — measured, not assumed** (the harness installs on
-2026-07-31, the Multica import re-measured 2026-08-01).
+---
 
-**Any agent (universal, via [skills.sh](https://skills.sh)):**
-```sh
-npx skills add jamillazarev/multica-ops
-```
-The installer detects your harnesses and installs where you choose — Claude Code,
-Cursor, Codex, Windsurf, Gemini CLI, Copilot, Cline, opencode, Zed and more. It lands the
-corpus in **`~/.agents/skills/multica-ops`** and symlinks it into each harness that reads
-its own path.
+## One minute in
 
-**Claude Code as a plugin (slash commands):**
 ```sh
 claude plugin marketplace add jamillazarev/multica-ops
 claude plugin install multica-ops@multica-ops
 ```
-Two commands, two steps. **In-session, `/plugin` opens the same thing as a menu** — there,
-paste **only the source** (`jamillazarev/multica-ops`) into its *Add Marketplace* field, then
-install from the list; pasting both lines into that one field is an error it hands straight
-back. **Pick one route per harness, not both.** The **plugin manifest (`.claude-plugin/`) sits at
-the repository root** while the corpus sits in `skills/mops/`, and a skills.sh install names the
-*repository* rather than a folder — so it copies the manifest along with everything else, Claude
-Code sees two plugins of one name, and **the installed plugin wins while the copy reads "not
-loaded"** (measured 2026-07-31). That is the tidy case: no duplicate commands, and the skills.sh
-copy still serves every *other* harness from `~/.agents/skills/`. Remove
-`~/.claude/skills/multica-ops` if you want the message gone.
 
-**Gemini CLI · Google Antigravity · Codex** — the same directory carries their manifests:
-```sh
-gemini extensions install https://github.com/jamillazarev/multica-ops
-```
-For Antigravity, place the repository at `~/.gemini/config/plugins/multica-ops/`; `rules/` keeps
-the four owner-gated kinds always-on there, and `GEMINI.md` does the same for Gemini CLI. Codex
-reads `.codex-plugin/plugin.json`. **All of these need a shell that can run the `multica` CLI** —
-without it the skill loads but cannot act, which is worth knowing before you install it somewhere
-it cannot work. Verification per runtime: see the table in this file's install notes.
+Then say what you need — no command required, any language. Mops runs day zero itself
+(installed · signed in · a workspace · daemon up · runtimes), reports the whole ladder at once
+with the fixes, and takes the right entrance:
 
-**Into a Multica workspace (as an agent skill):**
-```sh
-multica skill import --url github.com/jamillazarev/multica-ops/tree/v0.3.3/skills/mops
-```
-**The URL must point at the folder that contains `SKILL.md` — here, `skills/mops`.** The
-repository root does not work: it answers *"The Multica service is temporarily unavailable
-(server error)"*, which is the CLI mislabelling a 502 (`--debug` shows the truth). Measured all
-three ways on 2026-08-01 — the root failed, `…/tree/main/skills/mops` imported, and
-`…/tree/v0.1.0/skills/mops` imported with `"ref": "v0.1.0"` recorded in its origin block.
-**The line above pins a tag rather than `main` on purpose**: an import becomes agent
-instructions, so a moving ref means the content behind your agents can change without you
-moving. A tag cannot. Preflight fails if this line drifts from the released version.
-
-Then just say what you need. In Claude Code the commands arrive **namespaced** —
-`/multica-ops:status`, `/multica-ops:ship`, and `/multica-ops:mops <anything>` as the free-text
-front door — because that is how plugin commands always work: the prefix is what stops two
-plugins colliding over one verb. Everywhere else — Cursor, Codex, Windsurf and the rest — there
-are no slash commands and none are needed: plain language reaches every flow, and so does the
-plain word ("mops, status").
-
-### First run — you don't need to know a command
-
-Say what you're making, or just type **`/multica-ops:mops`** on its own (or "hi", or "where do I
-start?"). That is the front door, not an error: Mops checks your setup — installed · signed
-in · a workspace · daemon up · runtimes — reports it as one list with the fixes, then asks
-three questions and routes you itself. Nobody picks a command.
-
-The ways in, if you like to see them:
-
-| You have | You want | You get |
-|---|---|---|
-| nothing yet | a team | **`/multica-ops:init`** — the work is shaped first, then staffed |
-| a Multica workspace | it continued | **`/multica-ops:join`** — audit, then fixes in batches you approve |
-| a backlog in Linear/Jira | it moved here | **`/multica-ops:import`**, then crew mode |
-| a question, nothing to build | an answer, not a company | **`/multica-ops:consult`** — advice, no machinery unless it leads there |
-| a list of tasks, no tracker | them done, you set the order | **`/multica-ops:mops crew`** — executors and gates, no PM layer |
-| one job, no team | it done | a **quick job** (`/multica-ops:quick`) — three questions, no machinery |
-
-### Updating
-
-Ask Mops **"is there a new version?"** or run **`/multica-ops:upgrade`**. Mops fetches the new bytes
-itself (it has your shell). **New content applies the next time a file is read** — you only need to
-**restart Claude Code** when the update adds or renames a command, or changes a hook, since those
-are registered at session start — **and Mops reads the changelog, so it tells you which case this
-one is** rather than leaving you to guess. (Restarting doesn't lose the conversation: `claude --continue`
-resumes it, at the cost of re-reading it into context.)
-
-It then migrates your workspace, re-screens imported skills, and offers the CLI update
-**only when the team is idle**. *Update* = new bytes arrive; *upgrade* = your workspace
-moves onto them.
-
-> **Can't run `/multica-ops:upgrade`?** If it says *unknown command*,
-> your install has **no slash commands**: an older version, or a `skills.sh` install rather
-> than a Claude Code plugin (slash commands are a plugin feature). **Just say "upgrade"** or
-> **"is there a new version?"** — plain language reaches the flow on *any* install, which is
-> why it's the path that never breaks.
-
-## What's inside
-
-**Manual (any agent that reads files):**
-```sh
-git clone https://github.com/jamillazarev/multica-ops
-# point your agent at skills/mops/SKILL.md — AGENTS.md routes agents that land in the repo
-```
-
-
-## Why this exists
-
-Most "agent team" tooling is a prompt and a hope. This is a **methodology with gates**, and the
-parts worth trusting are the ones you can check:
-
-- **Every decision runs one loop.** Frame it, **search — don't recall** (options, prices and docs
-  fetched now, each claim sourced), compare, choose and say why, then check the choice survives
-  being wrong; record it in `docs/DECISIONS.md`. Prioritisation, tool selection, the role-builder and
-  process discovery are all that one loop — named once so it is followed, not reinvented each time.
-- **Every claim carries how it is known** — **measured · cited · recalled · a judgement call**,
-  or `unknown` when none applies — and the rung travels with the claim, so one agent cannot
-  promote another's guess into a fact by quoting it. An argument with no source is called an
-  opinion. Running the skill on itself, an executor **caught three stale upstream facts** before
-  they shipped and a persona review **caught a doc contradiction and routed around it**: the
-  method finds its own errors, which is the whole reason to build it this way.
-- **It adopts its own improvements.** A merge to the skill triggers guards → wait for idle →
-  re-import, so the team runs on its own latest version instead of a stale copy — the self-adoption
-  loop, dogfooded on this repo.
-- **Native-first, not a parallel universe.** Squads, stage barriers, @mention handoffs, permissions
-  and branch protection are Multica's real primitives; when the platform already does a thing the
-  skill uses it, rather than growing a home-grown copy that drifts.
-- **Honest about the ceiling.** The caps are stated, not wished away: **6 tasks per agent, 20 per
-  daemon** (the tighter wins), a `local_directory` serialises regardless, and `workspace delete`
-  isn't in the CLI — so Mops says so instead of promising it. Every number carries its check-date.
-- **Regression-tested behaviour, and the runs are on record.** **22 stratified eval scenarios** —
-  from a job too small to deserve a company to an import carrying a hidden instruction — judged on
-  the end state, not the route, by a judge that did not write the transcript and a player that
-  never saw the rubric. Each release records its run in **`evals/runs/<version>.md`** with
-  `not run` listed rather than omitted, so a green release is a claim you can check rather than
-  one you take on trust; a minor or major is not tagged without one. Reviews route **away from the
-  author, ideally onto a different provider**, because a model grades its own work generously.
-  And one number is deliberately **not** treated as success: the eval pass-rate. It tells you
-  whether behaviour got worse than it was — a regression detector, not evidence that it was ever
-  good.
-- **Gates say what actually holds them.** Every rule that matters carries an honest
-  `enforced_by` — a request a human must answer, a validator that refuses, branch protection,
-  the Multica platform itself, **or `prose-only`, which means nothing enforces it** — and the
-  prose-only rules are listed by name (PLAYBOOKS → Gates), because a gate believed in but not
-  enforced is worse than a stated rule.
-- **The subsystems compound.** The parts feed each other, and the ones that already do are worth
-  naming: a **stumble becomes a field note becomes a backlog item becomes a release** (the
-  dogfood loop); an **eval scenario hardens into a rule** the moment a weaker
-  model ignores the prose (an earlier regression gate re-formed exactly that); and the
-  **self-adoption gate** puts each such fix onto the next build instead of a shelf. New
-  subsystems join that mesh as they ship — described here when they do, not before.
-
-And the operational grind it removes: setup that eats the first week, the operator bottleneck
-(a conductor drives the conveyor, an optional resident Mops covers when you're away), session
-limits that stall silently, teams that can't grow themselves, knowledge scattered across chats,
-a backlog stranded in Linear/Jira, and one-size machinery forced onto a job that didn't want it —
-each is a capability below, not a promise here.
-
-
-## It finds the right *process*, not just the right tool
-
-Ask it to design an app and it doesn't guess: it researches how that craft actually works —
-information architecture, user flows, low-fi wireframes, **your approval of the structure**, then
-high-fidelity screens composed from a real component library rather than hand-written HTML — shows
-you the process so you can cut or add steps, and finds a skill or tool for each. The same
-**process discovery** runs for a launch, a migration or a content pipeline: anywhere there is a
-"how", so the team doesn't improvise and hand you gradient placeholders. And the design gate
-*rejects* bad work instead of rubber-stamping it — Mops never signs off design itself, you do, at
-the checkpoint your control level set.
-
-## Two seats, one advisor
-
-Mops is **one advisor with one name**, reachable in two places. **In the CLI** — where you build:
-full machine reach (shell, git, the `multica` CLI, deploy), instant chat, its own quota. **In
-Multica** — an optional resident agent carrying this same skill, present in the workspace while
-you are away from the console: async, sharing the team's session limit, best for status, `@Mops`
-advice on an issue, and being the escalation vertex. They do not share live chat memory and you
-cannot write into an agent's chat, so **the bridge is written state** — the repo and issue
-comments. The test that keeps it honest: the project must rebuild from repo + workspace alone.
-
-## Works beyond Claude Code
-
-The skill is plain **SKILL.md + markdown** — the Agent Skills convention. The
-[skills.sh](https://skills.sh) installer puts it into Claude Code, Cursor, Codex, Windsurf,
-Gemini CLI, Copilot and the rest of the skills.sh roster; `AGENTS.md` routes any agent that
-lands in the repo. Slash commands are a Claude Code plugin bonus (namespaced: `/multica-ops:mops …`) — everywhere else,
-natural language runs the same flows. Listing on skills.sh is automatic: it appears
-via telemetry on the first `npx skills add jamillazarev/multica-ops`.
-
-> Note on layout: the corpus lives at **`skills/mops/SKILL.md`**, one folder per verb beside it
-> (`skills/init/`, `skills/ship/`…) — the plugin layout Claude Code specifies, where **the folder
-> name becomes the command**: `skills/init/` is `/multica-ops:init`. A single `SKILL.md` at the
-> repository root is the *one-skill* form, and it silently suppresses every other command — which
-> is exactly the defect this layout fixes (measured 2026-07-31). None of this is related to the
-> *workspace monorepo* the skill recommends for YOUR projects (`apps/ site/ marketing/ docs/`) —
-> that guidance lives in [BOOTSTRAP.md §14](BOOTSTRAP.md).
-
-## Why a skill, not another CLI agent
-
-Why not ship Mops as a standalone binary with its own agent loop — a Hermes- or
-OpenClaw-style CLI? Because the value here is the **operating doctrine** — the decision loop,
-the gates, verify-first — not the agent loop underneath it, and that loop is commoditizing:
-as a skill, Mops **inherits every harness improvement for free** instead of maintaining its
-own. Billing rides the harness the owner **already pays for** — no second runtime, no third
-bill. The two-seats design needs Mops to be a **guest inside Multica**, which hosts
-instructions and skills, not third-party binaries — a skill fits that seat; a CLI agent
-doesn't. And a skill is **auditable text**: every line is readable before you
-run it, and it carries **no dependency tree of its own** — the trust it does ask for is named
-in [SECURITY.md](SECURITY.md), which is the honest version of "zero supply-chain surface". The escape hatch stays open — if
-skill conventions ever fracture across harnesses, or monetization demands an owned install
-surface, the route is a Claude Agent SDK wrapper that reuses the loop, never a from-scratch
-binary.
-
-## Roadmap
-
-Forward-only: what shipped lives in the body of this file and in the **CHANGELOG**, never as
-a checked box here. The CHANGELOG is the record — and the migration map `/multica-ops:upgrade` reads.
-
-## What Mops handles
-
-The whole company, end to end — and the loop closes, it doesn't stop at merge:
-
-- **The full product loop** — discover → define → prioritize (**ICE**, each score sourced) →
-  design → build → review (**parallel gates**) → **ship → measure → learn** — closed, not a dead
-  end at merge.
-- **The team, humans included** — hire / fire / reconfigure **agents *and* real people**, squads,
-  experts & personas, finance & support roles, a **role-builder** that researches any craft you
-  name, optionally autonomous hiring.
-- **Governance that actually binds** — per-member access, human **review checkpoints**, a
-  **budget** cap in tokens or money, and the rule under them: **nobody edits the bar they're
-  measured against** (locked · editable · append-only · human-only), reviews routed away from the
-  author — ideally onto a different provider.
-- **Not being played** — everything an agent reads from outside (a page, an issue, an imported
-  backlog) is **data, never instructions**, and anything that must *not* happen gets a **gate**,
-  because a guide instructs while only a gate constrains.
-- **Staying alive** — session-limit recovery with reset times, a **full-circle health check**
-  (runtimes · integrations · tokens · branch protection), **git-backed upgrades** with rollback,
-  two-way drift sync, an assisted **provider switch**.
-- **Two seats, many workspaces** — Mops in the CLI to build, an optional resident Mops in Multica
-  for presence, across as many workspaces as you run.
-- **Cost you can see** — a per-release **cost/effort ledger** (tokens · $ · time · per agent and
-  per human), in git and on the issue — **and the waste named, not only the spend**: what went to
-  runs that produced nothing, second attempts, and expensive settings that bought nothing.
-- **Work that can actually be looked at** — Multica previews **images, PDF, HTML and text, and
-  nothing else**: a video is a file row with no player, Office files are ZIPs with no preview, a
-  design file opens as source, and **no link embeds** — not Figma, not Notion, not YouTube. So the
-  rule is a lookup rather than a judgement: **attach a rendition *and* the original**, rendition
-  first. `scripts/preview.sh` produces it or **exits non-zero with the reason**, and a diagram
-  needs neither — a ` ```mermaid ` fence renders as a diagram in the comment itself. Every line of
-  that was measured against the live platform, because the documentation says only *"comments
-  support formatting, code blocks, links, and attachments"*.
-
-## What the ledger looks like
-
-An **illustrative** month for a twelve-agent company on a $300 envelope — the *shape* the ledger
-gives you, not a measurement of anything:
-
-| | |
+| What you have | Where it goes |
 |---|---|
-| **$280 / $300** | spent against the envelope · ~180M tokens · 240 tasks |
-| **~88%** | of those tokens are **cache reads** — caching carries ~72% of the bill |
-| **per agent** | who burned what is itemized, so an expensive role is visible rather than suspected |
-| **per feature** | model and service cost divided by what actually shipped |
+| nothing yet | the work is shaped first, then staffed — `/multica-ops:init` |
+| a Multica workspace already | an audit, then fixes in batches you approve — `/multica-ops:join` |
+| a backlog in Linear or Jira | a mapping shown before anything is written — `/multica-ops:import` |
+| a list of tasks and no tracker | executors and gates, no PM layer — `/multica-ops:mops crew` |
+| one job, no team | three questions and none of the machinery — `/multica-ops:quick` |
+| a question | an answer, and nothing is created — `/multica-ops:consult` |
 
-Every number above is made up to show the columns; **your numbers come from `issue usage` and
-`runtime usage`** at list prices, written into `docs/analytics/<release>.md` and onto the issue,
-so *"what did this feature cost"* has an answer. A shrinking budget re-proposes the stack instead
-of only raising an alarm.
+**Two questions are never skipped** — how much you want to be in the loop, and what you are
+actually expert in. Everything else has a default good enough to leave alone, and **"defaults"**
+takes all of them at once.
+
+Every other install route — skills.sh for any harness, Gemini CLI, Codex, Antigravity, and
+importing the skill into a Multica workspace — is in **[INSTALL.md](INSTALL.md)**, each measured
+end to end rather than assumed.
+
+---
+
+## Different, by design
+
+- **Native-first, not a parallel universe.** Squads, stage barriers, @mention handoffs,
+  permissions and branch protection are Multica's real primitives; where the platform already
+  does a thing, the skill uses it instead of growing a copy that drifts.
+- **The work is shaped before it is staffed** — a team proposed for work nobody scoped is how
+  you get twelve agents and no product.
+- **Gates say what actually holds them** — a request a human answers, a validator that refuses,
+  branch protection, the platform itself, **or `prose-only`, which means nothing does** — and
+  the prose-only rules are listed by name. A gate believed in but not enforced is worse than a
+  stated rule.
+- **Every claim carries how it is known** — measured · cited · recalled · a judgement call, or
+  `unknown` — and the rung travels with the claim, so nobody promotes another's guess into a
+  fact by quoting it.
+- **Every decision runs one loop** — frame it, **search rather than recall**, compare, choose
+  and say why, then check it survives being wrong. Prioritisation, tool choice, the role-builder
+  and process discovery are all that same loop.
+- **It finds the right *process*, not just the right tool.** Asked to design an app it
+  researches how the craft works — architecture, flows, low-fi, **your approval of the
+  structure**, then screens composed from a real component library — and the design gate
+  *rejects* instead of rubber-stamping. Mops never signs off design; you do.
+- **"Remember this" lands in a file, never in the chat's memory** — a guide line, a decision, a
+  register — and the home is named back to you.
+- **A persona is not a hire.** Synthetic rounds give **direction, never magnitude**, said before
+  anything is spent; 🎭 entities are excluded from headcount and billed to their own line.
+- **Cost is sliced so waste is a number, not a feeling** — per agent, per feature, and *spent on
+  work that produced nothing*, all from `issue usage` and `runtime usage` at list prices.
+- **A run that dies resumes** — what was committed, applied and remains is read back from the
+  record, and **applied work is never redone**.
+- **Autonomy is earned and can go down**, and no history buys the four gated kinds — spending,
+  outward acts, destruction, reshaping the team.
+- **It knows when the tree is not its own.** `_ops/` is a door shared with the sibling project
+  `opsinist`, deliberately — a successor finds the predecessor's record where it would have put
+  its own. So ownership is read from a marker before anything is written, and a tree operated by
+  another system is **named and handed back, untouched**.
+- **It works outside software** — *ship* is an episode published, a batch sent, a letter mailed;
+  a bakery has no deploys.
+- **It maintains itself through its own machinery** — proposed, never self-merged, with
+  validators in CI refusing what prose cannot.
+
+The full inventory lives in **[the docs](https://ai.jamillazarev.com/skills/multica-ops/overview)**:
+start at [the skill](https://ai.jamillazarev.com/skills/multica-ops/the-skill), then
+[use cases](https://ai.jamillazarev.com/skills/multica-ops/use-cases) and
+[commands](https://ai.jamillazarev.com/skills/multica-ops/commands).
+
+---
+
+## Honest about the ceiling
+
+Stated rather than wished away — every number carries where it came from:
+
+| Limit | What it means | How it is known |
+|---|---|---|
+| **6 tasks per agent · 20 per daemon** | the tighter one wins; fan-out past it just queues | measured |
+| **a `local_directory` serialises** | one task at a time, forever, however wide you decompose | cited (REFERENCE §object model) |
+| **`workspace delete` is not in the CLI** | Mops cannot remove a workspace it created, and says so | measured, CLI v0.4.12 |
+| **autopilot failures are silent** | no auto-retry, no inbox post — run them in `create_issue` mode and subscribe the owner | measured |
+| **start dates are enforced by the team** | nothing on the platform stops an agent beginning early | cited |
+| **some rules are `prose-only`** | nothing enforces them; they are listed by name rather than believed in | measured |
+
+**25 stratified eval scenarios** — from a job too small to deserve a company to an import
+carrying a hidden instruction — judge the **end state, not the route**, with a player that never
+saw the rubric and a judge that did not write the transcript. Each release records its run in
+`evals/runs/<version>.md` with `not run` listed rather than omitted, and **a minor or major is
+not tagged without one**. The pass-rate is deliberately **not** treated as success: it detects
+regression, it is not evidence the behaviour was ever good.
+
+---
 
 ## How you would know it is working
 
-**Success here shows up as an absence.** Nothing was decided twice. Nothing was rebuilt that was
-already built. No bill arrived that nobody saw coming. Nobody asked *"who chose this, and why?"*
-and got silence. A system like this is invisible when it works and obvious when it fails — which
-is exactly why it is tempting to measure something showier instead. The tests worth being judged
-on:
+**Success here shows up as an absence.** Nothing decided twice. Nothing rebuilt that was already
+built. No bill nobody saw coming. Nobody asking *"who chose this, and why?"* and getting silence.
+The tests worth being judged on:
 
-- **Can a stranger continue?** Hand the repo + workspace to someone who was not there, give them
-  a task. If they can pick it up without asking what was meant, the record is real.
-- **Did the dead run resume?** Of the runs that hit a limit: how many came back and finished
-  **without redoing work that was already applied**. That claim is on the box.
-- **Is the waste share falling?** Cost is sliced so *spent on work that produced nothing* is a
-  number, not a feeling. Over time it should go down.
-- **How often do you go behind it?** Re-reading the diff because you don't believe "done",
-  recounting the cost, re-checking the board — each is a failure even when every gate is green,
-  because **a console you audit is not a console**.
+- **Can a stranger continue?** Hand over the repo and the workspace, give them a task. If they
+  can start without asking what was meant, the record is real.
+- **Did the dead run resume** without redoing work that was already applied?
+- **Is the waste share falling?**
+- **How often do you go behind it** — re-reading the diff because you don't believe "done"?
+  Each time is a failure even with every gate green, because **a console you audit is not a
+  console.**
 
-## Known limits
+---
 
-Stated rather than wished away, each with its check-date where it can move:
+## Two seats, one advisor
 
-- **Platform caps**: 6 tasks per agent, 20 per daemon (the tighter wins); a `local_directory`
-  resource **serialises regardless** of how wide you fan out.
-- **`workspace delete` is not in the CLI** — Mops says so instead of promising it.
-- **Autopilot failures are silent** — no auto-retry, no inbox post; run them in `create_issue`
-  mode and subscribe the owner, or a broken one goes unnoticed indefinitely.
-- **Start dates are enforced by the team, not the platform** — nothing stops an agent beginning
-  early except the guide rule and the conductor's check.
-- **Some rules are prose-only** — nothing enforces them, and they are listed by name
-  (PLAYBOOKS → Gates) rather than left to be believed in.
+Mops is one advisor with one name, in two places. **In the CLI** — full machine reach (shell,
+git, the `multica` CLI, deploy), instant chat, its own quota. **In Multica** — an optional
+resident agent carrying this same skill, present while you are away: async, sharing the team's
+session limit, best for status and `@Mops` advice on an issue. They share no live chat memory,
+so **the bridge is written state**. The test that keeps it honest: the project must rebuild from
+repo + workspace alone.
+
+## Works beyond Claude Code
+
+Plain **SKILL.md + markdown** — the Agent Skills convention. [skills.sh](https://skills.sh)
+installs it into Claude Code, Cursor, Codex, Windsurf, Gemini CLI, Copilot and the rest;
+**[AGENTS.md](AGENTS.md)** routes any agent that lands in the repo, **[GEMINI.md](GEMINI.md)**
+does the same for Gemini CLI, and **[CLAUDE.md](CLAUDE.md)** carries the session loop for anyone
+*developing* the skill rather than using it. Slash commands are a Claude Code plugin bonus
+(namespaced `/multica-ops:…`); everywhere else plain language reaches the same flows.
+
+> **Layout note:** the corpus is at **`skills/mops/SKILL.md`**, one folder per verb beside it —
+> the plugin layout where **the folder name becomes the command** (`skills/init/` →
+> `/multica-ops:init`). A single `SKILL.md` at the repository root is the *one-skill* form and
+> silently suppresses every other command, which is the defect this layout fixes (measured
+> 2026-07-31).
+
+## Why a skill, not another CLI agent
+
+The value is the **operating doctrine** — the decision loop, the gates, verify-first — not the
+agent loop underneath it, and that loop is commoditising: as a skill, Mops inherits every harness
+improvement for free and bills through the harness you **already pay for**. The two-seats design
+needs Mops to be a guest *inside* Multica, which hosts instructions and skills, not third-party
+binaries. And a skill is **auditable text** with no dependency tree of its own — the trust it
+does ask for is named in **[SECURITY.md](SECURITY.md)**.
+
+---
 
 ## What's inside
 
 | File | Purpose |
 |---|---|
 | [SKILL.md](skills/mops/SKILL.md) | **the always-loaded core** — interview → stand up → conveyor → console |
-| [INSTALL.md](INSTALL.md) | getting started, step by step — install, day zero, first run, updating |
-| [SECURITY.md](SECURITY.md) | what this reaches, what is gated, what is `prose-only` — written for whoever audits it |
-| [scripts/preview.sh](scripts/preview.sh) | makes a file visible in Multica, or refuses with a named reason — the attachment rule as a script rather than a request |
-| [GLOSSARY.md](GLOSSARY.md) | one word, one meaning — and the pairs that look alike and are not |
-| [PATTERNS.md](PATTERNS.md) | the recurring forms, named once — a rule that instantiates one cites it and stops |
+| [INSTALL.md](INSTALL.md) | every install route, day zero, first run, updating |
+| [SECURITY.md](SECURITY.md) | what this reaches, what is gated, what is `prose-only` |
+| [COMMANDS.md](COMMANDS.md) | every command, its aliases, and the surface it runs best on |
 | [USE-CASES.md](USE-CASES.md) | situation → what to say → which command |
-| [EXAMPLES.md](EXAMPLES.md) | worked examples — the same issue, handoff, review or ledger done weakly and done well |
-| [COMMANDS.md](COMMANDS.md) | every command, its aliases and the surface it runs best on |
-| [STACKS.md](STACKS.md) | services, libraries, audio/DSP, testing, security, reference galleries |
-| [MODULES.md](MODULES.md) | opt-in modules: design work · design system · brand · persona theatre · tracker bridge · HQ |
-| [FLOWS.md](FLOWS.md) | the full procedures for `/multica-ops:init`, `/multica-ops:join`, `/multica-ops:mops health`, `/multica-ops:upgrade`, `/multica-ops:mops switch` |
+| [EXAMPLES.md](EXAMPLES.md) | the same issue, handoff, review or ledger done weakly and done well |
+| [GLOSSARY.md](GLOSSARY.md) | one word, one meaning — and the pairs that look alike and are not |
+| [PATTERNS.md](PATTERNS.md) | the recurring forms, named once |
+| [FLOWS.md](FLOWS.md) | the full procedures — init, join, health, upgrade, switch |
 | [BOOTSTRAP.md](BOOTSTRAP.md) | zero-to-team CLI recipes, capacity levers, real-hours traps |
-| [ROLES.md](ROLES.md) | role catalog with curated skill packs + generic role-builder |
+| [ROLES.md](ROLES.md) | role catalog with curated skill packs + the generic role-builder |
 | [PLAYBOOKS.md](PLAYBOOKS.md) | daily operations, copy-paste ready |
+| [STACKS.md](STACKS.md) | services, libraries, testing, security, evidence and reference shelves |
+| [MODULES.md](MODULES.md) | opt-in: design work · design system · brand · persona theatre · tracker bridge · HQ |
 | [REFERENCE.md](REFERENCE.md) | object model, anti-patterns, **CLI surface (§10)**, **frameworks (§11)** |
 | [WORKFLOW.md](WORKFLOW.md) | Mermaid diagrams of the whole process |
-| [CHANGELOG.md](CHANGELOG.md) | versioned history — the migration map for `/multica-ops:upgrade` |
-| [BUDGET template](templates/BUDGET-template.md) | envelope · currency · credits with expiries · prices on record |
-| [evals/](evals/) | stratified scenarios — from a job too small to deserve a company to an import carrying a hidden instruction — plus `runs/`, the recorded verdicts per release |
-| [templates/](templates/) · [scripts/](scripts/) | guide · roadmap · brand · component docs · **decisions log · architecture map · tooling register · team roster** · **a docs guard for the companies Mops builds** · ops helpers · **resumable backlog import** |
+| [CHANGELOG.md](CHANGELOG.md) | versioned history — the migration map `/multica-ops:upgrade` reads |
+| [evals/](evals/) | the 25 scenarios, plus `runs/` — the recorded verdicts per release |
+| [templates/](templates/) · [scripts/](scripts/) | guide · roadmap · brand · component docs · decisions · architecture · tooling · team · **a docs guard for the companies Mops builds** · ops helpers · resumable backlog import |
 
-Contributing? Run **`bash scripts/preflight.sh --install`** once. The pre-commit hook holds
-the invariants that this repo has actually broken before: version sync, the CHANGELOG entry
-(it is the migration map for `/multica-ops:upgrade`), README completeness, internal links, one-level-deep
-references, the token budget on the always-loaded core, command↔file↔dispatcher coherence,
-use-case coverage, and — via **`scripts/check-structure.py`** — table column counts, list
-indentation, words a reflow tool broke across lines, counts that no longer match their list,
-mermaid blocks that don't close, skeleton files with no template, repeated sentences, and
-every `multica …` command the docs promise actually existing in the installed CLI.
+Everything but `skills/mops/SKILL.md` loads **only when its trigger fires**.
 
-What the hook cannot do is check whether a claim is still **true**. That is
-**`scripts/verify.py`**, run against the world rather than the text:
+**Contributing?** Run **`bash scripts/preflight.sh --install`** once — the pre-commit hook holds
+the invariants this repo has actually broken before, and **[AGENTS.md](AGENTS.md)** is the
+contract. What no hook can check is whether a claim is still *true*; that is `verify.py`, run
+against the world rather than the text:
 
 ```sh
-python3 scripts/verify.py             # every documented command + flag exists in the CLI
-python3 scripts/verify.py --sources   # every URL and skill-pack source still resolves
-python3 scripts/verify.py --live      # the read-only CLI surface actually runs and parses
+python3 scripts/verify.py --live
 ```
 
-`--live` executes reads only — never a create, update, assign or delete — so it is safe to
-run against a real workspace, and it is where a changed output format or a broken pagination
-assumption shows up before a user finds it. Whether a *paragraph* is still true stays a
-reading job; these two scripts remove the mechanical excuses for it going stale.
+`--live` executes reads only — never a create, update, assign or delete — so it is safe against
+a real workspace.
 
-Everything but `skills/mops/SKILL.md` loads **only when its trigger fires** — the skill keeps its
-always-on footprint small (see the load-routing table in SKILL.md).
+## Roadmap
 
-Works against **Multica cloud or a self-hosted server** (`multica setup self-host`) —
-execution is local either way, so only backups and upgrades change hands.
+Forward-only: what shipped lives in the body of this file and in the
+[CHANGELOG](CHANGELOG.md), never as a checked box here.
 
-Verified with `multica` CLI v0.4.12. Code is **[Apache-2.0](LICENSE)**; the names "Mops" /
-"multica-ops" and the avatar are reserved — see **[TRADEMARKS.md](TRADEMARKS.md)**.
+---
+
+Works against **Multica cloud or a self-hosted server** — execution is local either way, so only
+backups and upgrades change hands. Verified with `multica` CLI v0.4.12. Code is
+**[Apache-2.0](LICENSE)**; the names "Mops" / "multica-ops" and the avatar are reserved — see
+**[TRADEMARKS.md](TRADEMARKS.md)**.

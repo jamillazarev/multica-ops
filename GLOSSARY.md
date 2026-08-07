@@ -14,16 +14,17 @@ it; a term used in one file is that file's business.
 | **rerun** · **retry** | a CLI `issue rerun` **starts fresh and resets the attempt counter**; a per-row retry in the app **resumes the session and reuses the working directory** | fresh after corrupt state, resume when it's cheaper |
 | **threshold** · **cap** | a threshold **asks before an action** above it; a cap **stops when a total is reached** | before each, or at the sum? |
 | **grade** · **model tier** | grade is a **routing fact in `TEAM.md`** — who gets the work; the tier is **what the agent runs on**. Grade never enters instructions as an identity | is it about routing, or about compute? |
+| **project resource** (Multica) · **shelf** (ours) | Multica's is a **thing agents work on** — a `github_repo` or a `local_directory` bound to a project, and a workspace has none; ours is a **place you look something up** — a STACKS row, `_ops/TOOLING.md`, `sources/SOURCES.md` (FLOWS → *a shelf serves every flow*) | can an agent be dispatched against it, or do you read it? |
 | **Access** (Multica) · **`/multica-ops:mops access`** | Multica's: **who may run this agent** (`--permission-mode`); ours: **what a member may direct Mops to do** | whose setting is it — the platform's or the methodology's? |
 | **conductor** · **Mops** | the conductor **plans and accepts work** (project lead, in the conveyor); Mops **advises and builds the machinery** (never assigned a task) | does it hold work? |
 | **crew** · **quick job** | crew = **a standing team without a conductor** — the owner is the PM; a quick job = **1–2 agents, build → review, none of the machinery, then done** | does anything stand after the work ships? |
-| **consult** · **research** | consult is **ephemeral advice, zero standing footprint**; `/multica-ops:mops research` **persists cited findings** to `docs/research/` | does anything land in the repo? |
+| **consult** · **research** | consult is **ephemeral advice, zero standing footprint**; `/multica-ops:mops research` **persists cited findings** to `_ops/research/` | does anything land in the repo? |
 | **module** · **skill** | a module is an **optional capability of the company** (design system, brand, theatre); a skill is **text an agent loads** | toggled for the company, or attached to an agent? |
 | **workspace** · **project** | the workspace is **the company** (agents, skills, limits are shared here); a project is **a direction inside it** (app, site, marketing) | do agents cross it? |
 | **stage** · **nesting** | `--stage N` is **a number on a sub-issue** — a barrier ordering siblings; nesting is **issue → sub-issue, exactly two levels** | a barrier, or a level? |
 | **expert** · **persona** | an expert is **consulted and cites sources** (or *is* the source, when live); a persona **reacts as the audience** — direction-only, 🎭-marked, never a hire | does it advise, or simulate? |
 | **blocked** (board) · **stuck** (run) | `blocked` is **a status someone set, with a reason**; stuck is **a failed run** (`agent_error`, limits) that rolled the issue back | a decision, or a failure? |
-| **architecture map** · **product map** | `docs/ARCHITECTURE.md` is **where the implementation lives** — a worker's map of the tree; `docs/MAP.md` is **how the product is walked** — the moves and the things, in the product's own words (`/multica-ops:mops map`) | does it name files, or moves? |
+| **architecture map** · **product map** | `_ops/ARCHITECTURE.md` is **where the implementation lives** — a worker's map of the tree; `_ops/MAP.md` is **how the product is walked** — the moves and the things, in the product's own words (`/multica-ops:mops map`) | does it name files, or moves? |
 | **verified/recalled/unknown** · **measured/cited/recalled/judgement** | **one scale, not two — the three-way labelling is retired.** Claims carry measured › cited › recalled › judgement call, plus `unknown` | — |
 | **migration** · **adoption** | a migration moves what a workspace **already has** onto a newer shape; an adoption is taking up something it **never used**, which a release can make load-bearing. The first is applied on approval; the second is **offered with its price and may be declined for good** | is there something to convert, or something to start? |
 | **update** · **upgrade** *(bytes vs workspace)* | new bytes arriving on the machine is not the workspace moving onto them — **swapping the skill files is not migrating the company**, and the two are indistinguishable until `UPGRADES.md` says which happened | did anything in the workspace change? |
@@ -43,7 +44,7 @@ it; a term used in one file is that file's business.
   every gate declares its value honestly → PLAYBOOKS (Gates).
 - **waste slices** — outcome · attempt · tier · theatre/system: what was spent on work that
   produced nothing, derived from the same ledger as the spend → PLAYBOOKS (ledger).
-- **fingerprint** — the per-class hash of workspace state in `docs/.workspace-state.json`;
+- **fingerprint** — the per-class hash of workspace state in `_ops/.workspace-state.json`;
   what answers "what changed that we didn't change" → PLAYBOOKS (drift).
 - **conveyor** — the pull-based flow: conductor seeds, leaders route, stage barriers
   sequence, @-mention hands off → SKILL.

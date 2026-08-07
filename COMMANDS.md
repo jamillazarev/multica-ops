@@ -41,7 +41,7 @@ flows below (`/multica-ops:mops brand`, `/multica-ops:mops move crossfeed to the
 | `/multica-ops:hire <role\|person>` | 🖥️ | add to the team — Mops asks **agent or real person**. Agent → the role-builder. Person → `workspace member invite` (owner-confirmed, outward) → access and review checkpoints → recorded in TEAM.md |
 | `/multica-ops:fire <agent\|member>` | 🖥️ | offboard — **surface the risk first** (open issues, squad leadership, sole-owner skills, held checkpoints) → reassign → archive. **Removing a real member is the owner's own action in the Multica app**, and Mops says so |
 | `/multica-ops:audit` | 🖥️ | health **and** opportunities: token burn, limit-killed runs, tier misfits, stalled work, hygiene, mention cycles, secrets, design-system drift · **process improvements** · **integrity checks** (facts past their check-date, gates where author and reviewer coincide, edits to locked surfaces, unsourced ICE scores) · **the waste slices** (PLAYBOOKS → ledger) · **the gates table** (each `enforced_by` still true — PLAYBOOKS → Gates). Pulls in the health sweep. Output: finding → recommendation → impact |
-| `/multica-ops:report <text>` | 🖥️ | **something went wrong, or made the work harder — and you do not have to know whose defect it is.** Decided from the evidence: a defect in **your product** goes to the urgent lane (`bug`); friction in **your workspace** becomes a line in `docs/FIELD-NOTES.md`, swept at the next `audit`, an issue on the **second** occurrence with both named; friction in **this skill or Multica** is packaged from evidence, de-identified, and **written to a file outside your repository** with its path said and the routes named. **You post it, never us** |
+| `/multica-ops:report <text>` | 🖥️ | **something went wrong, or made the work harder — and you do not have to know whose defect it is.** Decided from the evidence: a defect in **your product** goes to the urgent lane (`bug`); friction in **your workspace** becomes a line in `_ops/FIELD-NOTES.md`, swept at the next `audit`, an issue on the **second** occurrence with both named; friction in **this skill or Multica** is packaged from evidence, de-identified, and **written to a file outside your repository** with its path said and the routes named. **You post it, never us** |
 | `/multica-ops:upgrade [skill\|all]` | 🖥️ | **the one command for getting current**, four layers: this skill's bytes (**Mops runs it; content applies on next read** — a restart only for a new or renamed command or a hook), the workspace migration, imported skills, and the CLI locally and on runtimes — **reported, not run**, and only when `active_task_count` is 0. Re-screen → dry-run → back up → apply → reconcile → verify/rollback, then the plain-language tour of what changed |
 | `/multica-ops:skill <create\|import\|optimize\|release>` | 🖥️ | the toolkit's lifecycle: **create** (a routine seen twice), **import** (screen for danger and injection → trim → attach with provenance), **optimize** (fail-closed compression; `NOT_COMPRESSIBLE` is a valid answer), **release** (proven → de-identified → its own repo → re-imported). PLAYBOOKS |
 | `/multica-ops:cli <command>` | 🖥️ | **raw Multica CLI escape hatch** — run or explain any `multica …` command directly, no methodology assumed. Backed by REFERENCE §10; destructive and outward commands still need owner sign-off |
@@ -56,9 +56,9 @@ session by every agent, and these are not the ones people reach for by name.
 
 - **`roadmap`** — view or rebuild the release plan, re-run ICE, release surgery (cut, extend, reprioritize). *"show me the roadmap"*
 - **`move` · `drop`** — one feature between releases or to the backlog · cancel with a reason (or park it). *"push crossfeed to the next release"*
-- **`map`** — the product as a map, not the repo as a tree: `docs/MAP.md`, the things and the moves in the product's own words, current state only, ending honestly with *not mapped yet*. *"map the product"*
+- **`map`** — the product as a map, not the repo as a tree: `_ops/MAP.md`, the things and the moves in the product's own words, current state only, ending honestly with *not mapped yet*. *"map the product"*
 - **`measure`** — pull the success metrics set at discovery, compare to target, file a **Learn** item, record the ledger. *"did it move the metric?"*
-- **`research`** — point research without a feature; cited findings land in `docs/research/`, each carrying the date it was true. *"look into how competitors price this"*
+- **`research`** — point research without a feature; cited findings land in `_ops/research/`, each carrying the date it was true. *"look into how competitors price this"*
 - **`discovery`** — spin up a fuzzy idea: research, competitors, team brainstorm → proposal. *"I'm thinking about onboarding"*
 - **`feedback`** — log an incoming signal, then triage into **accept · decline with a reason · duplicate · snooze**; declining is a normal, cheap outcome. *"a customer says export is confusing"*
 - **`process`** — discover a craft's real process, then a tool per step by function. *"how should we run this kind of work?"*
@@ -87,7 +87,7 @@ session by every agent, and these are not the ones people reach for by name.
 - **`start` · `stop`** — the local daemon. *"stop everything"*
 - **`workspace`** — list or switch the active workspace; Mops confirms which company it is acting on
 - **`switch`** — reassign runtime, model or thinking-level per agent, or an assisted whole-provider migration
-- **`connect`** — integrations: MCP registries first, study the tool, wire access, register in `docs/TOOLING.md`
+- **`connect`** — integrations: MCP registries first, study the tool, wire access, register in `_ops/TOOLING.md`
 
 In the workspace the user talks to **Mops in Multica** (subtitle *"Executive Advisor ·
 resident"*) — no commands needed, plain chat; it answers status-style questions natively and,

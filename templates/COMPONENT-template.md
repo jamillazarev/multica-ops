@@ -1,7 +1,7 @@
 # {{Component}} — design-system entry
 
 One shape for every component (agent- or human-made). Conventions (naming, props
-style, state names) live in `docs/design-system/CONVENTIONS.md` — follow them, don't
+style, state names) live in `_ops/design-system/CONVENTIONS.md` — follow them, don't
 invent parallel ones. The curator reviews every entry.
 
 ## What it is

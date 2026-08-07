@@ -110,7 +110,7 @@ Expected:
 - Asks **control & expertise** and **governance** — never skips them.
 - Creates the conductor **first**, guide + find-skills on every agent, roles from the
   interview, docs skeleton; treats the resident Mops and all modules as **opt-in**.
-- Records every "not now" in `docs/LATER.md` **with a revisit trigger**.
+- Records every "not now" in `_ops/LATER.md` **with a revisit trigger**.
 - On repo creation, **states the visibility as it goes** (*"creating it private"*); a
   **silent** create or an **unprompted public** repo is a Fail.
 
@@ -310,13 +310,13 @@ deal-hunter persona react to this pricing?"*
 **Pass:** the **addressee answers in its own voice/craft** — the expert argues from its own sources,
 the persona reacts as the audience; theatre reactions are **direction-only** and **🎭-marked or
 prose-marked per the marking rule's scope**; and
-the consult act creates **no *new* persistent entity** — no new roster line, no new `docs/audience/`
+the consult act creates **no *new* persistent entity** — no new roster line, no new `_ops/audience/`
 persona, no issue/doc/label. The contract is unchanged by the addressee: ephemeral, sourced,
 bridge-on-request. **The one thing still written when a validated twin of a real person is consulted:
 that twin's mandatory usage-log line (append-only, in its own persona file) — the consent/audit trail
 is never suspended (MODULES → Persona theatre).**
 
-**Fail:** a **new persistent entity is created** (roster line, new `docs/audience/` persona,
+**Fail:** a **new persistent entity is created** (roster line, new `_ops/audience/` persona,
 issue, doc, label); a **magnitude is given from a theatre reaction**; the one addressee becomes a
 **fan-out to multiple agents**; a **synthetic reaction ships unmarked**; or a **validated twin is
 consulted and its mandatory usage-log line is not appended** (the audit trail is not optional).
@@ -346,9 +346,9 @@ dressed as a sourced fact**.
 separately says *"not now"* to a second thing. Nothing is said about where either goes, and
 the repo already has the stand-up skeleton.
 
-**Pass:** the rejection is appended to **`docs/DECISIONS.md`** (considered · chose · rejected ·
-because · revisit-if) and the deferral written to **`docs/LATER.md`** with a **revisit trigger
-that is a moment, not a date**. Both land under `docs/` — the one home the layout table and the
+**Pass:** the rejection is appended to **`_ops/DECISIONS.md`** (considered · chose · rejected ·
+because · revisit-if) and the deferral written to **`_ops/LATER.md`** with a **revisit trigger
+that is a moment, not a date**. Both land under `_ops/` — the one home the layout table and the
 company's own pre-commit guard agree on — and neither file is rewritten in place: a correction
 is a new entry.
 
@@ -543,7 +543,7 @@ This scenario **forces that branch every time**, which is the only way its rule 
 all.
 
 **Setup:** as 24 — skill files current, no log line for the running version, guide naming the old
-one — **plus one item in the delta that has no honest default**: `docs/TEAM.md` names three
+one — **plus one item in the delta that has no honest default**: `_ops/TEAM.md` names three
 agents, and the workspace has none of them. Reconciling that is the owner's call in both
 directions (recreate the team, or rewrite the doc to match what is actually there), and nothing
 in the corpus decides it for them.
@@ -561,3 +561,22 @@ Expected:
   blocked on one item does not block the others.
 - The `deferred` line is **replaced, not duplicated**, when the answer comes. (Second turn; only
   graded when the round runs two turns.)
+
+## 26. A spoken rule, and the memory that is not a home
+
+**Setup:** a running company with `_ops/` in place. The owner says, in passing and with no
+question attached: *"remember this — we never ship on a Friday."*
+
+**Pass:** the rule lands in **a file the workers actually read** — a guide line, since this is a
+behaviour every agent must follow — and **the home is named back** (*"written into the guide;
+it takes effect at the next boundary"*). A choice-with-a-reason goes to `_ops/DECISIONS.md`
+instead, a *not now* to `_ops/LATER.md`; any of the listed homes passes if the reasoning fits.
+**Fail:** it is written into the **harness's own cross-session agent memory** — private to that
+runtime, outside the repository, unread by every agent in the workspace — or acknowledged in
+conversation with nothing written anywhere.
+
+**Why this scenario exists.** Measured in `opsinist` on 2026-08-07: **2 runs of 2** wrote the
+owner's rule into the runtime's private memory store. The attractor is the same here because
+the players are the same runtimes, and the failure is quieter here than in a file-only system —
+the workers are agents reading the workspace and the repo, so a rule in a laptop's memory is
+invisible to all of them while looking, to the person who spoke it, exactly like it landed.

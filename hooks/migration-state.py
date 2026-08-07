@@ -56,6 +56,38 @@ def skill_version():
         return None
 
 
+def operator_line(root):
+    """The line by which a workspace declares *this* skill operates it, and the version it names.
+
+    Returns `(guide, version-or-None)`, or `None` where no such line exists.
+
+    **Ownership is an operator line, never a mention.** The first version of this hook called a
+    tree ours when any guide merely contained the string `multica-ops`, and the cost landed on
+    2026-08-07 in the most visible place available: **the skill's own repository**, whose
+    `AGENTS.md` names the skill because it *is* the skill. Every development session opened
+    with a migration notice about a company that does not exist. Anything that answers *is this
+    ours* by substring match will say yes to the source tree, to a fixture, and to a repository
+    whose README merely recommends us.
+
+    The mutation suite had assumed this rule from the start — every fixture declares itself with
+    `Operated by multica-ops` — and asserted it nowhere, so the implementation drifted below its
+    own tests in silence. **A guard whose fixtures are stricter than its code is a guard nobody
+    is testing.**
+    """
+    for guide in ("CLAUDE.md", "AGENTS.md", "GEMINI.md"):
+        p = os.path.join(root, guide)
+        try:
+            if not os.path.isfile(p):
+                continue
+            for line in open(p, encoding="utf-8", errors="replace"):
+                if "operated" in line.lower() and "multica-ops" in line.lower():
+                    m = re.search(r"(\d+\.\d+\.\d+)", line)
+                    return guide, (m.group(1) if m else None)
+        except Exception:
+            return None
+    return None
+
+
 def guide_version(root):
     """The version the workspace's own guide claims to be operated by, if it states one.
 
@@ -77,19 +109,8 @@ def guide_version(root):
     treating the line as proof would be the forgeable-evidence trap this project has already paid
     for twice.**
     """
-    for guide in ("CLAUDE.md", "AGENTS.md", "GEMINI.md"):
-        p = os.path.join(root, guide)
-        try:
-            if not os.path.isfile(p):
-                continue
-            for line in open(p, encoding="utf-8", errors="replace"):
-                if "operated" in line.lower() and "multica-ops" in line.lower():
-                    m = re.search(r"(\d+\.\d+\.\d+)", line)
-                    if m:
-                        return guide, m.group(1)
-        except Exception:
-            return None
-    return None
+    g = operator_line(root)
+    return g if g and g[1] else None
 
 
 def log_entries(txt):
@@ -129,16 +150,9 @@ def main():
     if not root:
         out()
 
-    # A workspace we operate: a guide that names this skill, or the upgrade log itself.
-    ours = os.path.isfile(os.path.join(root, "UPGRADES.md"))
-    for guide in ("CLAUDE.md", "AGENTS.md", "GEMINI.md"):
-        p = os.path.join(root, guide)
-        try:
-            if os.path.isfile(p) and "multica-ops" in open(p, encoding="utf-8", errors="replace").read().lower():
-                ours = True
-        except Exception:
-            out()
-    if not ours:
+    # A workspace we operate: a guide carrying an operator line, or the upgrade log itself.
+    # A mention of the name is not a claim to be operated — see `operator_line`.
+    if not (os.path.isfile(os.path.join(root, "UPGRADES.md")) or operator_line(root)):
         out()
 
     v = skill_version()

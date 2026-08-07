@@ -145,9 +145,9 @@ except OSError:
 DECLARED = set()
 try:
     boot = open("BOOTSTRAP.md", encoding="utf-8").read()
-    rows = re.findall(r"^\s*\|\s*`(docs/[^`]+)`\s*\|[^|]*\|[^|]*\|\s*([^|]*?)\s*\|", boot, re.M)
+    rows = re.findall(r"^\s*\|\s*`(_ops/[^`]+)`\s*\|[^|]*\|[^|]*\|\s*([^|]*?)\s*\|", boot, re.M)
     if not rows:
-        fail("BOOTSTRAP: the repo-layout table has no `docs/…` rows — the template guard is blind")
+        fail("BOOTSTRAP: the repo-layout table has no `_ops/…` rows — the template guard is blind")
     for path, tmpl in rows:
         name = tmpl.split()[0] if tmpl.strip() else ""
         if not name or name.startswith("—"):

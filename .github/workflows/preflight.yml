@@ -1,15 +1,39 @@
-# Same checks as the local pre-commit hook, enforced on every push/PR.
+# The same gates the release ritual runs, enforced on every push and PR.
+#
+# **On macOS on purpose.** The ritual is run from the maintainer's own machine (darwin), and a
+# badge that goes green on a platform nobody releases from is decoration. Next door the same
+# workflow sat red for four releases because ubuntu's GNU sed refuses the BSD `-i ''` the
+# suites use — nobody looked, because nobody expected the badge to mean anything. It means
+# something here: it is the gate suite, not a subset of it.
 name: preflight
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+  workflow_dispatch: {}
 # This job only reads the tree. Without this block the job inherits the repository
 # default, which on an older repo is write-all — a token far stronger than the work.
 permissions:
   contents: read
 jobs:
   check:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       # Pinned to a commit, not a tag: a tag is mutable, so `@v4` means "whatever that
       # tag points at the day CI runs" — the supply-chain hole every scanner flags.
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
-      - run: bash scripts/preflight.sh
+        with: {fetch-depth: 0}   # check 5j compares against the last release tag
+      - name: preflight
+        run: bash scripts/preflight.sh
+      # A hook that cannot be wrong is decoration, and this one only ever *reports* — so its
+      # whole value is being right about when it speaks. Each rule is shown speaking on a
+      # mutant and silent on its honest twin.
+      - name: hook mutation suite
+        run: bash scripts/test-migration-hook.sh
+      # A migration is only trustworthy if what it REFUSES to touch is proven: the craft's own
+      # files staying put, a collision named instead of overwritten, a second run doing nothing.
+      - name: layout migration suite
+        run: bash scripts/test-migrate-layout.sh
+      - name: map-blocks suite
+        run: bash scripts/test-map-blocks.sh
+      - name: issues.py helper tests
+        run: python3 scripts/tests/test_issues_helpers.py

@@ -1,6 +1,6 @@
 # Product map — how {{the product}} is walked
 
-**Why this file exists:** `docs/ARCHITECTURE.md` says **where the implementation lives** — a
+**Why this file exists:** `_ops/ARCHITECTURE.md` says **where the implementation lives** — a
 worker's map of the tree. This one says **how the product is walked** — the moves and the
 things, in the product's own words. Reasoning about a flow from the architecture map lands a
 change in the right file and the wrong journey; this map is what the conductor reads at
@@ -12,8 +12,25 @@ One line per thing a user meets — **in this product's own words** (screens for
 pickup slots for a bakery, corridors for a venue, rubrics for a channel):
 
 - {{**Library** — every recording the user owns; entry point after sign-in}}
+  <!-- touched-by: Library -->
+  <!-- /touched-by -->
 - {{**Player** — one recording: playback, transcript, sharing}}
+  <!-- touched-by: Player -->
+  <!-- /touched-by -->
 - {{**Search** — reached from Library; returns into Player}}
+  <!-- touched-by: Search -->
+  <!-- /touched-by -->
+
+**Who is standing on a node is generated, never typed.** `python3 scripts/map-blocks.py` fills
+the marker pairs above from the board — an issue declares the nodes it touches in its metadata
+(`multica issue metadata set <id> touches "Library,Player"`), and the script rewrites **only**
+what sits between the markers, so the prose around them is safe. A hand-kept version of this
+goes stale the same afternoon.
+
+**And two live issues on one node is a finding, stated inside the block itself** — not a
+surprise discovered at review. It is the shape of a merge conflict arriving a week early: two
+crafts about to edit the same ground, at decomposition, while it is still cheap to sequence
+them or say out loud that they are independent.
 
 ## The moves
 

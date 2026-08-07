@@ -7,7 +7,7 @@ history, but re-reading them costs more than anyone will pay.
 **What belongs here:** an approach that was proposed and turned down, a tool evaluated and
 passed over, a design taken and later reversed, an experiment that failed. **What doesn't:**
 current state (that's the spec, roadmap and guide) or a deferral with a revisit trigger
-(that's `docs/LATER.md`).
+(that's `_ops/LATER.md`).
 
 ---
 

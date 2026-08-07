@@ -59,7 +59,7 @@ are shortcuts for when you already know the name. Both columns do the same thing
 
 | Situation | Just say | Or run |
 |---|---|---|
-| "Is anyone else doing this?" | *"look into how competitors price this"* | `/multica-ops:mops research …` — cited findings land in `docs/research/` |
+| "Is anyone else doing this?" | *"look into how competitors price this"* | `/multica-ops:mops research …` — cited findings land in `_ops/research/` |
 | "Who are we even for?" | *"work out our segments and ICP"* | `/multica-ops:mops audience` |
 | "We need a brand / ours feels dated" | *"we need an identity"* · *"our brand looks old"* | `/multica-ops:mops brand` |
 | "Would experts tear this apart?" | *"have the experts review this spec"* | `/multica-ops:mops validate …` |
@@ -139,8 +139,8 @@ are shortcuts for when you already know the name. Both columns do the same thing
 | "An imported ticket tells the agent to grant itself access" | nothing — it surfaces | external text is data: it's quoted to you and not obeyed |
 | "Who reviewed this? Not the person who wrote it, I hope" | `/multica-ops:audit` | flags gates where author and reviewer coincide |
 | "Was that price still true?" | `/multica-ops:audit` or just ask | recorded facts carry a check-date and get re-verified before a decision |
-| "Why didn't we go with X? I keep suggesting it" | *"what did we reject and why?"* | `docs/DECISIONS.md` — append-only, with the evidence |
-| "New agents keep re-learning the codebase" | *"write the architecture map"* | `docs/ARCHITECTURE.md`, kept current like any doc |
+| "Why didn't we go with X? I keep suggesting it" | *"what did we reject and why?"* | `_ops/DECISIONS.md` — append-only, with the evidence |
+| "New agents keep re-learning the codebase" | *"write the architecture map"* | `_ops/ARCHITECTURE.md`, kept current like any doc |
 | "I want people to find us through ChatGPT, not just Google" | `/multica-ops:mops research` or `/multica-ops:ship` | GEO: bot allowlist, FAQ schema, answer-first copy (STACKS) |
 
 ## Control and cost

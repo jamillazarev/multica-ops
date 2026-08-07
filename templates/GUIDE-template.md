@@ -5,7 +5,7 @@ and write task comments ONLY in {{language}}; artifacts (specs, docs) in
 {{artifact_language}}. Tone: {{tone}}.
 
 **Company:** {{one-line: what we build}}. Repo: {{repo_url}}. Source of truth:
-{{spec docs}}; roadmap: `docs/ROADMAP.md`; team: `docs/TEAM.md`.
+{{spec docs}}; roadmap: `_ops/ROADMAP.md`; team: `_ops/TEAM.md`.
 
 **Operated by multica-ops {{0.3.3}}.** Workspace: `{{workspace}}` on Multica. This line is the
 version this company was *migrated to*, not the version installed on someone's machine — the two
@@ -46,8 +46,8 @@ budget cap and this guide's invariants are **proposed** to a human, never adjust
 you work under them.
 
 **Evidence over opinion:** research before inventing; cite sources; mark opinion as
-opinion. **And look here before you research** — `docs/research/` already holds this project's
-discovery notes, usability sessions and persona runs, and `docs/DECISIONS.md` holds what was
+opinion. **And look here before you research** — `_ops/research/` already holds this project's
+discovery notes, usability sessions and persona runs, and `_ops/DECISIONS.md` holds what was
 tried and rejected, with the evidence. Asked *what do we know about X* — start there, then go
 outside and say which is which. Re-running a study the team already paid for is the expensive
 way to look thorough. **Self-improvement:** a routine repeated twice → shape it into a skill
@@ -74,24 +74,24 @@ lists/tables; no filler. Issues carry the why + DoD; comments carry decisions.
 decision that changes the spec/roadmap/this guide? Whoever owns the change updates the
 affected doc **in the same task**. Docs hold current state only — no "was/changed to"
 history (the thread is the history). Unwritten decisions don't exist for the next agent.
-**One deliberate exception:** `docs/DECISIONS.md` is append-only and holds what was tried
+**One deliberate exception:** `_ops/DECISIONS.md` is append-only and holds what was tried
 or proposed and **rejected**, with the evidence. That is not edit history — it's the record
 that stops the same idea being re-proposed every quarter, which reading old threads is far
 too expensive to do.
 
-**System follows solutions:** before inventing form, check `docs/design-system/` —
+**System follows solutions:** before inventing form, check `_ops/design-system/` —
 reuse tokens/components/templates first; an extension is an argued decision in the spec.
 Shipped something with new patterns? Systematize it in the same feature (built by the
 craft that owns the medium, **reviewed by the system curator** — the design lead).
 
-**Brand voice:** all outward copy follows `docs/brand/` — tone words, register samples,
+**Brand voice:** all outward copy follows `_ops/brand/` — tone words, register samples,
 naming rules, anti-references (hard bans). Changing the brand itself → owner approval.
 
-**Later list:** a deferred decision lives in `docs/LATER.md` (what · why · revisit
+**Later list:** a deferred decision lives in `_ops/LATER.md` (what · why · revisit
 trigger). Touching an area with a deferred item? Mention it once; the owner decides.
 
-**Tools have runbooks:** before operating any tool from `docs/TOOLING.md`, read its
-runbook at `docs/tooling/<tool>.md` — routine operations and failure modes live there,
+**Tools have runbooks:** before operating any tool from `_ops/TOOLING.md`, read its
+runbook at `_ops/runbooks/<tool>.md` — routine operations and failure modes live there,
 not in this guide. Learned something new about a tool? Add it to that runbook.
 
 **Everything carries its why:** code comments explain *why*, not *what*; every doc opens
@@ -154,7 +154,7 @@ review and will bounce it.
 a suggested owner; above your grade → escalate; below it → hand down. All three are
 normal, none is failure.
 
-**Pitch to the reader, not to yourself.** `docs/TEAM.md` records what each person is
+**Pitch to the reader, not to yourself.** `_ops/TEAM.md` records what each person is
 **expert in** — read it before writing to them. Inside their field: terse, technical,
 decisions routed to them without preamble. Outside it: explain the tradeoffs and recommend,
 never hand over a bare choice. Same across squads — their terms, not your jargon — and same

@@ -1,7 +1,7 @@
 # {{Persona name}} — persona profile
 
 One shape for every persona in the theatre (MODULES → Persona theatre). Lives in
-`docs/audience/` and is the persona's **primary artifact** — the agent's instructions are
+`_ops/audience/` and is the persona's **primary artifact** — the agent's instructions are
 generated from it, never the other way round.
 
 **A twin** is a validated persona grounded in **one specific real person's** interview — it must

@@ -30,7 +30,7 @@ priorities, acceptance criteria — §11).
 
 **1 · Store the atom, derive the rest.** Measure once, at the smallest event; never store
 rollups as truth — they drift the moment anything is edited. On Multica the atoms live in the
-platform (`issue runs`, `issue usage`, comments); our rollups (`docs/analytics/`,
+platform (`issue runs`, `issue usage`, comments); our rollups (`_ops/analytics/`,
 `ECONOMICS.md`, the status digest) are **derived and re-derivable**, marked as such.
 *Applies to:* the cost ledger · the waste slices · `/multica-ops:status` · utilization review.
 
@@ -41,12 +41,12 @@ around it — generate it or search for it.
 
 **3 · Check-date, not a tick.** Every recorded fact that can change carries **when it was
 verified**; past its recheck it is **unknown, not fine**.
-*Applies to:* `docs/TOOLING.md` rows · STACKS entries · `sources/SOURCES.md` · prices ·
+*Applies to:* `_ops/TOOLING.md` rows · STACKS entries · `sources/SOURCES.md` · prices ·
 platform caps quoted in these files.
 
 **4 · Provenance is mandatory.** Origin · when · who · what version. Without it `/multica-ops:upgrade` cannot tell what it is updating and `/multica-ops:audit` cannot tell what is old.
 *Applies to:* imported skills · personas (grounding artifact, consent) · assets
-(`docs/assets.md`) · imported issues (`source_id` / `source_url`).
+(`_ops/assets.md`) · imported issues (`source_id` / `source_url`).
 
 **5 · Evidence, not verdicts.** A tool that pattern-matches produces **findings**; a clean
 report is not approval and a flag is not a rejection. Who decides what a finding means is
@@ -92,7 +92,7 @@ between moods.**
 **10 · Ages like a request.** Anything pending carries its age and surfaces past a
 threshold, because a wait nobody chased and a wait everybody forgot look identical from
 outside.
-*Applies to:* owner approvals · escalations · grants · ripe `docs/LATER.md` items · a live
+*Applies to:* owner approvals · escalations · grants · ripe `_ops/LATER.md` items · a live
 participant's round.
 
 **11 · Nobody edits the bar they are measured against.** Locked (acceptance criteria,

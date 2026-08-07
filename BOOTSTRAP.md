@@ -109,7 +109,7 @@ skill holds unchanged; what does change is operational and worth stating at `/mu
 - Self-hosting changes **nothing about model spend** — that's still your provider
   subscriptions. It changes where *data* lives, which is usually the reason to do it.
 
-Mops records which mode a workspace is in (fingerprint + `docs/TOOLING.md`), because it
+Mops records which mode a workspace is in (fingerprint + `_ops/TOOLING.md`), because it
 changes who to call when the board is down: the vendor, or you.
 
 ## 1. Project
@@ -441,7 +441,7 @@ stage finished" (that is @mentions and barriers). Offer at setup, default "later
   mix unrelated ventures in one workspace — that breeds an agent junkyard.
 - **Members**: the cloud stores issues/comments/metadata; **code, keys, and CPU stay
   on each member's machine**. Several members each run their own daemon for the same
-  workspace. Keep `docs/TEAM.md`: humans and agents, who owns what, which features.
+  workspace. Keep `_ops/TEAM.md`: humans and agents, who owns what, which features.
   Several PMs = one project lead per direction; Mops in Multica coordinates.
 - **Three roles, and the CLI cannot grant the top one.** `owner` · `admin` · `member`:
   day-to-day work (issues, comments, using agents) is open to all three. **Only an owner can
@@ -499,7 +499,7 @@ stage finished" (that is @mentions and barriers). Offer at setup, default "later
 5. **Experts & personas (opt-in)** — composition depends on the project; propose 2–4
    experts relevant to the domain (e.g. domain specialist, market/growth, architect)
    as an **Experts squad**. **Personas are docs-first:** opting into the theatre seeds the
-   **register and persona documents** in `docs/audience/` (proto or validated per the data that
+   **register and persona documents** in `_ops/audience/` (proto or validated per the data that
    exists — MODULES → Persona theatre); persona **agents/squads stand up per validation round
    and retire after**, never as standing roster at bootstrap. Only Mops in Multica stays
    squadless. The user may decline both.
@@ -508,9 +508,9 @@ stage finished" (that is @mentions and barriers). Offer at setup, default "later
    *guide* skill, not this one — multica-ops is Mops's brain), so Mops in Multica *is* the
    same Mops:
    - **Install idempotently, never blindly.** First `multica skill list` — if `multica-ops`
-     isn't there, `multica skill import --url github.com/jamillazarev/multica-ops/tree/v0.3.3/skills/mops`. If it
+     isn't there, `multica skill import --url github.com/jamillazarev/multica-ops/tree/v0.4.0/skills/mops`. If it
      **already exists** (re-run, or a teammate imported it), **compare versions**: same →
-     skip; older → refresh through `/multica-ops:upgrade` (backup current to `docs/skill-backups/` →
+     skip; older → refresh through `/multica-ops:upgrade` (backup current to `_ops/skill-backups/` →
      `import --on-conflict overwrite`), **never a second copy**. (`import` supports
      github/skills.sh/clawhub URLs.) Then `multica agent create` the agent named
      **Mops**, `multica agent skills` to attach the imported skill (+ find-skills),
@@ -532,37 +532,54 @@ stage finished" (that is @mentions and barriers). Offer at setup, default "later
    - If declined: skip; Mops lives in the console only, and `/multica-ops:mops` says so.
 7. **Labels** (discipline/type; never the stage) and the **repo layout**. This table is the
    layout — **every path the methodology prescribes**; a project's own directories are not
-   listed here, they are mapped in `docs/ARCHITECTURE.md`. Rows
+   listed here, they are mapped in `_ops/ARCHITECTURE.md`. Rows
    marked *stand-up* are created now; the rest appear when their condition fires, and an
    agent should never invent a home for something already listed here. **Start each from its
    template** rather than improvising the shape — a doc nobody can predict the shape of gets
    skimmed, not used.
 
+   **Everything the methodology owns lives under one door: `_ops/`.** The root belongs to the
+   craft — the product's own directories, its own `docs/`, its `.claude/` — and a name that
+   sorts first and collides with nothing keeps it that way. **This is why it is not `docs/`:**
+   most repositories already own one, and a bakery's or a Django project's documentation is
+   not a place to file a decisions ledger. Before 0.4.0 this layer *was* `docs/`, and the
+   collision was real rather than theoretical — a repository with its own `docs/` got the
+   machinery mixed into its documentation with nothing saying which was whose.
+
+   Two consequences worth stating plainly. **A path is claimed, or it is the craft's** — Mops
+   moves and reads only what this table names; anything else under a project's `docs/` is
+   theirs, untouched and named in the migration's output rather than swept along. And **an
+   unmigrated workspace is recognised, never crashed into**: reading a claimed path that is
+   missing, Mops looks once at the old `docs/` location, and if the file is there it stops and
+   says the workspace predates 0.4.0 and offers `/multica-ops:upgrade` — it does not silently read
+   the old path forever, because a fallback nobody is told about is how a workspace runs two
+   layouts for a year.
+
    | Path | Holds | Created | Template | Guarded by |
    |---|---|---|---|---|
    | `apps/ site/ marketing/` | the product itself — one dir per project (§14) | stand-up | — | mapped in ARCHITECTURE |
-   | `docs/ROADMAP.md` | story map → release plan; the conductor's queue | stand-up | ROADMAP | exists |
-   | `docs/TEAM.md` | who owns what — agents **and** people | stand-up | TEAM | exists |
-   | `docs/TOOLING.md` | every tool: what · for what · access · where its secret lives · **when last checked** — the probe list `/multica-ops:mops health` reads | stand-up | TOOLING | exists · stale check-dates warn |
-   | `docs/DECISIONS.md` | **append-only**: what was tried or rejected, with the evidence, so the same idea isn't rediscovered next quarter | stand-up | DECISIONS | exists · **append-only enforced** |
-   | `docs/LATER.md` | deferrals — *what · why · **revisit trigger*** (a moment, not a date) | stand-up | — (shape is here) | exists |
-   | `docs/FIELD-NOTES.md` | append-only stumbles — `date · flow · symptom · evidence · fix-candidate`; swept into the backlog at checkpoints (PLAYBOOKS) | **first stumble** | — | append-only by convention |
-   | `docs/ARCHITECTURE.md` | what lives where, entry points — every task starts in a fresh worktree, so an unwritten map is re-derived by every agent on every run | once there's code | ARCHITECTURE | warns if code exists without it · must mention every top-level dir |
-   | `docs/MAP.md` | **how the product is walked** — the things and the moves, in the product's own words; current state only, ends with *Not mapped yet* (`/multica-ops:mops map`). ARCHITECTURE answers *where the implementation lives*; this answers *how it is used* | first walkable flow (at discovery for an existing product) | MAP | — |
-   | `docs/BUDGET.md` | the envelope: amount · currency · credits with expiries | `/multica-ops:mops budget` | BUDGET | — |
-   | `docs/ECONOMICS.md` | burn · runway · cost per shipped feature | first `/multica-ops:ship` | — | — |
-   | `docs/analytics/<release>.md` | the cost/effort ledger for that release | each `/multica-ops:ship` | — | — |
-   | `docs/assets.md` | every asset actually used: what · source · **licence** · where | first asset | — | — |
-   | `docs/research/` | cited findings from research, discovery, usability sessions, persona runs — **one document per question, each pointing back at what produced it and carrying the date it was true** | first discovery | discovery | — |
-   | `docs/audience/` | persona register + persona documents | theatre module on | PERSONA | — |
-   | `docs/design-system/` | tokens, components, `CONVENTIONS.md` | design-system module on | COMPONENT | — |
-   | `docs/brand/` | the brand book | brand module on | BRAND | — |
-   | `docs/skill-backups/` | pre-upgrade copies of skills | `/multica-ops:upgrade` | — | — |
-   | `docs/.workspace-state.json` | the state fingerprint per object class + the git HEAD it was taken at | after every Mops operation | — | — |
+   | `_ops/ROADMAP.md` | story map → release plan; the conductor's queue | stand-up | ROADMAP | exists |
+   | `_ops/TEAM.md` | who owns what — agents **and** people | stand-up | TEAM | exists |
+   | `_ops/TOOLING.md` | every tool: what · for what · access · where its secret lives · **when last checked** — the probe list `/multica-ops:mops health` reads | stand-up | TOOLING | exists · stale check-dates warn |
+   | `_ops/DECISIONS.md` | **append-only**: what was tried or rejected, with the evidence, so the same idea isn't rediscovered next quarter | stand-up | DECISIONS | exists · **append-only enforced** |
+   | `_ops/LATER.md` | deferrals — *what · why · **revisit trigger*** (a moment, not a date) | stand-up | — (shape is here) | exists |
+   | `_ops/FIELD-NOTES.md` | append-only stumbles — `date · flow · symptom · evidence · fix-candidate`; swept into the backlog at checkpoints (PLAYBOOKS) | **first stumble** | — | append-only by convention |
+   | `_ops/ARCHITECTURE.md` | what lives where, entry points — every task starts in a fresh worktree, so an unwritten map is re-derived by every agent on every run | once there's code | ARCHITECTURE | warns if code exists without it · must mention every top-level dir |
+   | `_ops/MAP.md` | **how the product is walked** — the things and the moves, in the product's own words; current state only, ends with *Not mapped yet* (`/multica-ops:mops map`). ARCHITECTURE answers *where the implementation lives*; this answers *how it is used* | first walkable flow (at discovery for an existing product) | MAP | — |
+   | `_ops/BUDGET.md` | the envelope: amount · currency · credits with expiries | `/multica-ops:mops budget` | BUDGET | — |
+   | `_ops/ECONOMICS.md` | burn · runway · cost per shipped feature | first `/multica-ops:ship` | — | — |
+   | `_ops/analytics/<release>.md` | the cost/effort ledger for that release | each `/multica-ops:ship` | — | — |
+   | `_ops/assets.md` | every asset actually used: what · source · **licence** · where | first asset | — | — |
+   | `_ops/research/` | cited findings from research, discovery, usability sessions, persona runs — **one document per question, each pointing back at what produced it and carrying the date it was true** | first discovery | discovery | — |
+   | `_ops/audience/` | persona register + persona documents | theatre module on | PERSONA | — |
+   | `_ops/design-system/` | tokens, components, `CONVENTIONS.md` | design-system module on | COMPONENT | — |
+   | `_ops/brand/` | the brand book | brand module on | BRAND | — |
+   | `_ops/skill-backups/` | pre-upgrade copies of skills | `/multica-ops:upgrade` | — | — |
+   | `_ops/.workspace-state.json` | the state fingerprint per object class + the git HEAD it was taken at | after every Mops operation | — | — |
 
    **Where bytes physically live.** The repo carries text, code and config. **Files and big
    blobs — video, raw media, datasets — go to object storage with a pointer in the repo, never
-   into the DB and never into git** (STACKS); what was used is still logged in `docs/assets.md`,
+   into the DB and never into git** (STACKS); what was used is still logged in `_ops/assets.md`,
    because provenance is portability. The cloud holds issues and comments; code and keys stay
    on members' machines.
 
@@ -597,7 +614,7 @@ stage finished" (that is @mentions and barriers). Offer at setup, default "later
    Re-checked at `/multica-ops:mops health`.
    Then **install the docs guard** — `templates/company-preflight.sh` as the repo's
    pre-commit hook (PLAYBOOKS): a skeleton is only useful while it stays true.
-   `docs/LATER.md` and `ECONOMICS.md` are the two without a template: their shape is stated where they
+   `_ops/LATER.md` and `ECONOMICS.md` are the two without a template: their shape is stated where they
    are defined (a deferral is *what · why · revisit trigger*; economics is the ledger
    rolled up — PLAYBOOKS).
 
@@ -703,7 +720,7 @@ Each item with its default, as walked in `/multica-ops:init` and re-asked in the
     project produce a repeatable form (UI, covers, packaging, letters)? Default: **on
     when a design discipline exists**. And: does it face the world — is there a brand
     (existing / to create / not needed)? Existing → audit, don't rebuild. Homes:
-    `docs/design-system/` (tokens as files) and `docs/brand/` (the brand book).
+    `_ops/design-system/` (tokens as files) and `_ops/brand/` (the brand book).
 16. **Resident Mops (Mops in Multica)** — opt-in (see "Two seats of Mops"). Default: **on** for a
     company (a running team needs an in-workspace advisor + escalation vertex when the
     user is away); **off** for a quick job. Declining means Mops lives in the console
@@ -724,7 +741,7 @@ Each item with its default, as walked in `/multica-ops:init` and re-asked in the
     Tone (business / friendly / terse-technical)? Everything chosen goes into the guide
     skill, first line, absolute — including every agent's first greeting. With several
     humans in the workspace the language is company-wide today; a per-member preference
-    is a `docs/LATER.md` item, not a hidden promise.
+    is a `_ops/LATER.md` item, not a hidden promise.
 20. **Governance** (see below) — who can direct Mops (default: all members full; owner
     always full; destructive/spend always → owner) and which flows need a named human's
     sign-off (default: none beyond the destructive gate; ask what the user wants to

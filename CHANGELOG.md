@@ -3,6 +3,157 @@
 Newest first. Each entry leads with what you can now do, not with which files moved. This is
 also the migration map `/multica-ops:upgrade` reads.
 
+## 0.4.0 — 2026-08-07
+
+**The machinery lives under one door now: `_ops/`.** A project's root belongs to the craft
+again — its own files, its own `docs/`, its `.claude/` — and everything the methodology owns
+sits in a single directory named to sort first and collide with nothing. What `docs/` used to
+hold is flat inside it (`_ops/DECISIONS.md`, not `docs/DECISIONS.md`), and `docs/tooling/` is
+**`_ops/runbooks/`**, because a runbook is what it holds and `tooling` beside `TOOLING.md` was
+one word doing two jobs. **The collision this ends was real, not theoretical**: roughly twenty
+paths went into whatever `docs/` a repository already had, and most repositories have one — a
+bakery's or a Django project's documentation is not a place to file a decisions ledger.
+
+**Migration map — one command:**
+- **`python3 scripts/migrate-layout.py <project-root>`** (`--dry-run` reads without touching)
+  moves the claimed paths as history-preserving `git mv`s. **Anything under `docs/` it does not
+  recognise stays where it is and is named in the output** — that directory is very often the
+  craft's own. A dirty tree is refused so the migration is its own diff; a destination that
+  already exists is a named `CONFLICT` and a nonzero exit, never a silent overwrite; a second
+  run does nothing and says so.
+- **Then re-copy `templates/company-preflight.sh`** over the repo's pre-commit hook — the old
+  copy checks paths that have moved. The migration names it rather than rewriting your hook.
+- **An unmigrated workspace is recognised, not crashed into**: reading a claimed path that is
+  missing, Mops looks once at the old location and, finding the file there, stops and offers
+  `/multica-ops:upgrade` rather than silently reading the old layout forever.
+
+**And `_ops/` is a shared door, so ownership is read before anything is written.** The sibling
+project `opsinist` runs the same methodology out of files and uses the same directory —
+**nine of the twelve documents inside are named identically** (measured 2026-08-07). Sharing the
+name is the right trade: a successor finds the predecessor's record exactly where it would have
+put its own, where a private directory would make a fully-documented project look like open
+ground. What it requires is a marker, not a rename — **`_ops/config.md` with no
+`Operated by multica-ops` line in the guide means another system operates this tree**, and it is
+named and handed back with nothing touched. `migrate-layout.py` refuses such a tree outright,
+and both directions are covered by the suite. Their records are evidence, not our workspace.
+
+**"Remember this" lands in a file, and Mops says which one** — a guide line · the glossary ·
+`_ops/DECISIONS.md` · the register · `_ops/LATER.md` — **and never the harness's own agent
+memory**. Measured next door on 2026-08-07: told *"remember this"*, two runs of two wrote the
+owner's rule into the runtime's private cross-session store — outside the repository, unread by
+every worker (opsinist 0.2.2). It is worse here than in a file-only system, because the workers
+are agents that read the workspace and the repo and never your laptop.
+
+**A back-pointer names a section and proves what it said.** The sources register cited claims by
+`file:line`, and a line number names a *position* — **measured 2026-08-07, 11 of 23 pointers no
+longer landed on their claim**, with no edit to the register in between; the docs had simply been
+written in. Citations are now `file.md#anchor (sha:…, checked …)`, minted by
+`fetch-source.py --cite <file.md>#<anchor>`, and the hash earns the rest: a passage rewritten
+*underneath* its citation makes the fact **`unknown` and says so**, which a line number cannot
+even see. All twenty-four pointers were converted; the register verifies **20/20**.
+
+**The README was cut to be read.** Three hundred and eighty-four lines became two hundred: one
+minute in (two commands, then say what you need, with the six entrances), **fourteen one-line
+differences** instead of paragraphs, an honest ceiling table with *how it is known* per row, and
+the success-as-absence tests. The pug stays. One number in it was also simply wrong — it
+advertised 22 eval scenarios against a rubric holding 25.
+
+**Seven rules the sibling project proved, each checked against the platform first.** Three of
+them the platform does not do, so they are ours and say so:
+
+- **A role declares what it falls back to.** `agent create --model` takes one identifier and a
+  capacity death lands in `agent_error` unretried (CLI v0.4.12), so a role records a fallback
+  chain of tiers in `TEAM.md` — **taken and named in the same breath**, never a silent
+  downgrade. *No fallback* is a real answer for review and architecture: waiting beats answering
+  worse. A chain never reaches below the grade's floor.
+- **Silence is not an answer unless a grant said so first.** A request may act on an unanswered
+  question only through a grant written **in advance**, carrying `on_timeout` — **`keep-waiting`
+  is the default** — and a real window. Authored mid-wait it is the constrained party unlocking
+  its own door. The four owner-gated kinds cannot carry `proceed` at all, and what fired is
+  recorded on the issue.
+- **The owner's hand-edit is offered a home — once.** An edit is the standard stated in the one
+  unambiguous way: the finished thing. It is read back once and one home proposed — a guide
+  line, the role's instructions, a worked example, or **nothing, which is a real answer**. Not
+  on every occurrence, because that turns a correction into an interrogation; and never
+  generalised silently, because an inferred standard nobody agreed to is how a company acquires
+  conventions its owner never chose.
+- **A decomposition states four things once** — what happens when a child fails (**`escalate` by
+  default**; Multica has no `on_child_failure`), what it is expected to cost as a **median over
+  comparable runs with its sample size** rather than a feeling, where a secret goes (**the owner
+  answers "done", never the value**), and that a lesson crossing to another project goes through
+  the import gate rather than a shared brain.
+- **A product that lives elsewhere is watched, never vendored** — a pointer with its why,
+  `version_seen`, and **per-surface check-dates** (repo · site · docs · pricing move at
+  different speeds). The watch closes natively: an autopilot in `create_issue` mode with the
+  owner subscribed makes each upstream release an issue that **lands in triage and cannot
+  fade**. And accepting a move **opens the delta** — `version_seen` moves only once the list of
+  what it changes exists.
+- **Who is standing on a map node is generated** — `scripts/map-blocks.py` fills marker pairs in
+  `_ops/MAP.md` from `touches` metadata and rewrites **only between the markers**. **Two live
+  issues on one node is a finding stated inside the block**: a merge conflict arriving a week
+  early, while sequencing is still cheap.
+- **The migration delta reads both ways.** An upgrade that only adds never notices the other
+  half — a rule the workspace already has that the new corpus contradicts. A clash is now **a
+  finding with two named sides and the owner decides**, recorded in `_ops/DECISIONS.md` so the
+  next upgrade does not re-ask. Only load-bearing clashes surface: a migration that asks twenty
+  questions gets answered *yes to everything*.
+
+**Five shelves arrived, and one law about who they serve.** Feature flags and progressive
+delivery (OpenFeature · Unleash · GrowthBook · Flagsmith — with the debt trap: **a flag nobody
+removes is configuration debt wearing a feature's name, so flags carry an expiry like grants**)
+· **hypothesis and usability test methods** ordered by the cost of being wrong, each carrying
+its bias on its face · the **experience-measurement ladder** by layer, CES through the Sean
+Ellis test to NPS, all of them attitudes that sit *beside* the behavioural numbers and never
+instead of them · **agent-web protocols** — Web Bot Auth, Content Signals, Pay-Per-Crawl's 402
+— with both sides named, since from **2026-09-15** Cloudflare's default starts blocking agent
+bots on ad-bearing pages · and **open-source and skill distribution**, where the listings are
+the channel and each has its own bar. Two shelves grew their applied halves: Growth.Design's
+**53 case studies** and **abtest.design**, both **a shelf of survivors** — they calibrate what
+to try, never what to expect, and they are for citing, never mirroring.
+
+**And the law they instance: a shelf serves every flow that meets its need.** Filed by one
+flow, scoped to none — the shelf a review cites is the shelf a build opens and a consultation
+answers from, and a pointer handed over once is read wherever it is relevant rather than asked
+for again. **The point of a shelf is a shorter search, so it sits at the search's head**: the
+register first, the live web where the register runs out, and a find worth keeping lands back
+with its why. One home in FLOWS; the catalogue header and the sources register cite it.
+**It is called a shelf and never a "resource"**, because on Multica a **project resource** is
+already a `github_repo` or a `local_directory` an agent works on — the glossary now tells the
+two apart, and the sibling project's word did not survive the border.
+
+**A migration notice now needs a workspace that says it is operated, not one that says the
+name.** The session-start check called a tree ours whenever any guide *contained* the string
+`multica-ops` — which is true of this skill's own repository, of every fixture, and of any repo
+whose README recommends us. **Ownership is an operator line** (`Operated by multica-ops
+0.4.0`) or an `UPGRADES.md`, nothing less. If your guide only mentions the skill in passing and
+you *want* the check, give it that line. The mutation suite had assumed the strict rule from
+the start and asserted it nowhere, so the code had drifted below its own tests in silence.
+
+**The coverage map exists, and it is generated.** `scripts/coverage-map.py` assembles
+`evals/COVERAGE.md` from the tree itself — what the corpus says holds each rule, which
+validators, hooks and suites ship, how many scenarios the rubric carries and which versions
+have a run record — with **rates deliberately not copied**, because a rate belongs where its
+date is. It has a page on the site, and the section finally has an **`llms.txt`** — scoped to
+the section, so it cannot fight the site root's over what this site says it is.
+
+**Three guards, each closing a defect that shipped somewhere.** The link checker stops filing
+false corpses: paren-cut URLs are percent-encoded (and preflight now refuses a raw `(` in a
+markdown URL), a transient 5xx gets one retry, and 401 joins 403/429 as bot-blocked rather than
+dead. The **version sweep runs over every manifest it can discover**, not the two somebody
+remembered — we ship four, and only two were checked. And CI runs the **real** gate suite on
+**macOS**, the platform the release is actually cut from, with the badge pinned to `main`.
+
+**The release notes are the changelog entry whole, with the heading collapsed to a bare italic
+date** — the title already carries the version and the release's own line. All seven past
+Releases were retro-fitted in place; one of them had been published carrying this file's
+*header* instead of its entry. **And the tag waits for the owner's word, every release its
+own** — that law and the session loop now live in the repo's own `CLAUDE.md`.
+
+**Migration map** — nothing to do for most workspaces: corpus rows, dev furniture and
+generated pages. The one exception is the session-start check: **a workspace whose guide only
+mentions `multica-ops` will now stay silent**. Add an `Operated by multica-ops 0.4.0` line to
+its guide to keep the migration reminder, or leave it silent if the workspace was never ours.
+
 ## 0.3.3 — 2026-08-02
 
 **Forty new tools and services, and this file's list is now the same list as the sibling
