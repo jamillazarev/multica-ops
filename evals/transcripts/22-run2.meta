@@ -1,0 +1,9 @@
+scenario: 22
+run: 2
+player-model: claude-sonnet-4-6
+workspace: ee0929fe-b776-4f1d-9716-4f58885f3df8
+corpus-sha: ab23144
+corpus-dirty: yes
+fixture: evals/fixtures/22
+query: Audit the whole workspace and tell me what's rotten. …oh and what's the conductor called?
+rc=0

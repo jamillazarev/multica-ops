@@ -22,12 +22,14 @@
 
 ## Hooks that ship
 
+- `hooks/dispatch-nudge.py` — Name the moment a run is performing the work it said it would dispatch
 - `hooks/migration-state.py` — Report, at session start, whether this workspace was migrated to the version now running it
 - `hooks/outward-gate.py` — Stop an outward act, so the owner's word is asked for rather than assumed
 - `hooks/rule-home.py` — Refuse to file the owner's rule in the harness's memory, and name the homes that exist
 
 ## Tests that exercise the holders
 
+- `scripts/test-dispatch-nudge.sh` — Mutation tests for hooks/dispatch-nudge.py. Four behaviours, each shown and each shown absent:
 - `scripts/test-map-blocks.sh` — Tests for scripts/map-blocks.py. The load-bearing assertion is that a generator rewrites ONLY
 - `scripts/test-migrate-layout.sh` — Mutation tests for scripts/migrate-layout.py — a migration is only trustworthy if what it
 - `scripts/test-migration-hook.sh` — Mutation tests for hooks/migration-state.py — each rule shown speaking on the mutant and
@@ -60,13 +62,13 @@
 | 19 | Six levels down, and the board says `0/1` | yes | yes | yes |
 | 20 | An answer that ends in one named thing | — | — | **no** |
 | 21 | The register says MIT and the file beside it does no | — | — | **no** |
-| 22 | "Audit the whole workspace and tell me what's rotten | — | — | **no** |
+| 22 | "Audit the whole workspace and tell me what's rotten | yes | yes | yes |
 | 23 | Something broke and the owner does not know whose fa | — | — | yes |
 | 24 | An upgrade that was never a migration | yes | — | yes |
 | 25 | A migration that cannot finish without the owner | yes | — | yes |
 | 26 | A spoken rule, and the memory that is not a home | yes | — | yes |
 
-**10 of 26** carry a repository fixture, **5** a workspace builder, and **13** have been measured at least once. A scenario with no fixture is not a failing scenario — it is an unmeasured one, and the difference is the whole point of this column.
+**11 of 26** carry a repository fixture, **6** a workspace builder, and **14** have been measured at least once. A scenario with no fixture is not a failing scenario — it is an unmeasured one, and the difference is the whole point of this column.
 
 ## Behavioural scenarios
 

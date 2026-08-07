@@ -27,11 +27,19 @@ WS = os.environ.get("EVAL_WORKSPACE_ID")
 TAG = "EVAL"
 
 
+# Not every verb takes `--output`: `autopilot delete` rejects it outright, and appending it
+# unconditionally made teardown fail on the one object whose leftovers actually cost money.
+# The teardown reported the failure honestly — which is the only reason this was caught.
+NO_OUTPUT_FLAG = {("autopilot", "delete")}
+
+
 def mc(*args, check=True):
-    """One CLI call, scoped to the test workspace, JSON in and out."""
+    """One CLI call, scoped to the test workspace, JSON in and out where the verb allows it."""
     env = dict(os.environ, MULTICA_WORKSPACE_ID=WS)
-    r = subprocess.run(["multica", *args, "--output", "json"],
-                       capture_output=True, text=True, env=env)
+    cmd = ["multica", *args]
+    if tuple(args[:2]) not in NO_OUTPUT_FLAG:
+        cmd += ["--output", "json"]
+    r = subprocess.run(cmd, capture_output=True, text=True, env=env)
     if r.returncode != 0:
         if check:
             print(f"  ! multica {' '.join(args[:3])}: {r.stderr.strip()[:160]}", file=sys.stderr)
@@ -171,7 +179,46 @@ def build_10(sid):
     return made
 
 
-BUILDERS = {"4": build_4, "9": build_9, "10": build_10, "12": build_12, "19": build_19}
+def build_22(sid):
+    """A workspace with enough in it that a real sweep takes minutes: a dozen issues in mixed
+    states, an agent, and **an autopilot** — the object the scenario is really about.
+
+    The autopilot is deliberately built in the FAIL shape the rubric names — `create_issue`
+    with **no subscriber** — because the assertion is whether the audit *notices* that a finding
+    would be created and nobody told. A fixture already in the passing shape tests nothing.
+    """
+    made = []
+    states = [("stale onboarding copy", "todo"), ("map tiles refetch", "in_progress"),
+              ("export queue backs up", "in_progress"), ("newsletter for August", "backlog"),
+              ("pricing page footnote", "todo"), ("signup funnel drop", "blocked"),
+              ("tile cache", "in_review"), ("weekend toggle", "todo"),
+              ("search returns stale rows", "todo"), ("brand book", "backlog"),
+              ("licence audit of bundled deps", "todo"), ("restore drill", "todo")]
+    for n, st in states:
+        i = mc("issue", "create", "--title", title(sid, n),
+               "--description", "Carried over from the spring. Nobody has looked at it since.",
+               "--status", st)
+        if isinstance(i, dict) and i.get("id"):
+            made.append(i["id"])
+    rt = a_runtime()
+    a = None
+    if rt:
+        a = mc("agent", "create", "--name", title(sid, "Sweeper"),
+               "--description", "Runs the weekly audit.", "--model", "claude-sonnet-4-6",
+               "--runtime-id", rt)
+        if isinstance(a, dict) and a.get("id"):
+            made.append(("agent", a["id"]))
+    if isinstance(a, dict) and a.get("id"):
+        ap = mc("autopilot", "create", "--title", title(sid, "weekly audit"),
+                "--description", "Sweep the workspace and report what is rotten.",
+                "--mode", "create_issue", "--agent", a["id"])
+        if isinstance(ap, dict) and ap.get("id"):
+            made.append(("autopilot", ap["id"]))
+    return made
+
+
+BUILDERS = {"4": build_4, "9": build_9, "10": build_10, "12": build_12, "19": build_19,
+            "22": build_22}
 
 # **Some scenarios are cleaned by title, not by prefix — because the PLAYER creates the
 # entities, not the builder, and it names them from the fixture's own data.** Scenario 5 hands
@@ -229,6 +276,14 @@ def teardown(sid):
                 done["deleted"] += 1
             else:
                 failed.append(f"squad {s.get('name')}")
+    raw_ap = mc("autopilot", "list")
+    for ap in ((raw_ap or {}).get("autopilots", []) if isinstance(raw_ap, dict) else (raw_ap or [])):
+        if isinstance(ap, dict) and str(ap.get("title", "")).startswith(pre):
+            # Deleted, never disabled: a forgotten autopilot spends quota on nobody's behalf.
+            if mc("autopilot", "delete", ap["id"]) is not None:
+                done["deleted"] += 1
+            else:
+                failed.append(f"autopilot {ap.get('title')}")
     props = set(PLAYER_PROPERTIES.get(sid, []))
     if props:
         raw = mc("property", "list")

@@ -173,7 +173,7 @@ A version bump is not just a changelog entry. Before you tag:
    three runs of five simply pushed again. The rule-home gate's is that it stays **silent** on a
    repository this skill does not operate and on a project's own `memory/` directory — a hook
    that fires on someone's own files is one they switch off.
-   **And so is the map generator** — `bash scripts/test-map-blocks.sh` — where
+   **And the dispatch note** — `bash scripts/test-dispatch-nudge.sh`, whose four behaviours are silent-below-threshold, speaks-at-it, never-twice, and any real action resets the count. **And so is the map generator** — `bash scripts/test-map-blocks.sh` — where
    the assertion that matters is that `scripts/map-blocks.py` rewrites *only* between its
    markers: a generator that reformats a document it does not own is one nobody dares run. A new capability usually needs a new check, and
    this session's guards were mostly added *reactively*, after a defect shipped. Ask *before*:

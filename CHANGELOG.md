@@ -39,6 +39,14 @@ doors are named instead: the owner runs the command, or sets `MOPS_OUTWARD_GATE=
 purpose. **5/5 after the repair.** (And the inherited note that plugin `PreToolUse` hooks do
 not fire under `claude -p` was checked rather than trusted — they do.)
 
+**A long read with nothing dispatched gets a note** — `hooks/dispatch-nudge.py`, after an
+unbroken run of read-only calls. It **reports and never refuses**, because reading is
+legitimate. Stated plainly: it did **not** move the measured rate the way the two refusing gates
+did, and it is shipped as an aid rather than a repair. What it did produce is a runtime fact
+worth having — **a `PostToolUse` hook's stderr never reaches the model; only
+`hookSpecificOutput.additionalContext` does.** A note nobody receives is not a weaker gate, it
+is no gate, and the first build of this one was exactly that.
+
 **And `_ops/` is a shared door, so ownership is read before anything is written.** The sibling
 project `opsinist` runs the same methodology out of files and uses the same directory —
 **nine of the twelve documents inside are named identically** (measured 2026-08-07). Sharing the
