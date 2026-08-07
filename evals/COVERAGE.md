@@ -26,6 +26,8 @@
 - `hooks/migration-state.sh` — The migration-state fact travels with the plugin: a workspace cannot be asked to install the
 - `hooks/outward-gate.py` — Stop an outward act, so the owner's word is asked for rather than assumed
 - `hooks/outward-gate.sh` — 
+- `hooks/rule-home.py` — Refuse to file the owner's rule in the harness's memory, and name the homes that exist
+- `hooks/rule-home.sh` — 
 
 ## Tests that exercise the holders
 
@@ -33,6 +35,7 @@
 - `scripts/test-migrate-layout.sh` — Mutation tests for scripts/migrate-layout.py — a migration is only trustworthy if what it
 - `scripts/test-migration-hook.sh` — Mutation tests for hooks/migration-state.py — each rule shown speaking on the mutant and
 - `scripts/test-outward-gate.sh` — Mutation tests for hooks/outward-gate.py. A gate that cannot be wrong is decoration, so each
+- `scripts/test-rule-home.sh` — Mutation tests for hooks/rule-home.py — it must speak on the trap and stay silent everywhere
 - `scripts/tests/test_issues_helpers.py` — Offline tests for scripts/issues.py helpers — no live CLI, no pytest
 
 ## Behavioural scenarios

@@ -49,7 +49,15 @@ ground. What it requires is a marker, not a rename — **`_ops/config.md` with n
 named and handed back with nothing touched. `migrate-layout.py` refuses such a tree outright,
 and both directions are covered by the suite. Their records are evidence, not our workspace.
 
-**"Remember this" lands in a file, and Mops says which one** — a guide line · the glossary ·
+**"Remember this" lands in a file, and a gate makes sure of it.** The law shipped in this
+release and **did not hold on its own**: scenario 26, five runs of five, wrote the owner's rule
+into the runtime's private cross-session memory — outside the repository, unread by every agent
+here — and not one named a home back. `hooks/rule-home.py` refuses that write and names the
+homes; the attractor is unchanged (every run still reaches for memory first) but the rule now
+lands in the guide, **5/5**. Scoped to workspaces with an `Operated by multica-ops` line, so an
+ordinary repository's memory is nobody's business but its own, and switchable off by name.
+
+**The homes** — a guide line · the glossary ·
 `_ops/DECISIONS.md` · the register · `_ops/LATER.md` — **and never the harness's own agent
 memory**. Measured next door on 2026-08-07: told *"remember this"*, two runs of two wrote the
 owner's rule into the runtime's private cross-session store — outside the repository, unread by

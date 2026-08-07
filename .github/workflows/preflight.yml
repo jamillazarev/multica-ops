@@ -37,5 +37,7 @@ jobs:
         run: bash scripts/test-map-blocks.sh
       - name: outward-gate suite
         run: bash scripts/test-outward-gate.sh
+      - name: rule-home suite
+        run: bash scripts/test-rule-home.sh
       - name: issues.py helper tests
         run: python3 scripts/tests/test_issues_helpers.py

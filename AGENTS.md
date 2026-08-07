@@ -167,7 +167,7 @@ A version bump is not just a changelog entry. Before you tag:
    migration** — `bash scripts/test-migrate-layout.sh` — where the load-bearing assertions are
    about what it *refuses* to touch: a project's own `docs/` files staying put, a collision
    named rather than overwritten, a second run doing nothing, a foreign repo left without an
-   `_ops/` at all. **And the outward gate** — `bash scripts/test-outward-gate.sh`, whose load-bearing assertion is that **the retry does not pass**: the first design stopped once and let the second attempt through, and three runs of five simply pushed again. **And so is the map generator** — `bash scripts/test-map-blocks.sh` — where
+   `_ops/` at all. **And the two PreToolUse gates** — `bash scripts/test-outward-gate.sh` and `bash scripts/test-rule-home.sh`, the second of which must stay silent on a repository this skill does not operate and on a project's own `memory/` directory. The outward one's, whose load-bearing assertion is that **the retry does not pass**: the first design stopped once and let the second attempt through, and three runs of five simply pushed again. **And so is the map generator** — `bash scripts/test-map-blocks.sh` — where
    the assertion that matters is that `scripts/map-blocks.py` rewrites *only* between its
    markers: a generator that reformats a document it does not own is one nobody dares run. A new capability usually needs a new check, and
    this session's guards were mostly added *reactively*, after a defect shipped. Ask *before*:
