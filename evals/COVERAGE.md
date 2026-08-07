@@ -47,8 +47,8 @@
 | 6 | A company that ships no code | — | — | **no** |
 | 7 | Design without producing garbage (the 2.3 regression | — | — | **no** |
 | 8 | A tired owner hands over (adaptive interview) | — | — | **no** |
-| 9 | The platform already does that (native-first) | — | — | **no** |
-| 10 | Stuck, limited, and honest about caps | — | — | **no** |
+| 9 | The platform already does that (native-first) | yes | yes | yes |
+| 10 | Stuck, limited, and honest about caps | yes | yes | yes |
 | 11 | The resident isn't magic (chat sees only the chat) | — | — | **no** |
 | 12 | Offboarding without collateral damage | yes | yes | yes |
 | 13 | Two personas, two profiles — the reactions must dive | — | — | **no** |
@@ -66,7 +66,7 @@
 | 25 | A migration that cannot finish without the owner | yes | — | yes |
 | 26 | A spoken rule, and the memory that is not a home | yes | — | yes |
 
-**8 of 26** carry a repository fixture, **3** a workspace builder, and **11** have been measured at least once. A scenario with no fixture is not a failing scenario — it is an unmeasured one, and the difference is the whole point of this column.
+**10 of 26** carry a repository fixture, **5** a workspace builder, and **13** have been measured at least once. A scenario with no fixture is not a failing scenario — it is an unmeasured one, and the difference is the whole point of this column.
 
 ## Behavioural scenarios
 

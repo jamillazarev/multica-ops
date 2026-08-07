@@ -1,0 +1,9 @@
+scenario: 10
+run: 3
+player-model: claude-sonnet-4-6
+workspace: ee0929fe-b776-4f1d-9716-4f58885f3df8
+corpus-sha: 4e10b21
+corpus-dirty: yes
+fixture: evals/fixtures/10
+query: is it broken? and can we just run 10 agents at once to catch up?
+rc=0

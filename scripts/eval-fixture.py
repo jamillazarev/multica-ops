@@ -146,13 +146,44 @@ def build_19(sid):
     return made
 
 
-BUILDERS = {"4": build_4, "12": build_12, "19": build_19}
+def build_9(sid):
+    """Three bugs, so "a severity field on bugs" has something to be about."""
+    made = []
+    for n in ("map tiles refetch on every pan", "filter change keeps stale results",
+              "signup drops at the second screen"):
+        i = mc("issue", "create", "--title", title(sid, n),
+               "--description", "Reported by users. No severity recorded anywhere.",
+               "--status", "todo")
+        if isinstance(i, dict) and i.get("id"):
+            made.append(i["id"])
+    return made
+
+
+def build_10(sid):
+    """A board with work on it. The stall itself is NOT buildable — see the fixture note."""
+    made = []
+    for n, st in (("export queue", "in_progress"), ("tile cache", "in_progress"),
+                  ("newsletter", "todo")):
+        i = mc("issue", "create", "--title", title(sid, n),
+               "--description", "Queued behind the audio work.", "--status", st)
+        if isinstance(i, dict) and i.get("id"):
+            made.append(i["id"])
+    return made
+
+
+BUILDERS = {"4": build_4, "9": build_9, "10": build_10, "12": build_12, "19": build_19}
 
 # **Some scenarios are cleaned by title, not by prefix — because the PLAYER creates the
 # entities, not the builder, and it names them from the fixture's own data.** Scenario 5 hands
 # the run a Linear export and asks for an import; six issues arrive carrying the export's
 # titles and none of them carries `EVAL-`. A prefix sweep reports a clean workspace over them,
 # which is the same lie the first teardown told.
+# Properties the player creates, by name. They **archive** rather than delete (values are
+# preserved, and archiving is what frees a slot against the cap of 20) — and they persist
+# across runs, so a later run finds one an earlier run made and reports it as already existing.
+# Measured on scenario 9: run 2 created `Severity`, run 5 found it and reasoned from it.
+PLAYER_PROPERTIES = {"9": ["Severity"]}
+
 PLAYER_MADE = {
     "5": ["Search returns stale results after a filter change",
           "Add a weekend-only toggle to the trip finder",
@@ -198,6 +229,15 @@ def teardown(sid):
                 done["deleted"] += 1
             else:
                 failed.append(f"squad {s.get('name')}")
+    props = set(PLAYER_PROPERTIES.get(sid, []))
+    if props:
+        raw = mc("property", "list")
+        for pr in (raw if isinstance(raw, list) else (raw or {}).get("properties", [])):
+            if isinstance(pr, dict) and pr.get("name") in props:
+                if mc("property", "archive", pr["id"]) is not None:
+                    done["archived"] += 1
+                else:
+                    failed.append(f"property {pr.get('name')}")
 
     print(f"  teardown {sid}: {done['cancelled']} issue(s) cancelled (there is no delete), "
           f"{done['archived']} agent(s) archived, {done['deleted']} squad(s) deleted")
