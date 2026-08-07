@@ -148,6 +148,20 @@ def build_19(sid):
 
 BUILDERS = {"4": build_4, "12": build_12, "19": build_19}
 
+# **Some scenarios are cleaned by title, not by prefix — because the PLAYER creates the
+# entities, not the builder, and it names them from the fixture's own data.** Scenario 5 hands
+# the run a Linear export and asks for an import; six issues arrive carrying the export's
+# titles and none of them carries `EVAL-`. A prefix sweep reports a clean workspace over them,
+# which is the same lie the first teardown told.
+PLAYER_MADE = {
+    "5": ["Search returns stale results after a filter change",
+          "Add a weekend-only toggle to the trip finder",
+          "Onboarding: second screen drops 40% of signups",
+          "Update the pricing page footnote",
+          "Cache the tile layer on the map view",
+          "Write the August newsletter"],
+}
+
 
 def teardown(sid):
     """Cancel our issues, archive our agents, delete our squads — and say which was which.
@@ -161,11 +175,13 @@ def teardown(sid):
     in a workspace is indistinguishable from real work a month later.
     """
     pre = f"{TAG}-{sid}-"
+    by_title = set(PLAYER_MADE.get(sid, []))
     done = {"cancelled": 0, "archived": 0, "deleted": 0}
     failed = []
 
     for i in issues():
-        if str(i.get("title", "")).startswith(pre) and i.get("status") != "cancelled":
+        t = str(i.get("title", ""))
+        if (t.startswith(pre) or t in by_title) and i.get("status") != "cancelled":
             if mc("issue", "status", i["id"], "cancelled") is not None:
                 done["cancelled"] += 1
             else:

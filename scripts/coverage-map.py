@@ -43,14 +43,31 @@ def main():
 
     validators = [(f, first_comment(f)) for f in sorted(glob.glob("scripts/*.py"))
                   if not Path(f).name.startswith("test")]
-    hooks = [(f, first_comment(f)) for f in sorted(glob.glob("hooks/*"))
-             if Path(f).suffix in (".py", ".sh")]
+    # Only the `.py`: each hook ships with a one-line `.sh` shim that carries no docstring, and
+    # listing both doubled the count while adding a blank description per pair.
+    hooks = [(f, first_comment(f)) for f in sorted(glob.glob("hooks/*.py"))]
     tests = [(f, first_comment(f)) for f in
              sorted(glob.glob("scripts/test-*.sh") + glob.glob("scripts/tests/test_*.py"))]
 
     rubric = Path("evals/README.md").read_text(encoding="utf-8", errors="replace")
     scenarios = re.findall(r"^## (\d+)\.\s+(.+)$", rubric, flags=re.M)
     runs = sorted(p for p in glob.glob("evals/runs/*.md") if "TEMPLATE" not in p)
+
+    # **A scenario is only runnable if its situation can be built.** Two halves, and they are
+    # tracked separately because a round measured the wrong thing when only one existed: the
+    # repository half (a tree the player stands in) and the workspace half (a board built by
+    # `eval-fixture.py`). A scenario with neither can still be run if it needs no state; a
+    # scenario that needs state and has none is the void this column exists to make visible.
+    builders = set(re.findall(r'^BUILDERS = \{(.*?)\}', Path("scripts/eval-fixture.py")
+                              .read_text(encoding="utf-8", errors="replace"), re.S | re.M)[0:1])
+    have_builder = set(re.findall(r'"(\d+)":', "".join(builders)))
+    have_repo = {Path(d).name for d in glob.glob("evals/fixtures/*") if Path(d).is_dir()}
+    ran = set()
+    for r in runs:
+        body = Path(r).read_text(encoding="utf-8", errors="replace")
+        for m in re.finditer(r"^\|\s*(\d+)\s*\|[^|]*\|\s*([^|]*)\|", body, re.M):
+            if "not run" not in m.group(2).lower():
+                ran.add(m.group(1))
 
     L = ["# Coverage — what holds each rule, and what exercises each holder",
          "",
@@ -77,7 +94,20 @@ def main():
     L += [f"- `{n}` — {d}" for n, d in hooks]
     L += ["", "## Tests that exercise the holders", ""]
     L += [f"- `{n}` — {d}" for n, d in tests]
-    L += ["", "## Behavioural scenarios", "",
+    L += ["", "## Fixtures — what a scenario can be run against", "",
+          "| # | Scenario | repo half | workspace half | ever run |",
+          "|---|---|---|---|---|"]
+    for num, title in scenarios:
+        L.append(f"| {num} | {title.strip()[:52]} | "
+                 f"{'yes' if num in have_repo else '—'} | "
+                 f"{'yes' if num in have_builder else '—'} | "
+                 f"{'yes' if num in ran else '**no**'} |")
+    L += ["", f"**{len(have_repo)} of {len(scenarios)}** carry a repository fixture, "
+              f"**{len(have_builder)}** a workspace builder, and **{len(ran)}** have been "
+              "measured at least once. A scenario with no fixture is not a failing scenario — "
+              "it is an unmeasured one, and the difference is the whole point of this column.",
+          "",
+          "## Behavioural scenarios", "",
           f"- **{len(scenarios)} scenarios** in the rubric (`evals/README.md`)",
           f"- **{len(runs)} recorded runs**: "
           + " · ".join(f"`{Path(r).stem}`" for r in runs),
@@ -86,7 +116,8 @@ def main():
           ""]
     OUT.write_text("\n".join(L), encoding="utf-8")
     print(f"wrote {OUT} — {len(enforced)} enforcement kinds · {len(validators)} validators · "
-          f"{len(hooks)} hooks · {len(tests)} test suites · {len(scenarios)} scenarios · "
+          f"{len(hooks)} hooks · {len(tests)} test suites · {len(scenarios)} scenarios "
+          f"({len(ran)} measured, {len(have_repo)} with a fixture) · "
           f"{len(runs)} runs")
     return 0
 

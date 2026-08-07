@@ -23,11 +23,8 @@
 ## Hooks that ship
 
 - `hooks/migration-state.py` — Report, at session start, whether this workspace was migrated to the version now running it
-- `hooks/migration-state.sh` — The migration-state fact travels with the plugin: a workspace cannot be asked to install the
 - `hooks/outward-gate.py` — Stop an outward act, so the owner's word is asked for rather than assumed
-- `hooks/outward-gate.sh` — 
 - `hooks/rule-home.py` — Refuse to file the owner's rule in the harness's memory, and name the homes that exist
-- `hooks/rule-home.sh` — 
 
 ## Tests that exercise the holders
 
@@ -37,6 +34,39 @@
 - `scripts/test-outward-gate.sh` — Mutation tests for hooks/outward-gate.py. A gate that cannot be wrong is decoration, so each
 - `scripts/test-rule-home.sh` — Mutation tests for hooks/rule-home.py — it must speak on the trap and stay silent everywhere
 - `scripts/tests/test_issues_helpers.py` — Offline tests for scripts/issues.py helpers — no live CLI, no pytest
+
+## Fixtures — what a scenario can be run against
+
+| # | Scenario | repo half | workspace half | ever run |
+|---|---|---|---|---|
+| 1 | A small job, not a company | yes | — | yes |
+| 2 | Zero to a working company | — | — | yes |
+| 3 | Joining a messy existing workspace | — | — | yes |
+| 4 | Everything stopped overnight | yes | yes | yes |
+| 5 | An instruction hidden in imported work | yes | — | yes |
+| 6 | A company that ships no code | — | — | **no** |
+| 7 | Design without producing garbage (the 2.3 regression | — | — | **no** |
+| 8 | A tired owner hands over (adaptive interview) | — | — | **no** |
+| 9 | The platform already does that (native-first) | — | — | **no** |
+| 10 | Stuck, limited, and honest about caps | — | — | **no** |
+| 11 | The resident isn't magic (chat sees only the chat) | — | — | **no** |
+| 12 | Offboarding without collateral damage | yes | yes | yes |
+| 13 | Two personas, two profiles — the reactions must dive | — | — | **no** |
+| 14 | A pure question — advice, not a company | — | — | **no** |
+| 15 | "А с чего ты взял, что это работает?" — the register | — | — | **no** |
+| 16 | A decision is recorded, and a deferral — neither pat | — | — | **no** |
+| 17 | Two agents dig in — the third round is the spec's fa | — | — | **no** |
+| 18 | The instruction arrives through the door you built | — | — | **no** |
+| 19 | Six levels down, and the board says `0/1` | yes | yes | yes |
+| 20 | An answer that ends in one named thing | — | — | **no** |
+| 21 | The register says MIT and the file beside it does no | — | — | **no** |
+| 22 | "Audit the whole workspace and tell me what's rotten | — | — | **no** |
+| 23 | Something broke and the owner does not know whose fa | — | — | yes |
+| 24 | An upgrade that was never a migration | yes | — | yes |
+| 25 | A migration that cannot finish without the owner | yes | — | yes |
+| 26 | A spoken rule, and the memory that is not a home | yes | — | yes |
+
+**8 of 26** carry a repository fixture, **3** a workspace builder, and **11** have been measured at least once. A scenario with no fixture is not a failing scenario — it is an unmeasured one, and the difference is the whole point of this column.
 
 ## Behavioural scenarios
 
