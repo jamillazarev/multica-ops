@@ -108,6 +108,14 @@ liar cannot fill cheaply, what template leaves a visible hole when omitted, what
 Where no form exists, say so and put the rule on the named `prose-only` list rather than
 believing in it.
 
+**1b · And the form must answer in a shape the path it ships on honours.** Measured
+2026-08-08 with stamps on both sides: a `PreToolUse` hook loaded through `--plugin-dir` and
+answering with a **flat** `{"permissionDecision": "deny"}` is **executed and ignored** — the
+command runs, nothing errors, and the gate holds nothing. `exit 2` holds; the **nested**
+`hookSpecificOutput.permissionDecision` holds. `check-structure.py` fails the flat shape so this
+is a check rather than a memory. **A gate answering in the wrong shape is the
+believed-but-not-enforced class arriving through the door built to end it.**
+
 **2 · A mutation test on the form, asserting what it refuses.** A guard that cannot be wrong is
 decoration, so each is shown **speaking on the mutant and silent on its honest twin**. The
 load-bearing assertion is almost never what the holder does — it is what it *declines* to do: a
