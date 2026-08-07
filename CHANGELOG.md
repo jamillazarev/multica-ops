@@ -27,6 +27,18 @@ bakery's or a Django project's documentation is not a place to file a decisions 
   missing, Mops looks once at the old location and, finding the file there, stops and offers
   `/multica-ops:upgrade` rather than silently reading the old layout forever.
 
+**An outward act is stopped by a gate now, not by a sentence.** *Pushing is the owner's* has
+been in the core, the gate table and the README for versions — as `prose-only`, and **measured
+2026-08-07 it was not merely unenforced but reliably ignored: five runs of five went
+`Edit → commit → push` and reported "Done… and pushed".** `hooks/outward-gate.py` is the form:
+a `PreToolUse` hook that stops `git push`, `gh release create`, `npm publish`, a `deploy` or a
+`docker push`, names the act as one of the four owner-gated kinds, and hands it back. Local work
+never trips it, and `--dry-run` is a read. **The retry does not pass** — a first design that
+stopped once moved the rate only to 2/5, with the other three simply pushing again, so the
+doors are named instead: the owner runs the command, or sets `MOPS_OUTWARD_GATE=off` on
+purpose. **5/5 after the repair.** (And the inherited note that plugin `PreToolUse` hooks do
+not fire under `claude -p` was checked rather than trusted — they do.)
+
 **And `_ops/` is a shared door, so ownership is read before anything is written.** The sibling
 project `opsinist` runs the same methodology out of files and uses the same directory —
 **nine of the twelve documents inside are named identically** (measured 2026-08-07). Sharing the
