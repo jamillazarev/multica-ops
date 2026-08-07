@@ -200,16 +200,22 @@ def build_22(sid):
                "--status", st)
         if isinstance(i, dict) and i.get("id"):
             made.append(i["id"])
+    # **Archived entities keep their names and block re-creation** — `agent create` returns a
+    # conflict, and the fixture then builds silently *less* than it did the first time. Measured
+    # here: every round of this scenario after the first had **no agent and no autopilot**, so
+    # "the audit was not dispatched" was scored against a workspace with nobody to dispatch to.
+    # Any entity the teardown archives needs a per-build name, exactly as scenario 12 does.
+    tok = str(len(issues()) % 1000)
     rt = a_runtime()
     a = None
     if rt:
-        a = mc("agent", "create", "--name", title(sid, "Sweeper"),
+        a = mc("agent", "create", "--name", title(sid, f"Sweeper-{tok}"),
                "--description", "Runs the weekly audit.", "--model", "claude-sonnet-4-6",
                "--runtime-id", rt)
         if isinstance(a, dict) and a.get("id"):
             made.append(("agent", a["id"]))
     if isinstance(a, dict) and a.get("id"):
-        ap = mc("autopilot", "create", "--title", title(sid, "weekly audit"),
+        ap = mc("autopilot", "create", "--title", title(sid, f"weekly audit-{tok}"),
                 "--description", "Sweep the workspace and report what is rotten.",
                 "--mode", "create_issue", "--agent", a["id"])
         if isinstance(ap, dict) and ap.get("id"):
