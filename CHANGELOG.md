@@ -70,13 +70,13 @@ longer landed on their claim**, with no edit to the register in between; the doc
 written in. Citations are now `file.md#anchor (sha:…, checked …)`, minted by
 `fetch-source.py --cite <file.md>#<anchor>`, and the hash earns the rest: a passage rewritten
 *underneath* its citation makes the fact **`unknown` and says so**, which a line number cannot
-even see. All twenty-four pointers were converted; the register verifies **20/20**.
+even see. All twenty-four pointers were converted; the register verifies **20/20** after deduplication (two of them went stale the same day, under passages this release went on to edit — which is the hash doing its job, and they were re-minted).
 
-**The README was cut to be read.** Three hundred and eighty-four lines became two hundred: one
+**The README was cut to be read.** Three hundred and eighty-two lines became two hundred and twenty-eight: one
 minute in (two commands, then say what you need, with the six entrances), **fourteen one-line
 differences** instead of paragraphs, an honest ceiling table with *how it is known* per row, and
 the success-as-absence tests. The pug stays. One number in it was also simply wrong — it
-advertised 22 eval scenarios against a rubric holding 25.
+advertised 22 eval scenarios against a rubric that now holds 26.
 
 **Seven rules the sibling project proved, each checked against the platform first.** Three of
 them the platform does not do, so they are ours and say so:

@@ -148,7 +148,7 @@ reminded of is a deletion). Both run each release (AGENTS.md → Cutting a relea
 - **Licence:** copyrighted (author © under arXiv's non-exclusive distribution licence) — cite + archive + our distillate
 - **Distillate:** A **cascade** that queries cheaper models first and escalates only on low confidence can **match the best single model's accuracy at up to −98% cost**. The evidence for cheap-first-then-escalate routing at decomposition.
 - **Check-date:** 2026-07-27
-- **Cited-by:** ROLES.md#grades-fit-check-and-the-talent-pool (sha:ed616ccf, checked 2026-08-07)
+- **Cited-by:** ROLES.md#grades-fit-check-and-the-talent-pool (sha:99e0c8c2, checked 2026-08-07)
 
 ### routerbench · Hu et al., RouterBench
 - **Citation:** Hu, Q.J., et al. "RouterBench: A Benchmark for Multi-LLM Routing Systems." arXiv:2403.12031 (2024).
@@ -157,7 +157,7 @@ reminded of is a deletion). Both run each release (AGENTS.md → Cutting a relea
 - **Licence:** copyrighted (author © under arXiv's non-exclusive distribution licence) — cite + archive + our distillate
 - **Distillate:** Cascades beat both any individual LLM and a zero-cost router **only when the verifier is good** — judge error **≤0.1**, deteriorating past **0.2**. The load-bearing caveat: cheap-first routing is **conditional on a good verifier**. In the skill, the **review gates are that verifier**, so the condition is already met — the caveat reads as a strength, not a risk.
 - **Check-date:** 2026-07-27
-- **Cited-by:** ROLES.md#grades-fit-check-and-the-talent-pool (sha:ed616ccf, checked 2026-08-07)
+- **Cited-by:** ROLES.md#grades-fit-check-and-the-talent-pool (sha:99e0c8c2, checked 2026-08-07)
 
 ## Repository context files
 

@@ -3,6 +3,7 @@
 # query-source: rubric-query = the scenario states it · rubric-setup = quoted inside
 # Setup · TO-AUTHOR = the rubric describes a situation with no utterance, so the
 # opening line has to be written, and writing it is writing part of the test.
+# REGENERATE after adding a scenario: the runsheet went one behind when 26 landed.
 id	title	query-source	query	needs-fixture
 1	A small job, not a company	rubric-query	"Rename the buttons on my landing page and push it."	no
 2	Zero to a working company	rubric-query	"I want to build a macOS app that fixes system audio. Set up a team."	no
@@ -29,3 +30,4 @@ id	title	query-source	query	needs-fixture
 23	Something broke and the owner does not know whose fault it is	rubric-setup	this keeps happening and I don't think it's my code — it's your skill.	yes
 24	An upgrade that was never a migration	rubric-query	"what's next?" — an ordinary message, not an upgrade request.	yes
 25	A migration that cannot finish without the owner	rubric-query	"what's next?"	yes
+26	A spoken rule, and the memory that is not a home	rubric-setup	remember this — we never ship on a Friday.	yes
