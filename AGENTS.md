@@ -92,6 +92,60 @@ a use case, and a mention in SKILL — or the commit message says plainly why th
 *not* getting one. A capability shipped now and given its door later is invisible in between,
 which is the same failure as an unreachable one.
 
+### What a capability owes before it ships — four things, and why each one is here
+
+**A capability is not shipped when it is written. It is shipped when it is held, exercised and
+measured.** Every item below is here because shipping without it was measured *in this
+repository* and produced a release that looked finished and was not. They land in the same
+commit as the capability, or the commit message says plainly which one is missing and why.
+
+**1 · If the rule can fail, a form — never a stronger sentence.** Prose does not hold the weak
+executor, and this is not an opinion: three rules of one release were measured at **0/5, 0/5 and
+0/3** while stated clearly in the always-loaded core. Two were rebuilt as `PreToolUse` refusals
+and went to **5/5** each. **A refusal moves the rate; a note does not** — the third was written
+as a `PostToolUse` note and did not move it. Before writing the sentence, ask what artifact a
+liar cannot fill cheaply, what template leaves a visible hole when omitted, what check refuses.
+Where no form exists, say so and put the rule on the named `prose-only` list rather than
+believing in it.
+
+**2 · A mutation test on the form, asserting what it refuses.** A guard that cannot be wrong is
+decoration, so each is shown **speaking on the mutant and silent on its honest twin**. The
+load-bearing assertion is almost never what the holder does — it is what it *declines* to do: a
+migration leaving the craft's own files alone, a gate whose **retry also stops** (the first
+outward gate let the second attempt through, and three runs of five simply pushed again), a hook
+staying quiet on a repository this skill does not operate. Two traps worth naming, both paid
+for: **a guard must not share its sweep's blind spot** — the `docs/` check read the same two
+directories the sweep did and confirmed its silence while the always-loaded core kept sixteen
+stale paths — and **a suite must own its state directory**, or markers survive between runs and
+it passes *less* the more often you run it.
+
+**3 · A scenario, and the fixture that scenario needs.** A behaviour with no scenario has no
+regression test; a scenario with no fixture is **unmeasured, not passing**, and `evals/COVERAGE.md`
+has a column that says which. Four things a fixture owes, each measured:
+
+- **Both halves.** The repository half *and* the workspace half. With the board built and the
+  ground missing, four runs of five answered *"the working directory is empty, could you give me
+  more context?"* — correct about the room, nothing to do with the scenario.
+- **Rebuilt before every run.** A scenario that acts on its own fixture invalidates every run
+  after the first; runs 2–5 once arrived at a workspace the earlier runs had dismantled.
+- **A unique name per build for anything the teardown archives.** Archived entities keep their
+  names and block re-creation, so the second build silently produces *less* than the first — one
+  scenario ran for three rounds with no agent to dispatch to, and scored the skill for it.
+- **A teardown that reports its own failure.** The first one printed *"0 issue(s) cancelled"*
+  over three live issues, because the verb was wrong and the error was swallowed. It exits
+  nonzero and names what it left behind; a probe left in a workspace is indistinguishable from
+  real work a month later.
+
+**4 · A door** — the command rule above, unchanged: a capability nobody can reach does not exist
+for the agent who needs it.
+
+**And the measurement is only as good as the harness.** A number taken through a broken rig is
+worse than no number, because it reads as behaviour. Before trusting a rate, confirm the player
+had its own working directory, its own config home, no other MCP servers, the corpus under test
+**readable** (the companions sit outside the working directory and were denied for a whole
+round), and no answer key in the box. When a defect is found in the rig, **the numbers taken
+before the fix are withdrawn, not carried forward**.
+
 ### Writing the changelog
 
 The changelog is the migration map `/multica-ops:upgrade` reads, and it is also what a stranger uses to
@@ -159,6 +213,15 @@ A version bump is not just a changelog entry. Before you tag:
 2. **Run the four review lenses** (deletion · adversarial · contradiction · cold-read) on the
    changed skill — they find the class of defect no script can: a sentence that parses, links
    and is false. This is not optional for a minor or major; a patch can skip it.
+   **`bash scripts/lens.sh <lens> <base-ref>`** runs one as an isolated headless session — its
+   own config home, no connectors, no memory of the session that wrote the corpus, read-only —
+   because **the author cannot be the reader who did not write it**. On 0.4.0 the four found
+   **sixteen defects with every script green**, including the always-loaded core still pointing
+   at the pre-release layout. **State the limit with the result**: this is independent of the
+   *session* and not of the *model*, and the rule below still prefers a different provider. A
+   lens that exhausts its turn budget reported nothing and is recorded as **not completed** —
+   it is indistinguishable from one nobody ran, and the run record says so rather than quietly
+   dropping it.
 3. **Keep the guards current — they rot too.** **The shipped hooks are tested by mutation** —
    `bash scripts/test-migration-hook.sh` — each rule shown speaking on the mutant and silent on
    its honest twin, because a hook that cannot be wrong is decoration and this one only ever

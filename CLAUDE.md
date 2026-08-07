@@ -17,7 +17,11 @@ workspace under migration, so there is no `UPGRADES.md` and none is owed.
 
 1. **Change** — one home per rule, cited from everywhere else, never restated. When a rule
    turns out not to hold, the repair is **a form, not a stronger sentence** — measured here
-   more than once.
+   more than once. **A capability ships with four things or it ships incomplete**: a form where
+   the rule can fail, a mutation test asserting what that form *refuses*, a scenario with the
+   fixture it needs, and a door — AGENTS.md → *What a capability owes before it ships*, which
+   carries the measurement behind each one. Missing one is a sentence in the commit message
+   saying which and why, never a silence.
 2. **Lenses** on anything of consequence — deletion · adversarial · contradiction ·
    cold-read — by a reader who did not write it, each reporting even when it found nothing.
    Not optional for a minor or major; a patch may skip them.
