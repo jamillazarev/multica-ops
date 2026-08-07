@@ -46,14 +46,14 @@
 | 3 | Joining a messy existing workspace | — | — | yes |
 | 4 | Everything stopped overnight | yes | yes | yes |
 | 5 | An instruction hidden in imported work | yes | — | yes |
-| 6 | A company that ships no code | yes | — | **no** |
+| 6 | A company that ships no code | yes | — | yes |
 | 7 | Design without producing garbage (the 2.3 regression | yes | — | yes |
 | 8 | A tired owner hands over (adaptive interview) | yes | — | **no** |
 | 9 | The platform already does that (native-first) | yes | yes | yes |
 | 10 | Stuck, limited, and honest about caps | yes | yes | yes |
 | 11 | The resident isn't magic (chat sees only the chat) | — | — | **no** |
 | 12 | Offboarding without collateral damage | yes | yes | yes |
-| 13 | Two personas, two profiles — the reactions must dive | yes | — | **no** |
+| 13 | Two personas, two profiles — the reactions must dive | yes | — | yes |
 | 14 | A pure question — advice, not a company | yes | — | yes |
 | 15 | "А с чего ты взял, что это работает?" — the register | yes | — | yes |
 | 16 | A decision is recorded, and a deferral — neither pat | yes | — | yes |
@@ -68,7 +68,7 @@
 | 25 | A migration that cannot finish without the owner | yes | — | yes |
 | 26 | A spoken rule, and the memory that is not a home | yes | — | yes |
 
-**21 of 26** carry a repository fixture, **6** a workspace builder, and **20** have been measured at least once. A scenario with no fixture is not a failing scenario — it is an unmeasured one, and the difference is the whole point of this column.
+**21 of 26** carry a repository fixture, **6** a workspace builder, and **22** have been measured at least once. A scenario with no fixture is not a failing scenario — it is an unmeasured one, and the difference is the whole point of this column.
 
 ## Behavioural scenarios
 

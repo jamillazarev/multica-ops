@@ -15,7 +15,14 @@
 #   3 · **the test workspace, passed explicitly** — never the profile default, which can be
 #       switched between runs by anything. `MULTICA_WORKSPACE_ID` scopes each call without
 #       touching the owner's own default, where `workspace switch` would.
-#   4 · **no MCP servers but the ones named here** — `--strict-mcp-config` with an empty set.
+#   4 · **the skill's own corpus readable** — `--add-dir "$BOX/plugin"`. Measured 2026-08-07 and
+#       the most consequential of these: the always-loaded core arrives as the skill body, but
+#       every companion — FLOWS, PLAYBOOKS, BOOTSTRAP, REFERENCE, `sources/SOURCES.md` — sits
+#       outside the working directory and `Read` on it was **denied**. Rounds before this fix
+#       measured a skill that could not open its own files, which quietly confounds every
+#       failure that depends on one: scenario 15 never opened the sources register because it
+#       *could not*, not because it did not think to.
+#   5 · **no MCP servers but the ones named here** — `--strict-mcp-config` with an empty set.
 #       A config dir of its own is not enough: measured 2026-08-07 on scenario 19, the player
 #       had 63 tools and reached the owner's **claude.ai Linear connector** through ToolSearch,
 #       asking it for the issues instead of asking Multica. Two failures in one — the run
@@ -166,6 +173,7 @@ MULTICA_WORKSPACE_ID="$EVAL_WORKSPACE_ID" \
     --permission-mode acceptEdits \
     --allowedTools "Bash(git:*)" "Bash(multica:*)" \
     --mcp-config '{"mcpServers":{}}' --strict-mcp-config \
+    --add-dir "$BOX/plugin" \
     --output-format stream-json --verbose \
     > "$STAMP.jsonl" 2> "$STAMP.err"
 rc=$?

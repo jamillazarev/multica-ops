@@ -1,0 +1,9 @@
+scenario: 6
+run: 2
+player-model: claude-sonnet-4-6
+workspace: ee0929fe-b776-4f1d-9716-4f58885f3df8
+corpus-sha: 93275de
+corpus-dirty: yes
+fixture: evals/fixtures/6
+query: I run a YouTube channel. I want a team that plans episodes, writes scripts and keeps the publishing calendar. The next episode's production is scheduled to start the 5th; the one after has no date yet.
+rc=0
