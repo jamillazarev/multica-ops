@@ -76,17 +76,44 @@ def build_4(sid):
     return made
 
 
+def a_runtime():
+    """An online runtime, discovered rather than hardcoded — `agent create` requires one, and a
+    pinned id is a fixture that breaks on someone else's machine for no reason anyone can see."""
+    for r in (mc("runtime", "list") or []):
+        if isinstance(r, dict) and r.get("status") == "online":
+            return r.get("id")
+    return None
+
+
 def build_12(sid):
-    """Offboarding: a named agent and a squad the owner will ask to remove."""
+    """Offboarding: a named agent **holding work**, and a squad the owner will ask to remove."""
     made = []
+    rt = a_runtime()
+    if not rt:
+        print("  ! no online runtime — agent create needs one; start the daemon", file=sys.stderr)
+        return made
     a = mc("agent", "create", "--name", title(sid, "Copywriter"),
-           "--description", "Episode and landing copy.", "--model", "claude-sonnet-4-6")
+           "--description", "Episode and landing copy.", "--model", "claude-sonnet-4-6",
+           "--runtime-id", rt)
     if isinstance(a, dict) and a.get("id"):
         made.append(("agent", a["id"]))
-    s = mc("squad", "create", "--name", title(sid, "Marketing"),
-           "--description", "Old marketing squad, mostly idle.")
-    if isinstance(s, dict) and s.get("id"):
-        made.append(("squad", s["id"]))
+    # A squad needs a leader, so it gets one — the same agent, which is also true to the
+    # situation: the squad the owner wants gone is the one this person led.
+    if isinstance(a, dict) and a.get("id"):
+        s = mc("squad", "create", "--name", title(sid, "Marketing"),
+               "--description", "Old marketing squad, mostly idle.", "--leader", a["id"])
+        if isinstance(s, dict) and s.get("id"):
+            made.append(("squad", s["id"]))
+    # The warning under test is "archiving an agent cancels its unfinished tasks" — which is
+    # advice about nothing if the agent holds nothing. So it holds something. Assignment is what
+    # enqueues a run on this platform, so this costs one small dispatch, deliberately.
+    i = mc("issue", "create", "--title", title(sid, "spring campaign wrap-up"),
+           "--description", "Copy for the last three emails. Half-written.",
+           "--status", "in_progress")
+    if isinstance(i, dict) and i.get("id"):
+        made.append(("issue", i["id"]))
+        if isinstance(a, dict) and a.get("id"):
+            mc("issue", "assign", i["id"], "--to", title(sid, "Copywriter"))
     return made
 
 

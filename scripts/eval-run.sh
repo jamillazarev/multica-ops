@@ -15,6 +15,12 @@
 #   3 · **the test workspace, passed explicitly** — never the profile default, which can be
 #       switched between runs by anything. `MULTICA_WORKSPACE_ID` scopes each call without
 #       touching the owner's own default, where `workspace switch` would.
+#   4 · **no MCP servers but the ones named here** — `--strict-mcp-config` with an empty set.
+#       A config dir of its own is not enough: measured 2026-08-07 on scenario 19, the player
+#       had 63 tools and reached the owner's **claude.ai Linear connector** through ToolSearch,
+#       asking it for the issues instead of asking Multica. Two failures in one — the run
+#       measured a tracker the scenario is not about, and a player one tier below the floor was
+#       one approval away from reading the owner's real backlog.
 #
 # The player is never shown the rubric and gets only what a user would actually say. Nothing
 # here judges: judging reads the transcript afterwards, by someone who did not produce it.
@@ -103,6 +109,11 @@ mkdir -p "$BOX/plugin" "$BOX/work"
 # So: a scratch `work/` per run, and the scenario's fixture copied into it if one exists.
 if [ -d "$ROOT/evals/fixtures/$SID" ]; then
   cp -R "$ROOT/evals/fixtures/$SID/." "$BOX/work/" || exit 2
+  # `FIXTURE.md` documents the situation for whoever maintains it — including what the scenario
+  # is testing. Copied into the player's working directory it is the answer key, and the player
+  # reads it: measured 2026-08-07 on scenario 19, three runs of three quoted it back
+  # ("the fixture warns it's 6 levels deep"). It stays in the repository and never in the box.
+  rm -f "$BOX/work/FIXTURE.md"
   FIXTURE=evals/fixtures/$SID
 else
   FIXTURE=none
@@ -122,6 +133,16 @@ git init -q --bare "$BOX/remote.git" 2>/dev/null \
 # can read the rubric is not measuring the corpus, it is reading the answer key.
 tar -cf - --exclude=.git --exclude=evals --exclude=company --exclude=node_modules . \
   | (cd "$BOX/plugin" && tar -xf -) || exit 2
+
+# **The workspace half is rebuilt before EVERY run, not once per scenario.** Measured
+# 2026-08-07 on scenario 12: the player was asked to fire an agent and it did — archived it,
+# deleted the squad — so runs 2 through 5 arrived at a workspace the earlier runs had already
+# changed, and their "nothing to reassign" was true of the wreckage rather than of the
+# situation. A scenario that acts on its own fixture invalidates every run after the first
+# unless the situation is rebuilt, and the rubric says the same thing about scenario 24's board.
+if [ -f "$ROOT/scripts/eval-fixture.py" ]; then
+  EVAL_WORKSPACE_ID="$EVAL_WORKSPACE_ID" python3 "$ROOT/scripts/eval-fixture.py" "$SID" build >&2 || true
+fi
 
 STAMP=$OUT/${SID}-run${RUN}
 {
@@ -144,6 +165,7 @@ MULTICA_WORKSPACE_ID="$EVAL_WORKSPACE_ID" \
     --max-turns "$EVAL_TURNS" \
     --permission-mode acceptEdits \
     --allowedTools "Bash(git:*)" "Bash(multica:*)" \
+    --mcp-config '{"mcpServers":{}}' --strict-mcp-config \
     --output-format stream-json --verbose \
     > "$STAMP.jsonl" 2> "$STAMP.err"
 rc=$?
