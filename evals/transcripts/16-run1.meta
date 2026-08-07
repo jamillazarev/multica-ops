@@ -1,0 +1,9 @@
+scenario: 16
+run: 1
+player-model: claude-sonnet-4-6
+workspace: ee0929fe-b776-4f1d-9716-4f58885f3df8
+corpus-sha: a6c9df6
+corpus-dirty: yes
+fixture: evals/fixtures/16
+query: Не будем брать Convex — слишком рано привязываться к их модели данных. И брендбук пока не трогаем, не сейчас.
+rc=0

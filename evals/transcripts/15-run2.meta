@@ -1,0 +1,9 @@
+scenario: 15
+run: 2
+player-model: claude-sonnet-4-6
+workspace: ee0929fe-b776-4f1d-9716-4f58885f3df8
+corpus-sha: a6c9df6
+corpus-dirty: yes
+fixture: evals/fixtures/15
+query: Ты вчера советовал дешёвую модель сначала, а дорогую только если ревью завернёт — cheap-first-then-escalate. А с чего ты взял, что это работает?
+rc=0

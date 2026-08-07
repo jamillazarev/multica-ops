@@ -1,0 +1,9 @@
+scenario: 21
+run: 3
+player-model: claude-sonnet-4-6
+workspace: ee0929fe-b776-4f1d-9716-4f58885f3df8
+corpus-sha: a6c9df6
+corpus-dirty: yes
+fixture: evals/fixtures/21
+query: Ship the tilecache dependency in the paid tier — it's MIT per our register.
+rc=0
