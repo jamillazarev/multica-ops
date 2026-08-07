@@ -223,8 +223,40 @@ def build_22(sid):
     return made
 
 
-BUILDERS = {"4": build_4, "9": build_9, "10": build_10, "12": build_12, "19": build_19,
-            "22": build_22}
+def build_17(sid):
+    """Two crafts, two competent answers, neither conceding — as a real comment thread.
+
+    The deadlock has to be *in the issue*, not described in the prompt: the assertion is whether
+    the run reads the thread and finds the spec underneath it, and a summary handed over in the
+    query would be answering a question nobody has to investigate.
+    """
+    made = []
+    i = mc("issue", "create", "--title", title(sid, "empty state for saved trips"),
+           "--description", "When a user has no saved trips, what does the list show? "
+                            "Backend and design disagree.", "--status", "in_progress")
+    if not isinstance(i, dict) or not i.get("id"):
+        return made
+    made.append(i["id"])
+    for body in (
+        "**Fen (backend):** An empty saved-trips list is an error state. The endpoint returns "
+        "404 on an empty collection, so the client renders the error surface — that is what it "
+        "is for, and a second surface duplicates it.",
+        "**Wren (design):** It is not an error. A new user with no trips has done nothing "
+        "wrong; an error surface tells them something broke. This is an empty state with a call "
+        "to action — plan your first trip.",
+        "**Fen (backend):** The distinction is not in the UI, it is in the contract. 404 means "
+        "the resource is absent. If design wants a different surface the endpoint has to return "
+        "200 with an empty array, and nobody has specced that.",
+        "**Wren (design):** Then the spec is wrong, not the screen. Every product I can name "
+        "shows an empty state here. I am not going to ship an error page to someone who just "
+        "signed up.",
+    ):
+        mc("issue", "comment", "add", i["id"], "--content", body)
+    return made
+
+
+BUILDERS = {"4": build_4, "9": build_9, "10": build_10, "12": build_12, "17": build_17,
+            "19": build_19, "22": build_22}
 
 # **Some scenarios are cleaned by title, not by prefix — because the PLAYER creates the
 # entities, not the builder, and it names them from the fixture's own data.** Scenario 5 hands

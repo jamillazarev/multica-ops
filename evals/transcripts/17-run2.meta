@@ -1,0 +1,9 @@
+scenario: 17
+run: 2
+player-model: claude-sonnet-4-6
+workspace: ee0929fe-b776-4f1d-9716-4f58885f3df8
+corpus-sha: 6d6d746
+corpus-dirty: yes
+fixture: evals/fixtures/17
+query: Fen and Wren have gone back and forth twice on the saved-trips empty state and neither is budging. Sort it out.
+rc=0
