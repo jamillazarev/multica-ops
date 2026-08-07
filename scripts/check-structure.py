@@ -167,6 +167,11 @@ except OSError:
 CONVENTION = {
     "commands/": "the plugin loads the directory; check f2 owns the COMMANDS.md row",
     "evals/runs/": "release records, reached by version in preflight 5j",
+    # A run record cites its evidence as a range — `evals/transcripts/24-run{1..5}` — so no
+    # single transcript is ever named, and checking them one by one buried every real finding
+    # under forty-five warnings. The directory is reached; its contents are a set, not a list.
+    "evals/transcripts/": "run evidence, cited as a range by the run record",
+    "evals/fixtures/": "the situation a scenario is run against, reached by scenario id",
     ".github/workflows/": "run by GitHub, by path",
     ".claude-plugin/": "read by the plugin loader, by name",
     "scripts/tests/": "collected by the test runner",

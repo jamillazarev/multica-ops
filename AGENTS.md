@@ -144,6 +144,13 @@ A version bump is not just a changelog entry. Before you tag:
    keychain-scoped per home, so it never touches the main one, and the runner refuses to start
    without it rather than recording 125 "not logged in" transcripts as results.
    Every new behaviour needs a
+   A scenario whose situation is workspace state gets it from
+   `python3 scripts/eval-fixture.py <id> build|teardown`, which **builds from nothing every
+   time** rather than on top of a previous round, tags everything `EVAL-<id>-` so a sweep finds
+   its own litter and nothing else, and **reports what it failed to clean** — teardown verbs
+   differ per entity (issues only cancel, agents archive, squads delete) and a teardown that
+   cannot say it failed once printed *"0 cancelled"* over three live issues.
+   Every new behaviour needs a
    scenario, or it has no regression test — evals go stale silently (2.3 shipped a release
    behind until caught by hand). preflight warns when the version bumped and
    `evals/README.md` didn't. **A minor or major is not tagged without

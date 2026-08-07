@@ -12,6 +12,7 @@
 
 - `scripts/check-structure.py` — Structural integrity of the docs. Every check here exists because the defect it
 - `scripts/coverage-map.py` — Regenerate the coverage map: what holds each rule, and what exercises each holder
+- `scripts/eval-fixture.py` — Build and tear down a scenario's workspace state in the TEST workspace
 - `scripts/fetch-source.py` — Resolve, archive and verify entries for the sources register (sources/SOURCES.md)
 - `scripts/import-issues.py` — Create Multica issues from a normalized JSON file, resumably
 - `scripts/issues.py` — Paginated, corruption-tolerant issue listing for Multica
