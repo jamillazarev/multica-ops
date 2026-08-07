@@ -15,7 +15,12 @@
 # different provider, and a lens pass here does not discharge that — it is the floor, not the
 # ceiling.
 #
-# Read-only by construction: no Edit, no Write, no push. A lens reports; the author repairs.
+# **It cannot edit the corpus, and that is not the same as read-only.** `Write`, `Edit` and
+# `NotebookEdit` are denied, so no lens can change a file it is reviewing. Bash is not denied —
+# a lens needs `git diff` and `grep` — and a shell redirect is a write the tool list never sees:
+# measured 2026-08-07, the four lenses left **fifteen megabytes of `.tmp_*.txt` scratch** in the
+# working tree while this comment claimed read-only. The claim is now accurate and the scratch
+# is swept below. A lens reports; the author repairs.
 set -uo pipefail
 cd "$(git rev-parse --show-toplevel)" || exit 1
 
@@ -68,5 +73,8 @@ CLAUDE_CONFIG_DIR="$HOME_DIR" claude -p "$PROMPT" \
   > "$OUT/$LENS.md" 2>"$OUT/$LENS.err"
 rc=$?
 rm -f "$DIFF"
+# Whatever the lens redirected into the tree while working. Named explicitly rather than
+# wildcarded over the repo: a cleanup that guesses is how a review deletes someone's work.
+rm -f .tmp_*.txt
 echo "$OUT/$LENS.md (rc=$rc, $(wc -l < "$OUT/$LENS.md" | tr -d ' ') lines)"
 exit $rc
