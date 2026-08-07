@@ -3,6 +3,28 @@
 Newest first. Each entry leads with what you can now do, not with which files moved. This is
 also the migration map `/multica-ops:upgrade` reads.
 
+## 0.4.1 — 2026-08-08
+
+**A gate is not enforced until you have watched it refuse — and on Claude Code, the shape of
+the refusal decides whether it holds.** `enforced_by: validator` is a claim, and the cheapest
+way to be wrong about your own company is to write a gate, see it run, and never check that it
+says no: a hook whose refusal is discarded is indistinguishable from one that works — the tool
+exits, the log fills, and the forbidden thing happens anyway. So a gate is accepted only against
+a **deliberate violation**, confirmed by the artifact (a stamp file, an absent commit, an
+unchanged permission) and never by the runner's account of itself.
+
+**The measured trap** (Claude Code 2.1.220, stamp files on both sides): `exit 2` refuses ·
+nested `hookSpecificOutput.permissionDecision` refuses on the plugin path (the settings path was not probed for it) · a **flat `{"permissionDecision":
+"deny"}` is executed and ignored on the plugin path *and* through a settings file — the command
+proceeds either way.** The flat shape is the natural guess, raises no error, and **is not a
+refusal anywhere measured**; the first reading of this blamed the path, and the path is not what
+decides. Home: PLAYBOOKS → *A gate is not enforced until you have
+watched it refuse*; the dev contract cites it rather than repeating it.
+
+**Nothing in 0.4.0's behaviour changed** — both hooks it ships already refuse with `exit 2`,
+and that was watched refusing, not read off their source. What is new is the rule for the gates a company writes for itself, and a check in this
+repository that fails the flat shape before it can ship.
+
 ## 0.4.0 — 2026-08-07
 
 **The machinery lives under one door now: `_ops/`.** A project's root belongs to the craft

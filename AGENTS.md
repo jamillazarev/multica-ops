@@ -106,15 +106,12 @@ and went to **5/5** each. **A refusal moves the rate; a note does not** — the 
 as a `PostToolUse` note and did not move it. Before writing the sentence, ask what artifact a
 liar cannot fill cheaply, what template leaves a visible hole when omitted, what check refuses.
 Where no form exists, say so and put the rule on the named `prose-only` list rather than
-believing in it.
-
-**1b · And the form must answer in a shape the path it ships on honours.** Measured
-2026-08-08 with stamps on both sides: a `PreToolUse` hook loaded through `--plugin-dir` and
-answering with a **flat** `{"permissionDecision": "deny"}` is **executed and ignored** — the
-command runs, nothing errors, and the gate holds nothing. `exit 2` holds; the **nested**
-`hookSpecificOutput.permissionDecision` holds. `check-structure.py` fails the flat shape so this
-is a check rather than a memory. **A gate answering in the wrong shape is the
-believed-but-not-enforced class arriving through the door built to end it.**
+believing in it. **And a form is not finished until you have watched it refuse, in the shape the
+path it ships on honours** — a flat `permissionDecision` is executed and ignored on the plugin
+path while `exit 2` holds, so `check-structure.py` fails the flat shape. The rule and its
+measured matrix live in PLAYBOOKS → *A gate is not enforced until you have watched it refuse*,
+because it is a company's problem before it is ours; what this section adds is that the same
+rule binds the hooks this repository itself ships.
 
 **2 · A mutation test on the form, asserting what it refuses.** A guard that cannot be wrong is
 decoration, so each is shown **speaking on the mutant and silent on its honest twin**. The

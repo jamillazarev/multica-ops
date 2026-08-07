@@ -2,7 +2,7 @@
 """Structural integrity of the docs. Every check here exists because the defect it
 looks for actually shipped once — see the 2.1.0 entry. Prints FAIL:/WARN: lines
 for preflight to render; deterministic classes fail, heuristic ones warn."""
-import glob, os, re, shutil, subprocess, sys
+import glob, json, os, re, shutil, subprocess, sys
 
 DOCS = sorted(set(glob.glob("*.md")) | set(glob.glob("templates/*.md")) | set(glob.glob("evals/*.md")))
 out = []
@@ -164,32 +164,31 @@ except OSError:
 # Reachable = named (by path or filename) in some other tracked file, or declared in the
 # skeleton table above. The exemptions are the paths something *outside* this repo reaches by
 # convention; each says who reaches it, so an obsolete exemption is legible rather than silent.
-# k · a shipped PreToolUse hook must refuse in a form the plugin path honours.
-# **Measured 2026-08-08, stamp files on both sides, CLI 2.1.220:** a hook loaded through
-# `--plugin-dir` and answering with a **flat** `{"permissionDecision": "deny"}` is executed and
-# **ignored** — the command runs, no error is raised, and the gate silently does nothing. The
-# nested `hookSpecificOutput.permissionDecision` shape holds, and so does `exit 2`. The flat
-# shape is the natural guess, which is exactly why this is a check and not a paragraph: a gate
-# that answers in the wrong shape is the believed-but-not-enforced class, arriving through the
-# door meant to end it.
+# k · a shipped PreToolUse hook must refuse in a form that actually refuses. The rule, the
+# measured matrix and the reason live in PLAYBOOKS -> "A gate is not enforced until you have
+# watched it refuse"; this only holds our own hooks to it. Shell hooks are scanned too — a
+# `.sh` emitting the flat shape is exactly as ignored as a `.py` doing it.
 try:
-    _hooks_cfg = open("hooks/hooks.json", encoding="utf-8").read()
-    for _h in sorted(glob.glob("hooks/*.py")):
-        _b = open(_h, encoding="utf-8").read()
-        # hooks.json registers the `.sh` shim, never the `.py` — match on the stem.
-        if "PreToolUse" not in _b or os.path.splitext(os.path.basename(_h))[0] not in _hooks_cfg:
+    _cfg = json.load(open("hooks/hooks.json", encoding="utf-8")).get("hooks", {})
+    _pre = " ".join(json.dumps(m) for m in _cfg.get("PreToolUse", []))
+    for _h in sorted(glob.glob("hooks/*.py") + glob.glob("hooks/*.sh")):
+        _stem = os.path.splitext(os.path.basename(_h))[0]
+        if _stem not in _pre:
             continue
-        _refuses = "sys.exit(2)" in _b
+        _b = open(_h, encoding="utf-8").read()
+        # A shim that only execs its sibling is judged by the sibling, already in this loop.
+        if re.search(r"exec\s+\S*python3?\s", _b) and "permissionDecision" not in _b:
+            continue
+        _refuses = "exit(2)" in _b or re.search(r"^\s*exit\s+2\s*$", _b, re.M)
         _nested = "hookSpecificOutput" in _b and "permissionDecision" in _b
         _flat = "permissionDecision" in _b and "hookSpecificOutput" not in _b
         if _flat:
-            fail(f"{_h} denies with a FLAT permissionDecision — the plugin path executes and "
-                 f"ignores it (measured 2026-08-08). Use `sys.exit(2)` or nest it under "
-                 f"`hookSpecificOutput`")
+            fail(f"{_h} denies with a FLAT permissionDecision, which refuses on neither path "
+                 f"(measured 2026-08-08) — use exit 2, or nest it under hookSpecificOutput")
         elif not (_refuses or _nested):
-            warn(f"{_h} handles PreToolUse but never refuses — if it is a gate it holds "
-                 f"nothing; if it only reports, say so in its docstring")
-except OSError:
+            warn(f"{_h} is registered on PreToolUse and never refuses — if it is a gate it "
+                 f"holds nothing; if it only reports, move it to PostToolUse")
+except (OSError, ValueError, KeyError):
     pass
 
 CONVENTION = {

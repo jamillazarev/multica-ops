@@ -41,8 +41,10 @@ command -v claude >/dev/null || { echo "no claude CLI on PATH"; exit 2; }
 # The reviewable surface, not the evidence: transcripts are 45 machine-written JSONL files and
 # a lens spending its turns on them reads nothing a human would. Fixtures are situations, not
 # claims. Both are excluded, and the prompt says they were.
+# **Against the working tree, not HEAD.** A lens run before the commit read the last commit and
+# reported a defect already repaired but unstaged — a review of yesterday, delivered as today.
 DIFF=$(mktemp)
-git diff "$BASE"...HEAD -- '*.md' 'scripts/*' 'hooks/*' 'templates/*' '.github/*' \
+git diff "$BASE" -- '*.md' 'scripts/*' 'hooks/*' 'templates/*' '.github/*' \
     ':!evals/transcripts/*' ':!evals/fixtures/*' > "$DIFF" 2>/dev/null \
   || git diff "$BASE" -- '*.md' 'scripts/*' 'hooks/*' 'templates/*' > "$DIFF"
 lines=$(wc -l < "$DIFF" | tr -d ' ')
