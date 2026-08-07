@@ -7,7 +7,7 @@ and write task comments ONLY in {{language}}; artifacts (specs, docs) in
 **Company:** {{one-line: what we build}}. Repo: {{repo_url}}. Source of truth:
 {{spec docs}}; roadmap: `_ops/ROADMAP.md`; team: `_ops/TEAM.md`.
 
-**Operated by multica-ops {{0.3.3}}.** Workspace: `{{workspace}}` on Multica. This line is the
+**Operated by multica-ops {{x.y.z}}.** Workspace: `{{workspace}}` on Multica. This line is the
 version this company was *migrated to*, not the version installed on someone's machine — the two
 are different facts, and `UPGRADES.md` records how the second became the first. **A migration
 that does not update this line has not finished**, and the session-start check reads both.

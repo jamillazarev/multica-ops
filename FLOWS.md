@@ -626,7 +626,7 @@ up and reversible where they can break things. Recipes: **PLAYBOOKS**.
   five.** The release names a file, so the migration creates it, and the owner gains an empty
   document from a version they installed rather than from work that needed it. **The delta names
   such a file as available, not as missing.** **The exception is deliberate and load-bearing**:
-  `_ops/ROADMAP.md`, `TEAM.md`, `TOOLING.md`, `DECISIONS.md` and `LATER.md` are created at
+  `_ops/ROADMAP.md`, `_ops/TEAM.md`, `_ops/TOOLING.md`, `_ops/DECISIONS.md` and `_ops/LATER.md` are created at
   stand-up and **guarded by `company-preflight.sh`**, which fails a commit when one is missing,
   because the guide tells every agent they exist (BOOTSTRAP §15 step 7). A rule that suppressed
   those would make an obedient workspace unable to commit. **Everything the guard does not name

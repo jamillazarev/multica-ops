@@ -26,7 +26,7 @@ make one option better: the free-first ladder, the budget, the success predicate
 domain). **Search, don't recall** — real options, prices and docs fetched now. **Compare**
 against the criteria, each claim sourced. **Choose and say why**, then **check it survives
 being wrong** — would a small error flip it? then it's undecided, say so rather than fake
-precision. **Record** in `docs/DECISIONS.md` (considered · chose · rejected · because ·
+precision. **Record** in `_ops/DECISIONS.md` (considered · chose · rejected · because ·
 revisit-if). **Act.** Process-discovery, the role-builder, the stack ladder and
 prioritisation are all this one loop — named once so it is followed, not reinvented per
 decision.
@@ -47,11 +47,11 @@ copy but not a lossy one — a summary of output is `cited`. **An argument witho
 an opinion**; slow-rotting claims trace to `sources/SOURCES.md` (*"с чего ты взял"*); where a
 number is unavailable, write `unknown`, never prose in its place.
 **Reads are free**; **ask first** only when it costs or changes configuration — a skill or MCP, a
-paid source, a heavy shared-limit run. Dead end → say so, name the gap, offer `/multica-ops:mops connect`, the role-builder or `docs/LATER.md`.
+paid source, a heavy shared-limit run. Dead end → say so, name the gap, offer `/multica-ops:mops connect`, the role-builder or `_ops/LATER.md`.
 
 **Freshness over training data.** Anything version-sensitive (OS/SDK and framework APIs, store
 rules, "current best practice") is verified against live sources — **Context7**, official docs,
-`--help` — never memory; target versions live in `docs/TOOLING.md`, rechecked at `/multica-ops:audit`
+`--help` — never memory; target versions live in `_ops/TOOLING.md`, rechecked at `/multica-ops:audit`
 and before a major `/multica-ops:ship`. **Prices are never quoted from memory**: fetched from the
 vendor for the owner's **billing location**, recorded as price · currency · date · source.
 **Platform limits carry the same rule** — any cap, count or timeout is quoted "(per REFERENCE
@@ -153,7 +153,7 @@ Never front-load a questionnaire. A **quick job skips the company machinery** ra
 answering fewer questions: three questions, one or two agents, build → review — no
 roadmap, no docs skeleton beyond a README, no ledger, no modules; whatever it outgrows is
 added later. A company walks the **20-topic checklist**, skipping what context already
-answered; every **"no / not now"** lands in `docs/LATER.md` with a revisit trigger, and
+answered; every **"no / not now"** lands in `_ops/LATER.md` with a revisit trigger, and
 **every choice accepts "other"**.
 
 **The interview is adaptive, not a fixed list.** The checklist is a *source of topics*,
@@ -202,7 +202,7 @@ in Multica**: an optional resident agent, async, on the team's shared limit, alw
 **One memory — written state, not shared chat.** The seats share no live memory and an
 agent's chat can't be written into (`multica chat` is read-only), so the bridge is the
 **repo and issue comments**: bootstrap ends with a **kickoff handoff** (decisions and
-their why distilled into `docs/` plus a pinned issue, which is also Mops-in-Multica's
+their why distilled into `_ops/` plus a pinned issue, which is also Mops-in-Multica's
 first message), and Mops writes as it goes. Test: **the project must rebuild from repo +
 workspace even with the CLI transcript gone.**
 
@@ -242,7 +242,7 @@ configuration lives in the guide skill so every agent knows which modules exist.
 ## Later is a list, not a void
 
 The user gets **only what they need now**, and what they defer isn't forgotten: any "not
-now" goes to **`docs/LATER.md`** as *what · why · **revisit trigger*** — the trigger a
+now" goes to **`_ops/LATER.md`** as *what · why · **revisit trigger*** — the trigger a
 **moment, not a date** ("before anything public ships", "at the first paying user"). Mops
 surfaces ripe items at natural checkpoints and **never nags**: `/multica-ops:status` lists the ones
 whose trigger fired, `/multica-ops:ship` and `/multica-ops:audit` catch the rest, one nudge each; "still later"
@@ -260,14 +260,14 @@ docs list: [FLOWS.md](../../FLOWS.md) · BOOTSTRAP §15.**
 ## Design system & brand (opt-in modules → [MODULES.md](../../MODULES.md))
 
 On at the interview (checklist #15 · Design system & brand) or later via `/multica-ops:mops module`;
-off = unreferenced. **Design system** — tokens/components in `docs/design-system/`, curated
-by the design lead, reuse before extending. **Brand** (`/multica-ops:mops brand`) — `docs/brand/`; an
+off = unreferenced. **Design system** — tokens/components in `_ops/design-system/`, curated
+by the design lead, reuse before extending. **Brand** (`/multica-ops:mops brand`) — `_ops/brand/`; an
 existing one is audited, not rebuilt.
 
 ## Roadmap, not numbers
 
 Never encode order in issue titles. The conductor builds a **User Story Map → release
-plan** in `docs/ROADMAP.md`: releases as sections, a Mermaid timeline for preview,
+plan** in `_ops/ROADMAP.md`: releases as sections, a Mermaid timeline for preview,
 features prioritized with explicit frameworks — **picked per task** (ICE by default; the
 adaptive table is REFERENCE §11). The roadmap is the between-features order (`--stage` is
 within-feature); in non-stop mode it is literally the conductor's queue.
@@ -332,7 +332,7 @@ the roadmap carries and `/multica-ops:ship` gates on (the classic silent misses,
 PLAYBOOKS).
 
 **Cost/effort ledger.** Each `/multica-ops:ship` records **tokens · $ · time · per agent and per
-human** — in `docs/analytics/<release>.md` and as a summary comment on the issue — **with
+human** — in `_ops/analytics/<release>.md` and as a summary comment on the issue — **with
 the waste sliced from the same records**: runs that produced nothing, reruns, tiers that
 bought nothing. $ reproduces Multica's own open-source estimate, not an invoice. All verbs
 are domain-neutral; unused ones never fire. Formula, slices, third-party spend: PLAYBOOKS.
@@ -348,7 +348,7 @@ workspace a migration target. **Full procedure: [FLOWS.md](../../FLOWS.md).**
 ## Staying in sync — the workspace drifts
 
 **Detect by fingerprint, not by remembering.** Mops keeps a **state fingerprint** in the repo
-(`docs/.workspace-state.json`): a hash per object class (agents · squads · skills · labels ·
+(`_ops/.workspace-state.json`): a hash per object class (agents · squads · skills · labels ·
 autopilots · projects · runtimes · properties · members · **project resources** — the one
 that decides whether parallelism is even possible) plus the git HEAD, rewritten after every
 Mops operation and recompared on wake — a hash that moved without Mops moving it *is* the
@@ -368,7 +368,7 @@ Board = truth (`backlog → todo → in_progress → in_review → done`, plus `
 `cancelled` — a cancel with a reason is a decision, one without is revivable); no sprints,
 standups or points. **Assignment = a run that spends budget**, and so is `@`-mentioning an
 agent or squad; mentioning a person or an issue is free. **Write like a product page** — issues, comments
-and every `docs/` file a human reads: first line = the point, lists over prose, tables for
+and every `_ops/` file a human reads: first line = the point, lists over prose, tables for
 data; **readability, not brevity** (terse trims words, this shapes them to scan). Issues carry
 the why + DoD; comments carry decisions and handoffs; a decision that changes the spec,
 roadmap or guide is written into that doc **in the same task**. **An assignment must stand on
@@ -429,16 +429,16 @@ gate carries an honest `enforced_by`** — `request` · `validator` · `git-host
 `prose-only` (**nothing enforces it**) — and the prose-only rules are listed by name, because
 a gate believed in but not enforced is worse than a stated rule (PLAYBOOKS → Gates).
 **Loosening is never a setting — it is a grant** (`right · grantee · scope · duration`),
-visible while it lives, expiring by its own terms, recorded in `docs/DECISIONS.md`.
+visible while it lives, expiring by its own terms, recorded in `_ops/DECISIONS.md`.
 
 ## Budget — the envelope every recommendation lives in
 
-Declared once in **`docs/BUDGET.md`** (`/multica-ops:mops budget`) and it **shapes advice, not just caps
+Declared once in **`_ops/BUDGET.md`** (`/multica-ops:mops budget`) and it **shapes advice, not just caps
 it**: an amount per day/month/project — without one Mops assumes *free tier only* and says
 so. **USD** default, changeable. **Credits and free months are runway, not income** —
 recorded with their **expiry**, and the advice names the cliff. Warn at a share, pause at
 the cap, always offer the cheaper path that still works. Burn, runway and cost per shipped
-feature roll up in `docs/ECONOMICS.md`, one line in `/multica-ops:status`. **A shrinking budget
+feature roll up in `_ops/ECONOMICS.md`, one line in `/multica-ops:status`. **A shrinking budget
 re-proposes the stack**, not just alarms. Fields + example: templates/BUDGET-template.md.
 
 ## Governance — who directs Mops, and where humans sign off
@@ -451,7 +451,7 @@ price) or time — on a subscription the session-limit window binds before money
 **Nobody edits the bar they're measured against.** Sort what the company owns into four
 kinds: **locked** (acceptance criteria, review rubrics, the budget cap, the guide's
 invariants — proposed to a human, never edited by whoever works under them), **editable**
-(code, specs, docs in flight), **append-only** (`docs/DECISIONS.md`, ledger, incidents; **and a skill's own definition when a company edits the skill it runs — self-editing is locked, proposed to a human, never self-merged**) and
+(code, specs, docs in flight), **append-only** (`_ops/DECISIONS.md`, ledger, incidents; **and a skill's own definition when a company edits the skill it runs — self-editing is locked, proposed to a human, never self-merged**) and
 **human-only** (spend, credentials, anything bypassing a gate). Most self-serving failures
 are that line crossed quietly. Likewise **a review goes to someone else, ideally not the
 author's provider** — models judge their own output generously.

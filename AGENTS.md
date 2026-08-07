@@ -143,7 +143,6 @@ A version bump is not just a changelog entry. Before you tag:
    than the profile default. The eval home needs **its own login, once** — credentials are
    keychain-scoped per home, so it never touches the main one, and the runner refuses to start
    without it rather than recording 125 "not logged in" transcripts as results.
-   Every new behaviour needs a
    A scenario whose situation is workspace state gets it from
    `python3 scripts/eval-fixture.py <id> build|teardown`, which **builds from nothing every
    time** rather than on top of a previous round, tags everything `EVAL-<id>-` so a sweep finds
@@ -167,7 +166,14 @@ A version bump is not just a changelog entry. Before you tag:
    migration** — `bash scripts/test-migrate-layout.sh` — where the load-bearing assertions are
    about what it *refuses* to touch: a project's own `docs/` files staying put, a collision
    named rather than overwritten, a second run doing nothing, a foreign repo left without an
-   `_ops/` at all. **And the two PreToolUse gates** — `bash scripts/test-outward-gate.sh` and `bash scripts/test-rule-home.sh`, the second of which must stay silent on a repository this skill does not operate and on a project's own `memory/` directory. The outward one's, whose load-bearing assertion is that **the retry does not pass**: the first design stopped once and let the second attempt through, and three runs of five simply pushed again. **And so is the map generator** — `bash scripts/test-map-blocks.sh` — where
+   `_ops/` at all.
+   **And the two `PreToolUse` gates** — `bash scripts/test-outward-gate.sh` and
+   `bash scripts/test-rule-home.sh`. The outward gate's load-bearing assertion is that **the
+   retry does not pass**: the first design stopped once and let the second attempt through, and
+   three runs of five simply pushed again. The rule-home gate's is that it stays **silent** on a
+   repository this skill does not operate and on a project's own `memory/` directory — a hook
+   that fires on someone's own files is one they switch off.
+   **And so is the map generator** — `bash scripts/test-map-blocks.sh` — where
    the assertion that matters is that `scripts/map-blocks.py` rewrites *only* between its
    markers: a generator that reformats a document it does not own is one nobody dares run. A new capability usually needs a new check, and
    this session's guards were mostly added *reactively*, after a defect shipped. Ask *before*:
@@ -196,7 +202,9 @@ A version bump is not just a changelog entry. Before you tag:
    forward-only, so a shipped feature lives in the body and changelog, never as a checked box.
 3. **preflight green** — the checklist above.
 4. **Merge** — a human merges the release branch (self-editing is locked; the loop adopts *after* the gate).
-5. **Tag** the merge commit — **and the tag waits for the owner's word, every release its own.** Everything above this line is preparation and needs no permission; nothing below it moves without an explicit yes. A version is public the moment it is tagged, and "it looked ready" is not the same act as being told to ship it. A prepared release that is never asked for costs nothing; a tagged one cannot be un-published.
+5. **Tag** the merge commit — **and the tag waits for the owner's word** (the law and its
+   reasoning have one home: `CLAUDE.md` → *Versioning*). Everything above this line is
+   preparation; nothing below it moves without an explicit yes.
 6. **`gh release create`** from that changelog section — a tag alone is **not** a Release, and a stranger deciding whether to adopt this reads the Releases page, not the tag list. (a previous version was tagged with no Release until the owner caught it; created retroactively.) **The title is `x.y.z — <the release's own line>`, with no repository name in front of it.** The Releases page is already scoped to this repo, so the prefix only eats the visible width and truncates the part that carries meaning — every title is a row read top to bottom, and the version plus its one line is what has to survive the truncation. (Both mistakes were made on 0.2.0 in one day: shipped bare as `0.2.0`, then renamed with the prefix, then renamed again without it.)
    **The notes are the changelog entry whole, and its heading collapses to a bare italic date** — `*2026-08-02*`, then the entry. The title already carries the version *and* the release's own line, so repeating the `## x.y.z — date` heading inside the body says both a second time and pushes the first real sentence below the fold; the date is the only thing the title does not carry, so the date is what survives. Not a summary, not a subset: a reader on the Releases page gets what a reader of `CHANGELOG.md` gets. (All seven past releases were retro-fitted in place on 2026-08-07 — one of them had been published carrying the changelog's *file header* instead of its entry.)
 7. **Regenerate and push the docs site** — `python3 scripts/generate.py` in the `ai` repo, then push. The site deploys continuously, so a skipped regen silently ships the previous pages against the new tag. (a previous release's site lagged its tag the same way.)

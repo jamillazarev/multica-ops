@@ -614,7 +614,7 @@ stage finished" (that is @mentions and barriers). Offer at setup, default "later
    Re-checked at `/multica-ops:mops health`.
    Then **install the docs guard** — `templates/company-preflight.sh` as the repo's
    pre-commit hook (PLAYBOOKS): a skeleton is only useful while it stays true.
-   `_ops/LATER.md` and `ECONOMICS.md` are the two without a template: their shape is stated where they
+   `_ops/LATER.md` and `_ops/ECONOMICS.md` are the two without a template: their shape is stated where they
    are defined (a deferral is *what · why · revisit trigger*; economics is the ledger
    rolled up — PLAYBOOKS).
 

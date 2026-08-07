@@ -111,8 +111,13 @@ done <<< "$paren_url"
 # slash (`/docs/squads` is a multica.ai documentation URL, not a file — the blind-sed trap that
 # cost the sibling project a line reading "200 _ops/requests/hour"), and `docs/cache/`, which
 # appears only inside a prompt-injection example describing a file the project already owns.
+# **And it reads `skills/*/SKILL.md` too — the omission that made it blind where it mattered
+# most.** The layout sweep globbed the root and `templates/`, so the always-loaded core kept
+# sixteen `docs/` paths through the whole release, and this guard looked in exactly the same two
+# places and confirmed the silence. A guard that shares the sweep's blind spot is not a check,
+# it is the same mistake wearing a second name. Found by the contradiction lens, 2026-08-07.
 stray=$(grep -rnoE '(^|[^/[:alnum:]_-])docs/(ROADMAP|TEAM|TOOLING|DECISIONS|LATER|FIELD-NOTES|ARCHITECTURE|MAP|BUDGET|ECONOMICS|assets|analytics|research|audience|design-system|brand|skill-backups|tooling|\.workspace-state)' \
-        -- *.md templates/*.md 2>/dev/null | grep -v '^CHANGELOG.md:' || true)
+        -- *.md templates/*.md skills/*/SKILL.md 2>/dev/null | grep -v '^CHANGELOG.md:' || true)
 [ -n "$stray" ] && while IFS= read -r l; do
   say_fail "machinery path still under docs/ — it lives in _ops/ since 0.4.0: $l"
 done <<< "$stray"
