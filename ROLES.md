@@ -67,7 +67,7 @@ cheap/text-oriented runtime (translations, boilerplate legal).
 | **Marketing Manager** | — (cross, or Content) | mid | marketing-ideas, positioning-ideas, value-prop-statements, product-name, north-star-metric, gtm-strategy, growth-loops, ideal-customer-profile, competitive-battlecard, beachhead-segment, + Corey Haines pack (social, emails, ads, launch, cold-email, referrals), handoff | GTM strategy pre-launch; post-launch owns channels. **Social automation**: content calendar as issues; a scheduled **autopilot** drafts posts on cadence; publishing via the platform's API/scheduler tools (import via find-skills) with human approval until trust is earned |
 | **Domain / Market / Tech Expert** (opt-in) | Experts squad | top | research, critique, brainstorming, handoff | advisors, not executors: pulled into specs, discovery, acceptance by `@`-mention; composition per project — see "Experts squad" below |
 | **Persona** (opt-in) | Personas squad | text | handoff | user simulation; instructions generated from `templates/PERSONA-template.md` (stage · bias profile · grounding artifact); used in usability passes and Design QA walkthroughs — see "Personas squad" below and MODULES → Persona theatre |
-| **Finance & Ops** (opt-in) | — (cross) | text | xlsx, analytics, research, handoff | keeps `docs/BUDGET.md` (which the owner sets via `/multica-ops:mops budget`) and owns `docs/ECONOMICS.md`: the ledger, burn and runway, **prices verified online per location**, subscriptions and renewal dates, credits with their expiry cliffs. Escalates *before* the cap, not at it |
+| **Finance & Ops** (opt-in) | — (cross) | text | xlsx, analytics, research, handoff | keeps `_ops/BUDGET.md` (which the owner sets via `/multica-ops:mops budget`) and owns `_ops/ECONOMICS.md`: the ledger, burn and runway, **prices verified online per location**, subscriptions and renewal dates, credits with their expiry cliffs. Escalates *before* the cap, not at it |
 | **Customer Support** (opt-in) | Content, or its own | text | handoff, copywriting, research, docx | owns the inbox: turns reports into bugs and feedback items with reproduction steps, answers in the brand voice, writes the help docs, and reports what keeps coming back — the input side of `/multica-ops:mops feedback` |
 | **Analyst** | — (cross) | top | analytics, xlsx, research, **north-star-metric, metrics-dashboard, ab-test-analysis, cohort-analysis**, handoff | event taxonomy, funnels, north-star, cohorts/AB; never PII/audio |
 
@@ -105,7 +105,7 @@ cron autopilot runs on your schedule; a webhook autopilot hands **anyone holding
 ability to start agent runs — which spends budget, consumes the shared session window and acts
 under the company's identity. So: creating one is **owner-confirmed**, the URL is a
 **credential** (`mcp_config`/`custom-env`, never a doc, an issue comment or a repo), it is
-registered in `docs/TOOLING.md` with what may fire it, and `trigger-rotate-url` exists because
+registered in `_ops/TOOLING.md` with what may fire it, and `trigger-rotate-url` exists because
 a leaked one is rotated rather than debated. Under `auto` autonomy an autopilot is an
 unattended actor — the same scrutiny as the resident Mops, for the same reason.
 
@@ -139,7 +139,7 @@ role genuinely doesn't need it. Confusing the two is how a floor quietly triples
 - **Context7** — for any role that writes version-sensitive code or config: current
   library/SDK/OS docs instead of a frozen training cutoff.
 - **The docs it must know**: `ROADMAP.md` · `TEAM.md` · `TOOLING.md` (tools, access,
-  target versions) · `docs/LATER.md`, plus `brand/` and `design-system/` when those modules
+  target versions) · `_ops/LATER.md`, plus `brand/` and `design-system/` when those modules
   are on. Referenced from the guide, not copy-pasted into instructions.
 
 ## Grades, fit-check and the talent pool
@@ -174,6 +174,27 @@ FrugalGPT's cascade matches the best single model at up to **−98% cost**, and 
 cheap-first-then-escalate beats any single model **only when the verifier is good** — judge error
 **≤0.1**, deteriorating past 0.2. That caveat is a *strength* here, not a risk: the skill's **review
 gates are that verifier**, so cascading rests on a check that already exists (sources/SOURCES.md).
+
+**And the other direction: a role declares what it falls back to.** Cascading is *upward* when
+the work turns out harder; this is *downward* when the tier is simply not available — the
+provider's limit fired, the runtime is offline, the quota reset is hours away. Multica has no
+native fallback: **`agent create --model` takes one identifier**, so nothing on the platform
+picks a second choice for you (checked against CLI v0.4.12), and a run that dies for capacity
+lands in `agent_error` without being retried.
+
+So the chain is ours to declare and ours to say out loud: **a role records a fallback chain of
+tiers in `TEAM.md`** — *stronger → medium*, or *medium → light, and no lower* — and three rules
+keep it honest:
+
+- **A fallback is taken and named in the same breath.** The re-dispatch says which tier it ran
+  on and why, on the issue, in the same message that reports the result. **Silent downgrade is
+  the failure this exists to prevent** — output produced by a weaker model than the work was
+  scoped for, indistinguishable afterwards from output that wasn't.
+- **A role may declare no fallback, and that is a real answer.** Review, architecture and
+  anything with review authority are the obvious cases: *wait for the tier* beats *answer now,
+  worse*. A missing chain is not a gap to fill by default.
+- **The floor is a floor.** A chain never reaches below the grade's stated tier — a junior task
+  falling back is fine, a senior review falling to the light tier is the review not happening.
 
 **Fit-check — every agent checks the task is actually theirs.** Before starting, an agent
 asks: *is this my craft, and my grade?* Three exits, all normal, none a failure:
@@ -256,7 +277,7 @@ weight.** A guide grows as the company does: modules switch on, brand voice arri
 domain gets its own conventions. And because every agent carries it, **guide growth is the
 most expensive growth there is** — a thousand tokens added to the guide is a thousand tokens
 added to every agent, on every run, forever. That is why tool runbooks live in
-`docs/tooling/<tool>.md` and not in the guide, why module rules live in their own docs, and
+`_ops/runbooks/<tool>.md` and not in the guide, why module rules live in their own docs, and
 why the guide holds *rules everyone needs* rather than *everything that is true*. Treat a
 guide edit as a budget decision: if it only matters to one craft, it belongs in that craft's
 skill, not on everyone's floor.
@@ -328,7 +349,7 @@ package — skills · tooling · resources**, not just skills:
 3. **Tooling.** The role's instruments, not just its knowledge: check the **MCP
    registries first** (mcpservers.org · mcp.so · awesome-mcp-servers; mcpmarket
    leaderboards for the maintained ones), then CLIs/APIs. Wire via `mcp_config` /
-   `custom-env`, register in `docs/TOOLING.md` — and obey the **selection ladder**
+   `custom-env`, register in `_ops/TOOLING.md` — and obey the **selection ladder**
    (free → OSS → self-host → in-repo → agent-drivable).
 4. **Resources.** What the role must consult: standards bodies, official docs, datasets,
    and the **reference galleries in STACKS** (design/brand/UX). Links go into its
@@ -336,7 +357,7 @@ package — skills · tooling · resources**, not just skills:
 5. **Propose the package** (model tier · skills · tooling · resources · squad) → create
    on approval → record in `TEAM.md` and `TOOLING.md`. **The proposal names the task that
    needs this craft now** — a hire whose justification is *"we'll need it"* belongs in
-   `docs/LATER.md` with a revisit trigger, because an agent here has no project scope to sit
+   `_ops/LATER.md` with a revisit trigger, because an agent here has no project scope to sit
    quietly in (FLOWS → *Shape the work*) and arrives holding its own credentials.
 
 **A prebuilt agent is a parts bin, not a hire.** When discovery turns up a *ready-made* agent — a
@@ -361,7 +382,7 @@ the *agentman* persona-creator — concepts taken, nothing embedded.
 4. **Decompose the role into tasks** and search per task — tooling usually exists per
    task even when the job title has no list.
 5. Only then **draft a small skill with skill-creator** from step 1's research — and log
-   the gap in `docs/LATER.md` so it gets revisited when the ecosystem catches up.
+   the gap in `_ops/LATER.md` so it gets revisited when the ecosystem catches up.
 
 Designers and engineers join from the first decisions (discovery, spec review) — not
 only at their build stage. Bake "tokens / design system / Storybook" style practices in
@@ -386,7 +407,7 @@ Inviting a live expert is an **access decision** (they see issues), and paying o
 ## Personas squad (opt-in, user simulation)
 
 The theatre's roster — its **design and rules are MODULES → Persona theatre**; this section is
-how the *agents* are built and run. Personas are **documents first** (`docs/audience/`, one
+how the *agents* are built and run. Personas are **documents first** (`_ops/audience/`, one
 `templates/PERSONA-template.md` each), and become agents only for a session (a usability pass, a
 Design QA walkthrough, a copy reaction), then quiet again. They are **not part of the build
 pipeline**.

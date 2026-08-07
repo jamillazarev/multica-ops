@@ -163,7 +163,7 @@ flowchart TD
     F["friction: something broke,<br/>or made the work harder"] --> Q{"does it stop you now?"}
     Q -->|"yes"| B["the urgent lane —<br/>a blocking issue on your product"]
     Q -->|"no"| W{"whose defect?<br/>decided here, not asked"}
-    W -->|"your workspace"| N["a field note in docs/FIELD-NOTES.md<br/>one line, append-only"]
+    W -->|"your workspace"| N["a field note in _ops/FIELD-NOTES.md<br/>one line, append-only"]
     N --> S["swept at session end · /status ·<br/>before a release cut"]
     S --> T{"seen twice?"}
     T -->|"yes"| ISSUE["an issue, with BOTH occasions named in it"]
@@ -190,7 +190,7 @@ flowchart TD
     end
     subgraph IMPORT["Import"]
         FIND["find-skills / search"] --> SCAN{"Screen:<br/>commands · exfiltration ·<br/>endpoints · grants · injection"}
-        SCAN -->|critical| REJ["Rejected<br/>→ docs/DECISIONS.md"]
+        SCAN -->|critical| REJ["Rejected<br/>→ _ops/DECISIONS.md"]
         SCAN -->|broad access| HUM["Conductor + security reviewer<br/>never auto-approved"]
         SCAN -->|clean| READ["Someone still reads<br/>what it instructs"]
         HUM --> READ

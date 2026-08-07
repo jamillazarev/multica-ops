@@ -17,6 +17,12 @@ say() { # name want-substring-or-EMPTY dir
 
 W="$T/ws"; mkdir -p "$W"; git -C "$W" init -q
 say "not a workspace we operate → silent"        "EMPTY" "$W"
+# Ownership is an operator line, never a mention. Measured 2026-08-07: the skill's own
+# repository was called ours by every session, because its AGENTS.md names the skill — as does
+# any repo whose README recommends us. Every fixture below already declared itself the strict
+# way; nothing asserted that the loose way was refused, so the code drifted under its own tests.
+printf 'Built with multica-ops, and multica-ops is great.\n' > "$W/CLAUDE.md"
+say "a guide that only mentions the name → silent" "EMPTY" "$W"
 printf 'Operated by multica-ops.\n' > "$W/CLAUDE.md"
 say "our guide, no UPGRADES.md → speaks"         "no \`UPGRADES.md\`" "$W"
 printf '# Upgrades\n\n- 2026-07-24 · 0.2.0 · SHA a1b2 · applied\n' > "$W/UPGRADES.md"

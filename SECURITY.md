@@ -30,7 +30,7 @@ capability is found**; a sentence reaches the same place.
 | What it is | Where it goes |
 |---|---|
 | a defect in **your product** | the urgent lane — `/multica-ops:bug`, reproduced before it is fixed |
-| friction in **your workspace** — a flow that fought you, a step that repeats | a line in `docs/FIELD-NOTES.md`, append-only, **swept at the checkpoints PLAYBOOKS names — session end, `/multica-ops:status`, before a release cut**; a **second** occurrence earns an issue with both occasions named in it |
+| friction in **your workspace** — a flow that fought you, a step that repeats | a line in `_ops/FIELD-NOTES.md`, append-only, **swept at the checkpoints PLAYBOOKS names — session end, `/multica-ops:status`, before a release cut**; a **second** occurrence earns an issue with both occasions named in it |
 | friction in **this skill or in Multica** | packaged and handed to you to send |
 
 **The package is assembled from evidence, not from memory:** version · the flow · the symptom ·
@@ -40,7 +40,7 @@ the task record with model, attempt and outcome · the state of the files involv
 names, member and agent names, internal paths, issue keys, URLs of private services, **and above
 all anything secret**. What survives: **counts and shapes** — *"eleven issues, two agents on a
 degraded runtime"* — because a defect report needs the shape of the workspace, not its census.
-**The workspace fingerprint does not travel**: `docs/.workspace-state.json` is a hash over the
+**The workspace fingerprint does not travel**: `_ops/.workspace-state.json` is a hash over the
 very names being stripped, so quoting it undoes the stripping. **A human reads the diff before it
 goes anywhere** — a bug report is by nature full of paths and fragments.
 

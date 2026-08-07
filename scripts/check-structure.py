@@ -145,9 +145,9 @@ except OSError:
 DECLARED = set()
 try:
     boot = open("BOOTSTRAP.md", encoding="utf-8").read()
-    rows = re.findall(r"^\s*\|\s*`(docs/[^`]+)`\s*\|[^|]*\|[^|]*\|\s*([^|]*?)\s*\|", boot, re.M)
+    rows = re.findall(r"^\s*\|\s*`(_ops/[^`]+)`\s*\|[^|]*\|[^|]*\|\s*([^|]*?)\s*\|", boot, re.M)
     if not rows:
-        fail("BOOTSTRAP: the repo-layout table has no `docs/…` rows — the template guard is blind")
+        fail("BOOTSTRAP: the repo-layout table has no `_ops/…` rows — the template guard is blind")
     for path, tmpl in rows:
         name = tmpl.split()[0] if tmpl.strip() else ""
         if not name or name.startswith("—"):
@@ -167,6 +167,11 @@ except OSError:
 CONVENTION = {
     "commands/": "the plugin loads the directory; check f2 owns the COMMANDS.md row",
     "evals/runs/": "release records, reached by version in preflight 5j",
+    # A run record cites its evidence as a range — `evals/transcripts/24-run{1..5}` — so no
+    # single transcript is ever named, and checking them one by one buried every real finding
+    # under forty-five warnings. The directory is reached; its contents are a set, not a list.
+    "evals/transcripts/": "run evidence, cited as a range by the run record",
+    "evals/fixtures/": "the situation a scenario is run against, reached by scenario id",
     ".github/workflows/": "run by GitHub, by path",
     ".claude-plugin/": "read by the plugin loader, by name",
     "scripts/tests/": "collected by the test runner",

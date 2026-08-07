@@ -1,6 +1,6 @@
 # {{Company}} — Brand Book
 
-Current state only (workshop artifacts live in `docs/research/`, distilled here).
+Current state only (workshop artifacts live in `_ops/research/`, distilled here).
 Formal elements are systematized: palette/type → design-system tokens, formats →
 templates; voice rules are mirrored in the team guide. Owner approves every change —
 identity is outward-facing.

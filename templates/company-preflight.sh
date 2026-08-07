@@ -53,27 +53,27 @@ fi
 fail=0; warn=0
 say_fail() { echo "  ✗ $1"; fail=1; }
 say_warn() { echo "  ! $1"; warn=1; }
-echo "preflight — docs"
+echo "preflight — _ops"
 
 # 1 · the docs the guide promises must exist. An agent told to read a file that
 #     isn't there improvises, and improvisation is how conventions drift.
-for f in docs/ROADMAP.md docs/TEAM.md docs/TOOLING.md docs/DECISIONS.md docs/LATER.md; do
+for f in _ops/ROADMAP.md _ops/TEAM.md _ops/TOOLING.md _ops/DECISIONS.md _ops/LATER.md; do
   [ -f "$f" ] || say_fail "$f is missing — the guide tells every agent it exists"
 done
 if git ls-files | grep -qE '\.(ts|tsx|js|py|go|rs|swift|kt|rb|java)$'; then
-  [ -f docs/ARCHITECTURE.md ] || say_warn "there is code but no docs/ARCHITECTURE.md — every task \
+  [ -f _ops/ARCHITECTURE.md ] || say_warn "there is code but no _ops/ARCHITECTURE.md — every task \
 starts in a fresh worktree and re-derives the layout"
 fi
 
 # 2 · a recorded fact past its recheck is unknown, not fact. TOOLING.md carries a
 #     Checked column precisely so this can be enforced rather than hoped for.
-if [ -f docs/TOOLING.md ]; then
+if [ -f _ops/TOOLING.md ]; then
   python3 - <<'PY'
 import re, datetime, sys
 STALE_DAYS = 90
 today = datetime.date.today()
 old = []
-for line in open("docs/TOOLING.md", encoding="utf-8"):
+for line in open("_ops/TOOLING.md", encoding="utf-8"):
     if not line.strip().startswith("|"):
         continue
     m = re.search(r"(\d{4})-(\d{2})-(\d{2})", line)
@@ -95,7 +95,7 @@ done
 #     the second is how a stumble gets polished into never having happened — a correction
 #     is a new entry, never an edit to an old one.
 if git rev-parse --verify HEAD >/dev/null 2>&1; then
-  for ao in docs/DECISIONS.md docs/FIELD-NOTES.md; do
+  for ao in _ops/DECISIONS.md _ops/FIELD-NOTES.md; do
     [ -f "$ao" ] || continue
     removed=$(git diff --cached -U0 -- "$ao" 2>/dev/null \
               | grep -c '^-[^-]' || true)
@@ -105,21 +105,21 @@ removes or rewrites $removed line(s). Add a new entry instead."
 fi
 
 # 4 · the architecture map must mention the places work actually happens.
-if [ -f docs/ARCHITECTURE.md ]; then
+if [ -f _ops/ARCHITECTURE.md ]; then
   for d in $(git ls-files | awk -F/ 'NF>1 {print $1}' | sort -u); do
-    case "$d" in docs|.github|node_modules|dist|build|vendor) continue;; esac
-    grep -q "$d" docs/ARCHITECTURE.md || say_warn "docs/ARCHITECTURE.md never mentions \`$d/\` \
+    case "$d" in _ops|docs|.github|node_modules|dist|build|vendor) continue;; esac
+    grep -q "$d" _ops/ARCHITECTURE.md || say_warn "_ops/ARCHITECTURE.md never mentions \`$d/\` \
 — either map it or say why it doesn't matter"
   done
 fi
 
 # 4b · a document nobody links is a document nobody reads. The skeleton files are
-#      referenced by the guide itself; anything else under docs/ has to be reachable
+#      referenced by the guide itself; anything else under _ops/ has to be reachable
 #      from at least one other document, or it was written into a drawer.
-for f in $(git ls-files 'docs/*.md' 'docs/**/*.md' 2>/dev/null); do
+for f in $(git ls-files '_ops/*.md' '_ops/**/*.md' 2>/dev/null); do
   case "$f" in
-    docs/ROADMAP.md|docs/TEAM.md|docs/TOOLING.md|docs/DECISIONS.md|docs/LATER.md|\
-docs/ARCHITECTURE.md|docs/BUDGET.md|docs/ECONOMICS.md|docs/README.md) continue;;
+    _ops/ROADMAP.md|_ops/TEAM.md|_ops/TOOLING.md|_ops/DECISIONS.md|_ops/LATER.md|\
+_ops/ARCHITECTURE.md|_ops/BUDGET.md|_ops/ECONOMICS.md|_ops/README.md) continue;;
   esac
   base=$(basename "$f")
   git grep -qF "$base" -- '*.md' ":!$f" 2>/dev/null \

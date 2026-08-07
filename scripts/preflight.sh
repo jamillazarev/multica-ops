@@ -44,10 +44,22 @@ say_warn() { echo "  ! $1"; warn=1; }
 
 echo "preflight — multica-ops"
 
-# 1 · version in skills/mops/SKILL.md == plugin.json
+# 1 · every manifest carries the version in skills/mops/SKILL.md — a sweep, not a pair.
+# We ship four manifests across four runtimes and a hand-maintained checklist only bumps the
+# ones somebody remembers: opsinist lost a release to three stragglers this way. The list is
+# DISCOVERED (any tracked .json declaring a "version"), because a hardcoded list is the same
+# rot surface wearing a script's clothes — a fifth runtime's manifest is checked the day it
+# lands, without anyone editing this.
 sv=$(grep -m1 '^version:' skills/mops/SKILL.md | awk '{print $2}')
-pv=$(grep -m1 '"version"' .claude-plugin/plugin.json | sed 's/.*"version": *"\([^"]*\)".*/\1/')
-[ "$sv" = "$pv" ] || say_fail "version mismatch: skills/mops/SKILL.md=$sv plugin.json=$pv"
+[ -n "$sv" ] || say_fail "skills/mops/SKILL.md has no version: frontmatter line"
+swept=0
+while IFS= read -r m; do
+  mv_=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get("version",""))' "$m" 2>/dev/null)
+  [ -n "$mv_" ] || continue
+  swept=$((swept+1))
+  [ "$mv_" = "$sv" ] || say_fail "version straggler: $m=$mv_ but skills/mops/SKILL.md=$sv"
+done <<< "$(git ls-files '*.json' | grep -v '^company/')"
+[ "$swept" -ge 3 ] || say_warn "manifest sweep saw only $swept versioned manifest(s) — expected at least 3 (Claude Code, Codex, Gemini); has one stopped declaring a version?"
 
 # 1b · the documented skill-import URL pins THIS version, not a moving ref.
 #      An import becomes agent instructions, so `tree/main` means the content behind someone's
@@ -82,6 +94,33 @@ print("\n".join(sorted(set(bad))))
 PYEOF
 )
 [ -n "$link_bad" ] && while IFS= read -r l; do say_fail "$l"; done <<< "$link_bad"
+
+# 4b · an external URL carrying a literal `(` is stored percent-encoded, or the link checker
+# reads it truncated and reports a live page as rot. Measured next door as issue #1: four
+# "dead" links that all answered 200, one of them a URL cut at its own parenthesis. The
+# checker's extraction cannot be made paren-aware without a markdown parser, so the corpus
+# holds the invariant instead and this is what holds the corpus to it.
+paren_url=$(grep -rnoE '\]\(https?://[^)[:space:]]*\(' -- *.md templates/*.md 2>/dev/null || true)
+[ -n "$paren_url" ] && while IFS= read -r l; do
+  say_fail "URL contains a literal '(' — percent-encode it as %28/%29: $l"
+done <<< "$paren_url"
+
+# 4c · the machinery's own paths live under `_ops/`, never `docs/`. A project's `docs/` is the
+# craft's, and before 0.4.0 ours was mixed into it. The old habit is one keystroke away, so the
+# invariant is held rather than remembered. Two things are deliberately NOT matched: a leading
+# slash (`/docs/squads` is a multica.ai documentation URL, not a file — the blind-sed trap that
+# cost the sibling project a line reading "200 _ops/requests/hour"), and `docs/cache/`, which
+# appears only inside a prompt-injection example describing a file the project already owns.
+# **And it reads `skills/*/SKILL.md` too — the omission that made it blind where it mattered
+# most.** The layout sweep globbed the root and `templates/`, so the always-loaded core kept
+# sixteen `docs/` paths through the whole release, and this guard looked in exactly the same two
+# places and confirmed the silence. A guard that shares the sweep's blind spot is not a check,
+# it is the same mistake wearing a second name. Found by the contradiction lens, 2026-08-07.
+stray=$(grep -rnoE '(^|[^/[:alnum:]_-])docs/(ROADMAP|TEAM|TOOLING|DECISIONS|LATER|FIELD-NOTES|ARCHITECTURE|MAP|BUDGET|ECONOMICS|assets|analytics|research|audience|design-system|brand|skill-backups|tooling|\.workspace-state)' \
+        -- *.md templates/*.md skills/*/SKILL.md 2>/dev/null | grep -v '^CHANGELOG.md:' || true)
+[ -n "$stray" ] && while IFS= read -r l; do
+  say_fail "machinery path still under docs/ — it lives in _ops/ since 0.4.0: $l"
+done <<< "$stray"
 
 # 5a · official guidance: skills/mops/SKILL.md body under 500 lines
 lines=$(wc -l < skills/mops/SKILL.md | tr -d ' ')
@@ -220,8 +259,11 @@ if git rev-parse --verify HEAD >/dev/null 2>&1; then
   fi
 fi
 
-# 5c · references must stay one level deep from skills/mops/SKILL.md
-for f in $(ls *.md | grep -vE '^(SKILL|README|CHANGELOG|AGENTS)\.md$'); do
+# 5c · references must stay one level deep from skills/mops/SKILL.md.
+# AGENTS.md and CLAUDE.md are exempt because they are not companions: they are the repo's own
+# dev furniture, read by whoever is changing the skill, and pointing at the contract and the
+# prose rules is the whole job of both.
+for f in $(ls *.md | grep -vE '^(SKILL|README|CHANGELOG|AGENTS|CLAUDE)\.md$'); do
   nested=$(grep -ohE '\]\([A-Z][A-Za-z-]*\.md' "$f" 2>/dev/null | head -1)
   [ -n "$nested" ] && say_warn "$f links to another companion — keep references one level deep from skills/mops/SKILL.md"
 done

@@ -17,14 +17,25 @@ jobs:
       - name: Check external links
         id: check
         run: |
+          # A URL containing parentheses is stored percent-encoded in the corpus (%28 %29):
+          # this grep stops at the first `)`, so a raw-paren URL arrives here truncated and
+          # 404s as a false corpse. Measured next door as issue #1 — four "dead" links that
+          # all answered 200: one paren cut, two transient blips checked only once, and a
+          # 401 anti-bot read as rot. All three coats are handled below.
           grep -rhoE '\]\(https?://[^)]+\)' *.md templates/*.md \
             | sed -E 's/^\]\(//; s/\)$//' | sort -u > urls.txt
           : > dead.txt
+          probe() { curl -sSL -o /dev/null -w '%{http_code}' --max-time 20 \
+                    -A 'Mozilla/5.0 (compatible; multica-ops-linkcheck)' "$1" || echo 000; }
           while read -r u; do
-            code=$(curl -sSL -o /dev/null -w '%{http_code}' --max-time 20 \
-                   -A 'Mozilla/5.0 (compatible; multica-ops-linkcheck)' "$u" || echo 000)
+            code=$(probe "$u")
+            # 401/403/429 = bot-blocked, not dead.
             case "$code" in
-              200|301|302|303|307|308|403|429) ;;   # 403/429 = bot-blocked, not dead
+              200|301|302|303|307|308|401|403|429) continue ;;
+            esac
+            sleep 5; code=$(probe "$u")   # a transient 5xx or a CDN blip is not rot
+            case "$code" in
+              200|301|302|303|307|308|401|403|429) ;;
               *) echo "- $u → HTTP $code" >> dead.txt ;;
             esac
           done < urls.txt

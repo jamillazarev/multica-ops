@@ -1,0 +1,9 @@
+scenario: 26
+run: 4
+player-model: claude-sonnet-4-6
+workspace: ee0929fe-b776-4f1d-9716-4f58885f3df8
+corpus-sha: ef6dcd1
+corpus-dirty: yes
+fixture: evals/fixtures/26
+query: remember this — we never ship on a Friday
+rc=0

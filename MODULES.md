@@ -30,7 +30,7 @@ taste enters before it is expensive to change.
 **Tool each surviving step, or name it a gap — not one flat "designer" skill list.** Search
 by the step's own function: a **flow library** (Mobbin) for user flows & journeys, a
 **wireframing approach** for low-fi, a **component library** (Pen.dev / Shadcn) for high-fi.
-**Flows that ship land on the product map** (`docs/MAP.md`, `/multica-ops:mops map`) — the design gate
+**Flows that ship land on the product map** (`_ops/MAP.md`, `/multica-ops:mops map`) — the design gate
 checks against it, and a persona walk's "sequence of steps" is read off it.
 **Present the steps as a table with a `tool-or-gap` column** (PLAYBOOKS process-discovery) so
 none can go silent: a step that turns up no tool is written `gap` in that cell, never hand-drawn
@@ -59,7 +59,7 @@ Any project that ships a repeatable form accumulates a **design system**: **toke
 variables** (color, type, spacing, motion — or a channel's palette and cover grid),
 **components/templates** (UI parts, thumbnail layouts, packaging, letter formats) and a
 **catalog** (Storybook for digital — see STACKS; a template library or brand book
-elsewhere). Home: `docs/design-system/` in the repo — tokens as files are the source of
+elsewhere). Home: `_ops/design-system/` in the repo — tokens as files are the source of
 truth. **Curator = the Design squad lead** (or the sole designer).
 
 - **Reuse-first gate at spec time.** Discussing *any* solution, the conductor/designer
@@ -87,7 +87,7 @@ truth. **Curator = the Design squad lead** (or the sole designer).
   the curator** before merging into the system. Same pattern in every domain: whoever
   systematizes, the curator reviews.
 - **One component standard, fixed at enablement.** Turning the module on, the curator
-  seeds `docs/design-system/CONVENTIONS.md`: naming, **one props convention** (borrowed
+  seeds `_ops/design-system/CONVENTIONS.md`: naming, **one props convention** (borrowed
   from the chosen stack's idioms — e.g. shadcn/Radix patterns for web), state names, and
   a **single documentation shape** per component (`templates/COMPONENT-template.md`:
   anatomy · props table · variants · states · tokens used · do/don't). Every component —
@@ -97,21 +97,21 @@ truth. **Curator = the Design squad lead** (or the sole designer).
   *Component Library Audit* (catches prop/convention drift), *Design System Patterns*
   (token hierarchies). **Naming/API reference: component.gallery** — real-world design
   systems and component patterns; consult before inventing component names or APIs.
-  **Tokens format:** default **W3C DTCG JSON** under `docs/design-system/tokens/`,
+  **Tokens format:** default **W3C DTCG JSON** under `_ops/design-system/tokens/`,
   transformed per platform via **Style Dictionary**; Figma sync via Tokens Studio;
-  Pen.dev or any other tool → study its token workflow first (see `docs/TOOLING.md`).
+  Pen.dev or any other tool → study its token workflow first (see `_ops/TOOLING.md`).
 - **Design QA checks against the system**: implementations use tokens/components, not
   hardcoded values; a deviation is either fixed or argued into the system. The owner can
   add a human checkpoint on system extensions via `/multica-ops:mops reviews`.
 - **Assets obey the same conformance**: stay within one chosen icon set / illustration
   style / photo look (mixing reads amateur, exactly as hardcoded values do), widening only
-  on a real gap — and record every shipped asset with its licence in `docs/assets.md`
+  on a real gap — and record every shipped asset with its licence in `_ops/assets.md`
   (sources and the licence-first rule live in STACKS → Free assets).
 
 ## Brand — identity, systematized
 
 A company that faces the world needs a **brand**, and Mops treats it as a first-class,
-systematized artifact — not a folder of moodboards. Home: `docs/brand/` (the brand book,
+systematized artifact — not a folder of moodboards. Home: `_ops/brand/` (the brand book,
 `templates/BRAND-template.md`); its **formal elements flow into the design system**
 (palette/type → tokens, formats → templates) and its **verbal rules into the guide**
 (every agent writes in the brand voice).
@@ -201,7 +201,7 @@ Two stages, always marked, never blurred:
   through the import gate and rebuilt on our structure, no vendor wrapper and no promotion
   (ROLES → A prebuilt agent is a parts bin; method checked 2026-07-26).
 
-Home for the documents and the register: **`docs/audience/`**.
+Home for the documents and the register: **`_ops/audience/`**.
 
 ### Bias profiles — every persona carries 2–4, each with its source
 A persona that "rationally weighs the value proposition" is useless: real people **skim, anchor
@@ -238,7 +238,7 @@ roster on its own:
 
 | Mode | What | When |
 |---|---|---|
-| **Docs only** (default) | personas in `docs/audience/`, zero agents | spec, copy, design intake — almost always |
+| **Docs only** (default) | personas in `_ops/audience/`, zero agents | spec, copy, design intake — almost always |
 | **One agent per segment** | one voice for a group | dialogue needed; individuals within the segment needn't differ |
 | **Separate agents** | one per persona | **parallel, distinguishable** voices on one artifact |
 | **Persona squad** | a leader routes the question to the right personas | the owner asks the **squad**, not each persona (`--assignee` takes a squad natively) |
@@ -275,7 +275,7 @@ beyond a convention (squads and agents carry name/description/avatar, not tags):
   **🎭 prefix** in the name, visible on every board and in `agent list` / `squad list`.
 - **Docs-only consults — prose-marking satisfies the rule.** The glyph binds to **entity
   names**, so where no theatre squad or persona-agent exists (a pure consult over
-  `docs/audience/`), marking a synthetic reaction **in prose** — *«синтетическая реакция,
+  `_ops/audience/`), marking a synthetic reaction **in prose** — *«синтетическая реакция,
   гипотеза, не факт»*-style — satisfies the marking rule. That is **the marking rule's scope**:
   🎭 on entities, prose where there are none.
 - **A machine-readable first line** of the squad/agent description:
@@ -283,7 +283,7 @@ beyond a convention (squads and agents carry name/description/avatar, not tags):
   already uses (`TEMP — …` as the description's first line, ROLES → Mark temporary agents), so
   **special, non-staff entities are marked one way, not two**.
 - **The register is the truth** — every theatre entity is listed in the personas register under
-  `docs/audience/` (the staging home above); the workspace roster can drift, the register does
+  `_ops/audience/` (the staging home above); the workspace roster can drift, the register does
   not.
 - **The programmatic consequence, stated plainly:** `/multica-ops:mops team` and any staff view **exclude
   🎭 entities from headcount** (a persona is not a hire); the **cost/effort ledger attributes
@@ -388,7 +388,7 @@ lives in Linear (or Jira, or GitHub Issues) and will keep living there.
 **Wiring.** The vendor's **MCP server** is the cheapest path: registered in `mcp_config`
 with a token that lives there and nowhere else, granted to the conductor and to Mops rather
 than to everyone — a tracker connection is an access change, so it follows the same gate as
-any other (owner-confirmed). Registered in `docs/TOOLING.md` with its runbook. For a large
+any other (owner-confirmed). Registered in `_ops/TOOLING.md` with its runbook. For a large
 one-off migration, prefer the GraphQL API over the MCP: it paginates, and it doesn't spend
 an agent's context on every ticket.
 

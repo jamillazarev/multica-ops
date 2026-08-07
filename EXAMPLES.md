@@ -40,7 +40,7 @@ when it's done, and the whole thing sits on one agent's guess.
 > **Does not count:** a plan for search; matching titles only; "works on my 12-item test
 > library"; a relevance improvement nobody can measure.
 >
-> **DoD:** the acceptance query set (20 real searches from tickets, in `docs/research/`)
+> **DoD:** the acceptance query set (20 real searches from tickets, in `_ops/research/`)
 > passes at ≥90%; p95 latency under 400 ms; recorded before/after numbers on the issue.
 
 **Every fact in the issue carries its source and check-date, or is phrased as "verify X."**
@@ -83,7 +83,7 @@ in tokens for what one sentence would have carried.
 > correct, the UI gives no way to disambiguate.
 > **You're up:** the empty and ambiguous-result states — the ambiguous one is new, it
 > wasn't in the original design.
-> **Not done, on purpose:** typo tolerance. Deferred with a trigger in `docs/LATER.md`
+> **Not done, on purpose:** typo tolerance. Deferred with a trigger in `_ops/LATER.md`
 > ("if disambiguation doesn't fix the ticket rate").
 
 It states what was built, what proves it, what is deliberately absent, and what the next
@@ -173,7 +173,7 @@ progress" would have been the same words whether or not anything moved.
 
 Six weeks later somebody proposes it again, and the argument is re-run from memory.
 
-**Strong — appended to `docs/DECISIONS.md`:**
+**Strong — appended to `_ops/DECISIONS.md`:**
 
 > ## 2026-06-14 — Search stays in Postgres, no dedicated engine
 >

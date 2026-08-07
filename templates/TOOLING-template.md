@@ -5,7 +5,7 @@ access is recorded. A tool missing from here is a tool nobody checks, whose toke
 rotates, and whose breaking change surprises the team.
 
 One row per tool. **Operating detail does not live here** — it lives in
-`docs/tooling/<tool>.md`, so this stays scannable and the runbook stays deep.
+`_ops/runbooks/<tool>.md`, so this stays scannable and the runbook stays deep.
 
 | Tool | What it's for | Access & where the secret lives | Wired how | Checked |
 |---|---|---|---|---|
