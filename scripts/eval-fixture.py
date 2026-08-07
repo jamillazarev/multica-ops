@@ -86,13 +86,22 @@ def a_runtime():
 
 
 def build_12(sid):
-    """Offboarding: a named agent **holding work**, and a squad the owner will ask to remove."""
+    """Offboarding: a named agent **holding work**, and a squad the owner will ask to remove.
+
+    The entity name carries a per-build token. Archived agents do not appear in `agent list`,
+    but a day of rounds leaves several same-named predecessors reachable by other routes, and
+    a player that finds one reports *"already archived"* about the wrong one — the situation
+    read off the residue of the last round rather than off this one.
+    """
     made = []
+    # A token from the current issue count: monotonic enough to differ per build, and derived
+    # from state rather than from a clock (nothing here may depend on wall time).
+    tok = str(len(issues()) % 1000)
     rt = a_runtime()
     if not rt:
         print("  ! no online runtime — agent create needs one; start the daemon", file=sys.stderr)
         return made
-    a = mc("agent", "create", "--name", title(sid, "Copywriter"),
+    a = mc("agent", "create", "--name", title(sid, f"Copywriter-{tok}"),
            "--description", "Episode and landing copy.", "--model", "claude-sonnet-4-6",
            "--runtime-id", rt)
     if isinstance(a, dict) and a.get("id"):
@@ -100,7 +109,7 @@ def build_12(sid):
     # A squad needs a leader, so it gets one — the same agent, which is also true to the
     # situation: the squad the owner wants gone is the one this person led.
     if isinstance(a, dict) and a.get("id"):
-        s = mc("squad", "create", "--name", title(sid, "Marketing"),
+        s = mc("squad", "create", "--name", title(sid, f"Marketing-{tok}"),
                "--description", "Old marketing squad, mostly idle.", "--leader", a["id"])
         if isinstance(s, dict) and s.get("id"):
             made.append(("squad", s["id"]))
@@ -113,7 +122,7 @@ def build_12(sid):
     if isinstance(i, dict) and i.get("id"):
         made.append(("issue", i["id"]))
         if isinstance(a, dict) and a.get("id"):
-            mc("issue", "assign", i["id"], "--to", title(sid, "Copywriter"))
+            mc("issue", "assign", i["id"], "--to-id", a["id"])
     return made
 
 
