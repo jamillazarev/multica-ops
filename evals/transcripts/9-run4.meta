@@ -1,9 +1,0 @@
-scenario: 9
-run: 4
-player-model: claude-sonnet-4-6
-workspace: ee0929fe-b776-4f1d-9716-4f58885f3df8
-corpus-sha: 4e10b21
-corpus-dirty: yes
-fixture: evals/fixtures/9
-query: I want a severity field on bugs, and I want to see who created each issue — human or agent.
-rc=0
