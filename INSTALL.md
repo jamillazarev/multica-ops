@@ -38,11 +38,15 @@ claude plugin marketplace add jamillazarev/multica-ops
 claude plugin install multica-ops@multica-ops
 
 # into a Multica workspace, as an agent skill
-multica skill import --url github.com/jamillazarev/multica-ops/tree/v0.4.0/skills/mops
+multica skill import --url github.com/jamillazarev/multica-ops/tree/v0.4.1/skills/mops
 ```
 
-**All three were run end to end — measured, not assumed** (the first two on 2026-07-31, the
-import re-measured 2026-08-01). Four things worth knowing before you paste:
+**All three routes were run end to end — measured, not assumed** (the first two on 2026-07-31,
+the import re-measured 2026-08-01, each against the version current that day). **What is
+measured is the route, never the tag in the line above** — that moves with every release, and
+claiming a fresh measurement for a tag that did not exist when the run happened is exactly the
+kind of true-looking sentence this file is careful about. Four things worth knowing before you
+paste:
 
 - **The plugin route is two commands, two steps.** In-session, `/plugin` opens the same thing as
   a **menu**: paste **only the source** — `jamillazarev/multica-ops` — into its *Add Marketplace*

@@ -948,6 +948,36 @@ honest **`enforced_by`**, and the audit reads this table rather than assuming:
 | `platform` | Multica itself refuses | `--permission-mode` (who may run an agent) · `agent env set` owner/admin-only and audited · concurrency caps (6/agent, 20/daemon) · task timeouts · `local_directory` lock · **the stage barrier** |
 | `prose-only` | **nothing enforces it** | the list below |
 
+### A gate is not enforced until you have watched it refuse
+
+**`enforced_by: validator` is a claim, and the cheapest way to be wrong about your own company
+is to write a gate, see it run, and never check that it says no.** Running is not refusing. A
+hook that executes on every call and whose refusal is discarded looks identical, from the
+outside, to one that holds — the tool exits, the log fills, and the thing it was built to stop
+happens anyway.
+
+**So a gate is accepted only against a deliberate violation**: do the thing it forbids, and
+confirm the thing **did not happen** — by the artifact, not by the tool's own report. A stamp
+file, an absent commit, an unchanged permission. **The runner's account of itself is not
+evidence**; a hook that says it blocked and did not is the same failure wearing a receipt.
+
+**The trap that produced this rule, measured 2026-08-08 on Claude Code 2.1.220** — with stamp
+files on both sides, because the runner's narration was wrong about this twice. **Two ways a
+hook reaches the runtime**, and they are worth naming because the first reading of this blamed
+them: the **plugin path** — shipped inside a plugin, declared in its `hooks/hooks.json` — and
+the **settings path** — declared in the harness's own settings file on the machine.
+
+| How a `PreToolUse` hook answers | Hook runs | Actually refuses |
+|---|---|---|
+| `exit 2`, reason on stderr | yes | **yes** — plugin path and settings path both |
+| `hookSpecificOutput.permissionDecision` (nested) | yes | **yes** — plugin path |
+| a **flat** `{"permissionDecision": "deny"}` | yes | **no** — command proceeds, **both paths** |
+
+**The flat shape is the natural guess and it is not a refusal anywhere measured.** It raises no
+error and the hook is invoked exactly as expected, so nothing looks wrong: the gate simply holds
+nothing. Two projects first concluded the *path* decided; it does not — **the shape does**, and
+both learned it only after replacing the tool's account of itself with an artifact.
+
 **The prose-only list, by name** — rules deliberately not gates, because believing in a gate
 nothing enforces is the failure this table guards against:
 
@@ -1095,7 +1125,7 @@ conventions its owner never chose.
 
 ## Resident Mops — install / refresh
 
-`multica skill list` → absent: `skill import --url github.com/jamillazarev/multica-ops/tree/v0.4.0/skills/mops`;
+`multica skill list` → absent: `skill import --url github.com/jamillazarev/multica-ops/tree/v0.4.1/skills/mops`;
 present: compare versions — same → skip, older → the Skill-upgrade recipe above. Never a
 second copy. Then `agent create` (name **Mops**) → `agent skills` attach (+ find-skills)
 → `agent avatar` per chosen library (Mops in Multica keeps `assets/mops-avatar.png`) → subtitle "Executive Advisor · resident" → rights

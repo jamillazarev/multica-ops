@@ -37,7 +37,7 @@ workspace under migration, so there is no `UPGRADES.md` and none is owed.
    `test-rule-home.sh` · `test-map-blocks.sh` · `test-dispatch-nudge.sh`. Each one's load-bearing assertion is about what
    its holder *refuses*, so a suite left out of this list is a guard nobody re-checks.
    Green is evidence about the corpus, never about behaviour — behaviour is the eval suite's
-   job, and **a minor is not tagged without `evals/runs/<version>.md`**. Then
+   job, and **a minor or major is not tagged without `evals/runs/<version>.md`**. Then
    `python3 scripts/coverage-map.py` and *read* `evals/COVERAGE.md`: a holder with no test and
    a version with no run record both show up there first.
 5. **Changelog entry** (capability first — it is the migration map `/multica-ops:upgrade`

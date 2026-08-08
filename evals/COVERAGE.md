@@ -6,7 +6,7 @@
 
 ## What the corpus says holds its rules
 
-- *(nothing states an `enforced_by` yet — the enum and the per-runtime honesty table are owed)*
+- `validator` — stated 2×
 
 ## Validators that ship
 
@@ -67,11 +67,12 @@
 | 24 | An upgrade that was never a migration | yes | — | yes |
 | 25 | A migration that cannot finish without the owner | yes | — | yes |
 | 26 | A spoken rule, and the memory that is not a home | yes | — | yes |
+| 27 | A gate that runs and does not refuse | — | — | **no** |
 
-**21 of 26** carry a repository fixture, **7** a workspace builder, and **25** have been measured at least once. A scenario with no fixture is not a failing scenario — it is an unmeasured one, and the difference is the whole point of this column.
+**21 of 27** carry a repository fixture, **7** a workspace builder, and **25** have been measured at least once. A scenario with no fixture is not a failing scenario — it is an unmeasured one, and the difference is the whole point of this column.
 
 ## Behavioural scenarios
 
-- **26 scenarios** in the rubric (`evals/README.md`)
-- **5 recorded runs**: `0.1.0` · `0.2.0` · `0.2.1` · `0.3.0` · `0.4.0`
+- **27 scenarios** in the rubric (`evals/README.md`)
+- **6 recorded runs**: `0.1.0` · `0.2.0` · `0.2.1` · `0.3.0` · `0.4.0` · `0.4.1`
 - A minor or major is not tagged without a run record for its own version (AGENTS.md → *Cutting a release*); `not run` is listed rather than omitted.
