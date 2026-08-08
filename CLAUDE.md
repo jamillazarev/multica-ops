@@ -45,9 +45,15 @@ workspace under migration, so there is no `UPGRADES.md` and none is owed.
    rather than ships) → README roadmap pruned of what landed.
 6. **Tag — only on the owner's word** (see *Versioning*), then the **GitHub Release whose
    notes are the entry whole with its heading collapsed to a bare italic date**.
-7. **Site**: `cd ~/Dev/ai && python3 scripts/generate.py`, then commit and push that repo
-   too. It deploys continuously, so a skipped regen silently ships the previous pages against
-   the new tag. A new page-worthy file needs a route in the generator first.
+7. **Site**: `cd ~/Dev/ai && python3 scripts/generate.py ~/Dev/multica-ops` — the generator
+   takes the source repo as its one argument and dies on `IndexError` without it — then commit
+   and push that repo too. **Then watch the deploy land**: it deploys continuously, so a skipped
+   regen silently ships the previous pages against the new tag — and *continuously* is a habit
+   of the integration, not a guarantee. **Measured 2026-08-08**: the 0.4.1 regen (`e84cb2c`)
+   reached GitHub at 04:20 and Vercel never built it; production stayed on the 03:32 build until
+   0.4.2 pushed past it, so the site served 0.4.0 for two releases while both repos looked clean.
+   Confirm a deployment exists **for that SHA** and reached `READY`, not that the push
+   succeeded. A new page-worthy file needs a route in the generator first.
 8. **Installs on this machine**: `bash scripts/find-installs.sh`, follow each row's route,
    run it again, and read the **`RESULT:` line** — that line is the canon, not a remembered
    count. Machines differ, installs come and go, and a runtime the script does not know yet
