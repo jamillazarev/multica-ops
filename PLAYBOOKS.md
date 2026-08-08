@@ -321,7 +321,9 @@ bridge**, which is a different thing with a direction of truth per field (MODULE
 **Pass 1 — extract.** Pull the source into flat JSON: id, title, body, state, labels,
 assignee, priority, dates, parent, URL. Linear has an MCP server and a GraphQL API (key
 lives in `mcp_config`/`custom-env`, **never in the repo**); GitHub has `gh issue list
---json`; everything else exports CSV. Keep the raw dump — you will re-map more than once.
+--json`; everything else exports CSV. **An export that lands as a spreadsheet, a document
+tree or a paper is converted before it is mapped, never read by eye** (STACKS → *Reading
+documents agents can't parse*). Keep the raw dump — you will re-map more than once.
 
 **Field traps that break imports silently.** In Linear the body is **`content`
 (unlimited)**, while **`description` is a 255-char blurb** for list views — pull the wrong
@@ -1125,7 +1127,7 @@ conventions its owner never chose.
 
 ## Resident Mops — install / refresh
 
-`multica skill list` → absent: `skill import --url github.com/jamillazarev/multica-ops/tree/v0.4.1/skills/mops`;
+`multica skill list` → absent: `skill import --url github.com/jamillazarev/multica-ops/tree/v0.4.2/skills/mops`;
 present: compare versions — same → skip, older → the Skill-upgrade recipe above. Never a
 second copy. Then `agent create` (name **Mops**) → `agent skills` attach (+ find-skills)
 → `agent avatar` per chosen library (Mops in Multica keeps `assets/mops-avatar.png`) → subtitle "Executive Advisor · resident" → rights

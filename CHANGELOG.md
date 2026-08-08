@@ -3,6 +3,30 @@
 Newest first. Each entry leads with what you can now do, not with which files moved. This is
 also the migration map `/multica-ops:upgrade` reads.
 
+## 0.4.2 — 2026-08-09
+
+**A document an agent cannot open is not evidence.** The shelf had an answer for web pages
+(Crawl4AI, cf-browser) and one for audio (Whisper), and none at all for the file somebody
+actually sends you — so a tracker export arriving as a spreadsheet, a primary source that exists
+only as a paper, or a segment's own words trapped in someone's deck were each solved from
+scratch by whoever hit them, or read by eye and paraphrased.
+**[anydoc](https://github.com/firecrawl/anydoc)** (MIT, Rust, local, no key and no model call)
+is now the row: docx · pptx · xlsx · odt/ods/odp · rtf · epub · csv and text-based PDFs into
+markdown. Home: STACKS → *Reading documents agents can't parse*; `/multica-ops:import` pass 1
+cites it rather than restating it.
+
+**Both limits are in the row, because a converter that quietly returns nothing is worse than
+no converter**: there is **no OCR** — an image-only or password-protected file is an explicit
+`Unsupported`, and the fallback stays the Anthropic `pdf` skill or a real OCR pass — and
+**images become their alt text**, so a deck whose argument lives in its pictures arrives without
+it. Its speed and coverage benchmarks are the project's own, LLM-judged claims, named as claims
+rather than carried as fact.
+
+**Nothing else moved, and no company owes a migration.** A shelf row is offered when a need
+names it and is never loaded before that (STACKS head), so no flow got longer. anydoc also
+ships as an agent skill; that route arrives through `/multica-ops:skill`'s screen like any other
+import, which is where it was already governed.
+
 ## 0.4.1 — 2026-08-08
 
 **A gate is not enforced until you have watched it refuse — and on Claude Code, the shape of
