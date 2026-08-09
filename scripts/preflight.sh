@@ -65,7 +65,21 @@ done <<< "$(git ls-files '*.json' | grep -v '^company/')"
 #      An import becomes agent instructions, so `tree/main` means the content behind someone's
 #      agents can change without them moving — the substance of the auditors' W012 finding,
 #      2026-07-30. A pin only works if it is maintained, so the maintenance is a check.
-bad_ref=$(grep -rhoE 'multica-ops/tree/[A-Za-z0-9._-]+/skills/mops' -- *.md 2>/dev/null | sort -u \
+#      **SECURITY.md is exempt, on purpose.** It records a URL that was *run once, on a date*, as
+#      the control for a measurement. Dragging that forward each release would make the control
+#      unreproducible — the exact defect the record exists to avoid — so this check covers
+#      instructions, which rot, and not history, which must not move. Verify the exemption is not
+#      hiding a real instruction: SECURITY.md gives none, and this asserts it.
+#      The exemption is kept honest by a POSITIVE assertion rather than by trying to tell a
+#      record from an instruction by its shape — they are the same shape, which is why the first
+#      attempt at this guard fired on the record it was written to protect. Instead: INSTALL.md
+#      must still carry the pinned line. Move the instruction into the exempt file to dodge the
+#      pin and this fires, because the place it belongs went empty.
+grep -q "multica-ops/tree/v${sv}/skills/mops" INSTALL.md 2>/dev/null || \
+  say_fail "INSTALL.md no longer carries the import line pinned to v$sv — §1b exempts SECURITY.md \
+because it records past runs, and that exemption only holds while the real instruction lives here."
+pinfiles=$(ls -1 *.md 2>/dev/null | grep -v '^SECURITY\.md$')
+bad_ref=$(grep -hoE 'multica-ops/tree/[A-Za-z0-9._-]+/skills/mops' $pinfiles 2>/dev/null | sort -u \
           | grep -v "multica-ops/tree/v${sv}/skills/mops" || true)
 [ -n "$bad_ref" ] && while IFS= read -r r; do
   say_fail "import URL is not pinned to v$sv: $r"
@@ -282,6 +296,21 @@ done
 n=$(grep -c '^## [0-9]' evals/README.md 2>/dev/null || echo 0)
 [ "$n" -lt 3 ] && say_warn "evals/README.md has $n scenarios — the official checklist asks for 3+"
 
+# 6c · and the hand-kept copy of that number must agree with it. This is a REPEAT: the changelog
+#      already records "advertised 22 eval scenarios against a rubric that now holds 26", and it
+#      drifted again to 26-against-27 — published on the site, where one page said 26 and another
+#      said 27. Twice is the threshold everywhere here, and past it the repair is a form, not a
+#      third correction of the same number by hand. The rubric is the home; README and the
+#      runsheet are copies, and a copy that disagrees is the defect.
+rs=$(grep -cE '^[0-9]+\s' evals/runsheet.tsv 2>/dev/null || echo 0)
+[ "$rs" = "$n" ] || say_fail "evals/runsheet.tsv has $rs rows against $n scenarios in the \
+rubric (evals/README.md) — the sheet has gone one behind twice before. Regenerate it."
+for claimed in $(grep -oE '\b[0-9]+ (stratified )?eval scenarios\b|\bthe [0-9]+ scenarios\b' README.md \
+                 | grep -oE '[0-9]+' | sort -u); do
+  [ "$claimed" = "$n" ] || say_fail "README.md advertises $claimed eval scenarios; the rubric \
+holds $n. The rubric is the home — fix the copy, and note that this is the second time."
+done
+
 # 7 · docs coverage — a new command with no use case is a doc gap, not a bug
 missing=""
 for c in $(grep -oE '^\| `/multica-ops:[a-z-]+' COMMANDS.md | sed -E 's/^.*multica-ops://'); do
@@ -336,7 +365,17 @@ today = datetime.date.today()
 old = []
 for f in glob.glob("*.md") + glob.glob("templates/*.md") + glob.glob("sources/*.md"):
     for i, line in enumerate(open(f, encoding="utf-8"), 1):
-        for m in re.finditer(r"(?:checked|verified|re-verified)\s+(\d{4})-(\d{2})-(\d{2})", line):
+        # IGNORECASE, the word "measured", and an optional backtick — each was a hole a lens
+        # measured. Case was the worst: house style capitalises at a sentence start, so 33 of
+        # STACKS' 61 stamps were exempt and the exemption was the DEFAULT. The strongest claims
+        # in this corpus are the ones that say "measured <date>", and they aged unseen. The gate
+        # had never fired, because nothing is 180 days old yet, so green meant nothing about half
+        # the file and would first have admitted it in 2027.
+        # NOTE: the backtick is written \x60 on purpose. A literal one here makes an odd number
+        # of backticks inside $( <<HEREDOC ), which bash tokenises for nesting even in a quoted
+        # heredoc — the file then dies with "unexpected end of file" 30 lines further down.
+        for m in re.finditer(r"(?:checked|verified|re-verified|measured|re-measured)"
+                             r"\s*:?\s*[\x60]?\s*(\d{4})-(\d{2})-(\d{2})", line, re.I):
             d = datetime.date(*map(int, m.groups()))
             age = (today - d).days
             if age > STALE_DAYS:

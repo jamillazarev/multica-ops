@@ -3,7 +3,49 @@
 Newest first. Each entry leads with what you can now do, not with which files moved. This is
 also the migration map `/multica-ops:upgrade` reads.
 
-## 0.4.6 — 2026-08-09
+## 0.4.5 — 2026-08-09
+
+**The claim under W012 stops being an assertion and carries its measurement.** 0.4.4 said the
+form Snyk quotes — `multica skill import --url github.com/jamillazarev/multica-ops` — is a
+command that does not work. True, and undated, and unmeasured, which by this repository's own
+freshness law makes it a claim wearing the clothes of a fact. **Measured `2026-08-09`**: the
+bare root returns **HTTP 502**, body *"SKILL.md not found at the root of
+jamillazarev/multica-ops@main. For multi-skill repositories, point to a specific directory
+using …/tree/main/&lt;skill-dir&gt;"*.
+
+**The control is the part that makes it evidence**, and it is written out with its tag —
+`…/tree/v0.4.4/skills/mops` — because *"the pinned line"* moves every release and a control
+nobody can re-run is not evidence. It **succeeded at the same moment**, so the 502 is the shape
+of the URL and not a service interruption —
+without that second run this page would have recorded a possible outage as a defect in an
+address, which is the same error in the opposite direction from the one 0.4.4 fixed.
+
+**And the response carries a second finding that is not ours.** Multica answers a plainly
+client-side mistake with a **5xx**, which the CLI renders as *"the service is temporarily
+unavailable"* — so an actionable message (*point at a directory*) reaches the user as a false
+claim that the service is down. Recorded on the security page rather than left in a
+conversation, because the next person to mistype that URL reads the same wrong cause. Worth
+reporting upstream; the row says so.
+
+**And what four review lenses found afterwards.** The freshness gate **could not see 33 of
+STACKS' 61 check-dates**: its regex was case-sensitive, so a stamp written `Checked` — house
+style at the start of a sentence — was exempt, and the exemption was the default. It also had no
+word for `measured`, which carries this corpus's strongest claims. Fixed with a note on the trap
+that broke it twice: **an odd number of backticks inside `$( <<HEREDOC )` breaks bash parsing**
+thirty lines further down, so the regex writes the character as `\x60`.
+
+**The scenario count drifted a second time — so it is a form now, not a third correction.**
+README advertised 26 against a rubric holding 27, and it was **published**: one page of the site
+said 26 while another said 27. The changelog already records this defect once, at 22-against-26.
+Preflight now compares README and the runsheet against the rubric, which is the home.
+
+**The control in `SECURITY.md` is written out with its tag**, because *"the pinned line"* moves
+every release and a control nobody can re-run is not evidence. **"Two-line shell wrapper" became
+accurate** — three are two lines, `migration-state.sh` is four — and the section now points at
+the **four `.py` files, ~24 KB**, which is the surface the finding is actually about rather than
+the 427 bytes of wrappers. The pin check gained a scope and a positive guard: `SECURITY.md` is
+exempt because it records past runs, and that exemption holds only while `INSTALL.md` still
+carries the real instruction.
 
 **Multica does not create repositories, and until now nothing here said so.** Measured
 `2026-08-09` against CLI 0.4.12: `multica repo` offers **add · checkout · list · remove** and no
@@ -27,33 +69,9 @@ API *accepts* a non-git path is **explicitly marked unmeasured** — checking it
 resource in a live workspace — and the check is owed either way: one question against somebody's
 files.
 
-**Eval state**: **not run** — a patch that records a measured fact about the platform and adds no
-behaviour. Corpus checks green and every guard suite passes.
-
-## 0.4.5 — 2026-08-09
-
-**The claim under W012 stops being an assertion and carries its measurement.** 0.4.4 said the
-form Snyk quotes — `multica skill import --url github.com/jamillazarev/multica-ops` — is a
-command that does not work. True, and undated, and unmeasured, which by this repository's own
-freshness law makes it a claim wearing the clothes of a fact. **Measured `2026-08-09`**: the
-bare root returns **HTTP 502**, body *"SKILL.md not found at the root of
-jamillazarev/multica-ops@main. For multi-skill repositories, point to a specific directory
-using …/tree/main/&lt;skill-dir&gt;"*.
-
-**The control is the part that makes it evidence.** The pinned install line was run **at the same
-moment and succeeded**, so the 502 is the shape of the URL and not a service interruption —
-without that second run this page would have recorded a possible outage as a defect in an
-address, which is the same error in the opposite direction from the one 0.4.4 fixed.
-
-**And the response carries a second finding that is not ours.** Multica answers a plainly
-client-side mistake with a **5xx**, which the CLI renders as *"the service is temporarily
-unavailable"* — so an actionable message (*point at a directory*) reaches the user as a false
-claim that the service is down. Recorded on the security page rather than left in a
-conversation, because the next person to mistype that URL reads the same wrong cause. Worth
-reporting upstream; the row says so.
-
-**Eval state**: **not run** — a patch that dates a claim and adds no behaviour. Corpus checks
-green and every guard suite passes.
+**Eval state**: **not run** — the release dates a claim, records a measured fact about the
+platform, and repairs checks; no behaviour an eval measures changed. Corpus checks green and
+every guard suite passes.
 
 ## 0.4.4 — 2026-08-09
 

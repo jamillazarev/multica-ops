@@ -178,9 +178,18 @@ github.com/jamillazarev/multica-ops` returns **HTTP 502**, body:
 > `SKILL.md not found at the root of jamillazarev/multica-ops@main. For multi-skill repositories,
 > point to a specific directory using github.com/jamillazarev/multica-ops/tree/main/<skill-dir>`
 
-**The pinned line succeeded at the same moment**, so the failure is the shape of the URL and not
-an outage — which is the whole reason the control was run: without it this page would be
-reporting a possible service interruption as a defect in an address.
+**The control, written the way the failing command is written**, because "the pinned line" is a
+referent that moves every release and a control nobody can re-run is not evidence:
+
+```
+multica skill import --url github.com/jamillazarev/multica-ops/tree/v0.4.4/skills/mops
+```
+
+succeeded at the same moment, returning `"status": "created"`. So the failure is the shape of the
+URL and not an outage — which is the whole reason the control was run: without it this page would
+be reporting a possible service interruption as a defect in an address. **Re-run it against any
+tag that exists**; the pin in the install instructions moves with each release and the tag for an
+unreleased version does not exist yet.
 
 **Two separate things are true of that response, and only one of them is ours.** The form quoted
 in Snyk's W012 is one nobody can execute. And **Multica answers a plainly client-side mistake
@@ -192,9 +201,16 @@ in a conversation, because the next person to mistype this URL will read the sam
 ## About the 2026-07-30 audits
 
 Socket and Snyk audited the skills.sh package on 2026-07-30. **Each finding is answered here by
-name, and they do not all get the same answer** — an earlier version of this section swept three
-of them into one sentence that was false about one, which is worse than any of the findings.
-Verified against `git log --all` on 2026-08-09.
+name, and they do not all get the same answer** — the rule being: *a wrong filename retires only
+the finding's example, never the class it belongs to.* One path below has never existed and takes
+the class with it; another exists while the script it names never did, so the class stays and is
+answered underneath. **Dismissing a finding because its filename is wrong leaves the part that
+was right standing.**
+
+**The audits scanned a package; the table answers about this repository** — and they hold the
+same bytes, because a skills.sh install names the *repository* rather than a folder and copies
+the manifest with it (`INSTALL.md` → *Installing from skills.sh*). Verified against
+`git log --all -- <path>` on 2026-08-09; anyone can re-run it one path at a time.
 
 | Finding | Answer |
 |---|---|
@@ -211,9 +227,13 @@ run a script from `${CLAUDE_PLUGIN_ROOT}`, and that is worth stating plainly:
   installed. It is not attacker-supplied input; **an attacker who can set it has already replaced
   the plugin**, at which point no in-plugin check helps — which is why the honest answer is where
   the plugin came from, not a path check inside it.
-- **Every wired hook is a two-line shell wrapper** that `exec`s a Python file sitting beside it —
-  `hooks/*.sh` are 64–227 bytes. They are readable in full in under a minute, and that is the
-  intended way to check them.
+- **Every wired hook is a two-to-four-line shell wrapper** that `exec`s a Python file sitting
+  beside it — `hooks/*.sh` are 64–227 bytes, three of two lines and `migration-state.sh` of four.
+  **But the wrappers are 427 bytes and the behaviour is the ~24 KB of Python under them**, so
+  pointing at the wrappers as "readable in a minute" would be perfect transparency about the
+  files that do nothing. **Read these four**: `hooks/migration-state.py` (10 KB) ·
+  `hooks/dispatch-nudge.py` (5 KB) · `hooks/outward-gate.py` (4.6 KB) · `hooks/rule-home.py`
+  (4.1 KB). That is the surface the finding is actually about.
 - **Each one is mutation-tested**, shown speaking on the mutant and silent on its honest twin
   (AGENTS.md → *What a capability owes*). A hook that cannot be wrong is decoration; these are
   asserted on what they **refuse**.
