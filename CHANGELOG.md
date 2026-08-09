@@ -3,6 +3,35 @@
 Newest first. Each entry leads with what you can now do, not with which files moved. This is
 also the migration map `/multica-ops:upgrade` reads.
 
+## 0.4.4 — 2026-08-09
+
+**The security page said something false about itself, and a security page is the worst place for
+that.** Answering the 2026-07-30 Socket and Snyk audits, it swept three findings into one sentence
+— *"none of those paths exists in this repository at any commit"* — which is true of
+`commands/skill.md` and of the `scripts/install-alias.sh` that Socket's hooks alert points at
+(**zero commits each, at any ref**) and **false of `hooks/hooks.json`, which exists and has four**.
+The substance was right and the claim was wrong, which is precisely the defect class AGENTS.md
+names as the expensive one: *a statement that parsed perfectly, linked correctly, and was false*.
+
+**Every finding now gets its own row and its own answer**, because they do not deserve the same
+one: a path that never existed · a file that exists whose flagged script never did · a quoted
+command that does not run, against an install line that pins a tag for exactly that reason and a
+preflight that fails the release when the pin drifts · and two findings that are **accurate
+descriptions of what the skill is for**, answered by the page rather than argued with. Verified
+against `git log --all` on 2026-08-09.
+
+**And the live half of the hooks finding is answered instead of dodged.** A `SessionStart` hook
+does run a script from `${CLAUDE_PLUGIN_ROOT}` — so: that variable is **the runtime's own**, and
+an attacker who can set it has already replaced the plugin, which no in-plugin check survives;
+every wired hook is a **two-line shell wrapper** exec'ing a Python file beside it, 64–227 bytes,
+readable in a minute, and that is the intended way to check them; each is **mutation-tested on
+what it refuses**; and the upgrade flow exists so that re-reading the diff from a pinned tag is
+the default rather than a discipline. **Dismissing a finding because its filename is wrong leaves
+the part that was right standing.**
+
+**Eval state**: **not run** — a patch that corrects a claim and adds no behaviour. Corpus checks
+green and every guard suite passes.
+
 ## 0.4.3 — 2026-08-09
 
 **Six shelf rows, and two of them close doors that were open in only one direction.** Nothing

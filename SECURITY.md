@@ -173,10 +173,31 @@ because a pin nobody maintains is decoration.
 
 ## About the 2026-07-30 audits
 
-Socket and Snyk audited the skills.sh package on 2026-07-30. Two of the three Socket alerts name
-`hooks/hooks.json` and `commands/skill.md`, and Snyk's W012 quotes
-`multica skill import --url github.com/jamillazarev/multica-ops` — a command that does not work
-(the repository root answers a mislabelled 502). **None of those paths exists in this repository at
-any commit**, and the import URL has since been corrected and pinned. The remaining findings —
-broad control, and third-party content exposure — are accurate descriptions of what the skill is
-for, and this page is the answer to them.
+Socket and Snyk audited the skills.sh package on 2026-07-30. **Each finding is answered here by
+name, and they do not all get the same answer** — an earlier version of this section swept three
+of them into one sentence that was false about one, which is worse than any of the findings.
+Verified against `git log --all` on 2026-08-09.
+
+| Finding | Answer |
+|---|---|
+| Socket · `commands/skill.md` — *"a wrapper that delegates to an unseen external skill"* | **the path has never existed here** — zero commits touch it, at any ref. There is no `commands/` directory; the package ships `skills/mops/SKILL.md` and its companions |
+| Socket · `hooks/hooks.json` — *"a sensitive OS-command execution sink at session start … verify `${CLAUDE_PLUGIN_ROOT}/scripts/install-alias.sh`"* | **the file exists; the script it names never did** — `scripts/install-alias.sh` has zero commits at any ref. But the *class* of the finding is live and is answered below rather than dismissed |
+| Snyk · **W012** — a runtime URL that controls the agent | the quoted form, `--url github.com/jamillazarev/multica-ops`, is **not a command that works** (the bare repository root is not a skill folder). The line the install instructions actually carry **pins a tag**, for exactly W012's reason, and **preflight fails the release if the pin drifts** — see above |
+| Snyk · **W011** — third-party content exposure | accurate, and Snyk's own note records the mitigation: external text is treated as **data, never instructions**. That rule is this page |
+| Socket · `SKILL.md` — broad control, autonomous real-world actions, unsandboxed imports | **an accurate description of what the skill is for.** The answers are the owner-gated four kinds, the import screen, and the fact that nothing outward happens without a human — all on this page |
+
+**The live part of the hooks finding, answered rather than dodged.** A `SessionStart` hook does
+run a script from `${CLAUDE_PLUGIN_ROOT}`, and that is worth stating plainly:
+
+- **`${CLAUDE_PLUGIN_ROOT}` is the runtime's own variable**, pointing at the directory the runtime
+  installed. It is not attacker-supplied input; **an attacker who can set it has already replaced
+  the plugin**, at which point no in-plugin check helps — which is why the honest answer is where
+  the plugin came from, not a path check inside it.
+- **Every wired hook is a two-line shell wrapper** that `exec`s a Python file sitting beside it —
+  `hooks/*.sh` are 64–227 bytes. They are readable in full in under a minute, and that is the
+  intended way to check them.
+- **Each one is mutation-tested**, shown speaking on the mutant and silent on its honest twin
+  (AGENTS.md → *What a capability owes*). A hook that cannot be wrong is decoration; these are
+  asserted on what they **refuse**.
+- **Install from a pinned tag and re-read the diff on upgrade** — `/multica-ops:upgrade` exists to
+  make that the default rather than a discipline.
