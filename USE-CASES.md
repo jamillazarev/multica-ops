@@ -63,6 +63,8 @@ are shortcuts for when you already know the name. Both columns do the same thing
 | "Who are we even for?" | *"work out our segments and ICP"* | `/multica-ops:mops audience` |
 | "We need a brand / ours feels dated" | *"we need an identity"* · *"our brand looks old"* | `/multica-ops:mops brand` |
 | "Would experts tear this apart?" | *"have the experts review this spec"* | `/multica-ops:mops validate …` |
+| "Where does that video say it?" | *"get me the transcript"* | the caption track first, the audio transcribed only when there is none — nobody pays GPU time for words already written down |
+| "Turn this into a deck" | *"make the slides"* | markdown in the repo, so the deck diffs and reviews like everything else; a `.pptx` only when a person outside the repo must edit it |
 
 ## Work with dates
 

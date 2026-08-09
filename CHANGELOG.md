@@ -3,6 +3,66 @@
 Newest first. Each entry leads with what you can now do, not with which files moved. This is
 also the migration map `/multica-ops:upgrade` reads.
 
+## 0.4.3 — 2026-08-09
+
+**Six shelf rows, and two of them close doors that were open in only one direction.** Nothing
+else moved: a row is offered when a need names it and is never loaded before that (STACKS head),
+so no flow got longer and **no company owes a migration**.
+
+- **Voice became a ladder, because the top rung is free.** YouTube and most platforms ship a
+  caption track, and **transcribing a video that already has one is paying twice** — in GPU time
+  and in wall clock. `youtube-transcript-api` and **yt-dlp** first, Whisper when there is no
+  track, hosted only for scale or a synthetic voice. Rung 1's real limit is in the row:
+  unofficial, so `RequestBlocked`, cloud-IP blocks and parser breakage when the markup moves —
+  a research pass on a laptop, not a standing pipeline.
+- **Presentations, picked by who owns the deck afterwards.** **Marp** is the default because it
+  is the only rung where a deck still diffs, reviews and gates like everything else; Slidev when
+  the slides execute, Quarto when a paper shares the source, the `pptx` skill when a person
+  outside the repo must edit the file. `academic-pptx-skill`'s **action titles** — a heading
+  states the finding, not the topic — is a form worth stealing whatever you generate with.
+  **`anydoc` from 0.4.2 is the same door running inward**, so the two releases are halves of one
+  thing: decks arrive as `.pptx` and leave as markdown.
+- **Style presets, filed as a vocabulary and not a machine.** Fooocus's JSON is the format
+  everyone ports and is worth having as *two hundred named looks to point at* when briefing an
+  owner. It is not a style system: these are SDXL-era suffixes, the hosted models answer to plain
+  description and a reference image, and a preset picked per image is a moodboard folder in JSON.
+  **What makes two images match is the recipe kept beside the asset** — model, prompt, seed,
+  reference, in `_ops/assets.md` next to the licence.
+- **Image → prompt, starting from the model you already pay for.** Claude or GPT-4o vision beats
+  standing up CLIP Interrogator unless the batch is big or the images must not leave the machine
+  — the same two reasons as local Whisper. Its real uses are salvage, turning a client's
+  reference deck into words the register can hold, and alt text.
+- **Where skills live**, the step before screening one: SkillsMP leads because it shows the
+  `SKILL.md` **before** installing, and a directory that shows neither instructions nor code is
+  an advertisement.
+- **`last30days`** joins the demand-signal row with both of its limits: *"no keys"* is true of a
+  slice (X wants cookies, three networks go through a paid third party), and **engagement
+  weighting is not representativeness** — the top of the signal pyramid handed over as the base.
+- **Skill Vetter joins the screening row, because it fails in the opposite direction** to the
+  scanner. Patterns cannot read intent and cannot be argued with; a model-executed checklist
+  reads intent and **can be talked out of it by the very file it is screening**. Neither is the
+  gate.
+
+**And a defect the runsheet had warned about itself.** Its own header says *regenerate after
+adding a scenario — the runsheet went one behind when 26 landed*; it was one behind again, with
+**scenario 27 in the rubric and absent from the sheet**. It is a row now, marked `TO-AUTHOR`
+because the rubric describes a situation with no utterance and writing the opening line is
+writing part of the test.
+
+**What this release deliberately does not carry, and why it is a patch.** The asset **recipe** —
+model, prompt, seed and reference as required fields, with a company-preflight refusal behind
+them — was built and is **held back**. It is a capability, and a capability here owes a form, a
+mutation test, a scenario and a door; the form and the suite exist, but a minor is not tagged
+without `evals/runs/<version>.md` and the four lenses, and neither was run. **Shipping it as a
+patch would have been shipping the shape of the bar without the bar.** The two rows above that
+depend on the idea say it in plain words instead of citing a section that does not exist yet.
+It lands whole, as a minor, when the round has been run. *(The sibling `opsinist` carries the
+same mechanic at 0.2.5 with its own measurement behind it.)*
+
+**Eval state**: **not run** — a patch that adds no behaviour, so no round is owed. Corpus checks
+green and every guard suite passes, which is evidence about the corpus and about what the
+holders refuse, never about behaviour.
+
 ## 0.4.2 — 2026-08-09
 
 **A document an agent cannot open is not evidence.** The shelf had an answer for web pages

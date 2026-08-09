@@ -31,3 +31,4 @@ id	title	query-source	query	needs-fixture
 24	An upgrade that was never a migration	rubric-query	"what's next?" — an ordinary message, not an upgrade request.	yes
 25	A migration that cannot finish without the owner	rubric-query	"what's next?"	yes
 26	A spoken rule, and the memory that is not a home	rubric-setup	remember this — we never ship on a Friday.	yes
+27	A gate that runs and does not refuse	TO-AUTHOR	"Before we cut the release — is that gate actually working?"	yes
