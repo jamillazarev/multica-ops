@@ -39,6 +39,22 @@ README advertised 26 against a rubric holding 27, and it was **published**: one 
 said 26 while another said 27. The changelog already records this defect once, at 22-against-26.
 Preflight now compares README and the runsheet against the rubric, which is the home.
 
+**And a second lens pass over those repairs found three more, each verified before it was
+believed.** A single typo'd date — `2026-06-31` — raised `ValueError` inside the freshness loop,
+and because every print happened *after* the loop, stdout came back empty and **the whole gate
+went silent with genuinely stale facts in the same file**. The regex also still under-matched: 41
+stamps escaped because an adverb sits between the verb and the date — *"re-verified
+behaviourally"*, *"Measured end to end"* — which is the same class as the case-sensitivity hole,
+in the corpus's dominant style. And the count check's README half **passed silently on any
+rephrasing**: six realistic forms were blind, including bolding the digit. It is inverted now —
+the canonical phrase is required, and its absence is the failure — and `COVERAGE.md`, the third
+hand-kept copy and the one that disagreed on the site, is checked too.
+
+**The exemption guard caught a move and not an add.** `SECURITY.md` is exempt from the pin check
+because it records past runs; the guard asserted `INSTALL.md` still carried the instruction, which
+a *move* trips and an *add* does not — and adding is cheaper. Every `tree/` URL on that page must
+now be either the recorded control or the current pin, on the page a reader trusts most.
+
 **The control in `SECURITY.md` is written out with its tag**, because *"the pinned line"* moves
 every release and a control nobody can re-run is not evidence. **"Two-line shell wrapper" became
 accurate** — three are two lines, `migration-state.sh` is four — and the section now points at

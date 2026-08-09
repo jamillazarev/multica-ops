@@ -78,6 +78,17 @@ done <<< "$(git ls-files '*.json' | grep -v '^company/')"
 grep -q "multica-ops/tree/v${sv}/skills/mops" INSTALL.md 2>/dev/null || \
   say_fail "INSTALL.md no longer carries the import line pinned to v$sv — §1b exempts SECURITY.md \
 because it records past runs, and that exemption only holds while the real instruction lives here."
+#      **And the exemption asserts a negative, because a guard that only catches a MOVE is
+#      cheaper to walk around than to obey**: adding a second URL to the exempt page leaves
+#      INSTALL.md untouched and passes. So every `tree/` URL inside SECURITY.md must be either
+#      the one recorded control or the current pin — anything else is refused, on the page a
+#      reader trusts most.
+sec_bad=$(grep -hoE 'multica-ops/tree/[A-Za-z0-9._-]+/skills/mops' SECURITY.md 2>/dev/null | sort -u \
+          | grep -vE "multica-ops/tree/(v${sv}|v0\.4\.4)/skills/mops" || true)
+[ -n "$sec_bad" ] && while IFS= read -r r; do
+  say_fail "SECURITY.md carries an import URL that is neither the recorded control (v0.4.4) nor \
+the current pin (v$sv): $r — the page is exempt from the pin check, not from scrutiny."
+done <<< "$sec_bad"
 pinfiles=$(ls -1 *.md 2>/dev/null | grep -v '^SECURITY\.md$')
 bad_ref=$(grep -hoE 'multica-ops/tree/[A-Za-z0-9._-]+/skills/mops' $pinfiles 2>/dev/null | sort -u \
           | grep -v "multica-ops/tree/v${sv}/skills/mops" || true)
@@ -293,7 +304,7 @@ for c in $(grep -oE '^\| `/multica-ops:[a-z-]+' COMMANDS.md | sed -E 's/^.*multi
 done
 
 # 6b · official checklist: at least three evaluations
-n=$(grep -c '^## [0-9]' evals/README.md 2>/dev/null || echo 0)
+n=$(grep -cE '^## [0-9]+\. ' evals/README.md 2>/dev/null || true); n=${n:-0}
 [ "$n" -lt 3 ] && say_warn "evals/README.md has $n scenarios — the official checklist asks for 3+"
 
 # 6c · and the hand-kept copy of that number must agree with it. This is a REPEAT: the changelog
@@ -302,13 +313,25 @@ n=$(grep -c '^## [0-9]' evals/README.md 2>/dev/null || echo 0)
 #      said 27. Twice is the threshold everywhere here, and past it the repair is a form, not a
 #      third correction of the same number by hand. The rubric is the home; README and the
 #      runsheet are copies, and a copy that disagrees is the defect.
-rs=$(grep -cE '^[0-9]+\s' evals/runsheet.tsv 2>/dev/null || echo 0)
-[ "$rs" = "$n" ] || say_fail "evals/runsheet.tsv has $rs rows against $n scenarios in the \
-rubric (evals/README.md) — the sheet has gone one behind twice before. Regenerate it."
-for claimed in $(grep -oE '\b[0-9]+ (stratified )?eval scenarios\b|\bthe [0-9]+ scenarios\b' README.md \
-                 | grep -oE '[0-9]+' | sort -u); do
-  [ "$claimed" = "$n" ] || say_fail "README.md advertises $claimed eval scenarios; the rubric \
-holds $n. The rubric is the home — fix the copy, and note that this is the second time."
+rs=$(grep -cE '^[0-9]+[[:space:]]' evals/runsheet.tsv 2>/dev/null || true)
+[ "${rs:-0}" = "$n" ] || say_fail "evals/runsheet.tsv has ${rs:-0} rows against $n scenarios in \
+the rubric (evals/README.md) — the sheet has gone one behind twice before."
+# **Inverted on purpose.** Iterating over whatever a grep happened to find is a silent pass the
+# moment somebody rephrases: `**26** stratified…`, `26 scenarios, stratified`, `26 scenarios in
+# the rubric` — six realistic phrasings were all blind, and bolding a digit is ordinary drift.
+# So the canonical phrase is REQUIRED to be present with the right number, and its absence is
+# the failure. The same for COVERAGE.md, which is a third hand-kept copy and is published: it
+# was the page that disagreed with README on the site.
+for doc in README.md evals/COVERAGE.md; do
+  [ -f "$doc" ] || continue
+  grep -qE "(^|[^0-9])${n}( stratified)? (eval )?scenarios" "$doc" || say_fail "$doc does not \
+state the scenario count as \"$n … scenarios\" — the rubric (evals/README.md) holds $n, this is \
+a hand-kept copy, and it has drifted twice before. Write the number in that phrase."
+  wrong=$(grep -oE '(^|[^0-9])[0-9]+( stratified)? (eval )?scenarios' "$doc" \
+          | grep -oE '[0-9]+' | sort -u | grep -v "^${n}$" || true)
+  [ -n "$wrong" ] && while IFS= read -r w; do
+    say_fail "$doc also advertises $w scenarios; the rubric holds $n."
+  done <<< "$wrong"
 done
 
 # 7 · docs coverage — a new command with no use case is a doc gap, not a bug
@@ -374,14 +397,27 @@ for f in glob.glob("*.md") + glob.glob("templates/*.md") + glob.glob("sources/*.
         # NOTE: the backtick is written \x60 on purpose. A literal one here makes an odd number
         # of backticks inside $( <<HEREDOC ), which bash tokenises for nesting even in a quoted
         # heredoc — the file then dies with "unexpected end of file" 30 lines further down.
-        for m in re.finditer(r"(?:checked|verified|re-verified|measured|re-measured)"
-                             r"\s*:?\s*[\x60]?\s*(\d{4})-(\d{2})-(\d{2})", line, re.I):
-            d = datetime.date(*map(int, m.groups()))
+        # Up to three words may sit between the verb and the date: this corpus writes
+        # "re-verified behaviourally 2026-08-01", "Measured end to end 2026-08-01" and
+        # "measured on this machine 2026-08-01" — 41 stamps escaped the first repair for
+        # exactly that reason, which is the same hole as the case-sensitivity one, in the
+        # house's dominant style. (?<!un) keeps "unverified"/"unchecked" from reading as
+        # verification, which would invert the meaning of the stamp.
+        for m in re.finditer(r"(?<!un)\b(?:checked|verified|re-verified|measured|re-measured)"
+                             r"(?:\W+\w+){0,3}?\W+(\d{4})-(\d{2})-(\d{2})", line, re.I):
+            try:
+                d = datetime.date(*map(int, m.groups()))
+            except ValueError:
+                # A single typo'd date used to raise here, and because every print happened
+                # after the loop, stdout came back empty and the whole gate went silent with
+                # genuinely stale facts in the file. Report it and keep going.
+                print(f"BAD:{f}:{i} ({m.group(0)!r} is not a date)")
+                continue
             age = (today - d).days
             if age > STALE_DAYS:
-                old.append(f"{f}:{i} ({d}, {age}d ago)")
+                print(f"OLD:{f}:{i} ({d}, {age}d ago)")
 for o in old[:6]:
-    print(o)
+    print(o)  # retained for older callers; the loop above prints directly
 if len(old) > 6:
     print(f"…and {len(old)-6} more")
 PYEOF
