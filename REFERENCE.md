@@ -320,6 +320,27 @@ sub-issue, not another level.
   worktree, while `local_directory` is serialized by a per-directory lock — one task at a time,
   forever.
 
+- **Multica does not create repositories, and nothing in day zero notices there isn't one.**
+  Measured `2026-08-09` against CLI 0.4.12: `multica repo` offers **add · checkout · list ·
+  remove** and no `create`; `repo add` *"adds one or more repository URLs to the current
+  workspace repository registry"*, which registers something that already exists. So a folder
+  with no git in it is never solved by Multica — it is solved once by the owner, with `git init`
+  (plus a remote, if the resource is to be `github_repo`).
+
+  **Ask before the resource is attached, not after**, and say what it costs: `git init` is one
+  local command, nothing leaves the machine, and **on a folder that already holds work it moves
+  and changes nothing** — every file stays where it is until someone commits. That last sentence
+  is the one that unblocks people; *"is this a repo?"* on its own is a question only somebody who
+  already knows git can answer.
+
+  **The `local_directory` case is the one worth being strict about.** It runs the agent
+  **directly in the path you gave**, with no worktree and no copy — so if that path is not a
+  repository, agents are writing where there is **no history and no undo**, and the first bad run
+  is unrecoverable rather than a `git checkout`. Being blocked at the start is a far cheaper
+  failure. *(Whether the API accepts a non-git path for `local_directory` is **not measured
+  here** — checking it means creating a resource in a live workspace. Treat the check as owed
+  either way: the cost of asking is one question, the cost of being wrong is somebody's files.)*
+
 - **`workspace --context` is a real agent-facing surface, and this skill was not using it.**
   The field is described as *background information and context for AI agents working in this
   workspace*, and **it reaches them**: measured 2026-08-01 by putting a fact that exists nowhere

@@ -3,6 +3,33 @@
 Newest first. Each entry leads with what you can now do, not with which files moved. This is
 also the migration map `/multica-ops:upgrade` reads.
 
+## 0.4.6 — 2026-08-09
+
+**Multica does not create repositories, and until now nothing here said so.** Measured
+`2026-08-09` against CLI 0.4.12: `multica repo` offers **add · checkout · list · remove** and no
+`create` — `repo add` *"adds one or more repository URLs to the current workspace repository
+registry"*, which registers something that already exists. Day zero's six checks are about the
+CLI, the daemon and the runtime; **none of them notices that the folder in front of you has no
+git in it**, and most people who arrive that way have never run `git init` and cannot act on a
+silence.
+
+**The question moves to where it belongs — before a project resource is attached — and it names
+its price.** `git init` is one local command, nothing leaves the machine, and **on a folder that
+already holds work it moves and changes nothing**: every file stays where it is until someone
+commits. That last clause is what actually unblocks somebody; *"is this a repo?"* alone is a
+question only a person who already knows git can answer.
+
+**`local_directory` is the type to be strict about, because its failure is the expensive kind.**
+It runs the agent **directly in the path you gave**, no worktree and no copy — so where that path
+is not a repository, agents write with **no history and no undo**, and the first bad run is
+unrecoverable instead of a `git checkout`. Being blocked at the start is far cheaper. Whether the
+API *accepts* a non-git path is **explicitly marked unmeasured** — checking it means creating a
+resource in a live workspace — and the check is owed either way: one question against somebody's
+files.
+
+**Eval state**: **not run** — a patch that records a measured fact about the platform and adds no
+behaviour. Corpus checks green and every guard suite passes.
+
 ## 0.4.5 — 2026-08-09
 
 **The claim under W012 stops being an assertion and carries its measurement.** 0.4.4 said the
