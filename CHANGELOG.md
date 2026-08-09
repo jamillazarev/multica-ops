@@ -3,6 +3,31 @@
 Newest first. Each entry leads with what you can now do, not with which files moved. This is
 also the migration map `/multica-ops:upgrade` reads.
 
+## 0.4.5 — 2026-08-09
+
+**The claim under W012 stops being an assertion and carries its measurement.** 0.4.4 said the
+form Snyk quotes — `multica skill import --url github.com/jamillazarev/multica-ops` — is a
+command that does not work. True, and undated, and unmeasured, which by this repository's own
+freshness law makes it a claim wearing the clothes of a fact. **Measured `2026-08-09`**: the
+bare root returns **HTTP 502**, body *"SKILL.md not found at the root of
+jamillazarev/multica-ops@main. For multi-skill repositories, point to a specific directory
+using …/tree/main/&lt;skill-dir&gt;"*.
+
+**The control is the part that makes it evidence.** The pinned install line was run **at the same
+moment and succeeded**, so the 502 is the shape of the URL and not a service interruption —
+without that second run this page would have recorded a possible outage as a defect in an
+address, which is the same error in the opposite direction from the one 0.4.4 fixed.
+
+**And the response carries a second finding that is not ours.** Multica answers a plainly
+client-side mistake with a **5xx**, which the CLI renders as *"the service is temporarily
+unavailable"* — so an actionable message (*point at a directory*) reaches the user as a false
+claim that the service is down. Recorded on the security page rather than left in a
+conversation, because the next person to mistype that URL reads the same wrong cause. Worth
+reporting upstream; the row says so.
+
+**Eval state**: **not run** — a patch that dates a claim and adds no behaviour. Corpus checks
+green and every guard suite passes.
+
 ## 0.4.4 — 2026-08-09
 
 **The security page said something false about itself, and a security page is the worst place for

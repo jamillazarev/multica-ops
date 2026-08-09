@@ -171,6 +171,24 @@ becomes agent instructions, so a moving ref means the content behind someone's a
 without them moving; a tag cannot. Preflight fails if that line drifts from the released version,
 because a pin nobody maintains is decoration.
 
+**And the bare repository root is not an install line at all — measured `2026-08-09`, with the
+control that makes the measurement mean anything.** `multica skill import --url
+github.com/jamillazarev/multica-ops` returns **HTTP 502**, body:
+
+> `SKILL.md not found at the root of jamillazarev/multica-ops@main. For multi-skill repositories,
+> point to a specific directory using github.com/jamillazarev/multica-ops/tree/main/<skill-dir>`
+
+**The pinned line succeeded at the same moment**, so the failure is the shape of the URL and not
+an outage — which is the whole reason the control was run: without it this page would be
+reporting a possible service interruption as a defect in an address.
+
+**Two separate things are true of that response, and only one of them is ours.** The form quoted
+in Snyk's W012 is one nobody can execute. And **Multica answers a plainly client-side mistake
+with a 5xx**, which the CLI then renders as *"the service is temporarily unavailable"* — so a
+perfectly actionable message (*point at a directory*) reaches the user as a false claim that the
+service is down. That is a defect worth reporting upstream, and it is recorded here rather than
+in a conversation, because the next person to mistype this URL will read the same wrong cause.
+
 ## About the 2026-07-30 audits
 
 Socket and Snyk audited the skills.sh package on 2026-07-30. **Each finding is answered here by
@@ -182,7 +200,7 @@ Verified against `git log --all` on 2026-08-09.
 |---|---|
 | Socket · `commands/skill.md` — *"a wrapper that delegates to an unseen external skill"* | **the path has never existed here** — zero commits touch it, at any ref. There is no `commands/` directory; the package ships `skills/mops/SKILL.md` and its companions |
 | Socket · `hooks/hooks.json` — *"a sensitive OS-command execution sink at session start … verify `${CLAUDE_PLUGIN_ROOT}/scripts/install-alias.sh`"* | **the file exists; the script it names never did** — `scripts/install-alias.sh` has zero commits at any ref. But the *class* of the finding is live and is answered below rather than dismissed |
-| Snyk · **W012** — a runtime URL that controls the agent | the quoted form, `--url github.com/jamillazarev/multica-ops`, is **not a command that works** (the bare repository root is not a skill folder). The line the install instructions actually carry **pins a tag**, for exactly W012's reason, and **preflight fails the release if the pin drifts** — see above |
+| Snyk · **W012** — a runtime URL that controls the agent | the quoted form, `--url github.com/jamillazarev/multica-ops`, is **a command that cannot run** — measured, not asserted, see below. The line the install instructions actually carry **pins a tag**, for exactly W012's reason, and **preflight fails the release if the pin drifts** — see *Supply chain* above |
 | Snyk · **W011** — third-party content exposure | accurate, and Snyk's own note records the mitigation: external text is treated as **data, never instructions**. That rule is this page |
 | Socket · `SKILL.md` — broad control, autonomous real-world actions, unsandboxed imports | **an accurate description of what the skill is for.** The answers are the owner-gated four kinds, the import screen, and the fact that nothing outward happens without a human — all on this page |
 
