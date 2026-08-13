@@ -3,6 +3,34 @@
 Newest first. Each entry leads with what you can now do, not with which files moved. This is
 also the migration map `/multica-ops:upgrade` reads.
 
+## 0.4.6 — 2026-08-14
+
+**The mention that dispatches is now in the guide, with the roster column it needs.** A sibling
+field report measured what happens when the one file every worker loads names an act but not its
+form; checked here, the naive defect refuted — workers hold no CLI, the transition machinery is
+native, and the guide rightly refuses to restate native behaviour — **but one narrow instance
+survived**: the guide told every worker to *"@-mention the next role"* while carrying the strict
+form `[@Name](mention://agent/<uuid>)` **zero** times, and `PLAYBOOKS` itself records that a
+plain `@name` in a comment **wakes the squad leader instead of the agent you meant**. The
+handoff is the conveyor's entire transition door, and the guide described it in words that do
+not dispatch. The guide now carries the strict form and where the uuid lives; the roster
+template gains the **mention column**, because a worker cannot construct a mention from a name.
+The template preflight caught the half-done version of this very edit — a widened header over
+six-cell rows — which is the table-shape check earning its keep.
+
+**The AI-gateway row widens to the selection ladder's own order** — LiteLLM (MIT, the self-host
+default) · OmniRoute (MIT, self-host; **young and churning, pin versions** — a proxy holding
+every key is supply-chain-sensitive; its throughput numbers are its own marketing, carried
+dated; **prompt compression off** for anything reviewed or measured; checked 2026-08-14) ·
+OpenRouter (hosted; per-model data policies are its distinct value). The need named honestly:
+provider-independence of the judge, answered first by cross-runtime dispatch with no proxy;
+the gateway covers judge models with no harness, outages, and bulk persona calls — and **the
+model that answered may not be the model requested**, so records read the response's model
+field.
+
+**Eval state**: **not run** — a guide-template line, a roster column and a shelf row; no
+behaviour an eval measures changed. Corpus checks green and every guard suite passes.
+
 ## 0.4.5 — 2026-08-09
 
 **The claim under W012 stops being an assertion and carries its measurement.** 0.4.4 said the

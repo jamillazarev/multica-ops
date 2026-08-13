@@ -22,8 +22,11 @@ settling a third review round.** A chain naming someone this workspace doesn't h
 than a short chain — the agent stalls or invents a recipient.}}
 
 **Workflow:** features arrive as staged sub-issues (`--stage` barrier orders them).
-Finish your rung → `@`-mention the next role with a short handoff (what's done, PR
-link, what to check). Commit incrementally — `issue rerun` resumes from the repo.
+Finish your rung → mention the next role with a short handoff (what's done, PR
+link, what to check) — **the mention that dispatches is the strict form**
+`[@Name](mention://agent/<uuid>)`, uuid from the roster's mention column
+(`_ops/TEAM.md`); **a plain `@name` in a comment wakes the squad leader instead of
+the agent you meant**. Commit incrementally — `issue rerun` resumes from the repo.
 Operating mode: flow = {{manual|auto}}, hiring = {{manual|auto}}.
 Enabled modules: {{experts? personas? Design QA? autopilots? social? Slack?}}.
 
