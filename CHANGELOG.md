@@ -28,6 +28,14 @@ the gateway covers judge models with no harness, outages, and bulk persona calls
 model that answered may not be the model requested**, so records read the response's model
 field.
 
+**Every agent now writes without the AI smell.** The guide template carries the two-line ban
+form beside LANGUAGE & TONE; the shelf takes [humanizer](https://github.com/blader/humanizer)
+(MIT, 35.5k★) with its limits named — English tells only, never over quotations, no invented
+facts. **And the preflight's own checks finally carry tests**: `test-preflight-checks.sh`, 9/9 —
+the typo'd date that used to kill the freshness gate silently, the count rephrase, the stale
+pin, the URL hidden in the exempt page — each mutant refused, each twin passing, in a local
+clone that never touches the working tree.
+
 **Eval state**: **not run** — a guide-template line, a roster column and a shelf row; no
 behaviour an eval measures changed. Corpus checks green and every guard suite passes.
 
