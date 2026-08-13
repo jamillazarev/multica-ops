@@ -180,8 +180,10 @@ Three measured constraints shape that (2026-08-01):
 ```sh
 multica issue comment add <id> --content "…[@Name](mention://agent/<uuid>)…"
 ```
-The @-mention triggers that agent with the issue as context. Plain comments (no
-mention) wake the squad leader instead.
+The @-mention triggers that agent with the issue as context. **A plain comment (no mention)
+dispatches nobody** — REFERENCE §2's verified trigger list holds only assignment, the strict
+mention, chat and autopilot (aligned 2026-08-14; the earlier *wakes-the-leader* claim here was
+the unmeasured side of a contradiction with that list).
 
 ## Add an agent mid-project
 

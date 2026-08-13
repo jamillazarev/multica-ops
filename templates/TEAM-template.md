@@ -19,10 +19,10 @@ handing a stranger to the field a decision they have no basis to make.
 
 ## Agents
 
-| Agent | Mention (`mention://agent/<uuid>`) | Craft | Squad | Grade | Model tier | Owns |
+| Agent | Mention (`mention://agent/<uuid>` — uuid = the ID column of `multica agent list`) | Craft | Squad | Grade | Model tier | Owns |
 |---|---|---|---|---|---|---|
 | {{Conductor}} | {{`[@Name](mention://agent/<uuid>)` — copied whole, this is what dispatches}} | {{PM}} | {{— project lead}} | {{senior}} | {{top}} | {{backlog order · specs · the skill inventory}} |
-| {{Web Engineer}} | {{`[@Name](mention://agent/<uuid>)` — copied whole, this is what dispatches}} | {{engineering}} | {{Eng}} | {{mid}} | {{mid}} | {{`site/`}} |
+| {{Web Engineer}} | {{`[@Name](mention://agent/<uuid>)`}} | {{engineering}} | {{Eng}} | {{mid}} | {{mid}} | {{`site/`}} |
 
 **Keep it current or it lies:** hiring, firing, a squad change or a grade change updates
 this file **in the same task** — the roster is also what `/sync` compares the live

@@ -34,6 +34,7 @@
 - `scripts/test-migrate-layout.sh` — Mutation tests for scripts/migrate-layout.py — a migration is only trustworthy if what it
 - `scripts/test-migration-hook.sh` — Mutation tests for hooks/migration-state.py — each rule shown speaking on the mutant and
 - `scripts/test-outward-gate.sh` — Mutation tests for hooks/outward-gate.py. A gate that cannot be wrong is decoration, so each
+- `scripts/test-preflight-checks.sh` — Runs against a LOCAL CLONE of HEAD — an uncommitted edit is exercised one commit late,
 - `scripts/test-rule-home.sh` — Mutation tests for hooks/rule-home.py — it must speak on the trap and stay silent everywhere
 - `scripts/tests/test_issues_helpers.py` — Offline tests for scripts/issues.py helpers — no live CLI, no pytest
 

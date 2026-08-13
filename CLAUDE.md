@@ -34,7 +34,8 @@ workspace under migration, so there is no `UPGRADES.md` and none is owed.
    `python3 scripts/fetch-source.py --verify` then `--verify-citations` ·
    `python3 scripts/tests/test_issues_helpers.py` · and **every shipped guard's mutation
    suite** — `test-migration-hook.sh` · `test-migrate-layout.sh` · `test-outward-gate.sh` ·
-   `test-rule-home.sh` · `test-map-blocks.sh` · `test-dispatch-nudge.sh`. Each one's load-bearing assertion is about what
+   `test-rule-home.sh` · `test-map-blocks.sh` · `test-dispatch-nudge.sh` ·
+   `test-preflight-checks.sh`. Each one's load-bearing assertion is about what
    its holder *refuses*, so a suite left out of this list is a guard nobody re-checks.
    Green is evidence about the corpus, never about behaviour — behaviour is the eval suite's
    job, and **a minor or major is not tagged without `evals/runs/<version>.md`**. Then

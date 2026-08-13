@@ -36,6 +36,10 @@ the typo'd date that used to kill the freshness gate silently, the count rephras
 pin, the URL hidden in the exempt page — each mutant refused, each twin passing, in a local
 clone that never touches the working tree.
 
+**An existing workspace receives this by regeneration, said rather than implied**: the guide
+skill is re-issued from the new template and `_ops/TEAM.md` gains the mention column (uuid = the
+ID column of `multica agent list`) — neither moves by itself.
+
 **Eval state**: **not run** — a guide-template line, a roster column and a shelf row; no
 behaviour an eval measures changed. Corpus checks green and every guard suite passes.
 

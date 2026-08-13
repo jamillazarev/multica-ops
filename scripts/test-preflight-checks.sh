@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Runs against a LOCAL CLONE of HEAD — an uncommitted edit is exercised one commit late,
+# on purpose: the suite tests what ships.
 # Mutation tests for the preflight's own checks — the ones a lens found shipping with zero
 # coverage ("no test touches preflight at all"). Each check is shown speaking on the mutant
 # and silent on the honest twin, in a local clone so the working tree is never touched.
@@ -25,9 +27,10 @@ perl -pi -e 's/\d+ stratified eval scenarios/many scenarios, stratified/' "$T/c/
 perl -pi -e 's/the \d+ scenarios/the whole rubric/' "$T/c/README.md"
 run && bad "a README with no canonical count phrase passed" || ok
 undo
-perl -pi -e 's/the (\d+) scenarios/the 12 scenarios/' "$T/c/README.md"
+wrong=$(( $(grep -cE '^## [0-9]+\. ' "$T/c/evals/README.md") + 1 ))
+perl -pi -e "s/the (\\d+) scenarios/the $wrong scenarios/" "$T/c/README.md"
 run && bad "a README advertising the wrong count passed" || ok
-grep -q "also advertises 12" "$T/out" && ok || bad "the wrong count is not named"
+grep -q "also advertises $wrong" "$T/out" && ok || bad "the wrong count is not named"
 undo
 
 # §1b · a stale pin is refused; an import URL added to the exempt page is refused
