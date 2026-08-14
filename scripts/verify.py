@@ -59,16 +59,57 @@ def check_recipes():
     print(f"  recipes: {len(recipes)} command lines, {flags} flags")
     return len(recipes)
 
-# ── 2. the CLI pin in REFERENCE §10 must match what is installed ────────────────
+# ── 2. the CLI pin in REFERENCE §10 must match what is installed — AND what exists ─────
+def _newest_release():
+    """The newest published CLI, or None when it cannot be asked.
+
+    The pin check used to compare REFERENCE against the INSTALLED binary only. Measured
+    2026-08-15: both said 0.4.12 while 0.4.26 was current — fourteen releases, shipped almost
+    daily, and the check was green the whole way because it was comparing two stale things to
+    each other. A platform that ships daily needs the outside number, not the local one.
+    """
+    for cmd in (["gh", "release", "view", "--repo", "multica-ai/multica", "--json", "tagName",
+                 "-q", ".tagName"],
+                ["brew", "info", "--json=v2", "multica"]):
+        if not shutil.which(cmd[0]):
+            continue
+        try:
+            out = subprocess.run(cmd, capture_output=True, text=True, timeout=25).stdout
+        except Exception:
+            continue
+        m = re.search(r"(\d+\.\d+\.\d+)", out)
+        if m:
+            return m.group(1)
+    return None
+
+
+def _ver(s):
+    return tuple(int(x) for x in s.split("."))
+
+
 def check_pin():
-    if not shutil.which("multica"):
+    ref = open("REFERENCE.md", encoding="utf-8").read()
+    m_pin = re.search(r"CLI v?(\d+\.\d+\.\d+)", ref)
+    if not m_pin:
+        warn("REFERENCE names no CLI version — every claim about the platform is undated")
         return
-    installed = subprocess.run(["multica", "version"], capture_output=True, text=True).stdout
-    m_inst = re.search(r"(\d+\.\d+\.\d+)", installed)
-    m_pin = re.search(r"CLI v?(\d+\.\d+\.\d+)", open("REFERENCE.md", encoding="utf-8").read())
-    if m_inst and m_pin and m_inst.group(1) != m_pin.group(1):
-        warn(f"REFERENCE pins CLI {m_pin.group(1)}, installed is {m_inst.group(1)} — "
-             f"regenerate §10 if the surface moved")
+    pinned = m_pin.group(1)
+
+    if shutil.which("multica"):
+        installed = subprocess.run(["multica", "version"], capture_output=True, text=True).stdout
+        m_inst = re.search(r"(\d+\.\d+\.\d+)", installed)
+        if m_inst and m_inst.group(1) != pinned:
+            warn(f"REFERENCE pins CLI {pinned}, installed is {m_inst.group(1)} — "
+                 f"regenerate §10 if the surface moved")
+
+    newest = _newest_release()
+    if newest and _ver(newest) > _ver(pinned):
+        a, b = _ver(pinned), _ver(newest)
+        behind = b[2] - a[2] if a[:2] == b[:2] else "several"
+        warn(f"REFERENCE pins CLI {pinned}; {newest} is published — {behind} release(s) behind. "
+             f"Every claim in REFERENCE was measured against {pinned}. Re-verify §2 (trigger "
+             f"paths), §3 (what is native) and §10 (the surface) before trusting them, and date "
+             f"what you re-verify")
 
 # ── 3. the sources we send agents to must still answer ──────────────────────────
 _BROWSER_UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "

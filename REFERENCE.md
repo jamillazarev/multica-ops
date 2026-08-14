@@ -462,6 +462,14 @@ and *"it does not hold the loop"* stops being a rule it could work around.
 
 **Multiple workspaces.** A user can have several workspaces (separate companies). The console operates on **one at a time** — the profile's default (`workspace list` shows them). When more than one exists, Mops **confirms which workspace it's acting on** before doing anything, and switches on request: `workspace switch <id>` (or `--workspace-id` per command) — `/multica-ops:mops workspace [name]`. Each workspace is its own company — own team, roadmap, and, if enabled, its own resident Mops in Multica; nothing crosses between them. A Mops in Multica lives in exactly one workspace, so switching is a console-only notion.
 
+> [!WARNING]
+> **Measured 2026-08-15: this file is pinned to CLI 0.4.12 and 0.4.26 is published — fourteen
+> releases, shipped almost daily.** Nine of the thirteen sections below carry no date at all,
+> including this one and §3. At least one of those releases touches the behaviour §2
+> describes (`MUL-5958`, v0.4.23: *skip the assignee fallback when replying to a human
+> comment*). Treat every undated claim here as unverified until it is re-measured against the
+> current CLI and dated. `python3 scripts/verify.py` now says how far behind the pin is.
+
 ## 2. Four trigger paths
 
 1. **Issue assignment** — to a squad wakes only the leader; to an agent runs it.
