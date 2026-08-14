@@ -36,6 +36,14 @@ the typo'd date that used to kill the freshness gate silently, the count rephras
 pin, the URL hidden in the exempt page — each mutant refused, each twin passing, in a local
 clone that never touches the working tree.
 
+**Consult gains a council, and the shelf a marketing pool.** The council: independent angles,
+anonymized cross-review, a synthesis that names the strongest dissent — Karpathy's method in
+house prose (both upstreams licence-unstated), bound by the persona law: five angles of one
+model are one bias five ways, and consensus is not a rung. The pool:
+[marketingskills](https://github.com/coreyhaines31/marketingskills) (MIT, 44k★, 49 skills) —
+two or three per agent through the screen, trimmed to read the workspace's own registers,
+never attached wholesale.
+
 **An existing workspace receives this by regeneration, said rather than implied**: the guide
 skill is re-issued from the new template and `_ops/TEAM.md` gains the mention column (uuid = the
 ID column of `multica agent list`) — neither moves by itself.

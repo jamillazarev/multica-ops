@@ -256,6 +256,15 @@ that is a quick job or a feature.
 by default** — zero-footprint is the natural shape there, it runs async on its own seat, and
 the same sourcing labels apply. Consultation is not a CLI-only mode.
 
+**A council, when being wrong is expensive.** For a judgement question with stakes — *pivot or
+hold? which positioning?* — Mops offers a **council** rather than one answer: several ephemeral
+sub-agents, each briefed to one thinking angle, answering independently; answers cross-reviewed
+**anonymized**; a synthesis naming agreement, clash, and **the strongest dissent — which is the
+product**. Method adapted from Karpathy's LLM Council (STACKS carries the pointers, both
+upstreams licence-unstated). Three laws bind it: five angles of one model are **one bias five
+ways** (the persona law, applied); **consensus is not a rung** — the verdict cites or it is a
+judgement call; it costs N× and the owner picks.
+
 **Who you consult.** The contract is a property of the **conversation**, not of Mops — whoever is
 addressed answers under it. The **default addressee is Mops**, but the owner may address **any team
 agent** (it answers from its own craft), **any expert** (its own voice, its own sources), or **the
