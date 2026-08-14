@@ -11,9 +11,12 @@ form; checked here, the naive defect refuted — workers hold no CLI, the transi
 native, and the guide rightly refuses to restate native behaviour — **but one narrow instance
 survived**: the guide told every worker to *"@-mention the next role"* while carrying the strict
 form `[@Name](mention://agent/<uuid>)` **zero** times — and a plain `@name` in a comment
-**does not dispatch the agent you meant** (REFERENCE §2's verified trigger list; a PLAYBOOKS
-line claiming it woke the squad leader was the unmeasured side of a contradiction with that
-list, and is aligned in this release, dated). The
+**does not dispatch the agent you meant** (REFERENCE §2 names the strict form as the mention
+trigger — a reading of what that list says). **Corrected on 2026-08-14, before the tag:** §2 was
+called *verified* here and in two other files while carrying no date, no measurement and no
+source, and the PLAYBOOKS line was rewritten to *a plain comment dispatches nobody* — which §2
+does not say either way, so an absence of evidence had been given a verdict. Both sides are now
+written as unknown, dated, with what would settle it. The
 handoff is the conveyor's entire transition door, and the guide described it in words that do
 not dispatch. The guide now carries the strict form and where the uuid lives; the roster
 template gains the **mention column**, because a worker cannot construct a mention from a name.

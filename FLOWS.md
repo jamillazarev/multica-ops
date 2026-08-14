@@ -264,7 +264,12 @@ sub-agents, each briefed to one thinking angle, answering independently; answers
 product**. Method adapted from Karpathy's LLM Council (STACKS carries the pointers, both
 upstreams licence-unstated). Three laws bind it: five angles of one model are **one bias five
 ways** (the persona law, applied); **consensus is not a rung** — the verdict cites or it is a
-judgement call; it costs N× and the owner picks.
+judgement call; and it is the most expensive shape here — **four angles is the default, so
+nine runs where a consultation is one**, and that number is said out loud before it runs.
+**The synthesis declares what it was made of**, in one line — `angles: 4 · voices: 4 ·
+provider: one` — the same move a panel performs, and for the same reason: a warning that
+four angles of one model are one bias four ways is a warning, while `provider: one` printed
+above the verdict is the owner seeing exactly how much independence they bought.
 
 **Who you consult.** The contract is a property of the **conversation**, not of Mops — whoever is
 addressed answers under it. The **default addressee is Mops**, but the owner may address **any team
@@ -275,11 +280,16 @@ artifact, never that a twin's audit trail is suspended: a consulted validated tw
 own usage-log line per its consent contract (MODULES → Persona theatre).** The mode is unchanged by
 who answers: **ephemeral, zero standing footprint**, sourcing labels carried, and the bridge on
 request (*"let's build it"* seeds the project, nothing re-asked). **Economy: route to the one
-addressee, no fan-out** — consulting an in-workspace agent is a task that spends budget and the
+addressee, no fan-out** — the rule governs **addressees, not the workers behind one**: §Research
+spins sub-agents to search and verify, and a council spins them to answer, which is the one case
+where the fan-out is the product and is therefore priced to the owner before it runs. Consulting
+an in-workspace agent is a task that spends budget and the
 team's **shared limit**, and Mops says so (REFERENCE §7; the cost framing per §10).
 
 **Mode semantics — zero standing footprint.** No workspace, issue, team, doc, label or agent is
-created; **nothing survives the session** unless the owner asks to persist it, and then it is a
+created **in Multica** — "agent" in this file always means the Multica entity, so a council's
+voices, which are console-side sub-agents, do not breach this line. **Nothing survives the
+session** unless the owner asks to persist it, and then it is a
 **single file or note where they say**, nowhere else. The zero is about *persistent entities*,
 not conversation depth: **clarifying, interview-style questions are normal consulting**
 (past behaviour over hypotheticals, no leading questions). A consultation

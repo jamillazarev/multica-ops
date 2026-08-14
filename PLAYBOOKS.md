@@ -180,10 +180,13 @@ Three measured constraints shape that (2026-08-01):
 ```sh
 multica issue comment add <id> --content "…[@Name](mention://agent/<uuid>)…"
 ```
-The @-mention triggers that agent with the issue as context. **A plain comment (no mention)
-dispatches nobody** — REFERENCE §2's verified trigger list holds only assignment, the strict
-mention, chat and autopilot (aligned 2026-08-14; the earlier *wakes-the-leader* claim here was
-the unmeasured side of a contradiction with that list).
+The @-mention triggers that agent with the issue as context. **What a plain comment (no mention) does is unknown** — as of 2026-08-14, and said that way
+deliberately. REFERENCE §2 lists four trigger paths and carries no date, no measurement and no
+source; it says nothing about plain comments either way. "Dispatches nobody" was read out of
+that silence and briefly shipped as verified, which is an absence of evidence wearing a
+verdict — the same move this system refuses everywhere else. **What settles it:** post a
+plain comment on an issue with an assigned agent in a live workspace and watch whether a run
+starts. Until someone does, mention explicitly and do not rely on either answer.
 
 ## Add an agent mid-project
 
