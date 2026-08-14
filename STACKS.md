@@ -335,6 +335,7 @@ rest.
 | UX guidance & rationale | **[NN/g](https://www.nngroup.com)** (research-backed articles) | the place to look for a **sourced** argument behind a design call — pairs with *an argument without a source is an opinion*. Search at [nngroup.com/search](https://www.nngroup.com/search/) and **re-apply the *Articles* filter each time — it doesn't persist in the URL**. Free articles |
 | Typography | **[Google Fonts](https://fonts.google.com)** for licensing-safe families · [Practical Typography](https://practicaltypography.com) for the rules | licence clarity is the whole point |
 | Colour | **[Coolors](https://coolors.co)** · [Color Hunt](https://colorhunt.co) | fast palettes that export as tokens |
+| Web & marketing artifacts, fresh | **[recent.design](https://recent.design)** — websites · app icons · app-store screenshots · OG images (free to browse, checked 2026-08-14) | **recency is the point and the trap**: the artifact classes the other anchors miss (an OG image and a store screenshot are designed objects too), refreshed daily — and *recent* means *fashion*, so it feeds style discovery above as raw references, never as tokens by itself |
 | Boards | **[Are.na](https://are.na)** | where the moodboard lives without becoming a private silo |
 
 **Visual styles — method, not a baked-in taxonomy:** name the style in the owner's own words,
