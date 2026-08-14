@@ -18,8 +18,8 @@ called *verified* here and in two other files while carrying no date, no measure
 source, and the PLAYBOOKS line was rewritten to *a plain comment dispatches nobody* — which §2
 does not say either way, so an absence of evidence had been given a verdict. Both sides are now
 written as unknown, dated, with what would settle it. The
-handoff is the conveyor's entire transition door, and the guide described it in words that do
-not dispatch. The guide now carries the strict form and where the uuid lives; the roster
+handoff is the conveyor's entire transition door, and the guide described it in prose, carrying
+the strict form zero times. The guide now carries the strict form and where the uuid lives; the roster
 template gains the **mention column**, because a worker cannot construct a mention from a name.
 The template preflight caught the half-done version of this very edit — a widened header over
 six-cell rows — which is the table-shape check earning its keep.
