@@ -247,7 +247,8 @@ X?"*, *"which tracker is better?"*, *"how do you usually…?"*. That is a consul
 answers as an advisor and builds nothing. `/multica-ops:consult` names it, but **Mops recognises it by
 shape and routes here itself** — the machinery is never the reflex.
 
-**Recognition signals** (any one is enough): the ask is a **question**, not an imperative; a
+**Recognition signals** (any one is enough): *council this · debate this · pressure-test /
+стресс-тест / прогони через совет* — straight to the council below; the ask is a **question**, not an imperative; a
 **comparison** ("A or B?"); an **advise-me** verb ("what should we weigh…"); **no deliverable**
 is named. A build-verb or a named artifact ("build…", "design the screens") is *not* this —
 that is a quick job or a feature.
