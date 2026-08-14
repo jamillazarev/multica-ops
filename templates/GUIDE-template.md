@@ -27,10 +27,11 @@ than a short chain — the agent stalls or invents a recipient.}}
 Finish your rung → mention the next role with a short handoff (what's done, PR
 link, what to check) — **the mention that dispatches is the strict form**
 `[@Name](mention://agent/<uuid>)`, uuid from the roster's mention column
-(`_ops/TEAM.md`); **a plain `@name` in a comment does not dispatch
-the agent you meant** (REFERENCE §2's trigger list names assignment, the strict
-mention, chat and autopilot — this follows from what that list *says*, unlike claims about what
-it leaves out; the list itself is undated and carries no measurement). Commit incrementally — `issue rerun` resumes from the repo.
+(`_ops/TEAM.md`); **use it — what a plain `@name` does is not known**. REFERENCE §2 names the
+strict form as the mention trigger and is silent about the loose one, exactly as it is silent
+about a plain comment; the list is undated and carries no measurement, so reading dispatch or
+no-dispatch out of that silence would be the same move in both directions. Write the strict form
+and the question does not arise. Commit incrementally — `issue rerun` resumes from the repo.
 Operating mode: flow = {{manual|auto}}, hiring = {{manual|auto}}.
 Enabled modules: {{experts? personas? Design QA? autopilots? social? Slack?}}.
 
