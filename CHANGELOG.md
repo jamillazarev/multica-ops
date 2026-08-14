@@ -10,8 +10,10 @@ field report measured what happens when the one file every worker loads names an
 form; checked here, the naive defect refuted — workers hold no CLI, the transition machinery is
 native, and the guide rightly refuses to restate native behaviour — **but one narrow instance
 survived**: the guide told every worker to *"@-mention the next role"* while carrying the strict
-form `[@Name](mention://agent/<uuid>)` **zero** times, and `PLAYBOOKS` itself records that a
-plain `@name` in a comment **wakes the squad leader instead of the agent you meant**. The
+form `[@Name](mention://agent/<uuid>)` **zero** times — and a plain `@name` in a comment
+**does not dispatch the agent you meant** (REFERENCE §2's verified trigger list; a PLAYBOOKS
+line claiming it woke the squad leader was the unmeasured side of a contradiction with that
+list, and is aligned in this release, dated). The
 handoff is the conveyor's entire transition door, and the guide described it in words that do
 not dispatch. The guide now carries the strict form and where the uuid lives; the roster
 template gains the **mention column**, because a worker cannot construct a mention from a name.
@@ -48,7 +50,7 @@ never attached wholesale.
 skill is re-issued from the new template and `_ops/TEAM.md` gains the mention column (uuid = the
 ID column of `multica agent list`) — neither moves by itself.
 
-**Eval state**: **not run** — a guide-template line, a roster column and a shelf row; no
+**Eval state**: **not run** — template lines, shelf rows and a consult mechanic; no
 behaviour an eval measures changed. Corpus checks green and every guard suite passes.
 
 ## 0.4.5 — 2026-08-09
