@@ -43,8 +43,8 @@ clone that never touches the working tree.
 
 **Consult gains a council, and the shelf a marketing pool.** The council: independent angles,
 anonymized cross-review, a synthesis that names the strongest dissent — Karpathy's method in
-house prose (both upstreams licence-unstated), bound by the persona law: five angles of one
-model are one bias five ways, and consensus is not a rung. The pool:
+house prose (both upstreams licence-unstated), bound by the persona law: N angles of one
+model are one bias N ways, and consensus is not a rung. The pool:
 [marketingskills](https://github.com/coreyhaines31/marketingskills) (MIT, 44k★, 49 skills) —
 two or three per agent through the screen, trimmed to read the workspace's own registers,
 never attached wholesale.

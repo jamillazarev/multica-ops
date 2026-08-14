@@ -262,12 +262,14 @@ hold? which positioning?* — Mops offers a **council** rather than one answer: 
 sub-agents, each briefed to one thinking angle, answering independently; answers cross-reviewed
 **anonymized**; a synthesis naming agreement, clash, and **the strongest dissent — which is the
 product**. Method adapted from Karpathy's LLM Council (STACKS carries the pointers, both
-upstreams licence-unstated). Three laws bind it: five angles of one model are **one bias five
-ways** (the persona law, applied); **consensus is not a rung** — the verdict cites or it is a
+upstreams licence-unstated). Two laws bind it — the third thing here is its price, not a law. N angles of one model are
+**one bias N ways**, whatever N is (the persona law, applied); **consensus is not a rung** — the verdict cites or it is a
 judgement call; and it is the most expensive shape here — **four angles is the default, so
 nine runs where a consultation is one**, and that number is said out loud before it runs.
 **The synthesis declares what it was made of**, in one line — `angles: 4 · voices: 4 ·
-provider: one` — the same move a panel performs, and for the same reason: a warning that
+provider: one`; a consultation leaves no artifact, so nothing can enforce that line — it is
+`prose-only`, named here rather than believed in, and the missing bar clauses are the council's
+own debt (mirrored from the sibling's `LATER.md`) — the same move a panel performs, and for the same reason: a warning that
 four angles of one model are one bias four ways is a warning, while `provider: one` printed
 above the verdict is the owner seeing exactly how much independence they bought.
 

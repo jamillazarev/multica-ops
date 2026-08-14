@@ -61,6 +61,7 @@ are shortcuts for when you already know the name. Both columns do the same thing
 |---|---|---|
 | "Is anyone else doing this?" | *"look into how competitors price this"* | `/multica-ops:mops research …` — cited findings land in `_ops/research/` |
 | "Who are we even for?" | *"work out our segments and ICP"* | `/multica-ops:mops audience` |
+| "Being wrong here is expensive — don't just agree with me" | *"council this"* · *"прогони через совет"* | four angles answer independently, cross-review anonymized, and the synthesis leads with **the strongest dissent**. You hear the price first — **nine runs** — and the answer says `provider: one` when every voice was the same model |
 | "We need a brand / ours feels dated" | *"we need an identity"* · *"our brand looks old"* | `/multica-ops:mops brand` |
 | "Would experts tear this apart?" | *"have the experts review this spec"* | `/multica-ops:mops validate …` |
 | "Where does that video say it?" | *"get me the transcript"* | the caption track first, the audio transcribed only when there is none — nobody pays GPU time for words already written down |
