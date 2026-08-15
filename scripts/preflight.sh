@@ -313,9 +313,33 @@ for f in $(ls *.md | grep -vE '^(SKILL|README|CHANGELOG|AGENTS|CLAUDE)\.md$'); d
 done
 
 # 5 · always-loaded core stays lean (it is paid on every run, by every agent)
-chars=$(wc -c < skills/mops/SKILL.md | tr -d ' '); tok=$((chars/4))
+# Characters, not bytes. `wc -c` counts bytes, and the chars/4 heuristic is about characters —
+# so every em-dash and every Cyrillic word in this corpus inflated the estimate. Measured
+# 2026-08-15: 37829 bytes against 37315 characters, ~129 phantom tokens, all of it in one
+# direction. A budget that reads its own file wrong is strict for a reason nobody chose.
+chars=$(python3 -c "import sys; print(len(open(sys.argv[1], encoding='utf-8').read()))" skills/mops/SKILL.md 2>/dev/null \
+        || wc -c < skills/mops/SKILL.md | tr -d ' ')
+tok=$((chars/4))
 [ "$tok" -gt 10000 ] && say_fail "skills/mops/SKILL.md ~${tok} tokens — over the 10k budget; move detail to a companion file"
-[ "$tok" -gt 9000 ] && [ "$tok" -le 10000 ] && say_warn "skills/mops/SKILL.md ~${tok} tokens — approaching the 10k budget"
+# The second warning fires on GROWTH, not on size. "Approaching the budget" was true at 9.0k and
+# will be true at every commit until someone cuts the core, and a warning that is always on names
+# nothing — it is read past, which is how the one that matters gets read past too. Measured
+# 2026-08-15: at ~9.3k every section of the core is an invariant, detail is already delegated by
+# pointer, and exactly one sentence of 142 appears in any companion — so there is nothing cheap
+# left to move, and the honest signal is not "it is large" but "it just got larger".
+if [ "$tok" -le 10000 ] && [ "$tok" -gt 8000 ]; then
+  last_tag=$(git describe --tags --abbrev=0 2>/dev/null || true)
+  if [ -n "$last_tag" ]; then
+    prev=$(git show "${last_tag}:skills/mops/SKILL.md" 2>/dev/null \
+           | python3 -c "import sys; print(len(sys.stdin.read()))" 2>/dev/null || echo 0)
+    prev_tok=$(( ${prev:-0} / 4 ))
+    if [ "${prev_tok:-0}" -gt 0 ] && [ "$tok" -gt "$prev_tok" ]; then
+      say_warn "skills/mops/SKILL.md grew ~${prev_tok} → ~${tok} tokens since ${last_tag} (budget 10000). \
+Every agent pays this on every run: either the new lines are invariants that belong in the always-loaded \
+core, or they are detail and belong in a companion"
+    fi
+  fi
+fi
 
 # 6 · every command in the table has a plugin file
 for c in $(grep -oE '^\| `/multica-ops:[a-z-]+' COMMANDS.md | sed -E 's/^.*multica-ops://'); do

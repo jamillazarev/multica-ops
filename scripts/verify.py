@@ -303,6 +303,48 @@ def check_undated():
         print(f"  staleness note: {claimed} undated sections, and there are {len(undated)}")
 
 
+# ── the always-loaded core must not pay for a sentence a companion already holds ────────────
+# The core is read by every agent on every run; a companion is read when its trigger fires. A
+# sentence in both is paid twice, and the size budget cannot see it — the budget knows how big
+# the core is, not how much of it is redundant. Measured 2026-08-15 at ~9.3k tokens: exactly one
+# sentence of 142 was duplicated, so there is nothing cheap left to move, and this check exists
+# to keep that true rather than to discover it again.
+def check_core_overlap():
+    core_p = "skills/mops/SKILL.md"
+    try:
+        core = open(core_p, encoding="utf-8").read()
+    except OSError:
+        return
+    def norm(s):
+        return re.sub(r"\s+", " ", re.sub(r"[*`\[\]()]", "", s)).strip().lower()
+    sents = [s.strip() for s in re.split(r"(?<=[.!?])\s+", core) if len(s.strip()) > 90]
+    companions = {}
+    for f in DOCS:
+        if f in ("README.md", "CHANGELOG.md", "AGENTS.md", "CLAUDE.md") or f.startswith("templates/"):
+            continue
+        try:
+            companions[f] = norm(open(f, encoding="utf-8").read())
+        except OSError:
+            pass
+    dup = []
+    for s in sents:
+        n = norm(s)[:110]
+        if len(n) < 90:
+            continue
+        for name, body in companions.items():
+            if n in body:
+                dup.append((name, s[:90]))
+                break
+    # One is the known, deliberate overlap (the external-text rule, which SECURITY restates in
+    # its own context). More than that is the core paying rent twice and is worth a look.
+    if len(dup) > 1:
+        warn(f"{len(dup)} sentences of the always-loaded core also appear verbatim in a "
+             f"companion — every agent pays those on every run: "
+             + "; ".join(f"{n} — {s[:60]}…" for n, s in dup[:3]))
+    else:
+        print(f"  core overlap: {len(dup)} sentence(s) of {len(sents)} also in a companion")
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--sources", action="store_true", help="resolve every documented URL")
@@ -314,6 +356,7 @@ if __name__ == "__main__":
     check_fingerprint()
     check_prose_only()
     check_undated()
+    check_core_overlap()
     check_pin()
     if a.sources: check_sources()
     if a.live: check_live()
