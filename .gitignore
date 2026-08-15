@@ -3,3 +3,10 @@ __pycache__/
 .DS_Store
 company/
 ~/
+
+# Probe runs. `eval-run.sh <id> 99 …` is the shape a developer uses to exercise the RIG rather
+# than to measure anything, and 42 such files rode into v0.4.6 inside a commit about the guard —
+# 398 KB of transcripts that grade nothing. Run numbers 98 and 99 are reserved for probes and are
+# never a round's evidence. Measured 2026-08-16.
+evals/transcripts/*-run98.*
+evals/transcripts/*-run99.*
