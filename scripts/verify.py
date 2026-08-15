@@ -89,15 +89,15 @@ def _ver(s):
 
 def check_pin():
     ref = open("REFERENCE.md", encoding="utf-8").read()
-    # By name, like both readers in preflight.sh: the first vX.Y.Z in the file stopped being
-    # the pin the moment a ticket citation was written above §10, and a ticket's version and
-    # this repository's pin are indistinguishable to a positional read.
+    # By MARKER, like both readers in preflight.sh. "By name" was an ordinary English phrase and
+    # any sentence containing it was read as the pin — measured 2026-08-15, one citation under the
+    # §10 heading and all three readers returned the ticket's version.
     # No positional fallback. One stood here and it silently restored the defect the by-name read
     # exists to remove: measured 2026-08-15 with the anchor reworded, the primary missed, the
     # fallback returned 0.4.26 from a different section, and nothing said it had fallen back. A
     # fallback that cannot announce itself turns this check into the thing it replaced, one
     # copy-edit away. Missing the anchor now warns, which is the honest outcome.
-    m_pin = re.search(r"of `multica` \*\*v(\d+\.\d+\.\d+)", ref)
+    m_pin = re.search(r"\*\*v(\d+\.\d+\.\d+)\*\* <!-- cli-pin -->", ref)
     if not m_pin:
         warn("REFERENCE names no CLI version — every claim about the platform is undated")
         return

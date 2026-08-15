@@ -11,11 +11,13 @@ cd "$(git rev-parse --show-toplevel)" || exit 1
 if [ "${1:-}" = "--regen-cli" ]; then
   command -v multica >/dev/null || { echo "multica CLI not installed"; exit 1; }
   local_v=$(multica --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
-  # The pin is read BY NAME, not by position. `head -1` took the first vX.Y.Z in the file,
-  # which became a citation of someone else's release the moment one was written above §10 —
-  # a ticket's version and this repository's pin look identical to a regex, and the check
-  # confused them the same day a note was added warning about exactly that.
-  pinned=$(grep -oE 'of `multica` \*\*v[0-9]+\.[0-9]+\.[0-9]+' REFERENCE.md \
+  # The pin is read by a MARKER, not by a phrase. "By name" was `of \`multica\` **vX.Y.Z`, which
+  # is ordinary English: any sentence saying "…narrowed the behaviour of `multica` **v0.4.23**…"
+  # is read as the pin by every reader, and the writer then rewrote THAT and reported "re-pinned
+  # in §10" at exit 0 while §10 sat untouched. Measured 2026-08-15 (pass ten) — the same incident
+  # the comment below was written about, walking through its own repair. `<!-- cli-pin -->` is a
+  # marker prose cannot produce by accident and a reflow cannot separate from its version.
+  pinned=$(grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+\*\* <!-- cli-pin -->' REFERENCE.md \
            | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
   echo "installed=$local_v pinned=$pinned"
   sec=$(awk '/## 10\./{f=1} f{print}' REFERENCE.md); diff=0
@@ -40,11 +42,11 @@ if [ "${1:-}" = "--regen-cli" ]; then
   # entire resulting diff was one line, the `MUL-5958` citation, under the message "review and
   # commit". Worse with an empty pin — a plain copy-edit to §10's wording makes `pinned` empty,
   # `s/v/v0.4.26/g` follows, and 446 lines across both files are corrupted with exit 0.
-  [ -n "$pinned" ] || { echo "→ could not read the pin from §10 by name — the anchor 'of \`multica\` **vX.Y.Z' is not in REFERENCE.md. Re-pin by hand; refusing to sweep"; exit 1; }
+  [ -n "$pinned" ] || { echo "→ could not read the pin — the marker '**vX.Y.Z** <!-- cli-pin -->' is not in REFERENCE.md §10. Re-pin by hand; refusing to sweep"; exit 1; }
   # One anchored substitution, on the pin itself. README carries dated measurements ("measured,
   # CLI v0.4.12") whose date IS the claim — re-dating those without re-measuring is the thing the
   # evidence rungs exist to stop, so they are reported here and never rewritten.
-  perl -0pi -e "s/(of \`multica\` \*\*v)${pinned}/\${1}${local_v}/" REFERENCE.md
+  perl -0pi -e "s/(\*\*v)${pinned}(\*\* <!-- cli-pin -->)/\${1}${local_v}\${2}/" REFERENCE.md
   echo "  ✓ surface unchanged — re-pinned v${pinned} → v${local_v} in §10 (review and commit)"
   stale=$(grep -n 'CLI v[0-9]\+\.[0-9]\+\.[0-9]\+' README.md | grep -v "v${local_v}" || true)
   [ -n "$stale" ] && { echo "  ! README still cites an older CLI — these are dated measurements, not pins; re-check each against v${local_v} and re-date it, or mark it unverified:"; echo "$stale" | sed 's/^/      README.md:/'; }
@@ -403,7 +405,7 @@ if command -v multica >/dev/null 2>&1; then
   lv=$(multica --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
   # Same anchor as --regen-cli above, and for the same reason: `head -1` reads whichever
   # version happens to appear first, which is a citation of someone else's release.
-  pv=$(grep -oE 'of `multica` \*\*v[0-9]+\.[0-9]+\.[0-9]+' REFERENCE.md \
+  pv=$(grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+\*\* <!-- cli-pin -->' REFERENCE.md \
        | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
   [ -n "$lv" ] && [ "$lv" != "$pv" ] && say_warn "installed CLI v$lv ≠ pinned v$pv — run: bash scripts/preflight.sh --regen-cli"
 fi

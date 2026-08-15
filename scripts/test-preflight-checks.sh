@@ -48,8 +48,11 @@ undo
 # shipped the defect and this file stayed 9/9 green. The bar this repository sets is a form where
 # the repair can fail; these are it. The mechanic under test: a `MUL-####` citation of somebody
 # else's release sits ABOVE §10, so `head -1` returns THEIR version as OUR pin.
-cite='> `MUL-0001` (**v9.9.9** — checked against the release, not swept) does a thing\n\n'
-pin_by_name(){ grep -oE 'of `multica` \*\*v[0-9]+\.[0-9]+\.[0-9]+' "$1" | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+'; }
+# The poison carries the anchor PHRASE, because the phrase was the previous anchor and a poison
+# that omits it proves nothing: measured 2026-08-15, the old poison walked past this suite 16/16
+# while a single sentence containing "of \`multica\` **v…**" defeated every reader in the repo.
+cite='> `MUL-0001` narrowed the behaviour of `multica` **v9.9.9**; not swept in.\n\n'
+pin_by_name(){ grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+\*\* <!-- cli-pin -->' "$1" | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+'; }
 pin_positional(){ grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' "$1" | head -1 | sed 's/^v//'; }
 true_pin=$(pin_by_name "$T/c/REFERENCE.md")
 [ -n "$true_pin" ] && ok || bad "the by-name anchor reads no pin out of the shipped REFERENCE"
@@ -70,30 +73,30 @@ undo
 readers=$(grep -cE '^[[:space:]]*(pinned|pv)=' "$T/c/scripts/preflight.sh")
 [ "$readers" -eq 2 ] \
   && ok || bad "preflight.sh has $readers pin readers, not the 2 this assertion is scoped to"
-anchored=$(grep -E '^[[:space:]]*(pinned|pv)=' "$T/c/scripts/preflight.sh" | grep -c 'of `multica`')
+anchored=$(grep -E '^[[:space:]]*(pinned|pv)=' "$T/c/scripts/preflight.sh" | grep -c 'cli-pin')
 [ "$anchored" -eq "$readers" ] \
   && ok || bad "$((readers-anchored)) of preflight.sh's $readers pin readers lost the by-name anchor"
-grep -E '^[[:space:]]*m_pin' "$T/c/scripts/verify.py" | grep -q 'of `multica`' \
+grep -E '^[[:space:]]*m_pin' "$T/c/scripts/verify.py" | grep -q 'cli-pin' \
   && ok || bad "verify.py's pin reader lost the by-name anchor"
 [ "$(grep -cE 'CLI v\?\(' "$T/c/scripts/verify.py")" -eq 0 ] \
   && ok || bad "verify.py grew a positional fallback under the anchored read again"
-grep -E '^[[:space:]]*pinned=' "$T/c/.github/workflows/cli-watch.yml" | grep -q 'of `multica`' \
+grep -E '^[[:space:]]*pinned=' "$T/c/.github/workflows/cli-watch.yml" | grep -q 'cli-pin' \
   && ok || bad "the CI pin reader lost the by-name anchor"
 
 # ...and the behavioural twin, because a shape assertion is not a measurement: put a foreign
 # release ABOVE §10, exactly as this release's own MUL-5958 citation did, and require every reader
 # to keep returning OUR pin.
-true_pin=$(grep -oE 'of `multica` \*\*v[0-9]+\.[0-9]+\.[0-9]+' "$T/c/REFERENCE.md" | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+true_pin=$(grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+\*\* <!-- cli-pin -->' "$T/c/REFERENCE.md" | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
 printf '> `MUL-0001` (**v9.9.9** — checked against the release, not swept) does a thing\n\n' \
   | cat - "$T/c/REFERENCE.md" > "$T/c/.ref" && mv "$T/c/.ref" "$T/c/REFERENCE.md"
 got=$( cd "$T/c" && python3 -c "
 import re
 ref = open('REFERENCE.md', encoding='utf-8').read()
-m = re.search(r'of \`multica\` \*\*v(\d+\.\d+\.\d+)', ref)
+m = re.search(r'\*\*v(\d+\.\d+\.\d+)\*\* <!-- cli-pin -->', ref)
 print(m.group(1) if m else 'NONE')" )
 [ "$got" = "$true_pin" ] \
   && ok || bad "with a foreign release cited above §10, verify.py's reader returned $got, not $true_pin"
-got2=$( cd "$T/c" && grep -oE 'of `multica` \*\*v[0-9]+\.[0-9]+\.[0-9]+' REFERENCE.md | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' )
+got2=$( cd "$T/c" && grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+\*\* <!-- cli-pin -->' REFERENCE.md | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' )
 [ "$got2" = "$true_pin" ] \
   && ok || bad "with a foreign release cited above §10, the shell readers returned $got2, not $true_pin"
 undo
