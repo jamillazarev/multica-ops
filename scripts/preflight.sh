@@ -11,7 +11,12 @@ cd "$(git rev-parse --show-toplevel)" || exit 1
 if [ "${1:-}" = "--regen-cli" ]; then
   command -v multica >/dev/null || { echo "multica CLI not installed"; exit 1; }
   local_v=$(multica --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
-  pinned=$(grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' REFERENCE.md | head -1 | sed 's/^v//')
+  # The pin is read BY NAME, not by position. `head -1` took the first vX.Y.Z in the file,
+  # which became a citation of someone else's release the moment one was written above §10 —
+  # a ticket's version and this repository's pin look identical to a regex, and the check
+  # confused them the same day a note was added warning about exactly that.
+  pinned=$(grep -oE 'of `multica` \*\*v[0-9]+\.[0-9]+\.[0-9]+' REFERENCE.md \
+           | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
   echo "installed=$local_v pinned=$pinned"
   sec=$(awk '/## 10\./{f=1} f{print}' REFERENCE.md); diff=0
   for g in $(multica --help 2>&1 | sed -n '/COMMANDS/,/FLAGS/p' | grep -E '^\s+[a-z]' | awk '{print $1}' | tr -d ':'); do
@@ -345,7 +350,10 @@ done
 #     a false claim of currency, worse than visibly stale)
 if command -v multica >/dev/null 2>&1; then
   lv=$(multica --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
-  pv=$(grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' REFERENCE.md | head -1 | sed 's/^v//')
+  # Same anchor as --regen-cli above, and for the same reason: `head -1` reads whichever
+  # version happens to appear first, which is a citation of someone else's release.
+  pv=$(grep -oE 'of `multica` \*\*v[0-9]+\.[0-9]+\.[0-9]+' REFERENCE.md \
+       | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
   [ -n "$lv" ] && [ "$lv" != "$pv" ] && say_warn "installed CLI v$lv ≠ pinned v$pv — run: bash scripts/preflight.sh --regen-cli"
 fi
 
