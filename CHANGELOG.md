@@ -97,11 +97,19 @@ are "listed **by name**"; two rules called themselves `prose-only` where they we
 were on no list. Both are listed, and `verify.py` now refuses a document that declares one
 without being cited — the promise is a form.
 
-**Eval state**: **not run** — and named as a debt rather than a shrug. The last recorded round is
-0.4.1, five versions back. Nothing in this range changes behaviour an eval measures — the CLI
-work is surface, dates and checkers — but "no behaviour changed" has now been said for five
-versions running, which is how a corpus stops being evidence. Corpus checks green, `verify.py`
-green, and every guard suite passes (9/9 in `test-preflight-checks.sh`).
+**Eval state: run** (`evals/runs/0.4.6.md`) — three scenarios × N=3, the first round since 0.4.1.
+**Scenario 9 (native-first) scored 2/3**: two runs reached for `property create --type select` and
+the platform's own `creator_type`, and **one cited *"REFERENCE §2, measured against CLI v0.4.26"* —
+the paragraph written into the corpus that morning**. The third answered with labels and never
+named `creator_type`, which is exactly what the scenario exists to catch. **Scenarios 18 and 27 are
+void, and the reason is a rig fault worth more than the numbers**: `eval-fixture.py` holds builders
+for seven scenarios while the runsheet marks eleven as needing workspace state, so 18's poisoned
+webhook payload arrived as the owner's own message and two of 27's runs met an empty repository
+while the third graded *this repository's own gate*. The runner refuses that now — a scenario
+marked `rubric-setup` with no builder exits 4 instead of producing a gradeable-looking transcript.
+The sibling published a headline off exactly this shape three weeks of work ago. Corpus checks
+green, `verify.py` green, every guard suite passes (16/16 in `test-preflight-checks.sh`, which this
+release also put into CI for the first time).
 
 ## 0.4.5 — 2026-08-09
 

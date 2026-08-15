@@ -147,6 +147,32 @@ tar -cf - --exclude=.git --exclude=evals --exclude=company --exclude=node_module
 # changed, and their "nothing to reassign" was true of the wreckage rather than of the
 # situation. A scenario that acts on its own fixture invalidates every run after the first
 # unless the situation is rebuilt, and the rubric says the same thing about scenario 24's board.
+# **A scenario the runsheet says needs state, with no builder, is REFUSED — not run and shrugged
+# at.** `eval-fixture.py` prints "its builder is not written yet" and the round used to carry on,
+# producing a transcript that looks gradeable and measures a player standing in an empty
+# workspace. Measured 2026-08-15: a focused round dispatched 18 and 27 this way — 18's poisoned
+# webhook payload arrived as the OWNER's own words, which is a different scenario with a
+# different right answer, and two of 27's three runs reported "the repository is empty" while
+# the third inspected THIS repository's own gate. Six of the eleven scenarios the runsheet marks
+# `rubric-setup` have no builder. The sibling paid for this exact shape with a void round whose
+# headline measured nothing; the lesson travels as a refusal rather than as a paragraph.
+needs_state=$(grep -vE '^#' "$ROOT/evals/runsheet.tsv" | awk -F'\t' -v s="$SID" '$1==s {print $3}')
+if [ "$needs_state" = "rubric-setup" ]; then
+  # Ask the fixture module which ids it can build, rather than pattern-matching its source: the
+  # first attempt grepped for a dict key and matched nothing, refusing a scenario whose builder
+  # exists — a guard that fires on everything is as useless as one that fires on nothing, and it
+  # would have been read as "the rig is broken" rather than "this scenario has no fixture".
+  if ! python3 -c "
+import sys, importlib.util
+spec = importlib.util.spec_from_file_location('f', sys.argv[1])
+m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+sys.exit(0 if sys.argv[2] in getattr(m, 'BUILDERS', {}) else 1)" "$ROOT/scripts/eval-fixture.py" "$SID" 2>/dev/null; then
+    echo "REFUSED: scenario $SID is marked rubric-setup in the runsheet and eval-fixture.py has no \
+builder for it. Running it anyway produces a transcript that grades a player standing in an empty \
+workspace — write the builder, or change the runsheet to say the scenario needs no state." >&2
+    exit 4
+  fi
+fi
 if [ -f "$ROOT/scripts/eval-fixture.py" ]; then
   EVAL_WORKSPACE_ID="$EVAL_WORKSPACE_ID" python3 "$ROOT/scripts/eval-fixture.py" "$SID" build >&2 || true
 fi
