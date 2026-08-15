@@ -130,7 +130,7 @@ multica agent avatar <agent-id> --file <png>       # see ROLES.md → Avatars
 multica agent update <agent-id> --model <…> --instructions "<…>"
 multica agent copy <source-agent-id> --name "<Role name>"   # a near-twin: fork, don't retype
 ```
-**A second agent almost like an existing one is a `copy`, not a re-typed `create`** (CLI v0.4.12).
+**A second agent almost like an existing one is a `copy`, not a re-typed `create`** (CLI v0.4.26, re-checked 2026-08-15).
 It carries instructions, description, avatar, permission mode and allow-list, attached skills,
 `max_concurrent_tasks`, and — only while the runtime is unchanged — model, thinking level and
 service tier. **Secrets never travel**: `custom_env`, `mcp_config` and `runtime_config` are not
@@ -422,7 +422,7 @@ stage finished" (that is @mentions and barriers). Offer at setup, default "later
   returning in about a second with `{"status":"issue_created","issue_id":…}` while the agent
   runs on. A schedule is for the sweeps nobody is watching; the same object serves both
   (measured 2026-08-01 → PLAYBOOKS *The audit is dispatched*). Not reachable from the CLI
-  (checked v0.4.12): HMAC signing on the trigger, an IP allowlist, API-based triggers — do not
+  (re-checked against CLI v0.4.26, 2026-08-15): HMAC signing on the trigger, an IP allowlist, API-based triggers — do not
   design as if they exist. **Signing is in the data model and not in the CLI**: a webhook
   trigger comes back carrying `has_signing_secret: false`, `signing_secret_hint: null` and
   `provider: "generic"`, and no flag on `trigger-add` or `trigger-update` sets any of them. Read

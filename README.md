@@ -112,7 +112,7 @@ Stated rather than wished away — every number carries where it came from:
 |---|---|---|
 | **6 tasks per agent · 20 per daemon** | the tighter one wins; fan-out past it just queues | measured |
 | **a `local_directory` serialises** | one task at a time, forever, however wide you decompose | cited (REFERENCE §object model) |
-| **`workspace delete` is not in the CLI** | Mops cannot remove a workspace it created, and says so | measured, CLI v0.4.12 |
+| **`workspace delete` is not in the CLI** | Mops cannot remove a workspace it created, and says so | measured, CLI v0.4.26 (2026-08-15) |
 | **autopilot failures are silent** | no auto-retry, no inbox post — run them in `create_issue` mode and subscribe the owner | measured |
 | **start dates are enforced by the team** | nothing on the platform stops an agent beginning early | cited |
 | **some rules are `prose-only`** | nothing enforces them; they are listed by name rather than believed in | measured |
@@ -223,6 +223,7 @@ Forward-only: what shipped lives in the body of this file and in the
 ---
 
 Works against **Multica cloud or a self-hosted server** — execution is local either way, so only
-backups and upgrades change hands. Verified with `multica` CLI v0.4.12. Code is
+backups and upgrades change hands. Verified with `multica` CLI v0.4.12; the surface claims were
+re-checked against v0.4.26 on 2026-08-15 (REFERENCE §10 carries the pin and the caveat). Code is
 **[Apache-2.0](LICENSE)**; the names "Mops" / "multica-ops" and the avatar are reserved — see
 **[TRADEMARKS.md](TRADEMARKS.md)**.

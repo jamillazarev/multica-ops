@@ -179,7 +179,8 @@ gates are that verifier**, so cascading rests on a check that already exists (so
 the work turns out harder; this is *downward* when the tier is simply not available — the
 provider's limit fired, the runtime is offline, the quota reset is hours away. Multica has no
 native fallback: **`agent create --model` takes one identifier**, so nothing on the platform
-picks a second choice for you (checked against CLI v0.4.12), and a run that dies for capacity
+picks a second choice for you (re-checked against CLI v0.4.26, 2026-08-15 — `--model` still takes
+one identifier), and a run that dies for capacity
 lands in `agent_error` without being retried.
 
 So the chain is ours to declare and ours to say out loud: **a role records a fallback chain of

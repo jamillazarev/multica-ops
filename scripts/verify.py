@@ -92,8 +92,12 @@ def check_pin():
     # By name, like both readers in preflight.sh: the first vX.Y.Z in the file stopped being
     # the pin the moment a ticket citation was written above §10, and a ticket's version and
     # this repository's pin are indistinguishable to a positional read.
-    m_pin = re.search(r"of `multica` \*\*v(\d+\.\d+\.\d+)", ref) or \
-            re.search(r"CLI v?(\d+\.\d+\.\d+)", ref)
+    # No positional fallback. One stood here and it silently restored the defect the by-name read
+    # exists to remove: measured 2026-08-15 with the anchor reworded, the primary missed, the
+    # fallback returned 0.4.26 from a different section, and nothing said it had fallen back. A
+    # fallback that cannot announce itself turns this check into the thing it replaced, one
+    # copy-edit away. Missing the anchor now warns, which is the honest outcome.
+    m_pin = re.search(r"of `multica` \*\*v(\d+\.\d+\.\d+)", ref)
     if not m_pin:
         warn("REFERENCE names no CLI version — every claim about the platform is undated")
         return
@@ -213,8 +217,13 @@ def check_fingerprint():
     m = re.search(r"for k in ([a-z ]+); do", recipe)          # the fingerprint loop
     hashed = set(m.group(1).split()) if m else set()
     hashed |= {"member", "project resource"} if "member list" in recipe else set()
+    # No `or grp not in recipe` escape. It was a substring test over the whole document, and
+    # every one of these names appears in PLAYBOOKS' prose — so the gate could not fail for any
+    # of them. Measured 2026-08-15: `plugin` deleted from the loop, verify.py exits 0 and still
+    # prints its coverage line. A gate that reports the claim it was written to check is worse
+    # than no gate, because the green is read as evidence.
     for grp in sorted(STRUCTURAL):
-        if grp not in hashed and grp not in recipe:
+        if grp not in hashed:
             fail(f"fingerprint recipe (PLAYBOOKS) does not hash `{grp}` — drift in it goes unseen")
     # a CLI group that is neither hashed nor knowingly ignored is unclassified
     top = subprocess.run(["multica", "--help"], capture_output=True, text=True).stdout
@@ -222,7 +231,47 @@ def check_fingerprint():
     for g in sorted(groups - STRUCTURAL - IGNORE - hashed):
         warn(f"CLI group `{g}` is new — decide if it is workspace structure the fingerprint "
              f"should hash, then add it or add it to IGNORE")
-    print(f"  fingerprint: {len(STRUCTURAL)} structural classes covered")
+    # What the recipe covers, not what the list declares — the two were the same number until
+    # the escape above let them diverge, and the declared one is the one that cannot be wrong.
+    print(f"  fingerprint: {len(hashed & STRUCTURAL)}/{len(STRUCTURAL)} structural classes covered")
+
+
+# ── every self-declared prose-only rule must be on the named list ───────────────────────────
+# `README.md`, `PATTERNS.md`, `SECURITY.md` and `PLAYBOOKS.md` all promise that prose-only rules
+# are "listed by name", and nothing read the promise back. Measured 2026-08-15: two rules called
+# themselves `prose-only` at the place they were defined — the council's declaration line and the
+# empty-document rule — and neither was on the list. A promise four documents make is a form's
+# job. The check is by FILE, not by wording: a document that declares a prose-only rule must be
+# cited somewhere in the list, so a new declaration cannot arrive unlisted.
+DECLARE_IN = ["FLOWS.md", "REFERENCE.md", "STACKS.md", "ROLES.md", "BOOTSTRAP.md"]
+def check_prose_only():
+    try:
+        pb = open("PLAYBOOKS.md", encoding="utf-8").read()
+    except OSError:
+        return
+    m = re.search(r"\*\*The prose-only list, by name\*\*.*?(?=\n#{2,} )", pb, re.S)
+    if not m:
+        fail("PLAYBOOKS has no 'prose-only list, by name' section — four documents promise it")
+        return
+    listed = m.group(0)
+    cited = 0
+    for f in DECLARE_IN:
+        try:
+            body = open(f, encoding="utf-8").read()
+        except OSError:
+            continue
+        if "`prose-only`" not in body:
+            continue
+        stem = f[:-3]                       # FLOWS.md → FLOWS
+        if stem in listed:
+            cited += 1
+        else:
+            fail(f"{f} declares a rule `prose-only` and the named list never cites {stem} — "
+                 f"a rule that calls itself unenforced belongs on the list that names them")
+    # Only on success, and counting what was actually cited. A line reporting the claim it was
+    # written to check is the defect this same file's fingerprint gate carried until today.
+    if not FAIL:
+        print(f"  prose-only: {cited} declaring document(s), each cited on the named list")
 
 
 if __name__ == "__main__":
@@ -234,6 +283,7 @@ if __name__ == "__main__":
     print("verify — multica-ops")
     check_recipes()
     check_fingerprint()
+    check_prose_only()
     check_pin()
     if a.sources: check_sources()
     if a.live: check_live()

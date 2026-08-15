@@ -3,7 +3,7 @@
 Newest first. Each entry leads with what you can now do, not with which files moved. This is
 also the migration map `/multica-ops:upgrade` reads.
 
-## 0.4.6 — 2026-08-14
+## 0.4.6 — 2026-08-15
 
 **The mention that dispatches is now in the guide, with the roster column it needs.** A sibling
 field report measured what happens when the one file every worker loads names an act but not its
@@ -54,8 +54,54 @@ never attached wholesale.
 skill is re-issued from the new template and `_ops/TEAM.md` gains the mention column (uuid = the
 ID column of `multica agent list`) — neither moves by itself.
 
-**Eval state**: **not run** — template lines, shelf rows and a consult mechanic; no
-behaviour an eval measures changed. Corpus checks green and every guard suite passes.
+**The CLI moved fourteen releases while the checker said green, and the route that keeps your
+skill's id is now written down.** `multica skill refresh <id>` re-downloads a skill from its
+imported source **preserving its id and its agent assignments** — the old route mints a new id
+and orphans every agent that referenced the skill, which is the most user-facing thing in this
+range and was in no document. REFERENCE §10 is regenerated against **CLI v0.4.26** and carries
+the caveat its own surface cannot: *the surface is current; the behaviour is not*. Multica's
+native plugin system is in STACKS, and `plugin` is classified as workspace structure, so the
+workspace fingerprint hashes it.
+
+**Why the pin check was green for fourteen releases**: it compared REFERENCE against the
+*installed* binary, and both said 0.4.12 — two stale things measured against each other. It asks
+the outside number now. Three readers of that pin were then anchored **by name**, because the
+first `vX.Y.Z` in the file stopped being the pin the moment this release wrote a `MUL-5958`
+citation above §10 — and a blanket version sweep had already rewritten that citation into a
+release that does not carry it, which is the incident AGENTS.md now dates.
+
+**Then the four release lenses ran, and found the other half of every one of those repairs.**
+The **fourth** pin reader — `.github/workflows/cli-watch.yml`, the one nobody watches because it
+runs on a schedule — was byte-identical to the two that were fixed, read **0.4.23** out of the
+citation, and would have filed a false issue on Monday. `--regen-cli`'s **writer** was still the
+blanket `s/v0.4.23/v0.4.26/g` the reader had been protected from: with the pin at 0.4.23 its
+entire diff was the `MUL-5958` citation, and a copy-edit to §10's wording made the pin empty and
+`s/v/v0.4.26/g` corrupted **446 lines** across two files at exit 0. It is one anchored
+substitution now, it refuses an empty pin, and README's dated measurements are **reported, never
+rewritten** — a re-dated claim nobody re-measured is the promotion the rungs exist to stop.
+`verify.py`'s positional **fallback** is gone: measured, it silently returned a version from a
+different section with nothing saying it had fallen back. The `plugin` fingerprint row hashed
+**empty stdout** — the SHA-256 of nothing, identical to a nonexistent group, so an outage and an
+empty list were one value; and the gate proving the recipe covers every structural class carried
+a substring escape that made it **unable to fail**, printing "9 structural classes covered" while
+8 were hashed. It counts what it verified now.
+
+**Seven claims dated v0.4.12 were re-checked against 0.4.26, one at a time.** Five hold and carry
+today's date. One does not get a new date: *"Multica has no `on_child_failure`"* sits above a
+surface that moved — 0.4.26's `issue create --stage` groups sub-issues into a barrier where *"the
+parent assignee is woken only when every sub-issue in a stage finishes"*, and whether a dead child
+counts as finished is behavioural. It is marked unverified with that reason.
+
+**And the prose-only list is enforced rather than promised.** Four documents say prose-only rules
+are "listed **by name**"; two rules called themselves `prose-only` where they were defined and
+were on no list. Both are listed, and `verify.py` now refuses a document that declares one
+without being cited — the promise is a form.
+
+**Eval state**: **not run** — and named as a debt rather than a shrug. The last recorded round is
+0.4.1, five versions back. Nothing in this range changes behaviour an eval measures — the CLI
+work is surface, dates and checkers — but "no behaviour changed" has now been said for five
+versions running, which is how a corpus stops being evidence. Corpus checks green, `verify.py`
+green, and every guard suite passes (9/9 in `test-preflight-checks.sh`).
 
 ## 0.4.5 — 2026-08-09
 

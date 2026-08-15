@@ -83,7 +83,13 @@ Assignment = a run that spends budget. Everything after this is the conveyor's j
 **Four things the decomposition states once, so nobody improvises them under pressure:**
 
 - **What happens when a child fails.** Multica has no `on_child_failure` — a sub-issue that dies
-  leaves its parent sitting, and whoever notices decides (checked against CLI v0.4.12). So the
+  leaves its parent sitting, and whoever notices decides. **Checked at CLI v0.4.12 and NOT
+  re-verified: the surface under this moved.** At 0.4.26 `issue create --stage` groups sub-issues
+  into "an ordered barrier group under its parent", and *"the parent assignee is woken only when
+  every sub-issue in a stage finishes"* — which governs exactly when a parent hears from its
+  children. Whether a child that dies counts as finished is a behavioural question `--help` does
+  not answer and nobody has run. Re-dating this without running it would be the promotion this
+  repository's rungs exist to stop. So the
   parent says it in advance: **`escalate` is the default** (the parent goes `blocked`, the
   conductor is told), against `continue` (siblings proceed; only honest where the failed child
   was genuinely independent) and `halt` (cancel the remaining siblings — for a batch where a
@@ -179,9 +185,20 @@ Three measured constraints shape that (2026-08-01):
 
 ```sh
 multica issue comment add <id> --content "…[@Name](mention://agent/<uuid>)…"
+# replying as an agent, rather than starting one: --parent is not optional there
+multica issue comment add <id> --parent <trigger-comment-id> --content "…"
 ```
-The @-mention triggers that agent with the issue as context. **What a plain comment (no mention) does is unknown** — as of 2026-08-14, and said that way
-deliberately. REFERENCE §2 lists four trigger paths and carries no date, no measurement and no
+The @-mention triggers that agent with the issue as context. `--parent` is a rule, not a
+courtesy: `multica issue comment add --help` at CLI 0.4.26 states *"A comment-triggered agent
+task must reply under its trigger comment; omitting --parent to post a top-level comment is
+rejected"* (read 2026-08-15; REFERENCE §2 carries the same rule, and the recipe here did not).
+
+**What a plain comment (no mention) does is unknown** — as of 2026-08-14, and said that way
+deliberately. That same `--help` line is the nearest evidence this repository holds and it does
+**not** settle the question: it presupposes comment-triggered tasks without saying that an
+unmentioned comment triggers one. It narrows the possibilities and is cited here as exactly
+that — it was sitting in the output §10 was regenerated from, and the pass that fetched it
+walked past it. REFERENCE §2 lists four trigger paths and carries no date, no measurement and no
 source; it says nothing about plain comments either way. "Dispatches nobody" was read out of
 that silence and briefly shipped as verified, which is an absence of evidence wearing a
 verdict — the same move this system refuses everywhere else. **What settles it:** post a
@@ -275,7 +292,7 @@ and the repo moves daily, so one date over all four is wrong about at least one 
 
 **The watch closes its own loop, natively.** An autopilot in **`create_issue` mode with the
 owner subscribed** turns each upstream release into an issue on the board — so it lands in
-triage and **cannot fade**, which a notification does (checked against CLI v0.4.12:
+triage and **cannot fade**, which a notification does (re-checked against CLI v0.4.26, 2026-08-15:
 `autopilot create --mode create_issue --subscriber …`; note that **autopilot failures are
 silent**, so the subscriber is what makes a broken watch visible). Triage answers the only
 question that matters — *does this change anything of ours?* — with the ordinary four
@@ -999,6 +1016,12 @@ nothing enforces is the failure this table guards against:
 - **speak the domain's language · report the trend · small stays small** — judgement rules
 - **the mention ceiling** ("only squads whose answer changes something") — priced after, not
   blocked before
+- **the council's declaration line** (`angles: N · voices: N · provider: one`, FLOWS §The
+  council) — a consultation leaves no artifact, so nothing can read the line back. It calls
+  itself `prose-only` at the place it is defined and was absent from this list, which is the
+  one place four documents promise these are named
+- **an empty document waits for content** (FLOWS §The guard) — the sibling project has a hook
+  that refuses the write; nothing in this corpus performs it
 
 ### Silence is not an answer — unless a grant said so first
 
@@ -1261,8 +1284,17 @@ finds agents doing too little, the other finds agents asked to be too much.
 Write after any state-changing operation, compare on wake:
 
 ```sh
+# The exit code is checked before the hash. A failed call writes nothing to stdout, and the
+# SHA-256 of nothing is `e3b0c44298fc1c14` — the same value a genuinely empty group produces.
+# Measured 2026-08-15 against CLI 0.4.26: `plugin list` returned "The Multica service is
+# temporarily unavailable", exit 1, and the recipe hashed the silence; `multica nosuchgroup
+# list` gave the identical hash. A service outage, an expired token, a CLI too old to know the
+# group, and an empty list were one value — and every transition between them read as workspace
+# drift that never happened.
 for k in agent squad skill label autopilot project runtime property plugin; do
-  printf '%s %s\n' "$k" "$(multica $k list --output json | shasum -a 256 | cut -c1-16)"
+  out=$(multica $k list --output json 2>/dev/null) \
+    && printf '%s %s\n' "$k" "$(printf '%s' "$out" | shasum -a 256 | cut -c1-16)" \
+    || printf '%s UNREADABLE\n' "$k"
 done
 multica workspace member list --output json | shasum -a 256 | cut -c1-16   # members
 # Project resources decide whether the team can work in parallel at all — a switch from

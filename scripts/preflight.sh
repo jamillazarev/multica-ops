@@ -33,8 +33,22 @@ if [ "${1:-}" = "--regen-cli" ]; then
   if [ "$newest" = "$pinned" ]; then
     echo "  ✓ §10 matches; your CLI (v$local_v) is behind the pin (v$pinned) — nothing to re-pin, update your CLI"; exit 0
   fi
-  sed -i.bak "s/v${pinned}/v${local_v}/g" REFERENCE.md README.md && rm -f REFERENCE.md.bak README.md.bak
-  echo "  ✓ surface unchanged — re-pinned v${pinned} → v${local_v} (review and commit)"; exit 0
+  # The READER above is anchored by name and the WRITER was not, which is half a repair: a global
+  # `s/v0.4.23/v0.4.26/g` rewrites a citation of someone else's release as readily as our own pin,
+  # and that is the incident AGENTS.md dates to 2026-08-15 — performed by hand once, and then
+  # available to be performed mechanically by this script. Measured: with the pin at 0.4.23 the
+  # entire resulting diff was one line, the `MUL-5958` citation, under the message "review and
+  # commit". Worse with an empty pin — a plain copy-edit to §10's wording makes `pinned` empty,
+  # `s/v/v0.4.26/g` follows, and 446 lines across both files are corrupted with exit 0.
+  [ -n "$pinned" ] || { echo "→ could not read the pin from §10 by name — the anchor 'of \`multica\` **vX.Y.Z' is not in REFERENCE.md. Re-pin by hand; refusing to sweep"; exit 1; }
+  # One anchored substitution, on the pin itself. README carries dated measurements ("measured,
+  # CLI v0.4.12") whose date IS the claim — re-dating those without re-measuring is the thing the
+  # evidence rungs exist to stop, so they are reported here and never rewritten.
+  perl -0pi -e "s/(of \`multica\` \*\*v)${pinned}/\${1}${local_v}/" REFERENCE.md
+  echo "  ✓ surface unchanged — re-pinned v${pinned} → v${local_v} in §10 (review and commit)"
+  stale=$(grep -n 'CLI v[0-9]\+\.[0-9]\+\.[0-9]\+' README.md | grep -v "v${local_v}" || true)
+  [ -n "$stale" ] && { echo "  ! README still cites an older CLI — these are dated measurements, not pins; re-check each against v${local_v} and re-date it, or mark it unverified:"; echo "$stale" | sed 's/^/      README.md:/'; }
+  exit 0
 fi
 
 if [ "${1:-}" = "--install" ]; then
