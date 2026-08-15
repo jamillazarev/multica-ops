@@ -62,12 +62,76 @@ printf "$cite" | cat - "$T/c/REFERENCE.md" > "$T/c/.ref" && mv "$T/c/.ref" "$T/c
 undo
 # and every reader of the pin in the repository must use the anchored form, including the one
 # in CI that nobody watches: it was byte-identical to the two that were fixed and was missed.
-for f in scripts/preflight.sh scripts/verify.py .github/workflows/cli-watch.yml; do
-  grep -q 'of `multica`' "$T/c/$f" \
-    && ok || bad "$f reads the CLI pin without the by-name anchor"
+# Assert on the READER, not on the file. `grep -q 'of \`multica\`' <file>` is a substring test over
+# the whole document — the same `grp not in recipe` escape this very release deleted from verify.py
+# with the words "a gate that reports the claim it was written to check is worse than no gate" —
+# and preflight.sh carries that anchor text inside its refusal MESSAGES too, so either of its two
+# readers could revert and the assertion would stay green. Measured 2026-08-15 (pass ten).
+readers=$(grep -cE '^[[:space:]]*(pinned|pv)=' "$T/c/scripts/preflight.sh")
+[ "$readers" -eq 2 ] \
+  && ok || bad "preflight.sh has $readers pin readers, not the 2 this assertion is scoped to"
+anchored=$(grep -E '^[[:space:]]*(pinned|pv)=' "$T/c/scripts/preflight.sh" | grep -c 'of `multica`')
+[ "$anchored" -eq "$readers" ] \
+  && ok || bad "$((readers-anchored)) of preflight.sh's $readers pin readers lost the by-name anchor"
+grep -E '^[[:space:]]*m_pin' "$T/c/scripts/verify.py" | grep -q 'of `multica`' \
+  && ok || bad "verify.py's pin reader lost the by-name anchor"
+[ "$(grep -cE 'CLI v\?\(' "$T/c/scripts/verify.py")" -eq 0 ] \
+  && ok || bad "verify.py grew a positional fallback under the anchored read again"
+grep -E '^[[:space:]]*pinned=' "$T/c/.github/workflows/cli-watch.yml" | grep -q 'of `multica`' \
+  && ok || bad "the CI pin reader lost the by-name anchor"
+
+# ...and the behavioural twin, because a shape assertion is not a measurement: put a foreign
+# release ABOVE §10, exactly as this release's own MUL-5958 citation did, and require every reader
+# to keep returning OUR pin.
+true_pin=$(grep -oE 'of `multica` \*\*v[0-9]+\.[0-9]+\.[0-9]+' "$T/c/REFERENCE.md" | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+printf '> `MUL-0001` (**v9.9.9** — checked against the release, not swept) does a thing\n\n' \
+  | cat - "$T/c/REFERENCE.md" > "$T/c/.ref" && mv "$T/c/.ref" "$T/c/REFERENCE.md"
+got=$( cd "$T/c" && python3 -c "
+import re
+ref = open('REFERENCE.md', encoding='utf-8').read()
+m = re.search(r'of \`multica\` \*\*v(\d+\.\d+\.\d+)', ref)
+print(m.group(1) if m else 'NONE')" )
+[ "$got" = "$true_pin" ] \
+  && ok || bad "with a foreign release cited above §10, verify.py's reader returned $got, not $true_pin"
+got2=$( cd "$T/c" && grep -oE 'of `multica` \*\*v[0-9]+\.[0-9]+\.[0-9]+' REFERENCE.md | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' )
+[ "$got2" = "$true_pin" ] \
+  && ok || bad "with a foreign release cited above §10, the shell readers returned $got2, not $true_pin"
+undo
+
+# ── the eval guard's two halves ─────────────────────────────────────────────────────────────
+# Three attempts, two of them plausible one-token fixes that measured wrong — the first read
+# `query-source` and MISSED scenario 27, the very void it was named for; the second would have
+# blocked six scenarios with 5-7 tracked fixture files. What ships refuses only a scenario with
+# NEITHER half. These assert the boundary in both directions, from the runsheet and the module
+# rather than from a remembered list, so the sets move with the corpus.
+halves(){ # halves <sid> → "repo builder"
+  r=$(cd "$T/c" && git ls-files "evals/fixtures/$1" 2>/dev/null | grep -cv 'FIXTURE\.md$')
+  b=no; python3 -c "
+import sys, importlib.util
+spec = importlib.util.spec_from_file_location('f', sys.argv[1])
+m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+sys.exit(0 if sys.argv[2] in getattr(m, 'BUILDERS', {}) else 1)" \
+    "$T/c/scripts/eval-fixture.py" "$1" 2>/dev/null && b=yes
+  echo "$r $b"
+}
+nothing=""; provisioned=""
+for sid in $(grep -vE '^#' "$T/c/evals/runsheet.tsv" | awk -F'\t' '$5=="yes"{print $1}' | grep -E '^[0-9]+$'); do
+  set -- $(halves "$sid")
+  if [ "$1" -eq 0 ] && [ "$2" = "no" ]; then nothing="$nothing $sid"; else provisioned="$provisioned $sid"; fi
 done
-grep -qE "grep -oE 'v\[0-9\]" "$T/c/.github/workflows/cli-watch.yml" \
-  && bad "the CI pin reader still holds a positional read" || ok
+[ -n "$nothing" ] \
+  && ok || bad "no scenario has neither half — the eval guard can no longer fail, so this pair proves nothing"
+[ -n "$provisioned" ] \
+  && ok || bad "every needs-fixture scenario is unprovisioned — the guard would refuse the whole suite"
+# scenario 27 is the named casualty: it must be in the refused set, by measurement not by memory
+case " $nothing " in *" 27 "*) ok;; *) bad "scenario 27 is not in the guard's refusal set — it was the void this repair was named for";; esac
+# and a scenario with a tracked repository half must NOT be refused
+for sid in $provisioned; do
+  set -- $(halves "$sid")
+  [ "$1" -gt 0 ] || [ "$2" = "yes" ] \
+    || { bad "scenario $sid is allowed with neither half"; break; }
+done
+ok
 
 echo "preflight-checks: $pass passed, $fail failed"
 exit "$fail"

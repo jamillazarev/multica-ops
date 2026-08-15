@@ -472,7 +472,7 @@ and *"it does not hold the loop"* stops being a rule it could work around.
 > release, not swept) changes the assignee fallback when a human comment is answered, and it is
 > now clear why that sits so close to §2: **an unmentioned comment on an assigned issue is
 > itself a dispatch**, so what a fallback does with one is a live question rather than a corner.
-> **Still not measured: the other seven undated sections.** The surface is current, §2 and the
+> **Still not measured: the other six undated sections.** The surface is current, §2 and the
 > squad half of §3 are current, and the rest of the behaviour is undated — which is a smaller
 > claim than this note used to make, and a true one.
 
@@ -788,8 +788,10 @@ possible move and looks identical to diligence in a transcript.
 - ❌ A dispute nobody priced — `@`-mentioning an agent **is a run that spends budget**, so "this
   point cost N runs" is countable by ordinary grouping. A ceiling counted only in rounds and never
   in spend is a wish, not a limit.
-- ❌ Paying to stop paying — halting a loop with an `@`-mention, which is itself a run. A comment
-  wakes nobody (§2), so `blocked` + a comment stops it for free.
+- ❌ Paying to stop paying — halting a loop with an `@`-mention, which is itself a run. **And
+  `blocked` + a comment is not free either**: measured 2026-08-15, a plain comment on an issue
+  that still has an assignee is a dispatch (§2, path 3) and the status does not stop it. Unassign
+  first, then explain — that is the halt that costs nothing.
 - ❌ Settling a dispute by rewriting the bar — the spec and the task's wording are editable, the
   **DoD and acceptance criteria are not**: those are proposed to the owner, and "we had to settle
   it" is not an exemption from that.

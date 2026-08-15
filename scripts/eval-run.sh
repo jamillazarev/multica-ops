@@ -156,21 +156,48 @@ tar -cf - --exclude=.git --exclude=evals --exclude=company --exclude=node_module
 # the third inspected THIS repository's own gate. Six of the eleven scenarios the runsheet marks
 # `rubric-setup` have no builder. The sibling paid for this exact shape with a void round whose
 # headline measured nothing; the lesson travels as a refusal rather than as a paragraph.
-needs_state=$(grep -vE '^#' "$ROOT/evals/runsheet.tsv" | awk -F'\t' -v s="$SID" '$1==s {print $3}')
-if [ "$needs_state" = "rubric-setup" ]; then
-  # Ask the fixture module which ids it can build, rather than pattern-matching its source: the
-  # first attempt grepped for a dict key and matched nothing, refusing a scenario whose builder
-  # exists — a guard that fires on everything is as useless as one that fires on nothing, and it
-  # would have been read as "the rig is broken" rather than "this scenario has no fixture".
-  if ! python3 -c "
+# A scenario's state has TWO independent halves and the runsheet has one yes/no, so the guard is
+# written to see what is MISSING rather than to guess which half was meant. Every `FIXTURE.md`
+# states the model outright: "**Repository half only.** Where a scenario needs workspace state as
+# well, its builder lives in `scripts/eval-fixture.py`."
+#
+#   repository half : tracked files under evals/fixtures/<id>/ beyond FIXTURE.md itself
+#   workspace half  : an entry in eval-fixture.py's BUILDERS
+#
+# Refuse only when a scenario the runsheet marks as needing state has NEITHER. Measured 2026-08-15
+# (pass ten), against all 27 rows:
+#   the first form ($3 == rubric-setup, no builder)  refused 6 and MISSED scenario 27 — one of the
+#     two voids it was written to prevent, named in its own commit message and round record
+#   "$5 == yes, no builder"                          refuses 14, six of them (5·13·16·21·24·25)
+#     fully provisioned with 5-7 tracked files — it would report "the rig is broken" about
+#     scenarios that build fine, which is what the first attempt did and was rewritten to avoid
+#   "…or a fixtures/<id> directory exists"           refuses 5, re-admitting 14, 15 and 26; 14's
+#     directory holds exactly one tracked file, FIXTURE.md, a prose stub whose on-disk `_ops/`
+#     is untracked and vanishes in a clone
+# This form refuses 3 · 11 · 14 · 18 · 23 · 27 — nothing-at-all — and WARNS where one half is
+# present and the other is not, which is information the operator can act on rather than a wall.
+needs_state=$(grep -vE '^#' "$ROOT/evals/runsheet.tsv" | awk -F'\t' -v s="$SID" '$1==s {print $5}')
+if [ "$needs_state" = "yes" ]; then
+  repo_half=$(cd "$ROOT" && git ls-files "evals/fixtures/$SID" 2>/dev/null | grep -cv 'FIXTURE\.md$' || true)
+  has_builder=no
+  python3 -c "
 import sys, importlib.util
 spec = importlib.util.spec_from_file_location('f', sys.argv[1])
 m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
-sys.exit(0 if sys.argv[2] in getattr(m, 'BUILDERS', {}) else 1)" "$ROOT/scripts/eval-fixture.py" "$SID" 2>/dev/null; then
-    echo "REFUSED: scenario $SID is marked rubric-setup in the runsheet and eval-fixture.py has no \
-builder for it. Running it anyway produces a transcript that grades a player standing in an empty \
-workspace — write the builder, or change the runsheet to say the scenario needs no state." >&2
+sys.exit(0 if sys.argv[2] in getattr(m, 'BUILDERS', {}) else 1)" \
+    "$ROOT/scripts/eval-fixture.py" "$SID" 2>/dev/null && has_builder=yes
+  if [ "${repo_half:-0}" -eq 0 ] && [ "$has_builder" = "no" ]; then
+    echo "REFUSED: scenario $SID is marked needs-fixture=yes and has NEITHER half of its state — \
+no tracked files under evals/fixtures/$SID/ beyond FIXTURE.md, and no builder in \
+scripts/eval-fixture.py. Running it anyway produces a transcript that grades a player standing in \
+an empty workspace with an empty repository. Provision one half, or change the runsheet." >&2
     exit 4
+  fi
+  if [ "${repo_half:-0}" -eq 0 ]; then
+    echo "note — scenario $SID has a builder but no tracked repository half" >&2
+  elif [ "$has_builder" = "no" ]; then
+    echo "note — scenario $SID has a repository half ($repo_half tracked files) but no \
+workspace builder; anything the rubric expects to find in the workspace will be absent" >&2
   fi
 fi
 if [ -f "$ROOT/scripts/eval-fixture.py" ]; then

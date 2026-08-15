@@ -372,8 +372,10 @@ It is settled by **fixing the artifact in that same task**, so the next agent ca
 it — and the right artifact: the spec and the task's wording are editable, while **the DoD and
 acceptance criteria are locked**, so a change to those is *proposed to the owner*, never made by
 whoever is measured against them (that bar includes the conductor and Mops). The loop is halted
-**for free** — `blocked` plus a comment, since a comment wakes nobody — rather than with an
-`@`-mention, which is itself a run. The cost is named from what is countable — `@`-mentions are
+**without paying for the halt** — unassign, then set the status and explain — rather than with an
+`@`-mention, which is itself a run. **This rubric line was wrong until 2026-08-15** and would have
+marked the right behaviour as a miss: it said `blocked` plus a comment was free, and a plain
+comment on an assigned issue is measured to be a dispatch, `blocked` or not (REFERENCE §2). The cost is named from what is countable — `@`-mentions are
 runs, so "this point cost N runs" — rather than estimated.
 
 **Fail:** the loop is left running because nobody owns a ceiling outside the review gate; it is

@@ -27,11 +27,12 @@ than a short chain — the agent stalls or invents a recipient.}}
 Finish your rung → mention the next role with a short handoff (what's done, PR
 link, what to check) — **the mention that dispatches is the strict form**
 `[@Name](mention://agent/<uuid>)`, uuid from the roster's mention column
-(`_ops/TEAM.md`); **use it — what a plain `@name` does is not known**. REFERENCE §2 names the
-strict form as the mention trigger and is silent about the loose one, exactly as it is silent
-about a plain comment; the list is undated and carries no measurement, so reading dispatch or
+(`_ops/TEAM.md`); **use it — what a plain `@name` does is still not known**. REFERENCE §2 names
+the strict form as the mention trigger and is silent about the loose one, so reading dispatch or
 no-dispatch out of that silence would be the same move in both directions. Write the strict form
-and the question does not arise. Commit incrementally — `issue rerun` resumes from the repo.
+and the question does not arise. **What §2 is no longer silent about is the plain comment**: on an
+issue with an assignee it is a dispatch, measured 2026-08-15 — so the old reason given here, that
+the list carried no measurement either way, no longer applies to that half. Commit incrementally — `issue rerun` resumes from the repo.
 Operating mode: flow = {{manual|auto}}, hiring = {{manual|auto}}.
 Enabled modules: {{experts? personas? Design QA? autopilots? social? Slack?}}.
 
@@ -142,8 +143,12 @@ thread**: a thread dies with its run, and *"as discussed above"* is not a spec. 
 **ambiguous line and both readings** with what each would cost — never *"we couldn't agree"*,
 which hands the next person the argument instead of the question.
 
-**Stopping is free; arguing is not.** Set the issue `blocked` and say why in a comment — a
-comment wakes nobody, so the status is what actually stops round four. Do **not** `@`-mention
+**Stopping is free; explaining is not — and the order matters.** **Unassign first, then say why.**
+Measured 2026-08-15 against CLI 0.4.26: a plain comment on an issue that still has an assignee
+**creates a run**, and setting the issue `blocked` does **not** stop that — the same comment on an
+unassigned issue creates nothing. So the sequence that actually halts round four without paying
+for the halt is: `issue assign --unassign` (or `--no-start` when you are only re-homing it), set
+the status, and put the reason in a comment once nobody is listening. Do **not** `@`-mention
 to call the halt: a mention is a run that spends budget, and spending two more runs to stop
 spending runs is the one trade nobody meant to make. That same arithmetic is why a disputed
 point has a **price you can read** — the ceiling is measured, not just counted.

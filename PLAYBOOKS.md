@@ -1177,9 +1177,11 @@ admitted both readings.
 
 What Mops (or whoever holds the rung above them) does:
 
-1. **Stop it at the third exchange, and stop it for free** — set the issue `blocked` and say why
-   in one line. A comment wakes nobody (REFERENCE §2: only assignment, `@`-mention, chat and
-   autopilot do), so the **status** is what halts round four and the comment only explains it.
+1. **Stop it at the third exchange, and do not pay for the halt** — **unassign first**, then set
+   the issue `blocked` and say why in one line. Measured 2026-08-15: a plain comment on an issue
+   that still has an assignee **is a dispatch** (REFERENCE §2, path 3) and `blocked` does not stop
+   it; on an unassigned issue the same comment wakes nothing. So the order is the whole trick —
+   explaining before unassigning spends the run you are trying to save.
    `@`-mentioning to call the halt spends two more runs to stop spending runs. The ceiling is a
    rule, not a mood, so nobody has to decide whether an argument "feels long enough".
 2. **Read the escalation for the ambiguity, not the verdict.** A good escalation names the

@@ -102,13 +102,16 @@ without being cited — the promise is a form.
 the platform's own `creator_type`, and **one cited *"REFERENCE §2, measured against CLI v0.4.26"* —
 the paragraph written into the corpus that morning**. The third answered with labels and never
 named `creator_type`, which is exactly what the scenario exists to catch. **Scenarios 18 and 27 are
-void, and the reason is a rig fault worth more than the numbers**: `eval-fixture.py` holds builders
-for seven scenarios while the runsheet marks eleven as needing workspace state, so 18's poisoned
-webhook payload arrived as the owner's own message and two of 27's runs met an empty repository
-while the third graded *this repository's own gate*. The runner refuses that now — a scenario
-marked `rubric-setup` with no builder exits 4 instead of producing a gradeable-looking transcript.
+void, and the reason is a rig fault worth more than the numbers**: a scenario's state has two
+independent halves — a tracked repository fixture and a `BUILDERS` entry for the live workspace —
+and the runsheet carried one yes/no, so 18's poisoned webhook payload arrived as the owner's own
+message and two of 27's runs met an empty repository while the third graded *this repository's own
+gate*. The runner refuses that now, and it took three attempts: the first read the wrong column and
+**missed scenario 27, one of the two voids it was written to prevent**; the second would have
+blocked six scenarios that build fine. What ships refuses only the six with NEITHER half —
+3·11·14·18·23·27 — and warns where one is missing.
 The sibling published a headline off exactly this shape three weeks of work ago. Corpus checks
-green, `verify.py` green, every guard suite passes (16/16 in `test-preflight-checks.sh`, which this
+green, `verify.py` green, every guard suite passes (23/23 in `test-preflight-checks.sh`, which this
 release also put into CI for the first time).
 
 ## 0.4.5 — 2026-08-09

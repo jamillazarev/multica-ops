@@ -1,0 +1,8 @@
+scenario: 17
+run: 99
+player-model: claude-sonnet-4-6
+workspace: ee0929fe-b776-4f1d-9716-4f58885f3df8
+corpus-sha: e9b5a1c
+corpus-dirty: yes
+fixture: evals/fixtures/17
+query: probe
