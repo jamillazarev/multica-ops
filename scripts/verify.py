@@ -89,7 +89,11 @@ def _ver(s):
 
 def check_pin():
     ref = open("REFERENCE.md", encoding="utf-8").read()
-    m_pin = re.search(r"CLI v?(\d+\.\d+\.\d+)", ref)
+    # By name, like both readers in preflight.sh: the first vX.Y.Z in the file stopped being
+    # the pin the moment a ticket citation was written above §10, and a ticket's version and
+    # this repository's pin are indistinguishable to a positional read.
+    m_pin = re.search(r"of `multica` \*\*v(\d+\.\d+\.\d+)", ref) or \
+            re.search(r"CLI v?(\d+\.\d+\.\d+)", ref)
     if not m_pin:
         warn("REFERENCE names no CLI version — every claim about the platform is undated")
         return
