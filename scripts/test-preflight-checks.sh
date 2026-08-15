@@ -83,23 +83,32 @@ grep -E '^[[:space:]]*m_pin' "$T/c/scripts/verify.py" | grep -q 'cli-pin' \
 grep -E '^[[:space:]]*pinned=' "$T/c/.github/workflows/cli-watch.yml" | grep -q 'cli-pin' \
   && ok || bad "the CI pin reader lost the by-name anchor"
 
-# ...and the behavioural twin, because a shape assertion is not a measurement: put a foreign
-# release ABOVE §10, exactly as this release's own MUL-5958 citation did, and require every reader
-# to keep returning OUR pin.
-true_pin=$(grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+\*\* <!-- cli-pin -->' "$T/c/REFERENCE.md" | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
-printf '> `MUL-0001` (**v9.9.9** — checked against the release, not swept) does a thing\n\n' \
-  | cat - "$T/c/REFERENCE.md" > "$T/c/.ref" && mv "$T/c/.ref" "$T/c/REFERENCE.md"
-got=$( cd "$T/c" && python3 -c "
-import re
-ref = open('REFERENCE.md', encoding='utf-8').read()
-m = re.search(r'\*\*v(\d+\.\d+\.\d+)\*\* <!-- cli-pin -->', ref)
-print(m.group(1) if m else 'NONE')" )
-[ "$got" = "$true_pin" ] \
-  && ok || bad "with a foreign release cited above §10, verify.py's reader returned $got, not $true_pin"
-got2=$( cd "$T/c" && grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+\*\* <!-- cli-pin -->' REFERENCE.md | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' )
-[ "$got2" = "$true_pin" ] \
-  && ok || bad "with a foreign release cited above §10, the shell readers returned $got2, not $true_pin"
+# ...and the behavioural twin INVOKES THE SHIPPED READERS. The previous version retyped the
+# marker regex inside this file, so the copy agreed with itself no matter what preflight.sh,
+# verify.py or the watcher actually did — a test that cannot see the thing it tests. Measured
+# 2026-08-15 (pass eleven). These call `--regen-cli` and `verify.py` for real.
+poison(){ printf '%s\n\n' "$1" | cat - "$T/c/REFERENCE.md" > "$T/c/.ref" && mv "$T/c/.ref" "$T/c/REFERENCE.md"; }
+
+# a foreign release cited above §10 — the incident the marker exists for
+poison '> `MUL-0001` narrowed the behaviour of `multica` **v9.9.9**; not swept in.'
+( cd "$T/c" && python3 scripts/verify.py > "$T/v1" 2>&1 ); grep -q '9\.9\.9' "$T/v1" \
+  && bad "verify.py read a cited foreign release as the pin" || ok
 undo
+
+# a SECOND marker — every reader takes the first, so this is a second pin
+poison 'A convention note: the pin is marked **v9.9.9** <!-- cli-pin -->.'
+( cd "$T/c" && python3 scripts/verify.py > "$T/v2" 2>&1 )
+grep -q 'markers' "$T/v2" \
+  && ok || bad "a second <!-- cli-pin --> marker was accepted — every reader takes the first"
+undo
+
+# the reader must require exactly what the writer rewrites, or --regen-cli no-ops and says it
+# re-pinned. Asserted on the shipped regexes rather than a retyped copy.
+grep -E '^[[:space:]]*(pinned|pv)=' "$T/c/scripts/preflight.sh" | grep -c '\*\*v\[0-9\]' \
+  | grep -q '^2$' \
+  && ok || bad "a pin reader does not require the leading ** that the writer's substitution needs"
+grep -E '^[[:space:]]*m_pin' "$T/c/scripts/verify.py" | grep -q '\*\\\*v' \
+  && ok || bad "verify.py's reader does not require the leading ** the writer needs"
 
 # ── the eval guard's two halves ─────────────────────────────────────────────────────────────
 # Three attempts, two of them plausible one-token fixes that measured wrong — the first read

@@ -17,8 +17,15 @@ if [ "${1:-}" = "--regen-cli" ]; then
   # in §10" at exit 0 while §10 sat untouched. Measured 2026-08-15 (pass ten) — the same incident
   # the comment below was written about, walking through its own repair. `<!-- cli-pin -->` is a
   # marker prose cannot produce by accident and a reflow cannot separate from its version.
-  pinned=$(grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+\*\* <!-- cli-pin -->' REFERENCE.md \
+  pinned=$(grep -oE '\*\*v[0-9]+\.[0-9]+\.[0-9]+\*\* <!-- cli-pin -->' REFERENCE.md \
            | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+  # EXACTLY ONE marker. Every reader takes the first, so a second one anywhere above §10 — the
+  # natural thing to write the day you invent a convention, e.g. a note saying "the pin is marked
+  # `<!-- cli-pin -->`" — silently becomes the pin. Measured 2026-08-15 (pass eleven): a line above
+  # §10 carrying the marker made all readers return ITS version. The marker fixed the "any sentence
+  # is the anchor" defect and reintroduced it one level in, so the uniqueness is the other half.
+  _pins=$(grep -c -- '<!-- cli-pin -->' REFERENCE.md || true)
+  [ "${_pins:-0}" -eq 1 ] || { echo "→ REFERENCE.md carries ${_pins:-0} \`<!-- cli-pin -->\` markers, not 1 — every reader takes the first, so a second is a second pin. Leave exactly one, on §10's version"; exit 1; }
   echo "installed=$local_v pinned=$pinned"
   sec=$(awk '/## 10\./{f=1} f{print}' REFERENCE.md); diff=0
   for g in $(multica --help 2>&1 | sed -n '/COMMANDS/,/FLAGS/p' | grep -E '^\s+[a-z]' | awk '{print $1}' | tr -d ':'); do
@@ -409,7 +416,7 @@ if command -v multica >/dev/null 2>&1; then
   lv=$(multica --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
   # Same anchor as --regen-cli above, and for the same reason: `head -1` reads whichever
   # version happens to appear first, which is a citation of someone else's release.
-  pv=$(grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+\*\* <!-- cli-pin -->' REFERENCE.md \
+  pv=$(grep -oE '\*\*v[0-9]+\.[0-9]+\.[0-9]+\*\* <!-- cli-pin -->' REFERENCE.md \
        | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
   [ -n "$lv" ] && [ "$lv" != "$pv" ] && say_warn "installed CLI v$lv ≠ pinned v$pv — run: bash scripts/preflight.sh --regen-cli"
 fi

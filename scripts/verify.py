@@ -97,6 +97,9 @@ def check_pin():
     # fallback returned 0.4.26 from a different section, and nothing said it had fallen back. A
     # fallback that cannot announce itself turns this check into the thing it replaced, one
     # copy-edit away. Missing the anchor now warns, which is the honest outcome.
+    if ref.count("<!-- cli-pin -->") > 1:
+        fail(f"REFERENCE carries {ref.count('<!-- cli-pin -->')} `<!-- cli-pin -->` markers — every "
+             f"reader takes the first, so a second one is a second pin")
     m_pin = re.search(r"\*\*v(\d+\.\d+\.\d+)\*\* <!-- cli-pin -->", ref)
     if not m_pin:
         warn("REFERENCE names no CLI version — every claim about the platform is undated")

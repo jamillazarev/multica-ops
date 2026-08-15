@@ -26,7 +26,8 @@ jobs:
           # same release, against a §10 pinned at 0.4.26, and would have filed a false alarm on the
           # next Monday. The mirror case is quieter and worse: let a citation happen to equal
           # `latest` and this exits 0 forever while §10 goes genuinely stale.
-          pinned=$(grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+\*\* <!-- cli-pin -->' REFERENCE.md \
+          if [ "$(grep -c -- '<!-- cli-pin -->' REFERENCE.md)" -ne 1 ]; then echo "::error::REFERENCE.md must carry exactly one <!-- cli-pin --> marker"; exit 1; fi
+          pinned=$(grep -oE '\*\*v[0-9]+\.[0-9]+\.[0-9]+\*\* <!-- cli-pin -->' REFERENCE.md \
                    | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
           if [ -z "$pinned" ]; then echo "::error::could not read the §10 pin — the marker '**vX.Y.Z** <!-- cli-pin -->' is not in REFERENCE.md"; exit 1; fi
           echo "latest=$latest pinned=$pinned"
