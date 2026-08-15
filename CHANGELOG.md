@@ -3,7 +3,7 @@
 Newest first. Each entry leads with what you can now do, not with which files moved. This is
 also the migration map `/multica-ops:upgrade` reads.
 
-## 0.4.6 — 2026-08-15
+## 0.4.6 — 2026-08-16
 
 **The mention that dispatches is now in the guide, with the roster column it needs.** A sibling
 field report measured what happens when the one file every worker loads names an act but not its
