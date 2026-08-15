@@ -193,6 +193,14 @@ rule now prevents.)
 
 A version bump is not just a changelog entry. Before you tag:
 
+> [!CAUTION]
+> **A blanket version sweep does not touch a version that is part of a citation.** Measured
+> 2026-08-15: unifying the CLI pin with one `s/v0.4.23/v0.4.26/` also rewrote
+> `MUL-5958 (v0.4.23)` — a factual reference to the release that carries that change — into a
+> release that does not. The pin is a claim about *this repository*; a ticket's version is a
+> claim about *theirs*, and the two look identical to a regex. Sweep the pin by name, and
+> re-read any line where a version sits beside a ticket id.
+
 1. **Refresh the evals, then run them and record the run.** A round is driven by
    `evals/runsheet.tsv` (what the player is told, and whether the situation is workspace state
    that must exist first) and `bash scripts/eval-run.sh <id> <run> "<query>"`, which isolates

@@ -467,8 +467,10 @@ and *"it does not hold the loop"* stops being a rule it could work around.
 > `--help` and gained what fourteen releases added: `skill refresh`, and a whole `plugin`
 > group (workspace-private Skill Plugins). **What was NOT re-measured is every behavioural
 > claim below** — nine of thirteen sections carry no date, including §2 and §3, and
-> `MUL-5958` (v0.4.26) changes what happens when a human comment is answered, which is
-> exactly what §2 is silent about. The surface is current; the behaviour is not.
+> `MUL-5958` (**v0.4.23** — checked against the release, not swept) changes the assignee
+> fallback when a human comment is answered, which is adjacent to
+> what §2 is silent about rather than an answer to it. The surface is current; the
+> behaviour is not.
 
 ## 2. Four trigger paths
 
@@ -794,7 +796,7 @@ possible move and looks identical to diligence in a transcript.
 
 This map makes multica-ops a **complete CLI-competence layer**: an agent loading the
 skill knows not just the method but **every command that exists**. It's the full surface
-of `multica` **v0.4.26** — but it lists *what exists*, not exact flags, since the CLI
+of `multica` **v0.4.26**, regenerated from `--help` and verified 2026-08-15 — but it lists *what exists*, not exact flags, since the CLI
 evolves, so **always confirm with `multica <group> <cmd> --help`** and consult
 https://multica.ai/docs. **Precedence: live `--help` wins over this map** — on any
 mismatch trust the CLI, and regenerate this section when the skill is upgraded
