@@ -1261,7 +1261,7 @@ finds agents doing too little, the other finds agents asked to be too much.
 Write after any state-changing operation, compare on wake:
 
 ```sh
-for k in agent squad skill label autopilot project runtime property; do
+for k in agent squad skill label autopilot project runtime property plugin; do
   printf '%s %s\n' "$k" "$(multica $k list --output json | shasum -a 256 | cut -c1-16)"
 done
 multica workspace member list --output json | shasum -a 256 | cut -c1-16   # members

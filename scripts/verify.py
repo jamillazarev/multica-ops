@@ -192,7 +192,11 @@ def check_live():
 # the fingerprint is blind to it until someone adds it — so verify the recipe covers
 # every structural group, and flag any new CLI group to be classified.
 STRUCTURAL = {"agent", "squad", "skill", "label", "autopilot", "project", "runtime",
-              "property"}                       # workspace shape; not the volatile issue/chat
+              "property", "plugin"}        # workspace shape; not the volatile issue/chat
+# `plugin` classified 2026-08-15, on arrival in CLI 0.4.26: a workspace-private Skill Plugin
+# is installed into a workspace and changes what its agents can do — the same category as
+# `skill`, which is already here. This repository does not use them yet; the fingerprint
+# hashes them so that the day one appears, the drift is seen rather than discovered.
 IGNORE = {"issue", "chat", "attachment", "auth", "config", "daemon", "setup", "update",
           "user", "version", "login", "repo", "workspace", "completion", "help"}
 def check_fingerprint():
