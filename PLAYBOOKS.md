@@ -193,17 +193,22 @@ courtesy: `multica issue comment add --help` at CLI 0.4.26 states *"A comment-tr
 task must reply under its trigger comment; omitting --parent to post a top-level comment is
 rejected"* (read 2026-08-15; REFERENCE §2 carries the same rule, and the recipe here did not).
 
-**What a plain comment (no mention) does is unknown** — as of 2026-08-14, and said that way
-deliberately. That same `--help` line is the nearest evidence this repository holds and it does
-**not** settle the question: it presupposes comment-triggered tasks without saying that an
-unmentioned comment triggers one. It narrows the possibilities and is cited here as exactly
-that — it was sitting in the output §10 was regenerated from, and the pass that fetched it
-walked past it. REFERENCE §2 lists four trigger paths and carries no date, no measurement and no
-source; it says nothing about plain comments either way. "Dispatches nobody" was read out of
-that silence and briefly shipped as verified, which is an absence of evidence wearing a
-verdict — the same move this system refuses everywhere else. **What settles it:** post a
-plain comment on an issue with an assigned agent in a live workspace and watch whether a run
-starts. Until someone does, mention explicitly and do not rely on either answer.
+> [!IMPORTANT]
+> **A plain comment on an assigned issue IS a dispatch.** Measured 2026-08-15, CLI 0.4.26, in a
+> scratch workspace: a comment carrying no mention, on an issue assigned to an agent, created a
+> run — twice out of two. **The same comment on an unassigned issue created nothing.** So the
+> cost rule is not "mentions are runs"; it is **every comment on an assigned issue is a run**,
+> which is stricter and catches ordinary conversation on a live task. REFERENCE §2 now lists it
+> as a path of its own and carries the measurement.
+
+This was carried as **unknown** from 2026-08-14 and it is worth saying how it got settled, because
+the note that held it prescribed the experiment: *"post a plain comment on an issue with an
+assigned agent in a live workspace and watch whether a run starts."* Nobody had. Before that,
+*"dispatches nobody"* had been read out of §2's silence and briefly shipped as verified — an
+absence of evidence wearing a verdict — and the retraction left the question open rather than
+guessing the other way, which is why the answer arrived as a measurement instead of a second
+guess. **The practical consequence, now that it is known:** on a live assigned task, a comment is
+never free. Say it once, say it fully, and do not think out loud in the thread.
 
 ## Add an agent mid-project
 

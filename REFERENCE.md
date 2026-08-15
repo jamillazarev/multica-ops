@@ -9,7 +9,7 @@ platform can't help itself.**
 ## Contents
 
 - [1. Objects](#1-objects)
-- [2. Four trigger paths](#2-four-trigger-paths)
+- [2. Five trigger paths](#2-five-trigger-paths)
 - [3. Roles and what's native](#3-roles-and-whats-native)
 - [4. Feature structure and stages](#4-feature-structure-and-stages)
 - [5. The full flow (Kanban)](#5-the-full-flow-kanban)
@@ -466,21 +466,44 @@ and *"it does not hold the loop"* stops being a rule it could work around.
 > [!NOTE]
 > **CLI re-verified against 0.4.26 on 2026-08-15** — §10's surface was regenerated from
 > `--help` and gained what fourteen releases added: `skill refresh`, and a whole `plugin`
-> group (workspace-private Skill Plugins). **What was NOT re-measured is every behavioural
-> claim below** — nine of thirteen sections carry no date, including §2 and §3, and
-> `MUL-5958` (**v0.4.23** — checked against the release, not swept) changes the assignee
-> fallback when a human comment is answered, which is adjacent to
-> what §2 is silent about rather than an answer to it. The surface is current; the
-> behaviour is not.
+> group (workspace-private Skill Plugins). **§2 was then measured** on the same day, in a
+> scratch workspace with probe agents, and it gained a fifth trigger path it had been silent
+> about; §3's squad claim was measured with it. `MUL-5958` (**v0.4.23** — checked against the
+> release, not swept) changes the assignee fallback when a human comment is answered, and it is
+> now clear why that sits so close to §2: **an unmentioned comment on an assigned issue is
+> itself a dispatch**, so what a fallback does with one is a live question rather than a corner.
+> **Still not measured: the other seven undated sections.** The surface is current, §2 and the
+> squad half of §3 are current, and the rest of the behaviour is undated — which is a smaller
+> claim than this note used to make, and a true one.
 
-## 2. Four trigger paths
+## 2. Five trigger paths
 
-1. **Issue assignment** — to a squad wakes only the leader; to an agent runs it.
+**Measured 2026-08-15 against CLI 0.4.26**, in a scratch workspace with three inert probe agents,
+by counting `multica issue runs` before and after each act. Every probe run then failed downstream
+on an expired runtime OAuth, so **this measures whether a run is CREATED, not whether the agent
+finishes** — which is exactly what a trigger path is. This section had carried no date, no
+measurement and no source until now, and the count in its own heading was wrong.
+
+1. **Issue assignment** — to an agent runs it; to a squad wakes **only the leader** (measured with
+   a squad holding a leader *and* a member: exactly one run, the leader's). `multica issue assign`
+   carries `--no-start`, which is the surface saying the same thing: starting is the default.
 2. **`@`-mention** — `[@Name](mention://agent/<uuid>)` / `mention://squad/<uuid>`;
    agents may mention agents. Direct self-loops are blocked; indirect cycles are not.
-   Editing a comment does not re-trigger.
-3. **Chat** — a standalone conversation outside issues.
-4. **Autopilot** — cron/webhook only; never "a stage finished".
+   Measured on an **unassigned** issue: one run, and the issue's assignee is **unchanged** — a
+   mention dispatches without taking ownership, which is what makes it cost a run rather than
+   move the work.
+3. **A plain comment on an issue that HAS an assignee** — the path this section did not list.
+   Measured twice: a comment with no mention, on an issue assigned to an agent, creates a run
+   each time. **On an unassigned issue the same comment creates nothing.** So the cost rule is
+   not "mentions are runs" but "every comment on an assigned issue is a run", which is stricter
+   and applies to ordinary conversation on a live task.
+4. **Chat** — a standalone conversation outside issues.
+5. **Autopilot** — cron/webhook only; never "a stage finished".
+
+> [!NOTE]
+> **"Editing a comment does not re-trigger" is not tested and cannot be from here.** CLI 0.4.26's
+> `issue comment` offers `add · delete · list · resolve · unresolve` and no edit verb, so the
+> claim is about the web UI and stays unverified rather than being quietly carried as measured.
 
 ## 3. Roles and what's native
 
@@ -499,7 +522,9 @@ follow, and none of them is cosmetic:
 
 - **Routing costs a run.** Every squad assignment wakes the leader before any work begins:
   tokens, latency, a line in the ledger. A written rule costs nothing. So **a squad of one, or a
-  squad whose routing is obvious, is pure overhead** — assign to the agent.
+  squad whose routing is obvious, is pure overhead** — assign to the agent. *Measured 2026-08-15
+  against CLI 0.4.26: a squad holding a leader and a member, assigned an issue, produced exactly
+  one run and it was the leader's. The rest of this section is undated.*
 - **The decision is a judgement, so it has to leave a trace.** A rule can be read; a judgement
   cannot, unless it is written down. **`multica squad activity --reason` is exactly that trace**
   and it is the difference between a routed board and an unexplained one — *"went to the

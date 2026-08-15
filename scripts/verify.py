@@ -274,6 +274,35 @@ def check_prose_only():
         print(f"  prose-only: {cited} declaring document(s), each cited on the named list")
 
 
+# ── the staleness note's own number must match the file it describes ────────────────────────
+# REFERENCE's header note says how many sections carry no date. That number is a claim about the
+# file it sits in, it moves whenever a section is measured or added, and nothing read it back —
+# it was already wrong once (it said "nine of thirteen" while counting the table of contents as a
+# section). A count in prose about the document holding it is the cheapest possible form.
+def check_undated():
+    try:
+        ref = open("REFERENCE.md", encoding="utf-8").read()
+    except OSError:
+        return
+    m = re.search(r"[Ss]till not measured: the other (\w+) undated sections", ref)
+    if not m:
+        return                       # the note may be reworded; this check is not its owner
+    words = {"one":1,"two":2,"three":3,"four":4,"five":5,"six":6,"seven":7,"eight":8,
+             "nine":9,"ten":10,"eleven":11,"twelve":12,"thirteen":13}
+    claimed = words.get(m.group(1).lower())
+    if claimed is None:
+        return
+    secs = re.split(r"\n## ", ref)[1:]
+    undated = [s.split("\n")[0][:50] for s in secs
+               if not s.startswith("Contents")
+               and not re.search(r"20\d\d-\d\d-\d\d|CLI 0\.4\.\d+|v0\.4\.\d+", s[:1800])]
+    if len(undated) != claimed:
+        fail(f"REFERENCE's header says {claimed} sections are undated; {len(undated)} are "
+             f"({', '.join(undated)}) — the note is a claim about its own file")
+    else:
+        print(f"  staleness note: {claimed} undated sections, and there are {len(undated)}")
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--sources", action="store_true", help="resolve every documented URL")
@@ -284,6 +313,7 @@ if __name__ == "__main__":
     check_recipes()
     check_fingerprint()
     check_prose_only()
+    check_undated()
     check_pin()
     if a.sources: check_sources()
     if a.live: check_live()
