@@ -321,7 +321,7 @@ sub-issue, not another level.
   forever.
 
 - **Multica does not create repositories, and nothing in day zero notices there isn't one.**
-  Measured `2026-08-09` against CLI 0.4.12: `multica repo` offers **add · checkout · list ·
+  Measured `2026-08-09` against CLI 0.4.26: `multica repo` offers **add · checkout · list ·
   remove** and no `create`; `repo add` *"adds one or more repository URLs to the current
   workspace repository registry"*, which registers something that already exists. So a folder
   with no git in it is never solved by Multica — it is solved once by the owner, with `git init`
@@ -462,13 +462,13 @@ and *"it does not hold the loop"* stops being a rule it could work around.
 
 **Multiple workspaces.** A user can have several workspaces (separate companies). The console operates on **one at a time** — the profile's default (`workspace list` shows them). When more than one exists, Mops **confirms which workspace it's acting on** before doing anything, and switches on request: `workspace switch <id>` (or `--workspace-id` per command) — `/multica-ops:mops workspace [name]`. Each workspace is its own company — own team, roadmap, and, if enabled, its own resident Mops in Multica; nothing crosses between them. A Mops in Multica lives in exactly one workspace, so switching is a console-only notion.
 
-> [!WARNING]
-> **Measured 2026-08-15: this file is pinned to CLI 0.4.12 and 0.4.26 is published — fourteen
-> releases, shipped almost daily.** Nine of the thirteen sections below carry no date at all,
-> including this one and §3. At least one of those releases touches the behaviour §2
-> describes (`MUL-5958`, v0.4.23: *skip the assignee fallback when replying to a human
-> comment*). Treat every undated claim here as unverified until it is re-measured against the
-> current CLI and dated. `python3 scripts/verify.py` now says how far behind the pin is.
+> [!NOTE]
+> **CLI re-verified against 0.4.26 on 2026-08-15** — §10's surface was regenerated from
+> `--help` and gained what fourteen releases added: `skill refresh`, and a whole `plugin`
+> group (workspace-private Skill Plugins). **What was NOT re-measured is every behavioural
+> claim below** — nine of thirteen sections carry no date, including §2 and §3, and
+> `MUL-5958` (v0.4.26) changes what happens when a human comment is answered, which is
+> exactly what §2 is silent about. The surface is current; the behaviour is not.
 
 ## 2. Four trigger paths
 
@@ -794,7 +794,7 @@ possible move and looks identical to diligence in a transcript.
 
 This map makes multica-ops a **complete CLI-competence layer**: an agent loading the
 skill knows not just the method but **every command that exists**. It's the full surface
-of `multica` **v0.4.12** — but it lists *what exists*, not exact flags, since the CLI
+of `multica` **v0.4.26** — but it lists *what exists*, not exact flags, since the CLI
 evolves, so **always confirm with `multica <group> <cmd> --help`** and consult
 https://multica.ai/docs. **Precedence: live `--help` wins over this map** — on any
 mismatch trust the CLI, and regenerate this section when the skill is upgraded
@@ -809,7 +809,8 @@ or explain any of the below directly, no methodology assumed.
 - `label` — create · delete · get · list · update
 - `property` — archive · create · get · list · unarchive · update (workspace custom issue properties)
 - `repo` — add · checkout · list · remove
-- `skill` — create · delete · files · get · import · list · search · update
+- `skill` — create · delete · files · get · import · list · **refresh** · search · update
+- `plugin` — init · install · list · pack · status · validate  **(new in 0.4.26 — workspace-private Skill Plugins)**
 - `autopilot` — create · delete · get · list · runs · trigger · trigger-add · trigger-delete · trigger-rotate-url · trigger-update · update
 - `workspace` — create · get · list · member (invite/list) · switch · update
 - `attachment` — download · upload

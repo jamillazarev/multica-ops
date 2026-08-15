@@ -136,6 +136,11 @@ command*. Two paths that work from **any** version:
    one line to run.
 2. **Update the install yourself, then restart your agent:** `claude plugin update multica-ops`
    (Claude Code plugin) or `npx skills add jamillazarev/multica-ops` (skills.sh install).
+3. **The resident copy inside a Multica workspace has its own line** — `multica skill refresh
+   <id>`, which re-downloads from the source it was imported from **and keeps the id and the
+   agent assignments**. Before it existed the only route was a second `skill import`, which
+   mints a new id and leaves every agent pointing at the old copy. **New in CLI 0.4.26;
+   surface verified 2026-08-15, the behaviour not run against a live workspace.**
 
 And **"updated everywhere" is a claim about a generated list, never about memory** — run
 `bash scripts/find-installs.sh` before updating and again after. It walks every install of this
