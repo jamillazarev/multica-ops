@@ -321,7 +321,8 @@ sub-issue, not another level.
   forever.
 
 - **Multica does not create repositories, and nothing in day zero notices there isn't one.**
-  Measured `2026-08-09` against CLI 0.4.26: `multica repo` offers **add · checkout · list ·
+  Measured `2026-08-09` against CLI 0.4.12, and the same four re-checked against 0.4.26 on
+  2026-08-15: `multica repo` offers **add · checkout · list ·
   remove** and no `create`; `repo add` *"adds one or more repository URLs to the current
   workspace repository registry"*, which registers something that already exists. So a folder
   with no git in it is never solved by Multica — it is solved once by the owner, with `git init`

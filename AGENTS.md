@@ -200,6 +200,14 @@ A version bump is not just a changelog entry. Before you tag:
 > release that does not. The pin is a claim about *this repository*; a ticket's version is a
 > claim about *theirs*, and the two look identical to a regex. Sweep the pin by name, and
 > re-read any line where a version sits beside a ticket id.
+>
+> **And beside a measurement DATE, which this caution first missed.** The same sweep also turned
+> ``Measured `2026-08-09` against CLI 0.4.12`` into ``against CLI 0.4.26`` — a binary built on
+> 2026-08-14, so the line claimed a measurement taken five days before the thing measured
+> existed. It survived two repairs of its own class because this caution named only ticket
+> citations. **A version is swept only where it is this repository's pin**; everywhere else — a
+> ticket id, a measurement date, another project's release — it is somebody's fact, and a fact
+> re-dated by a regex is worse than a stale one, because it reads as current.
 
 1. **Refresh the evals, then run them and record the run.** A round is driven by
    `evals/runsheet.tsv` (what the player is told, and whether the situation is workspace state

@@ -42,5 +42,32 @@ run && bad "a foreign import URL hidden in the exempt page passed" || ok
 grep -q "neither the recorded control" "$T/out" && ok || bad "the exempt-page refusal lost its reason"
 undo
 
+# ── the pin readers, which were this release's headline repair and had zero coverage ───────
+# Three commits anchored three readers BY NAME, and the suite added in the same release tested
+# none of them — a cold-read reverted both readers in `preflight.sh` to the positional form that
+# shipped the defect and this file stayed 9/9 green. The bar this repository sets is a form where
+# the repair can fail; these are it. The mechanic under test: a `MUL-####` citation of somebody
+# else's release sits ABOVE §10, so `head -1` returns THEIR version as OUR pin.
+cite='> `MUL-0001` (**v9.9.9** — checked against the release, not swept) does a thing\n\n'
+pin_by_name(){ grep -oE 'of `multica` \*\*v[0-9]+\.[0-9]+\.[0-9]+' "$1" | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+'; }
+pin_positional(){ grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' "$1" | head -1 | sed 's/^v//'; }
+true_pin=$(pin_by_name "$T/c/REFERENCE.md")
+[ -n "$true_pin" ] && ok || bad "the by-name anchor reads no pin out of the shipped REFERENCE"
+# put a citation of a foreign release at the top of the file, as this release actually did
+printf "$cite" | cat - "$T/c/REFERENCE.md" > "$T/c/.ref" && mv "$T/c/.ref" "$T/c/REFERENCE.md"
+[ "$(pin_by_name "$T/c/REFERENCE.md")" = "$true_pin" ] \
+  && ok || bad "a foreign release cited above §10 changed what the by-name reader returns"
+[ "$(pin_positional "$T/c/REFERENCE.md")" = "9.9.9" ] \
+  && ok || bad "the positional form no longer demonstrates the defect — this pair proves nothing"
+undo
+# and every reader of the pin in the repository must use the anchored form, including the one
+# in CI that nobody watches: it was byte-identical to the two that were fixed and was missed.
+for f in scripts/preflight.sh scripts/verify.py .github/workflows/cli-watch.yml; do
+  grep -q 'of `multica`' "$T/c/$f" \
+    && ok || bad "$f reads the CLI pin without the by-name anchor"
+done
+grep -qE "grep -oE 'v\[0-9\]" "$T/c/.github/workflows/cli-watch.yml" \
+  && bad "the CI pin reader still holds a positional read" || ok
+
 echo "preflight-checks: $pass passed, $fail failed"
 exit "$fail"
