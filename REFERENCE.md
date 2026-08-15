@@ -9,7 +9,7 @@ platform can't help itself.**
 ## Contents
 
 - [1. Objects](#1-objects)
-- [2. Five trigger paths](#2-five-trigger-paths)
+- [2. Seven trigger paths](#2-seven-trigger-paths)
 - [3. Roles and what's native](#3-roles-and-whats-native)
 - [4. Feature structure and stages](#4-feature-structure-and-stages)
 - [5. The full flow (Kanban)](#5-the-full-flow-kanban)
@@ -480,7 +480,7 @@ and *"it does not hold the loop"* stops being a rule it could work around.
 > squad half of §3 are current, and the rest of the behaviour is undated — which is a smaller
 > claim than this note used to make, and a true one.
 
-## 2. Five trigger paths
+## 2. Seven trigger paths
 
 **Measured 2026-08-15 against CLI 0.4.26**, in a scratch workspace with three inert probe agents,
 by counting `multica issue runs` before and after each act. Every probe run then failed downstream
@@ -501,8 +501,21 @@ measurement and no source until now, and the count in its own heading was wrong.
    each time. **On an unassigned issue the same comment creates nothing.** So the cost rule is
    not "mentions are runs" but "every comment on an assigned issue is a run", which is stricter
    and applies to ordinary conversation on a live task.
-4. **Chat** — a standalone conversation outside issues.
-5. **Autopilot** — cron/webhook only; never "a stage finished".
+4. **A status change** — `multica issue status` carries `--no-start`, documented as *"Change
+   status without starting an agent run"*, so a status change starts one by default. Read from
+   `--help` at CLI 0.4.26, 2026-08-15.
+5. **An issue update** — same shape: `multica issue update --no-start`, *"Apply the update without
+   starting an agent run"*. Editing a field is a dispatch unless you say otherwise.
+6. **Chat** — a standalone conversation outside issues.
+7. **Autopilot** — cron/webhook only; never "a stage finished".
+
+> [!NOTE]
+> **Paths 4 and 5 were missing from the version of this section dated 2026-08-15**, which had
+> corrected its own heading from four to five in the same edit. `--no-start` is the platform saying
+> plainly which acts dispatch: wherever it exists, the act starts a run unless you pass it. That
+> flag is on `assign`, `status` and `update` — so the honest reading is that **almost everything
+> you do to an assigned issue spends a run**, and the mention ceiling is the smaller half of the
+> cost story.
 
 > [!NOTE]
 > **"Editing a comment does not re-trigger" is not tested and cannot be from here.** CLI 0.4.26's
