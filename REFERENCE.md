@@ -471,8 +471,9 @@ and *"it does not hold the loop"* stops being a rule it could work around.
 > **CLI re-verified against 0.4.26 on 2026-08-15** — §10's surface was regenerated from
 > `--help` and gained what fourteen releases added: `skill refresh`, and a whole `plugin`
 > group (workspace-private Skill Plugins). **§2 was then measured** on the same day, in a
-> scratch workspace with probe agents, and it gained a fifth trigger path it had been silent
-> about; §3's squad claim was measured with it. `MUL-5958` (**v0.4.23** — checked against the
+> scratch workspace with probe agents, and it gained three trigger paths it had been
+> silent about — a plain comment on an assigned issue, a status change and an issue update, the
+> last two evidenced by their own `--no-start` flags; §3's squad claim was measured with it. `MUL-5958` (**v0.4.23** — checked against the
 > release, not swept) changes the assignee fallback when a human comment is answered, and it is
 > now clear why that sits so close to §2: **an unmentioned comment on an assigned issue is
 > itself a dispatch**, so what a fallback does with one is a live question rather than a corner.
