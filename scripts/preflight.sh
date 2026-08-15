@@ -63,6 +63,19 @@ say_warn() { echo "  ! $1"; warn=1; }
 
 echo "preflight — multica-ops"
 
+# 0 · every suite must be run by something. This repo names its suites one by one in CI, and a
+# hardcoded roll-call is the rot surface §1 warns about wearing a workflow's clothes: measured
+# 2026-08-15, `test-preflight-checks.sh` — the suite whose whole job is mutation-testing the
+# checks in THIS file — had never been in that list, so the green tick covered everything except
+# the thing testing the gate. Discovery is the fix; until CI itself discovers, this refuses the
+# gap on the author's machine, where it is still cheap.
+for _s in scripts/test-*.sh; do
+  [ -f "$_s" ] || continue
+  _b=${_s##*/}
+  grep -q "$_b" .github/workflows/*.yml 2>/dev/null \
+    || say_fail "$_b is in scripts/ and named in no workflow — CI does not run it, and its green tick says otherwise"
+done
+
 # 1 · every manifest carries the version in skills/mops/SKILL.md — a sweep, not a pair.
 # We ship four manifests across four runtimes and a hand-maintained checklist only bumps the
 # ones somebody remembers: opsinist lost a release to three stragglers this way. The list is
