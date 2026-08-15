@@ -54,7 +54,11 @@ sub-issue, not another level.
   differently. Prefer a property over prose whenever something is later filtered or counted.
 - **An agent has fewer fields than a role needs, and where the rest goes is not a matter of
   taste.** The platform gives `--description`, `--instructions`, `--model`, `--runtime-id`,
-  `--skills`, `--mcp-config`, `--custom-env`, `--max-concurrent-tasks`, `--permission-mode`.
+  `--mcp-config`, `--custom-env`, `--max-concurrent-tasks`, `--permission-mode`. **Skills are
+  not among them** — they attach through their own group, `multica agent skills add|set|list`,
+  and `agent create` has no `--skills` flag (checked against CLI 0.4.26, 2026-08-15). This line
+  claimed one for months: `verify.py` validates every flag inside a fenced RECIPE and never one
+  named in prose, and no recipe runs it.
   It has **no field for type, grade, autonomy or the evidence behind them** — and the temptation
   is to put them all in the instructions, which is the one place they must not go.
 
@@ -472,7 +476,7 @@ and *"it does not hold the loop"* stops being a rule it could work around.
 > release, not swept) changes the assignee fallback when a human comment is answered, and it is
 > now clear why that sits so close to §2: **an unmentioned comment on an assigned issue is
 > itself a dispatch**, so what a fallback does with one is a live question rather than a corner.
-> **Still not measured: the other six undated sections.** The surface is current, §2 and the
+> **Still not measured: the other five undated sections.** The surface is current, §2 and the
 > squad half of §3 are current, and the rest of the behaviour is undated — which is a smaller
 > claim than this note used to make, and a true one.
 
@@ -910,7 +914,13 @@ the same way.
 
 ## 12. Token economy — what actually moves the needle
 
-**Worked example — illustrative volumes, real price list.** A twelve-agent company on a
+**Worked example — illustrative volumes, and prices that are ILLUSTRATIVE TOO.** This said
+"real price list" and gave no date and no source, while the always-loaded core says *"Prices
+are never quoted from memory: fetched from the vendor for the owner's billing location,
+recorded as price · currency · date · source"* (`skills/mops/SKILL.md`). The core forbids
+exactly what this did. The arithmetic below is exact and was recomputed 2026-08-15 — $280,
+$1,000, 72%, and every share — so the SHAPE of the conclusion holds; the absolute numbers are
+a worked illustration until someone fetches the vendor's list and records it with its date. A twelve-agent company on a
 $300/month envelope, one month of steady work:
 
 | | tokens | share |
