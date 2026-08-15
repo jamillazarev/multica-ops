@@ -1303,12 +1303,23 @@ for k in agent squad skill label autopilot project runtime property plugin; do
     && printf '%s %s\n' "$k" "$(printf '%s' "$out" | shasum -a 256 | cut -c1-16)" \
     || printf '%s UNREADABLE\n' "$k"
 done
-multica workspace member list --output json | shasum -a 256 | cut -c1-16   # members
+# ...and the same guard on the other three calls. The exit-code check was added to the loop above
+# and NOT to these, while the block's opening line said "the exit code is checked before the hash"
+# — true of one call in four. Measured 2026-08-15 (pass ten).
+mem=$(multica workspace member list --output json 2>/dev/null) \
+  && printf 'members %s\n' "$(printf '%s' "$mem" | shasum -a 256 | cut -c1-16)" \
+  || printf 'members UNREADABLE\n'
 # Project resources decide whether the team can work in parallel at all — a switch from
 # github_repo to local_directory silently serialises everything, and it is exactly the
 # kind of change someone makes by hand in the app.
-for p in $(multica project list --output json | python3 -c 'import json,sys;[print(x["id"]) for x in json.load(sys.stdin)]'); do
-  multica project resource list "$p" --output json | shasum -a 256 | cut -c1-16
+projects=$(multica project list --output json 2>/dev/null) || projects=""
+[ -n "$projects" ] || printf 'projects UNREADABLE\n'
+for p in $(printf '%s' "$projects" | python3 -c 'import json,sys
+try: print("\n".join(x["id"] for x in json.load(sys.stdin)))
+except Exception: pass'); do
+  res=$(multica project resource list "$p" --output json 2>/dev/null) \
+    && printf '%s %s\n' "$p" "$(printf '%s' "$res" | shasum -a 256 | cut -c1-16)" \
+    || printf '%s UNREADABLE\n' "$p"
 done
 git rev-parse HEAD                                                        # repo pointer
 ```

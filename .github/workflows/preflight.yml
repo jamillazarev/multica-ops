@@ -43,5 +43,12 @@ jobs:
         run: bash scripts/test-dispatch-nudge.sh
       - name: the preflight's own checks — each mutant denied, each twin passing
         run: bash scripts/test-preflight-checks.sh
+      # verify.py was run by NOTHING — not a workflow, not a suite, not preflight — so the three
+      # text checks added on 2026-08-15 (prose-only membership, the staleness note's own count,
+      # core/companion overlap) could not fail anywhere but a developer's terminal. Measured that
+      # day: deleting all three left the whole gate battery green. It warns rather than fails when
+      # the multica CLI is absent, which is the CI case, so the text checks still bite.
+      - name: verify — the claims that do not need the CLI
+        run: python3 scripts/verify.py
       - name: issues.py helper tests
         run: python3 scripts/tests/test_issues_helpers.py

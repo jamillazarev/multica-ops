@@ -74,8 +74,12 @@ echo "preflight — multica-ops"
 for _s in scripts/test-*.sh; do
   [ -f "$_s" ] || continue
   _b=${_s##*/}
-  grep -q "$_b" .github/workflows/*.yml 2>/dev/null \
-    || say_fail "$_b is in scripts/ and named in no workflow — CI does not run it, and its green tick says otherwise"
+  # On a `run:` LINE, not anywhere in the file. A bare substring test is satisfied by a mention in
+  # a comment — and this file now carries several comments naming suites — so the check would pass
+  # for a suite CI does not execute. Same class as the escape deleted from verify.py and the one
+  # in the pin assertions, third instance in a day. Measured 2026-08-15 (pass ten).
+  grep -hE '^[[:space:]]*(run:|- run:)' .github/workflows/*.yml 2>/dev/null | grep -qF "$_b" \
+    || say_fail "$_b is in scripts/ and is on no workflow's \`run:\` line — CI does not execute it, and its green tick says otherwise"
 done
 
 # 1 · every manifest carries the version in skills/mops/SKILL.md — a sweep, not a pair.

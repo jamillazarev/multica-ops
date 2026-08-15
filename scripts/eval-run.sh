@@ -201,7 +201,16 @@ workspace builder; anything the rubric expects to find in the workspace will be 
   fi
 fi
 if [ -f "$ROOT/scripts/eval-fixture.py" ]; then
-  EVAL_WORKSPACE_ID="$EVAL_WORKSPACE_ID" python3 "$ROOT/scripts/eval-fixture.py" "$SID" build >&2 || true
+  # The build's exit code is the thing that matters, and `|| true` threw it away — so the guard
+  # above could confirm a builder EXISTS while the build itself failed, and the run went ahead
+  # against a workspace the fixture never made. That is the same shape as the refusal it sits
+  # under, one line lower: a precondition asserted and not checked. Measured 2026-08-15 (pass ten).
+  if ! EVAL_WORKSPACE_ID="$EVAL_WORKSPACE_ID" python3 "$ROOT/scripts/eval-fixture.py" "$SID" build >&2; then
+    echo "REFUSED: scenario $SID has a builder and it FAILED — the workspace half was not created, \
+so the run would grade a player standing in a workspace the fixture never made. Fix the builder, \
+or check the workspace credentials." >&2
+    exit 5
+  fi
 fi
 
 STAMP=$OUT/${SID}-run${RUN}
