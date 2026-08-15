@@ -104,10 +104,9 @@ undo
 
 # the reader must require exactly what the writer rewrites, or --regen-cli no-ops and says it
 # re-pinned. Asserted on the shipped regexes rather than a retyped copy.
-grep -E '^[[:space:]]*(pinned|pv)=' "$T/c/scripts/preflight.sh" | grep -c '\*\*v\[0-9\]' \
-  | grep -q '^2$' \
+[ "$(grep -E '^[[:space:]]*(pinned|pv)=' "$T/c/scripts/preflight.sh" | grep -cF '\*\*v')" -eq 2 ] \
   && ok || bad "a pin reader does not require the leading ** that the writer's substitution needs"
-grep -E '^[[:space:]]*m_pin' "$T/c/scripts/verify.py" | grep -q '\*\\\*v' \
+grep -E '^[[:space:]]*m_pin' "$T/c/scripts/verify.py" | grep -qF '\*\*v' \
   && ok || bad "verify.py's reader does not require the leading ** the writer needs"
 
 # ── the eval guard's two halves ─────────────────────────────────────────────────────────────
