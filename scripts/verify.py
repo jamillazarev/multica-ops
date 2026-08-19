@@ -287,23 +287,46 @@ def check_undated():
         ref = open("REFERENCE.md", encoding="utf-8").read()
     except OSError:
         return
-    m = re.search(r"[Ss]till not measured: the other (\w+) undated sections", ref)
-    if not m:
-        return                       # the note may be reworded; this check is not its owner
-    words = {"one":1,"two":2,"three":3,"four":4,"five":5,"six":6,"seven":7,"eight":8,
-             "nine":9,"ten":10,"eleven":11,"twelve":12,"thirteen":13}
-    claimed = words.get(m.group(1).lower())
-    if claimed is None:
-        return
+    # The note is read by the SECTIONS IT NAMES, not by a word-number, and its absence is a
+    # failure rather than a silent skip. The first form matched one phrasing and returned early on
+    # any other — measured 2026-08-20: rewording the note to name its sections made this check stop
+    # running entirely, with nothing said. A checker that goes quiet when its subject is reworded is
+    # a checker that reports the claim it was written to verify, which is the escape this release
+    # has now deleted four times in four places.
     secs = re.split(r"\n## ", ref)[1:]
-    undated = [s.split("\n")[0][:50] for s in secs
-               if not s.startswith("Contents")
-               and not re.search(r"20\d\d-\d\d-\d\d|CLI 0\.4\.\d+|v0\.4\.\d+", s[:1800])]
-    if len(undated) != claimed:
-        fail(f"REFERENCE's header says {claimed} sections are undated; {len(undated)} are "
-             f"({', '.join(undated)}) — the note is a claim about its own file")
+    DATED = re.compile(
+        r"(measured|checked|verified|re-checked|re-verified)[^.\n]{0,60}"
+        r"(20\d\d-\d\d-\d\d|CLI 0\.4\.\d+|v0\.4\.\d+)"
+        r"|(20\d\d-\d\d-\d\d|CLI 0\.4\.\d+|v0\.4\.\d+)[^.\n]{0,60}"
+        r"(measured|checked|verified|re-checked|re-verified)", re.I)
+    # ONE line, in one shape — `> **Undated**: §5 · §6 · …`. The first form read the whole note
+    # including its prose, so every `§N` mentioned in an aside was taken for a claim: measured
+    # 2026-08-20, an explanation naming §1, §2 and §3 turned into three false disagreements. The
+    # same lesson as the CLI pin's marker, one file over: a list a checker reads must be a list,
+    # not a sentence that contains one.
+    m = re.search(r"^>?\s*\*\*Undated\*\*:([^\n]*)$", ref, re.M)
+    if not m:
+        fail("REFERENCE carries no 'Still not measured:' note — the staleness claim is the one "
+             "thing a reader checks before trusting a behavioural section, and nothing states it")
+        return
+    claimed_secs = set(re.findall(r"§(\d+)", m.group(1)))
+    actual_secs = set()
+    for s in secs:
+        if s.startswith("Contents") or DATED.search(s):
+            continue
+        n = re.match(r"(\d+)\.", s)
+        if n:
+            actual_secs.add(n.group(1))
+    if claimed_secs != actual_secs:
+        missing = sorted(actual_secs - claimed_secs, key=int)
+        extra = sorted(claimed_secs - actual_secs, key=int)
+        bits = []
+        if missing: bits.append("undated and not named: §" + ", §".join(missing))
+        if extra: bits.append("named but dated: §" + ", §".join(extra))
+        fail("REFERENCE's staleness note disagrees with the file — " + "; ".join(bits))
     else:
-        print(f"  staleness note: {claimed} undated sections, and there are {len(undated)}")
+        print(f"  staleness note: names §{', §'.join(sorted(actual_secs, key=int))}, and that is "
+              f"what is undated")
 
 
 # ── the always-loaded core must not pay for a sentence a companion already holds ────────────

@@ -477,7 +477,15 @@ and *"it does not hold the loop"* stops being a rule it could work around.
 > release, not swept) changes the assignee fallback when a human comment is answered, and it is
 > now clear why that sits so close to §2: **an unmentioned comment on an assigned issue is
 > itself a dispatch**, so what a fallback does with one is a live question rather than a corner.
-> **Still not measured: the other five undated sections.** The surface is current, §2 and the
+> **Undated**: §5 · §6 · §9 · §11 · §12
+>
+> That line is the one a checker reads, on its own and in one shape, because the previous
+> note mixed its list into its explanation and a reader — human or script — could not tell
+> which `§N` was a claim and which was an aside. (The count was right and its
+> membership was not: the checker read only each section's first 1800 characters, so **§1 —
+> the most measured section in this file — counted as undated** because its first date sits at
+> character 2717, and a reader learned it had never been measured. It reads the whole section
+> now, and requires the date to sit beside a word that claims a measurement.) The surface is current, §2 and the
 > squad half of §3 are current, and the rest of the behaviour is undated — which is a smaller
 > claim than this note used to make, and a true one.
 
@@ -668,7 +676,11 @@ don't restate them in instructions.
   thing.** It answers about **the CLI's own profile**. Measured `2026-08-01`: it said
   `Daemon: stopped` while six runtimes were `online` with a `last_seen` refreshing every few
   seconds — because the desktop app runs its own daemon under a different profile
-  (`multica daemon start --foreground --profile desktop-api.multica.ai`, and
+  (`multica daemon start --foreground --profile desktop-api.multica.ai` — `--profile` is a
+  GLOBAL flag and does not appear in `daemon start --help`, but this CLI accepts global flags
+  after the subcommand; both orders verified against 0.4.26 on 2026-08-20, and the note is
+  here because a reader checking `daemon start --help` finds nothing and concludes the line
+  is wrong — one did — and
   `~/.multica/profiles/` holds it). **The probe for "will this actually execute" is
   `multica runtime list`** — status `online` plus a fresh `last_seen`. A stopped-looking
   daemon with live runtimes is the normal state for anyone who has the app open, and reading

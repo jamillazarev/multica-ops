@@ -123,7 +123,11 @@ stalled — check the latest run's `error` for `agent_error` / "session limit".
 
 **Waiting work must not look alive, which is what makes the "needs you" half countable.**
 An escalation that stays `in_progress` is indistinguishable from an agent actually working, so
-**anything waiting on a human is set `blocked` with the reason in a comment** — and
+**anything waiting on a human is set `blocked`, and the reason goes in a comment AFTER the
+issue is unassigned** — because a plain comment on an issue that still has an assignee is a
+dispatch (REFERENCE §2, measured 2026-08-15) and `blocked` does not stop it, so explaining
+before unassigning wakes the agent you are trying to park. Unassign · set the status ·
+explain. And
 `bash scripts/status.sh` lists exactly those, oldest first, with an age. **The age is
 `updated_at`, i.e. last touched**: the platform stores no status-change timestamp, so renaming a
 blocked issue resets its clock. Read it as *"nothing has happened here for N days"* and say it
