@@ -3,6 +3,41 @@
 Newest first. Each entry leads with what you can now do, not with which files moved. This is
 also the migration map `/multica-ops:upgrade` reads.
 
+## 0.4.7 — 2026-08-16
+
+**Three repairs to the gates 0.4.6 shipped, and one apology with a form attached.**
+
+**The CI-coverage check could not see the idiomatic form.** Added yesterday so a suite cannot fall
+out of CI, it matched only lines BEGINNING with `run:` — so a `run: |` block, which is how a
+workflow step ordinarily runs anything, was invisible to it. It was a bare substring test, so a
+suite merely named inside an `echo` counted as executed. It swept `scripts/test-*.sh` only, so the
+repair that put `verify.py` into CI could be undone by deleting one step with nothing noticing —
+and widening it to every GATE immediately found that **`check-structure.py`, which this repository
+has always had, has never been in CI at all**. It is a step now.
+
+And the check's own line carried this repository's documented pipefail trap: `grep … | grep -q`
+returns 141 when the right side matches early and SIGPIPEs the left. Measured 2026-08-16 — rc=141
+on a large input with the match on line 1, read as "no match", which here means the guard accusing
+CI of not running a suite it runs. Counting cannot be signalled, so it counts.
+
+**The documented update route addressed one of two installs.** `claude plugin update <p>@<m>` acts
+on the USER scope. Minutes after tagging 0.4.6 the machine list still showed an install a release
+behind while that command reported "already at the latest version" — both true, because the
+registry carries user and project entries and the route named neither. Each row names its own scope
+now. A route that addresses one of two installs is a route that hides the other, and the reader
+concludes the checker is broken rather than the install stale.
+
+**And 42 of my own probe transcripts rode into v0.4.6** — 398 KB from `eval-run.sh <id> 99 "probe"`,
+the sweep that exercised the new fixture guard across all 27 rows. They grade nothing. They landed
+inside the commit about that guard, and were found only because updating a plugin clone printed
+their filenames as it pulled. Second time in one session that `git add -A` swept test artifacts
+into a commit about the thing being tested, so it gets a form rather than an apology: **run numbers
+98 and 99 are reserved for probes** and ignored by name. v0.4.6 carries them and that stands — a
+tag is not rewritten for ballast — and every version after it is clean.
+
+**Eval state**: unchanged from 0.4.6 (`evals/runs/0.4.6.md`). Nothing here alters what that round
+measured; the fixture guard it records is the thing these repairs harden.
+
 ## 0.4.6 — 2026-08-16
 
 **The mention that dispatches is now in the guide, with the roster column it needs.** A sibling
