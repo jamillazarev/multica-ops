@@ -68,7 +68,11 @@ mkdir -p "$EVAL_HOME"
 # The only honest test is asking the CLI. It costs one tiny turn and is cached for the round,
 # because a probe per run would cost more than the check is worth.
 if [ ! -f "$EVAL_HOME/.eval-login-ok" ] && [ -z "${ANTHROPIC_API_KEY:-}" ]; then
-  probe=$(CLAUDE_CONFIG_DIR="$EVAL_HOME" timeout 120 claude -p "reply with exactly: OK" \
+  # `timeout` is Homebrew's on macOS, not the system's. Without it this probe fails with 127,
+  # matches neither case below, and the run refuses a home that is perfectly logged in — the
+  # same "probe, never infer" mistake in a new place. Used when present, skipped when not.
+  _tmo=$(command -v timeout || command -v gtimeout || true)
+  probe=$(CLAUDE_CONFIG_DIR="$EVAL_HOME" ${_tmo:+$_tmo 120} claude -p "reply with exactly: OK" \
           --model "$EVAL_PLAYER_MODEL" --max-turns 1 2>&1 | head -3)
   case "$probe" in
     *"Not logged in"*|*"/login"*) : ;;

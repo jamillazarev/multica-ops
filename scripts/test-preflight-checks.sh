@@ -115,8 +115,16 @@ grep -E '^[[:space:]]*m_pin' "$T/c/scripts/verify.py" | grep -qF '\*\*v' \
 # matter what shipped. Measured 2026-08-20 (pass eleven); it is the same escape this release
 # deleted from the pin assertions. `--check-only` exists so the preconditions can be exercised
 # without spending a player turn, which is why they were never exercised.
+# `timeout` is NOT part of macOS — it arrives with Homebrew's coreutils, which a GitHub
+# macos-latest runner does not have. Measured 2026-08-20: the first CI run of these four assertions
+# failed all four with 127, while every local run was green, because this machine has
+# /opt/homebrew/bin/timeout on its PATH and the runner does not. Third instance this session of a
+# tool the author has and the target does not — after `grep` and `awk`. `--check-only` returns
+# before any dispatch, so the timeout was belt-and-braces; it is used when present and skipped
+# when not, rather than being a hidden dependency of the suite.
+_TMO=$(command -v timeout || command -v gtimeout || true)
 _ck(){ ( cd "$T/c" && EVAL_WORKSPACE_ID="${EVAL_WORKSPACE_ID:-probe}" \
-         timeout 90 bash scripts/eval-run.sh "$1" 97 probe --check-only >/dev/null 2>&1; echo $? ); }
+         ${_TMO:+$_TMO 90} bash scripts/eval-run.sh "$1" 97 probe --check-only >/dev/null 2>&1; echo $? ); }
 
 # a scenario with NEITHER half must refuse with 4 — 27 among them, the void this guard was named for
 [ "$(_ck 27)" = 4 ] \
