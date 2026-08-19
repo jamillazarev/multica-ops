@@ -78,15 +78,48 @@ echo "preflight — multica-ops"
 # checks in THIS file — had never been in that list, so the green tick covered everything except
 # the thing testing the gate. Discovery is the fix; until CI itself discovers, this refuses the
 # gap on the author's machine, where it is still cheap.
-for _s in scripts/test-*.sh; do
+# Every GATE, not just every suite. The first version swept `scripts/test-*.sh` only, so the repair
+# that put `verify.py` into CI could be undone by deleting one workflow step with nothing anywhere
+# noticing — and `check-structure.py`, a gate this repo has always had, was never in CI at all.
+# Measured 2026-08-16 (pass eleven).
+for _s in scripts/test-*.sh scripts/verify.py scripts/check-structure.py; do
   [ -f "$_s" ] || continue
   _b=${_s##*/}
-  # On a `run:` LINE, not anywhere in the file. A bare substring test is satisfied by a mention in
-  # a comment — and this file now carries several comments naming suites — so the check would pass
-  # for a suite CI does not execute. Same class as the escape deleted from verify.py and the one
-  # in the pin assertions, third instance in a day. Measured 2026-08-15 (pass ten).
-  grep -hE '^[[:space:]]*(run:|- run:)' .github/workflows/*.yml 2>/dev/null | grep -qF "$_b" \
-    || say_fail "$_b is in scripts/ and is on no workflow's \`run:\` line — CI does not execute it, and its green tick says otherwise"
+  # INVOKED, not merely named, and read out of every `run:` — including block scalars, which are
+  # the idiomatic form and which the first version could not see at all (it matched only lines
+  # BEGINNING with `run:`, so `run: |` followed by indented commands was invisible). A bare
+  # substring test is satisfied by a mention in a comment, and by a suite named inside an `echo`.
+  # Three findings from pass eleven, plus this repo's own documented pipefail trap living in the
+  # line itself: `grep … | grep -q` returns 141 when the right side matches early and SIGPIPEs the
+  # left — measured 2026-08-16, rc=141 on a large input with the match on line 1, read as "no
+  # match", which here means accusing CI of not running a suite it runs. Counting cannot be
+  # signalled, so it counts.
+  _runs=$(python3 - .github/workflows/*.yml <<'RUNPY' 2>/dev/null || true
+import re, sys
+out = []
+for f in sys.argv[1:]:
+    try: lines = open(f, encoding="utf-8").read().split("\n")
+    except OSError: continue
+    i = 0
+    while i < len(lines):
+        m = re.match(r"^(\s*)-?\s*run:\s*(\|[-+]?|>[-+]?)?\s*(.*)$", lines[i])
+        if m:
+            indent, block, rest = len(m.group(1)), m.group(2), m.group(3)
+            if rest: out.append(rest)
+            if block:
+                i += 1
+                while i < len(lines) and (not lines[i].strip() or
+                                          len(lines[i]) - len(lines[i].lstrip()) > indent):
+                    out.append(lines[i]); i += 1
+                continue
+        i += 1
+print("\n".join(out))
+RUNPY
+  )
+  # A command position, not a mention: the file name must follow an interpreter or a path prefix.
+  if [ "$(printf '%s\n' "$_runs" | grep -cE "(^|[;&|]|&&|\|\||bash |sh |python3 |\./)[^ ]*${_b}")" -eq 0 ]; then
+    say_fail "$_b is in scripts/ and no workflow \`run:\` step invokes it — CI does not execute it, and its green tick says otherwise"
+  fi
 done
 
 # 1 · every manifest carries the version in skills/mops/SKILL.md — a sweep, not a pair.

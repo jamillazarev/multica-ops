@@ -144,5 +144,40 @@ for sid in $provisioned; do
 done
 ok
 
+# ── check 0 must see an invocation, and only an invocation ─────────────────────────────────
+# Four findings from pass eleven met here: it read only lines BEGINNING with `run:`, so a `run: |`
+# block — the idiomatic form — was invisible; it was a bare substring test, so a suite named in an
+# `echo` passed; it swept `test-*.sh` only, so deleting the verify.py step went unnoticed; and its
+# `grep … | grep -q` carried this repo's own documented pipefail trap (rc=141 on a large input with
+# an early match, read as "no match" — an accusation that CI does not run a suite it runs).
+_step(){ python3 - "$T/c/.github/workflows/preflight.yml" "$1" <<'PY2'
+import sys, pathlib
+p = pathlib.Path(sys.argv[1]); t = p.read_text()
+old = """      - name: the preflight's own checks — each mutant denied, each twin passing
+        run: bash scripts/test-preflight-checks.sh"""
+p.write_text(t.replace(old, sys.argv[2], 1))
+PY2
+}
+_fires(){ ( cd "$T/c" && bash scripts/preflight.sh 2>&1 || true ) | grep -c "test-preflight-checks.sh is in scripts"; }
+
+_step '      # we used to run scripts/test-preflight-checks.sh'
+[ "$(_fires)" -eq 1 ] && ok || bad "a suite named only in a workflow COMMENT was accepted as run by CI"
+undo
+_step '      - name: noise
+        run: echo "we should add scripts/test-preflight-checks.sh one day"'
+[ "$(_fires)" -eq 1 ] && ok || bad "a suite merely NAMED inside an echo was accepted as run by CI"
+undo
+_step '      - name: suites
+        run: |
+          echo starting
+          bash scripts/test-preflight-checks.sh'
+[ "$(_fires)" -eq 0 ] && ok || bad "a suite invoked inside a 'run: |' block was reported as not run"
+undo
+# and the sweep must cover gates, not only suites
+perl -0pi -e 's{      - name: verify[^\n]*\n        run: python3 scripts/verify\.py\n}{}' "$T/c/.github/workflows/preflight.yml"
+( cd "$T/c" && bash scripts/preflight.sh 2>&1 || true ) | grep -q 'verify.py is in scripts' \
+  && ok || bad "deleting the verify.py CI step went unnoticed — the sweep covers suites only"
+undo
+
 echo "preflight-checks: $pass passed, $fail failed"
 exit "$fail"

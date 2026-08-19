@@ -50,5 +50,9 @@ jobs:
       # the multica CLI is absent, which is the CI case, so the text checks still bite.
       - name: verify — the claims that do not need the CLI
         run: python3 scripts/verify.py
+      # `check-structure.py` is a gate this repo has always had and CI has never run — found by
+      # widening the coverage check from "every suite" to "every gate", 2026-08-16.
+      - name: structure — the docs are well-formed
+        run: python3 scripts/check-structure.py
       - name: issues.py helper tests
         run: python3 scripts/tests/test_issues_helpers.py
