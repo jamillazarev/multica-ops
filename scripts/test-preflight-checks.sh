@@ -109,40 +109,38 @@ undo
 grep -E '^[[:space:]]*m_pin' "$T/c/scripts/verify.py" | grep -qF '\*\*v' \
   && ok || bad "verify.py's reader does not require the leading ** the writer needs"
 
-# ── the eval guard's two halves ─────────────────────────────────────────────────────────────
-# Three attempts, two of them plausible one-token fixes that measured wrong — the first read
-# `query-source` and MISSED scenario 27, the very void it was named for; the second would have
-# blocked six scenarios with 5-7 tracked fixture files. What ships refuses only a scenario with
-# NEITHER half. These assert the boundary in both directions, from the runsheet and the module
-# rather than from a remembered list, so the sets move with the corpus.
-halves(){ # halves <sid> → "repo builder"
-  r=$(cd "$T/c" && git ls-files "evals/fixtures/$1" 2>/dev/null | grep -cv 'FIXTURE\.md$')
-  b=no; python3 -c "
-import sys, importlib.util
-spec = importlib.util.spec_from_file_location('f', sys.argv[1])
-m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
-sys.exit(0 if sys.argv[2] in getattr(m, 'BUILDERS', {}) else 1)" \
-    "$T/c/scripts/eval-fixture.py" "$1" 2>/dev/null && b=yes
-  echo "$r $b"
-}
-nothing=""; provisioned=""
-for sid in $(grep -vE '^#' "$T/c/evals/runsheet.tsv" | awk -F'\t' '$5=="yes"{print $1}' | grep -E '^[0-9]+$'); do
-  set -- $(halves "$sid")
-  if [ "$1" -eq 0 ] && [ "$2" = "no" ]; then nothing="$nothing $sid"; else provisioned="$provisioned $sid"; fi
-done
-[ -n "$nothing" ] \
-  && ok || bad "no scenario has neither half — the eval guard can no longer fail, so this pair proves nothing"
-[ -n "$provisioned" ] \
-  && ok || bad "every needs-fixture scenario is unprovisioned — the guard would refuse the whole suite"
-# scenario 27 is the named casualty: it must be in the refused set, by measurement not by memory
-case " $nothing " in *" 27 "*) ok;; *) bad "scenario 27 is not in the guard's refusal set — it was the void this repair was named for";; esac
-# and a scenario with a tracked repository half must NOT be refused
-for sid in $provisioned; do
-  set -- $(halves "$sid")
-  [ "$1" -gt 0 ] || [ "$2" = "yes" ] \
-    || { bad "scenario $sid is allowed with neither half"; break; }
-done
-ok
+# ── the eval guard, INVOKED rather than reimplemented ──────────────────────────────────────
+# Nothing ran `eval-run.sh` — not a suite, not a workflow — and the assertions written for its
+# fixture guard rebuilt the guard's logic inside THIS file, so the copy agreed with itself no
+# matter what shipped. Measured 2026-08-20 (pass eleven); it is the same escape this release
+# deleted from the pin assertions. `--check-only` exists so the preconditions can be exercised
+# without spending a player turn, which is why they were never exercised.
+_ck(){ ( cd "$T/c" && EVAL_WORKSPACE_ID="${EVAL_WORKSPACE_ID:-probe}" \
+         timeout 90 bash scripts/eval-run.sh "$1" 97 probe --check-only >/dev/null 2>&1; echo $? ); }
+
+# a scenario with NEITHER half must refuse with 4 — 27 among them, the void this guard was named for
+[ "$(_ck 27)" = 4 ] \
+  && ok || bad "scenario 27 does not refuse — it is the void the fixture guard was written for"
+[ "$(_ck 18)" = 4 ] \
+  && ok || bad "scenario 18, which has neither half, was allowed to dispatch"
+# a scenario with both halves must not be refused BY THE GUARD. Its exit is 5 without a live
+# workspace, because its builder cannot reach one — so the assertion is on the guard's decision,
+# not the build's outcome, or this suite would only pass on a developer's machine with credentials.
+[ "$(_ck 9)" != 4 ] \
+  && ok || bad "scenario 9 has both halves and the guard refused it as having neither"
+# and a builder that FAILS refuses with 5, which needs no workspace to demonstrate
+( cd "$T/c" && python3 - <<'BRK'
+import pathlib
+p = pathlib.Path("scripts/eval-fixture.py"); t = p.read_text()
+p.write_text(t.replace("def build_9(sid):", "def build_9(sid):\n    raise SystemExit(3)", 1))
+BRK
+)
+[ "$(_ck 9)" = 5 ] \
+  && ok || bad "a builder that raises did not refuse the run with exit 5"
+undo
+# and one with a repository half and no builder runs, warned — refusing it would call the rig broken
+[ "$(_ck 5)" = 0 ] \
+  && ok || bad "scenario 5 has a provisioned repository half and was refused"
 
 # ── check 0 must see an invocation, and only an invocation ─────────────────────────────────
 # Four findings from pass eleven met here: it read only lines BEGINNING with `run:`, so a `run: |`

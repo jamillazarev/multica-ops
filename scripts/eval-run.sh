@@ -206,12 +206,30 @@ if [ -f "$ROOT/scripts/eval-fixture.py" ]; then
   # against a workspace the fixture never made. That is the same shape as the refusal it sits
   # under, one line lower: a precondition asserted and not checked. Measured 2026-08-15 (pass ten).
   if ! EVAL_WORKSPACE_ID="$EVAL_WORKSPACE_ID" python3 "$ROOT/scripts/eval-fixture.py" "$SID" build >&2; then
-    echo "REFUSED: scenario $SID has a builder and it FAILED — the workspace half was not created, \
-so the run would grade a player standing in a workspace the fixture never made. Fix the builder, \
-or check the workspace credentials." >&2
+    # The message is gated on what was actually checked. It asserted "has a builder and it FAILED"
+    # for EVERY scenario, including those the module has no builder for — so a CLI outage or an
+    # expired token on such a scenario would have produced a refusal naming a builder that does not
+    # exist, sending the reader to fix a file with nothing in it. Measured 2026-08-20 (pass eleven).
+    if [ "${has_builder:-no}" = yes ]; then
+      echo "REFUSED: scenario $SID has a builder and it FAILED — the workspace half was not \
+created, so the run would grade a player standing in a workspace the fixture never made. Fix the \
+builder, or check the workspace credentials." >&2
+    else
+      echo "REFUSED: scenario $SID has NO builder, and the fixture module still exited non-zero — \
+so this is not a missing builder, it is the module or the workspace being unreachable. Check the \
+CLI and the credentials before reading anything into a round." >&2
+    fi
     exit 5
   fi
 fi
+
+# `--check-only` stops here, after every precondition and before the dispatch. It exists so the
+# guard above can be TESTED: nothing invoked this script — not a suite, not a workflow — and the
+# assertions written for the fixture guard reimplemented its logic inside the test file, so the
+# copy agreed with itself no matter what shipped. Measured 2026-08-20 (pass eleven), and it is the
+# same escape this release deleted from the pin assertions two commits earlier. A dispatch costs a
+# real player turn, which is why the guard went untested; this makes the preconditions free to run.
+case " $* " in *" --check-only "*) echo "preconditions ok: $SID"; exit 0;; esac
 
 STAMP=$OUT/${SID}-run${RUN}
 {
