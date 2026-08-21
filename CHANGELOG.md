@@ -28,6 +28,19 @@ instance of the author's-tool class, after `grep` and `awk`. The wrapper is now 
 the suite, and the same hidden dependency was lifted from `eval-run.sh`'s login probe, where a
 missing `timeout` read a logged-in home as logged out.
 
+**Two rules the guide implied and never said.** A catch does not become a rule the day it is
+caught: the field-note ladder now prices each rung — a dated line immediately, a second
+occurrence for a backlog item, **a week between the first line and any promotion into the
+guide**, and a measured outcome for the always-loaded core. It is a filter, not a ritual: what
+still reproduces a week later, with the panic gone, is about the system. Repairs never wait — the
+ladder governs lessons. And a halt that is not a count: **two runs that disagree on the same
+question stop the work at the second disagreement**, because three attempts bound failure while
+nothing bounded contradiction, where every individual run looks like a success. It escalates as
+*the question is unstable, and here is what differed between the askings*, never as *which run
+was right*. Both are listed by name in the prose-only table, with the exact reason each is not a
+gate: `issue runs` records that a run finished, not what it concluded, and nothing compares a
+promotion's citation against the note's own date.
+
 **And a sixth void was wearing coverage.** Scenario 14's fixture directory held exactly one
 file — a FIXTURE.md announcing "Repository half only" — so the coverage table said yes while
 the guard, which counts tracked files rather than trusting prose, refused the scenario in every

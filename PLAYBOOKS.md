@@ -649,6 +649,23 @@ already — this is assembly order, not new machinery.
    ships in a release gets its issue **closed with the version in a comment**, so
    catch → log → backlog → conveyor → release is one visible chain. The machinery already exists
    (the `source_id` dedup above); this step is the discipline that feeds it.
+
+   **And a catch does not become a rule the day it is caught.** Every incident feels like a law
+   while it is fresh — which is exactly when its lesson is least separable from its
+   circumstances, and a guide that promotes each fresh catch straight into the always-loaded
+   text fills with rules that were true once, on one machine, about one CLI version. **Weight is
+   earned by surviving, not by hurting.** So a catch climbs, and each rung has a price: a dated
+   line costs nothing and is written immediately · a **second occurrence** earns it a backlog
+   item with both occasions named · a **week between the first line and any promotion into the
+   guide** earns it the status of a rule, spent doing other work rather than waiting · and the
+   always-loaded core is earned only by a **measured** change in outcome, cited. What still
+   reproduces a week later, with the panic gone, is about the system; what evaporates was about
+   that afternoon. The `date` column is what makes the rung checkable, which is why a promotion
+   cites the line it came from — a rule that cannot point back at a dated origin was **declared**,
+   not learned. **A defect with a live blast radius never waits**: anything that loses work,
+   ships something wrong or lets an untrusted string act is repaired now and its rule lands with
+   it. The ladder governs *lessons*, never *repairs*; the tell is whether the change stops a
+   thing happening or teaches a party to behave better. *Prose, and listed as prose below.*
 10. **A dead executor is a rerun, not a rewrite.** When a console executor dies mid-task — a
    session limit, a crash — Mops **resurrects it with a state inventory**, never restarts it
    from scratch: what is *committed*, what is *applied* against its numbered spec/checklist, and
@@ -1018,6 +1035,12 @@ nothing enforces is the failure this table guards against:
 - **a review goes to a non-author** — routing is instructions; `/multica-ops:audit` flags coincidences
   after the fact, nothing refuses them before
 - **three attempts stop a task** — counted from `issue runs`, stopped by whoever is watching
+- **two runs that disagree stop the work** — `issue runs` records that both *finished*, not what
+  either concluded, so a contradiction between two `completed` runs is invisible to any check
+  here; the seam exists and the field does not
+- **a lesson waits a week before it becomes a rule** — the field-note `date` and the promotion's
+  citation are both readable, but nothing compares them, and nothing notices a rule citing
+  nothing at all
 - **the rung travels with the claim** — no scanner can tell a promoted guess from a fact
 - **a price was fetched rather than recalled** — the *recording* (price · currency · date ·
   source) is checkable; the fetching is not
@@ -1191,6 +1214,22 @@ What Mops (or whoever holds the rung above them) does:
 2. **Read the escalation for the ambiguity, not the verdict.** A good escalation names the
    line and both readings with what each costs; *"they couldn't agree"* is not one — send it
    back for the question, since a summary of an argument makes the next person re-run it.
+
+   **And one halt that is not a count: when the answer will not hold still.** Three attempts
+   bound *failure*; nothing bounded *contradiction*, which is the worse state because every
+   individual run looks like a success. A check green on one run and red on the next against
+   the same input, two agents returning opposite readings of one file, a suite that passes
+   locally and fails in CI — each reports confidently, and the confidence is the problem. **Two
+   runs that disagree on the same question stop the work at the second disagreement, not the
+   third**: the count that matters is flips, not attempts, and rerunning until a run agrees with
+   you is sampling until the answer is convenient. It escalates as **"the question is unstable,
+   and here is what differed between the two askings"** — the machine, the CLI version, the
+   shell, the working tree, the order — never as *"which run was right"*, which invites
+   arbitration and produces a winner instead of a resolution. Every one of those differences has
+   caught something in this skill's own history, and none is visible from inside a single run.
+   **The disagreement is recorded as its own outcome**, never as the later reading quietly
+   replacing the earlier: a record keeping only the most recent answer has destroyed the evidence
+   that there was a disagreement at all.
 3. **Settle it by fixing the artifact**, not by picking a side in the thread — and mind which
    artifact. The **spec and the task's wording** are editable in flight: correct them in **that
    same task** (docs-follow-decisions), because a verdict living only in a comment is re-litigated
