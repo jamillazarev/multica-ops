@@ -202,6 +202,25 @@ perl -0pi -e 's{      - name: verify[^\n]*\n        run: python3 scripts/verify\
   && ok || bad "deleting the verify.py CI step went unnoticed — the sweep covers suites only"
 undo
 
+# ── the fixture probe must give THREE answers, and --check-only must be a flag ──────────────
+# `&& has_builder=yes` collapsed "this scenario has no builder" and "the module does not load at
+# all" into the same `no`, so a broken eval-fixture.py read as a scenario legitimately lacking a
+# builder and the refusal sent the reader to write a builder into a file that cannot be parsed.
+# Reading python's own exit status does not separate them either — an unhandled exception exits 1,
+# which is also "no builder" — so the probe assigns its codes itself. Measured 2026-08-21.
+( cd "$T/c" && printf '\nthis is not python(\n' >> scripts/eval-fixture.py )
+[ "$(_ck 11)" = 6 ] \
+  && ok || bad "an unloadable eval-fixture.py did not refuse with 6 — it reads as a missing builder"
+undo
+[ "$(_ck 11)" != 6 ] \
+  && ok || bad "a healthy fixture module was reported unloadable"
+# and the flag is read from the FLAG positions only, never from $3 — the operator's own query.
+# A scenario whose text mentions --check-only would otherwise stop the run and print
+# "preconditions ok", which reads exactly like a pass.
+_q=$( ( cd "$T/c" && EVAL_WORKSPACE_ID=probe bash scripts/eval-run.sh 27 97 "does --check-only work?" 2>&1 ) | grep -c "preconditions ok" )
+[ "$_q" = 0 ] \
+  && ok || bad "--check-only inside the operator's query stopped the run and reported preconditions ok"
+
 # ── check 0 counts an INVOCATION, and only an invocation ───────────────────────────────────
 # The gate that guards every other gate accepted a MENTION: the interpreter token was allowed
 # anywhere on the line, and comments inside a block scalar reached the matcher verbatim. So the

@@ -1,0 +1,9 @@
+scenario: 27
+run: 97
+player-model: claude-sonnet-4-6
+workspace: probe
+corpus-sha: 49876c3
+corpus-dirty: yes
+fixture: evals/fixtures/27
+query: does --check-only work?
+rc=0

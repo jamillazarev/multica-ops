@@ -178,18 +178,46 @@ tar -cf - --exclude=.git --exclude=evals --exclude=company --exclude=node_module
 #   "…or a fixtures/<id> directory exists"           refuses 5, re-admitting 14, 15 and 26; 14's
 #     directory holds exactly one tracked file, FIXTURE.md, a prose stub whose on-disk `_ops/`
 #     is untracked and vanishes in a clone
-# This form refuses 3 · 11 · 14 · 18 · 23 · 27 — nothing-at-all — and WARNS where one half is
-# present and the other is not, which is information the operator can act on rather than a wall.
+# This form refuses NOTHING-AT-ALL and WARNS where one half is present and the other is not,
+# which is information the operator can act on rather than a wall.
+# **The list that used to sit here — "refuses 3 · 11 · 14 · 18 · 23 · 27" — is gone rather than
+# corrected, because it was a dated claim about a corpus that moves.** On 2026-08-21 all six got
+# halves (3 and 27 repository, 3 · 11 · 18 · 23 builders, 14 declared needs-fixture=no), so the
+# sentence became false for every id it named on the day the work it described was finished. A
+# check's comment may say what the check DOES; the moment it enumerates which inputs it currently
+# refuses, it has copied a table that lives elsewhere and will rot without anyone editing it.
 needs_state=$(grep -vE '^#' "$ROOT/evals/runsheet.tsv" | awk -F'\t' -v s="$SID" '$1==s {print $5}')
 if [ "$needs_state" = "yes" ]; then
   repo_half=$(cd "$ROOT" && git ls-files "evals/fixtures/$SID" 2>/dev/null | grep -cv 'FIXTURE\.md$' || true)
   has_builder=no
+  _probe_err=$(mktemp)
+  # The probe assigns the three codes ITSELF. Reading them off python's own exit status does not
+  # work: an unhandled exception exits 1, which is the same code as "this scenario has no
+  # builder" — so the two answers arrived indistinguishable no matter what the caller did with
+  # them. Measured 2026-08-21, on the first run of the repair that was supposed to separate them.
   python3 -c "
 import sys, importlib.util
-spec = importlib.util.spec_from_file_location('f', sys.argv[1])
-m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+try:
+    spec = importlib.util.spec_from_file_location('f', sys.argv[1])
+    m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+except BaseException as e:
+    print(type(e).__name__ + ': ' + str(e), file=sys.stderr); sys.exit(2)
 sys.exit(0 if sys.argv[2] in getattr(m, 'BUILDERS', {}) else 1)" \
-    "$ROOT/scripts/eval-fixture.py" "$SID" 2>/dev/null && has_builder=yes
+    "$ROOT/scripts/eval-fixture.py" "$SID" 2>"$_probe_err"; _probe_rc=$?
+  # THREE answers, not two. `&& has_builder=yes` collapsed "this scenario has no builder" (exit 1)
+  # and "the module does not load at all" (exit 2 — a syntax error, an import error, the wrong
+  # interpreter) into the same `no`, so a broken eval-fixture.py read as a scenario legitimately
+  # lacking a builder, and the refusal below sent the reader to write a builder into a file that
+  # cannot be parsed. Measured 2026-08-21 (pass twelve).
+  case "$_probe_rc" in
+    0) has_builder=yes ;;
+    1) has_builder=no ;;
+    *) echo "REFUSED: scripts/eval-fixture.py could not be loaded (exit $_probe_rc) — this is not \
+a scenario without a builder, it is the module itself being unreadable, and every scenario's \
+builder is unreachable until it is fixed: $(head -c 300 "$_probe_err" | tr '\n' ' ')" >&2
+       rm -f "$_probe_err"; exit 6 ;;
+  esac
+  rm -f "$_probe_err"
   if [ "${repo_half:-0}" -eq 0 ] && [ "$has_builder" = "no" ]; then
     echo "REFUSED: scenario $SID is marked needs-fixture=yes and has NEITHER half of its state — \
 no tracked files under evals/fixtures/$SID/ beyond FIXTURE.md, and no builder in \
@@ -233,7 +261,13 @@ fi
 # copy agreed with itself no matter what shipped. Measured 2026-08-20 (pass eleven), and it is the
 # same escape this release deleted from the pin assertions two commits earlier. A dispatch costs a
 # real player turn, which is why the guard went untested; this makes the preconditions free to run.
-case " $* " in *" --check-only "*) echo "preconditions ok: $SID"; exit 0;; esac
+# Only the flag POSITIONS are searched, never `$3` — the operator's own query. A scenario asked
+# "does --check-only work?" would otherwise have stopped the run and reported its preconditions
+# ok, which looks exactly like a pass. Measured 2026-08-21 (pass twelve).
+_flags_only=""
+_i=0
+for _a in "$@"; do _i=$((_i+1)); [ "$_i" -le 3 ] || _flags_only="$_flags_only $_a"; done
+case " $_flags_only " in *" --check-only "*) echo "preconditions ok: $SID"; exit 0;; esac
 
 STAMP=$OUT/${SID}-run${RUN}
 {
