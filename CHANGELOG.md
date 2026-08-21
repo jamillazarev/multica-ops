@@ -3,7 +3,7 @@
 Newest first. Each entry leads with what you can now do, not with which files moved. This is
 also the migration map `/multica-ops:upgrade` reads.
 
-## 0.4.8 — unreleased
+## 0.4.8 — 2026-08-21
 
 **Every scenario can now be measured, and the suite stopped being green by geography.**
 
