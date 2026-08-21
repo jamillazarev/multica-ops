@@ -126,11 +126,28 @@ _TMO=$(command -v timeout || command -v gtimeout || true)
 _ck(){ ( cd "$T/c" && EVAL_WORKSPACE_ID="${EVAL_WORKSPACE_ID:-probe}" \
          ${_TMO:+$_TMO 90} bash scripts/eval-run.sh "$1" 97 probe --check-only >/dev/null 2>&1; echo $? ); }
 
-# a scenario with NEITHER half must refuse with 4 — 27 among them, the void this guard was named for
-[ "$(_ck 27)" = 4 ] \
-  && ok || bad "scenario 27 does not refuse — it is the void the fixture guard was written for"
+# a scenario with NEITHER half must refuse with 4. No live scenario is that void any more —
+# 2026-08-21 gave the last five their missing halves (3 · 27 repository, 3 · 11 · 18 · 23
+# builders) — so the void is CONSTRUCTED in the clone: strip two builder entries from a
+# scenario with no fixtures directory, which is a tracked-file edit `undo` can revert.
+# 18 was chosen because it is the scenario the guard was measured missing (pass eleven).
+( cd "$T/c" && python3 - <<'VOID'
+import pathlib
+p = pathlib.Path("scripts/eval-fixture.py"); t = p.read_text()
+assert '"11": build_11,' in t and '"18": build_18,' in t
+p.write_text(t.replace('"11": build_11,', '').replace('"18": build_18,', ''))
+VOID
+) || bad "the void could not be constructed — the clone's BUILDERS map has no 11/18 to strip"
 [ "$(_ck 18)" = 4 ] \
-  && ok || bad "scenario 18, which has neither half, was allowed to dispatch"
+  && ok || bad "scenario 18 stripped of its builder does not refuse — the void the guard was written for"
+[ "$(_ck 11)" = 4 ] \
+  && ok || bad "scenario 11 stripped of its builder was allowed to dispatch"
+undo
+# and the same two, whole, are admitted — the guard sees the halves 2026-08-21 added
+[ "$(_ck 18)" != 4 ] \
+  && ok || bad "scenario 18 has a builder now and the guard still refuses it as having neither half"
+[ "$(_ck 27)" = 0 ] \
+  && ok || bad "scenario 27 has a provisioned repository half now and was refused"
 # a scenario with both halves must not be refused BY THE GUARD. Its exit is 5 without a live
 # workspace, because its builder cannot reach one — so the assertion is on the guard's decision,
 # not the build's outcome, or this suite would only pass on a developer's machine with credentials.
