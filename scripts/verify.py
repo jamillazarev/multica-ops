@@ -371,7 +371,15 @@ def check_mention_cost():
             text = open(f, encoding="utf-8").read()
         except OSError:
             continue
-        for m in FREE.finditer(text):
+        # **Match on a flattened copy**, because this corpus hard-wraps at ~98 columns and the
+        # patterns above use `[^.\n]` to stay inside one sentence — so the retracted rule became
+        # INVISIBLE the moment it happened to straddle a line break. Measured 2026-08-21, on this
+        # guard's own first hour: after the core was rewrapped to fit its line budget, the planted
+        # mutant went undetected, and the guard reported clean over the sentence it exists to
+        # refuse. Newline → space is a SAME-LENGTH substitution, so every offset still points at
+        # the original byte and the reported line number stays true.
+        flat = text.replace("\n", " ")
+        for m in FREE.finditer(flat):
             line = text.count("\n", 0, m.start()) + 1
             bad.append(f"{f}:{line}")
     if bad:

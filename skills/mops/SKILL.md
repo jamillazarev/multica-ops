@@ -364,18 +364,16 @@ skill into upgrade tracking. Recipes: PLAYBOOKS.
 
 ## Run pull-based
 
-Board = truth (`backlog → todo → in_progress → in_review → done`, plus `blocked` and
-`cancelled` — a cancel with a reason is a decision, one without is revivable); no sprints,
-standups or points. **Assignment = a run that spends budget** (unless `--no-start`), and so is `@`-mentioning an
-agent or squad. **Mentioning a person or an issue adds no run of its own — but the comment
-carrying it still wakes the assignee**, so on a live task nothing you say is free (REFERENCE §2,
-measured). **Write like a product page** — issues, comments
-and every `_ops/` file a human reads: first line = the point, lists over prose, tables for
-data; **readability, not brevity** (terse trims words, this shapes them to scan). Issues carry
-the why + DoD; comments carry decisions and handoffs; a decision that changes the spec,
-roadmap or guide is written into that doc **in the same task**. **An assignment must stand on
-its own** — workable from the issue and its linked docs without the thread; *"as discussed
-above"* is not a spec, and stops being readable when a run dies with its chat.
+Board = truth (`backlog → todo → in_progress → in_review → done`, plus `blocked` and `cancelled` —
+a cancel with a reason is a decision, one without is revivable); no sprints, standups or points.
+**Assignment spends budget**, and so does `@`-mentioning an agent or squad; a person/issue mention
+adds none — but **every comment on an assigned issue is a run** (§2). **Write like a product
+page** — issues, comments and every `_ops/` file a human reads: first line = the point, lists over
+prose, tables for data; **readability, not brevity** (terse trims words, this shapes them to
+scan). Issues carry the why + DoD; comments carry decisions and handoffs; a decision that changes
+the spec, roadmap or guide is written into that doc **in the same task**. **An assignment must
+stand on its own** — workable from the issue and its linked docs without the thread; *"as
+discussed above"* is not a spec, and stops being readable when a run dies with its chat.
 
 **Right-size, then fan out.** Size by **routing, not rewriting** — model belongs to the
 *agent*, so the lever is **grades**; when difficulty is unclear, start low and let a
