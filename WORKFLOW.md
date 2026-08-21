@@ -13,6 +13,7 @@ Mermaid renders on GitHub, in Obsidian, and on the docs site.
 - [Getting current — what /upgrade actually walks](#getting-current-what-upgrade-actually-walks)
 - [Something went wrong — whose defect is it?](#something-went-wrong-whose-defect-is-it)
 - [The skill lifecycle — gates, not ceremony](#the-skill-lifecycle-gates-not-ceremony)
+- [A catch climbs, and a contradiction stops](#a-catch-climbs-and-a-contradiction-stops)
 
 ## From first message to a working company
 
@@ -208,3 +209,32 @@ flowchart TD
 
 > The loop back to **Screen** on upgrade is the point most setups miss: a version you vetted
 > is not the version you are about to install.
+
+## A catch climbs, and a contradiction stops
+
+Two rules that changed how this skill maintains itself, drawn because both are easy to nod at and
+hard to follow.
+
+```mermaid
+flowchart LR
+  I([something breaks]) --> N["**noticed**<br/>a dated line in<br/>FIELD-NOTES"]
+  N -->|"it happens again"| C["**recurrent**<br/>a backlog item naming<br/>both occasions"]
+  C -->|"a week, spent<br/>doing other work"| D["**durable**<br/>a rule in the guide"]
+  D -->|"it moved a<br/>measured outcome"| L["**load-bearing**<br/>the always-loaded core"]
+  I ==>|"loses work · ships something wrong ·<br/>lets an untrusted string act"| X["repaired NOW —<br/>the ladder governs lessons,<br/>never repairs"]
+```
+
+```mermaid
+flowchart TB
+  Q[one question] --> R1[run 1 · answers A]
+  Q --> R2[run 2 · answers B]
+  R1 & R2 --> F{"they disagree"}
+  F -->|"stop at the SECOND<br/>disagreement"| E["escalate: **the question is unstable**<br/>— and what differed between the askings"]
+  F -.->|"rerun until one<br/>agrees with you"| S(("sampling until the answer<br/>is convenient"))
+```
+
+**Three attempts bound failure; the second diagram bounds contradiction** — the worse state,
+because every run inside it looks like a success. Both are listed by name in the prose-only table
+with the exact reason neither is a gate today: `issue runs` records that a run *finished*, not what
+it *concluded*, and nothing compares a promotion's citation against its note's date.
+

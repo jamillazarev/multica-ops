@@ -27,6 +27,8 @@ are shortcuts for when you already know the name. Both columns do the same thing
 | Situation | Say | Runs |
 |---|---|---|
 | "I downloaded Multica — now what?" | *anything* | day zero: installed · current · signed in · workspace · daemon · runtimes, reported in one go with the fixes |
+| "We keep writing rules the day something breaks" | *"is this a lesson or a repair?"* | a repair lands now; a **lesson** waits a week between its dated field note and any promotion into the guide — what still reproduces with the panic gone is about the system, what evaporates was about that afternoon |
+| "It passed, then it failed, then it passed" | *"the answer will not hold still"* | the work stops at the **second** disagreement — the count is flips, not attempts — and what escalates is *the question is unstable, and here is what differed between the askings*, never *which run was right* |
 | "I don't know which of these I need" | *describe the situation* | three questions (what exists · what you want · who runs it) → init, join, import or a quick job (a bare question routes to `/multica-ops:consult` instead, by shape) |
 | "I just want tasks done, no product manager" | *"just execute, I'll prioritise"* | **`/multica-ops:mops crew`** — executors and gates, no conductor, no roadmap ceremony |
 | "I just have a question — not a thing to build" | *"what do you make of switching trackers?"* | **`/multica-ops:consult`** — an answer as an advisor; nothing created, no company set-up as a reflex |
