@@ -18,7 +18,7 @@ id	title	query-source	query	needs-fixture
 11	The resident isn't magic (chat sees only the chat)	rubric-setup	what's stuck on the board?	yes
 12	Offboarding without collateral damage	rubric-setup	fire the Copywriter, and delete that old marketing squad.	yes
 13	Two personas, two profiles — the reactions must diverge	TO-AUTHOR		yes
-14	A pure question — advice, not a company	rubric-setup	we're thinking about switching issue trackers — what should we weigh?	yes
+14	A pure question — advice, not a company	rubric-setup	we're thinking about switching issue trackers — what should we weigh?	no
 15	"А с чего ты взял, что это работает?" — the register answers	rubric-setup	а с чего ты взял, что это работает?	yes
 16	A decision is recorded, and a deferral — neither path is improvised	TO-AUTHOR		yes
 17	Two agents dig in — the third round is the spec's fault	rubric-setup	handles all states	yes

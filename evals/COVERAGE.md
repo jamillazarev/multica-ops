@@ -55,7 +55,7 @@
 | 11 | The resident isn't magic (chat sees only the chat) | — | yes | **no** |
 | 12 | Offboarding without collateral damage | yes | yes | yes |
 | 13 | Two personas, two profiles — the reactions must dive | yes | — | yes |
-| 14 | A pure question — advice, not a company | yes | — | yes |
+| 14 | A pure question — advice, not a company | — | — | yes |
 | 15 | "А с чего ты взял, что это работает?" — the register | yes | — | yes |
 | 16 | A decision is recorded, and a deferral — neither pat | yes | — | yes |
 | 17 | Two agents dig in — the third round is the spec's fa | yes | yes | yes |
