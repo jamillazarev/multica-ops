@@ -113,11 +113,32 @@ for f in sys.argv[1:]:
                     out.append(lines[i]); i += 1
                 continue
         i += 1
+# A COMMENT inside a block scalar is not an invocation, and the extractor used to hand it to the
+# matcher verbatim — so commenting a step out (the ordinary way to stop running something) left
+# this gate green. Measured 2026-08-21 (pass twelve): three lenses prescribed three different
+# repairs; the matrix that decided between them is in the critic's report. A quoted span is
+# dropped for the same reason: `echo "run bash scripts/test-foo.sh to reproduce"` names a suite
+# without running it, and an instruction in an echo is documentation, not CI.
+# No literal `'` anywhere in this function, and that is not style. This heredoc lives inside
+# `$( … )`, and bash 3.2 — the /bin/bash every macOS ships — scans for the closing paren while
+# tracking quotes, even through a quoted heredoc it should not be reading at all. An ODD number
+# of single quotes here made the substitution swallow 230 further lines and die on a `case` arm
+# 240 lines below. Measured 2026-08-21; the same family as this repo's note about `)` in case
+# patterns inside `$( … )`.
+_q = chr(39)
+def _code(s):
+    s = re.sub('"[^"]*"|' + _q + "[^" + _q + "]*" + _q, " ", s)
+    return s.split("#", 1)[0]
+out = [c for c in (_code(l) for l in out) if c.strip()]
 print("\n".join(out))
 RUNPY
   )
   # A command position, not a mention: the file name must follow an interpreter or a path prefix.
-  if [ "$(printf '%s\n' "$_runs" | grep -cE "(^|[;&|]|&&|\|\||bash |sh |python3 |\./)[^ ]*${_b}")" -eq 0 ]; then
+  # The interpreter must itself sit at a command position — line start or after a separator —
+  # not merely appear somewhere on the line. `[[:space:]]*` after the separator because a
+  # continued line is indented, and dropping that allowance broke every honest block-scalar
+  # step (measured, first attempt, 2026-08-21).
+  if [ "$(printf '%s\n' "$_runs" | grep -cE "(^|[;&|]+)[[:space:]]*(bash |sh |python3 |\./)[^ ]*${_b}")" -eq 0 ]; then
     say_fail "$_b is in scripts/ and no workflow \`run:\` step invokes it — CI does not execute it, and its green tick says otherwise"
   fi
 done

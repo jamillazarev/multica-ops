@@ -13,6 +13,7 @@ this generator exists to refuse, reproduced by hand.
 Usage: python3 scripts/coverage-map.py   (from the repo root; writes evals/COVERAGE.md)
 """
 import glob
+import subprocess
 import re
 from collections import Counter
 from pathlib import Path
@@ -61,7 +62,19 @@ def main():
     builders = set(re.findall(r'^BUILDERS = \{(.*?)\}', Path("scripts/eval-fixture.py")
                               .read_text(encoding="utf-8", errors="replace"), re.S | re.M)[0:1])
     have_builder = set(re.findall(r'"(\d+)":', "".join(builders)))
-    have_repo = {Path(d).name for d in glob.glob("evals/fixtures/*") if Path(d).is_dir()}
+    # **The guard's definition, not a directory-exists test.** eval-run.sh counts TRACKED files
+    # under evals/fixtures/<id>/ beyond FIXTURE.md; this counted any directory, so a folder
+    # holding nothing but a prose stub was reported as a provisioned half. That disagreement was
+    # repaired once by hand-editing the GENERATED file — which the generator overwrote at the
+    # next run. Measured 2026-08-21 (pass twelve): one definition, read from git, in both places.
+    _tracked = subprocess.run(["git", "ls-files", "-z", "--", "evals/fixtures"],
+                              capture_output=True, text=True).stdout.split("\0")
+    # evals/fixtures/<id>/<file> is four parts; anything deeper is a real file by construction.
+    # `len(parts) > 3` alone was WRONG and is worth keeping as a comment: it is true for a lone
+    # FIXTURE.md too, which reinstates the exact defect this replaced. The critic walked into the
+    # same shape and caught it by running it; so did this.
+    have_repo = {parts[2] for parts in (f.split("/") for f in _tracked if f)
+                 if len(parts) > 4 or (len(parts) == 4 and parts[3] != "FIXTURE.md")}
     ran = set()
     for r in runs:
         body = Path(r).read_text(encoding="utf-8", errors="replace")

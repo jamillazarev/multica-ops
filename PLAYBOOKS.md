@@ -1367,8 +1367,8 @@ done
 git rev-parse HEAD                                                        # repo pointer
 ```
 
-**Eight classes plus members, resources and the repo pointer — and the list grows with the
-platform.** When Multica gains an object type, the fingerprint is blind to it until someone
+**Nine classes plus members, resources and the repo pointer — and the list grows with the
+platform.** (Eight until `plugin` was classified on 2026-08-15 and this sentence was not moved with it — a count in prose beside a list in code, which is why `verify.py` now reads the number rather than trusting it.) When Multica gains an object type, the fingerprint is blind to it until someone
 adds it here; a class nobody hashes is drift nobody sees. Store as `_ops/.workspace-state.json` (`{class: hash}` + `head` + `taken_at`). On wake,
 recompute and diff. Something moved that Mops didn't move → **attribute first**
 (`agent tasks` initiator/originator · issue comments · `git log`), then ask the person who

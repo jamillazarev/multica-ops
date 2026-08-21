@@ -317,7 +317,10 @@ def check_undated():
         return
     m = re.search(r"^>?\s*\*\*Undated\*\*:([^\n]*)$", ref, re.M)
     if not m:
-        fail("REFERENCE carries no 'Still not measured:' note — the staleness claim is the one "
+        fail("REFERENCE carries no `**Undated**:` line — the shape this checker reads, and the "
+             "one a reader checks before trusting a behavioural section. (The message here named "
+             "'Still not measured:', a wording that cannot satisfy the check: a maintainer who "
+             "wrote exactly what was asked would be refused again. Measured 2026-08-21.) "
              "thing a reader checks before trusting a behavioural section, and nothing states it")
         return
     claimed_secs = set(re.findall(r"§(\d+)", m.group(1)))
@@ -346,6 +349,34 @@ def check_undated():
 # the core is, not how much of it is redundant. Measured 2026-08-15 at ~9.3k tokens: exactly one
 # sentence of 142 was duplicated, so there is nothing cheap left to move, and this check exists
 # to keep that true rather than to discover it again.
+def check_fingerprint_count():
+    """The prose count beside STRUCTURAL must be the length of STRUCTURAL.
+
+    `plugin` was classified 2026-08-15 and the sentence next to the list still said eight for
+    six days — a number a reader trusts, describing a set they cannot see. Found 2026-08-21.
+    A count in prose beside a list in code is only ever a claim; this makes it a checked one.
+    """
+    WORDS = {8: "Eight", 9: "Nine", 10: "Ten", 11: "Eleven", 12: "Twelve", 13: "Thirteen"}
+    n = len(STRUCTURAL)
+    want = WORDS.get(n)
+    try:
+        pb = open("PLAYBOOKS.md", encoding="utf-8").read()
+    except OSError:
+        return
+    m = re.search(r"\*\*(\w+) classes plus members, resources and the repo pointer", pb)
+    if not m:
+        fail("PLAYBOOKS no longer states the fingerprint class count in the shape this checker "
+             "reads (`**N classes plus members, resources and the repo pointer`)")
+    elif want is None:
+        warn(f"STRUCTURAL holds {n} classes and this checker has no word for that number")
+    elif m.group(1) != want:
+        fail(f"PLAYBOOKS says {m.group(1)} fingerprint classes; verify.py's STRUCTURAL holds {n} "
+             f"({want}). A class nobody hashes is drift nobody sees, and a count nobody checks "
+             f"is how the list and its description part company")
+    else:
+        print(f"  fingerprint: PLAYBOOKS and STRUCTURAL agree at {n} classes")
+
+
 def check_mention_cost():
     """No file may still call a member/issue mention FREE.
 
@@ -440,6 +471,7 @@ if __name__ == "__main__":
     check_prose_only()
     check_undated()
     check_mention_cost()
+    check_fingerprint_count()
     check_core_overlap()
     check_pin()
     if a.sources: check_sources()

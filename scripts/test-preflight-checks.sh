@@ -202,5 +202,41 @@ perl -0pi -e 's{      - name: verify[^\n]*\n        run: python3 scripts/verify\
   && ok || bad "deleting the verify.py CI step went unnoticed — the sweep covers suites only"
 undo
 
+# ── check 0 counts an INVOCATION, and only an invocation ───────────────────────────────────
+# The gate that guards every other gate accepted a MENTION: the interpreter token was allowed
+# anywhere on the line, and comments inside a block scalar reached the matcher verbatim. So the
+# two ordinary ways a step stops running — commenting it out, and an `echo` that names the suite
+# in an instruction — both left this gate green while CI ran nothing. Measured 2026-08-21 (pass
+# twelve) by two lenses; three repairs were prescribed and this five-shape matrix chose between
+# them. The two honest shapes are asserted too: a gate that fires on everything is not a gate.
+# IN THE CLONE, like every other case in this file. The first version edited the real
+# working tree's workflow and ran the real preflight — it passed, and it would have left a
+# modified workflow behind on any interruption. The file's own header promises the tree is
+# never touched; a test that breaks that promise to test something else is not a test.
+_c0(){ # <run: body> → 1 if check 0 refuses the suite, 0 if it is satisfied
+  ( cd "$T/c" && python3 - "$1" <<'C0PY'
+import sys, pathlib
+p = pathlib.Path(".github/workflows/preflight.yml"); t = p.read_text()
+old = "        run: bash scripts/test-preflight-checks.sh"
+if old not in t:
+    sys.exit(3)
+p.write_text(t.replace(old, sys.argv[1].replace("\\n", "\n"), 1))
+C0PY
+  )
+  n=$( ( cd "$T/c" && bash scripts/preflight.sh ) 2>&1 | grep -c "test-preflight-checks.sh is in scripts/")
+  undo
+  echo "$n"
+}
+[ "$(_c0 '        run: bash scripts/test-preflight-checks.sh')" = 0 ] \
+  && ok || bad "check 0 refuses an honest inline invocation"
+[ "$(_c0 '        run: |\n          bash scripts/test-preflight-checks.sh')" = 0 ] \
+  && ok || bad "check 0 refuses an honest block-scalar invocation — the idiomatic form"
+[ "$(_c0 '        run: echo nothing')" = 1 ] \
+  && ok || bad "check 0 stayed green with the step deleted outright"
+[ "$(_c0 '        run: |\n          # bash scripts/test-preflight-checks.sh')" = 1 ] \
+  && ok || bad "a suite commented out inside a block scalar still counted as invoked"
+[ "$(_c0 '        run: echo \"run bash scripts/test-preflight-checks.sh\"')" = 1 ] \
+  && ok || bad "a suite named inside an echo counted as invoked — an instruction is not a run"
+
 echo "preflight-checks: $pass passed, $fail failed"
 exit "$fail"

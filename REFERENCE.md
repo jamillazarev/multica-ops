@@ -9,7 +9,7 @@ platform can't help itself.**
 ## Contents
 
 - [1. Objects](#1-objects)
-- [2. Seven trigger paths](#2-seven-trigger-paths)
+- [2. Eight trigger paths](#2-eight-trigger-paths)
 - [3. Roles and what's native](#3-roles-and-whats-native)
 - [4. Feature structure and stages](#4-feature-structure-and-stages)
 - [5. The full flow (Kanban)](#5-the-full-flow-kanban)
@@ -489,9 +489,9 @@ and *"it does not hold the loop"* stops being a rule it could work around.
 > squad half of §3 are current, and the rest of the behaviour is undated — which is a smaller
 > claim than this note used to make, and a true one.
 
-## 2. Seven trigger paths
+## 2. Eight trigger paths
 
-**Measured 2026-08-15 against CLI 0.4.26**, in a scratch workspace with three inert probe agents,
+**Measured 2026-08-15 against CLI 0.4.26** (path 8 added 2026-08-21 from the CLI's own help text, not from a run count — it is documented behaviour this roster had denied), in a scratch workspace with three inert probe agents,
 by counting `multica issue runs` before and after each act. Every probe run then failed downstream
 on an expired runtime OAuth, so **this measures whether a run is CREATED, not whether the agent
 finishes** — which is exactly what a trigger path is. This section had carried no date, no
@@ -516,7 +516,14 @@ measurement and no source until now, and the count in its own heading was wrong.
 5. **An issue update** — same shape: `multica issue update --no-start`, *"Apply the update without
    starting an agent run"*. Editing a field is a dispatch unless you say otherwise.
 6. **Chat** — a standalone conversation outside issues.
-7. **Autopilot** — cron/webhook only; never "a stage finished".
+7. **Autopilot** — a schedule, a webhook, or `autopilot trigger` by hand. It never fires on
+   "a stage finished" — that is path 8, which is a different mechanism entirely and was for a
+   long time denied here rather than listed.
+8. **The stage barrier** — `issue create --stage`'s own help at CLI 0.4.26 reads *"The parent
+   assignee is woken only when every sub-issue in a stage finishes"*, and §6 has described the
+   same barrier four times over. **It is the mechanism the whole conveyor runs on, and this
+   roster — whose stated job is to enumerate every way a run is created — omitted it while item
+   7 denied it in passing.** Read from `--help`, 2026-08-15; listed here 2026-08-21.
 
 > [!NOTE]
 > **Paths 4 and 5 were missing from the version of this section dated 2026-08-15**, which had
