@@ -47,6 +47,19 @@ the guard, which counts tracked files rather than trusting prose, refused the sc
 round. Its own rubric reads "a standing workspace *or none at all*": the scenario needs no
 state, the runsheet now says so, and 14 runs against the empty directory its rubric describes.
 
+**Pass twelve's high and medium findings, all read.** Beyond the three criticals above:
+**check 0 counted mentions** — a suite commented out, or named inside an `echo`, read as invoked,
+so CI could stop running it with preflight green; five-shape matrix now, both honest forms
+asserted too. **coverage-map counted directories where the guard counts tracked files**, and the
+disagreement had been "fixed" by hand-editing the generated file. **§2 omitted the stage barrier**
+while item 7 denied it in passing — eight paths now. **The fixture probe gave two answers where
+three were needed**, so an unreadable module read as a scenario without a builder. **`--check-only`
+was not free**, though its own comment said so: the login probe ran first, which is why the
+fixture guard could not be exercised without credentials. **An assertion that could not fail** is
+deleted rather than reworded, and what it could not test is said plainly. **And the pin's
+uniqueness guard existed twice with only one copy exercised** — the untested one being the copy
+attached to the thing that rewrites the pin. Suite 32 → 41.
+
 Eval state: **not run** — the new halves admit six scenarios the rig has never dispatched; the
 next round is the first that can measure them (11 and 27 have never been run at all).
 
