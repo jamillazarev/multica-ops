@@ -153,15 +153,15 @@ undo
 # not the build's outcome, or this suite would only pass on a developer's machine with credentials.
 [ "$(_ck 9)" != 4 ] \
   && ok || bad "scenario 9 has both halves and the guard refused it as having neither"
-# and a builder that FAILS refuses with 5, which needs no workspace to demonstrate
-( cd "$T/c" && python3 - <<'BRK'
-import pathlib
-p = pathlib.Path("scripts/eval-fixture.py"); t = p.read_text()
-p.write_text(t.replace("def build_9(sid):", "def build_9(sid):\n    raise SystemExit(3)", 1))
-BRK
-)
-[ "$(_ck 9)" = 5 ] \
-  && ok || bad "a builder that raises did not refuse the run with exit 5"
+# **The assertion that used to sit here could not fail, and is deleted rather than reworded.**
+# It broke `build_9` and required exit 5 — but scenario 9's builder fails on any machine without a
+# live workspace, which is the CI case and this suite's own stated condition, so 5 arrived whether
+# the mutation was applied or not. A test whose two branches return the same value is a green tick
+# with no question behind it. Measured 2026-08-21 (pass twelve).
+# What replaces it is the pair above, which genuinely disagrees: an unloadable module refuses with
+# 6, a healthy one does not. **A builder that RAISES while the workspace is reachable is not
+# testable from here**, and that is said rather than faked — it needs credentials this suite
+# deliberately does not have.
 undo
 # and one with a repository half and no builder runs, warned — refusing it would call the rig broken
 [ "$(_ck 5)" = 0 ] \
@@ -200,6 +200,28 @@ undo
 perl -0pi -e 's{      - name: verify[^\n]*\n        run: python3 scripts/verify\.py\n}{}' "$T/c/.github/workflows/preflight.yml"
 ( cd "$T/c" && bash scripts/preflight.sh 2>&1 || true ) | grep -q 'verify.py is in scripts' \
   && ok || bad "deleting the verify.py CI step went unnoticed — the sweep covers suites only"
+undo
+
+# ── the WRITER's uniqueness guard, invoked ─────────────────────────────────────────────────
+# `--regen-cli` carries its own copy of the marker-uniqueness check, and only verify.py's copy was
+# ever exercised — so the half attached to the thing that REWRITES the pin could be deleted with
+# every suite green. Measured 2026-08-21 (pass twelve). `--regen-cli` refuses without a CLI on
+# PATH, which is the CI case, so a stub supplies one: the guard runs before any real CLI call.
+_stub=$T/stub; mkdir -p "$_stub"
+printf '#!/bin/sh\ncase "$1" in --version) echo "multica 0.4.26";; *) exit 0;; esac\n' > "$_stub/multica"
+chmod +x "$_stub/multica"
+_regen(){ ( cd "$T/c" && PATH="$_stub:$PATH" bash scripts/preflight.sh --regen-cli ) 2>&1; }
+_regen | grep -qc 'markers' >/dev/null 2>&1   # warm the path; the assertion is below
+[ "$(_regen | grep -c 'markers, not 1')" = 0 ] \
+  && ok || bad "--regen-cli reports a duplicate marker on the honest REFERENCE"
+( cd "$T/c" && python3 - <<'DUP'
+import pathlib
+p = pathlib.Path("REFERENCE.md")
+p.write_text("A convention note: the pin is marked **v9.9.9** <!-- cli-pin -->.\n\n" + p.read_text())
+DUP
+)
+[ "$(_regen | grep -c 'markers, not 1')" -ge 1 ] \
+  && ok || bad "a SECOND <!-- cli-pin --> marker was accepted by the writer — it rewrites whichever it reads first"
 undo
 
 # ── the fixture probe must give THREE answers, and --check-only must be a flag ──────────────

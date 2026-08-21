@@ -67,7 +67,17 @@ mkdir -p "$EVAL_HOME"
 # that is present but empty, which is exactly the state a half-finished login leaves behind.
 # The only honest test is asking the CLI. It costs one tiny turn and is cached for the round,
 # because a probe per run would cost more than the check is worth.
-if [ ! -f "$EVAL_HOME/.eval-login-ok" ] && [ -z "${ANTHROPIC_API_KEY:-}" ]; then
+# **`--check-only` is parsed HERE, before anything it should not pay for.** Its own comment
+# called it free; it was not — the login probe below spends a real CLI turn, and a missing login
+# refused the run outright, so exercising the preconditions needed credentials the preconditions
+# have nothing to do with. That is why the suite could not test the fixture guard without a
+# logged-in home. Measured 2026-08-21 (pass twelve). Flag positions only, never `$3`.
+_check_only=no
+_i=0
+for _a in "$@"; do _i=$((_i+1)); [ "$_i" -le 3 ] && continue
+  [ "$_a" = "--check-only" ] && _check_only=yes; done
+
+if [ "$_check_only" = no ] && [ ! -f "$EVAL_HOME/.eval-login-ok" ] && [ -z "${ANTHROPIC_API_KEY:-}" ]; then
   # `timeout` is Homebrew's on macOS, not the system's. Without it this probe fails with 127,
   # matches neither case below, and the run refuses a home that is perfectly logged in — the
   # same "probe, never infer" mistake in a new place. Used when present, skipped when not.
@@ -79,7 +89,7 @@ if [ ! -f "$EVAL_HOME/.eval-login-ok" ] && [ -z "${ANTHROPIC_API_KEY:-}" ]; then
     *OK*) touch "$EVAL_HOME/.eval-login-ok" ;;
   esac
 fi
-if [ ! -f "$EVAL_HOME/.eval-login-ok" ] && [ -z "${ANTHROPIC_API_KEY:-}" ]; then
+if [ "$_check_only" = no ] && [ ! -f "$EVAL_HOME/.eval-login-ok" ] && [ -z "${ANTHROPIC_API_KEY:-}" ]; then
   # Ask once, clearly, instead of failing 125 times with "Please run /login" in a transcript
   # that then looks like a scenario result.
   cat >&2 <<EOF
@@ -172,7 +182,7 @@ tar -cf - --exclude=.git --exclude=evals --exclude=company --exclude=node_module
 # (pass ten), against all 27 rows:
 #   the first form ($3 == rubric-setup, no builder)  refused 6 and MISSED scenario 27 — one of the
 #     two voids it was written to prevent, named in its own commit message and round record
-#   "$5 == yes, no builder"                          refuses 14, six of them (5·13·16·21·24·25)
+#   "$5 == yes, no builder"                          refused six at the time this was written
 #     fully provisioned with 5-7 tracked files — it would report "the rig is broken" about
 #     scenarios that build fine, which is what the first attempt did and was rewritten to avoid
 #   "…or a fixtures/<id> directory exists"           refuses 5, re-admitting 14, 15 and 26; 14's
@@ -186,6 +196,10 @@ tar -cf - --exclude=.git --exclude=evals --exclude=company --exclude=node_module
 # sentence became false for every id it named on the day the work it described was finished. A
 # check's comment may say what the check DOES; the moment it enumerates which inputs it currently
 # refuses, it has copied a table that lives elsewhere and will rot without anyone editing it.
+# The three lines above record how this form was CHOSEN, with the counts measured that day. They
+# are history, not a live claim — the ids they name have moved since (2026-08-21), and a comment
+# that enumerates current inputs rots without anyone editing it. Kept as dated reasoning; nothing
+# reads them.
 needs_state=$(grep -vE '^#' "$ROOT/evals/runsheet.tsv" | awk -F'\t' -v s="$SID" '$1==s {print $5}')
 if [ "$needs_state" = "yes" ]; then
   repo_half=$(cd "$ROOT" && git ls-files "evals/fixtures/$SID" 2>/dev/null | grep -cv 'FIXTURE\.md$' || true)
@@ -264,10 +278,7 @@ fi
 # Only the flag POSITIONS are searched, never `$3` — the operator's own query. A scenario asked
 # "does --check-only work?" would otherwise have stopped the run and reported its preconditions
 # ok, which looks exactly like a pass. Measured 2026-08-21 (pass twelve).
-_flags_only=""
-_i=0
-for _a in "$@"; do _i=$((_i+1)); [ "$_i" -le 3 ] || _flags_only="$_flags_only $_a"; done
-case " $_flags_only " in *" --check-only "*) echo "preconditions ok: $SID"; exit 0;; esac
+[ "$_check_only" = yes ] && { echo "preconditions ok: $SID"; exit 0; }
 
 STAMP=$OUT/${SID}-run${RUN}
 {
