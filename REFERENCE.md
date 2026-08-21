@@ -892,11 +892,14 @@ exists*):
 - **Start safely.** Before operating: confirm the CLI version, that auth is valid, and
   **which workspace/profile is active** — acting against the wrong workspace is the
   expensive mistake.
-- **Mentions are not free, and not equal.** Mentioning an **agent or squad enqueues a
-  run** — that is a task, spending budget and shared limit. Mentioning a **member or an
-  issue does not**. So `@`-mention an agent when you want work done, and reference a person
-  or an issue when you only want them informed. Casual agent mentions are how a team
-  quietly burns its window.
+- **Mentions are not free, and not equal — and the comment around them is not free either.**
+  Mentioning an **agent or squad enqueues a run**: a task, spending budget and shared limit.
+  Mentioning a **member or an issue adds no run of its own** — but **§2 path 3 measured that any
+  comment on an issue that HAS an assignee creates a run regardless of what it mentions**, so on a
+  live task "reference a person when you only want them informed" is not the cheap act it reads
+  as. Cheap is a comment on an **unassigned** issue, which wakes nothing. This bullet advised the
+  costly act as the thrifty one until 2026-08-21; the rule is *every comment on an assigned issue
+  is a run*, and the mention ceiling is the smaller half of it.
 - **Write comment bodies from a file, not inline.** Use `--content-file` (UTF-8) or
   `--content-stdin`; shell interpretation mangles multi-line and non-ASCII content, and a
   mangled comment is a mangled handoff.

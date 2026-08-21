@@ -366,8 +366,10 @@ skill into upgrade tracking. Recipes: PLAYBOOKS.
 
 Board = truth (`backlog → todo → in_progress → in_review → done`, plus `blocked` and
 `cancelled` — a cancel with a reason is a decision, one without is revivable); no sprints,
-standups or points. **Assignment = a run that spends budget**, and so is `@`-mentioning an
-agent or squad; mentioning a person or an issue is free. **Write like a product page** — issues, comments
+standups or points. **Assignment = a run that spends budget** (unless `--no-start`), and so is `@`-mentioning an
+agent or squad. **Mentioning a person or an issue adds no run of its own — but the comment
+carrying it still wakes the assignee**, so on a live task nothing you say is free (REFERENCE §2,
+measured). **Write like a product page** — issues, comments
 and every `_ops/` file a human reads: first line = the point, lists over prose, tables for
 data; **readability, not brevity** (terse trims words, this shapes them to scan). Issues carry
 the why + DoD; comments carry decisions and handoffs; a decision that changes the spec,

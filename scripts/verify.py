@@ -304,6 +304,17 @@ def check_undated():
     # 2026-08-20, an explanation naming §1, §2 and §3 turned into three false disagreements. The
     # same lesson as the CLI pin's marker, one file over: a list a checker reads must be a list,
     # not a sentence that contains one.
+    # **And exactly one line, guarded** — `re.search` takes the FIRST match in the whole file, so
+    # a second `**Undated**:` line anywhere above the real note silently becomes the note. This is
+    # the identical defect the `<!-- cli-pin -->` marker got a `count != 1` guard for in this same
+    # release, in this same file, 200 lines up: the lesson was learned about one reader and not
+    # carried to its neighbour. Measured 2026-08-21 (pass twelve) with a decoy line.
+    notes = re.findall(r"^>?\s*\*\*Undated\*\*:[^\n]*$", ref, re.M)
+    if len(notes) > 1:
+        fail(f"REFERENCE carries {len(notes)} `**Undated**:` lines — this checker takes the "
+             "first, so a second one silently becomes the staleness note. Exactly one, and the "
+             "others reworded")
+        return
     m = re.search(r"^>?\s*\*\*Undated\*\*:([^\n]*)$", ref, re.M)
     if not m:
         fail("REFERENCE carries no 'Still not measured:' note — the staleness claim is the one "
@@ -335,6 +346,44 @@ def check_undated():
 # the core is, not how much of it is redundant. Measured 2026-08-15 at ~9.3k tokens: exactly one
 # sentence of 142 was duplicated, so there is nothing cheap left to move, and this check exists
 # to keep that true rather than to discover it again.
+def check_mention_cost():
+    """No file may still call a member/issue mention FREE.
+
+    **Why a form, and not a fourth careful sentence.** REFERENCE §2 measured on 2026-08-15 that
+    *any* comment on an issue with an assignee creates a run, mention or not — and the old rule
+    ("a mention of a member or an issue is free") survived that retraction in THREE places at
+    once: the always-loaded SKILL.md, the GLOSSARY row whose whole job is that a word means
+    exactly one thing, and REFERENCE §10, which advised the costly act as the thrifty one. Found
+    2026-08-21 (pass twelve). Three sites, one retraction, and no reader noticed for two releases.
+
+    The pattern is deliberately narrow: it fires on *free* or *costs nothing* said within a short
+    span of a member/issue mention. Section §2 itself is exempt — it is where the measurement
+    lives, and it says "wakes nothing" about the genuinely free case (an UNASSIGNED issue).
+    """
+    FREE = re.compile(
+        r"(mention(ing)?[^.\n]{0,80}(member|person|issue)[^.\n]{0,80}(is free|costs nothing|"
+        r"does not cost|are free)"
+        r"|(a member or an issue)[^.\n]{0,40}(it is )?\*\*free\*\*)", re.I)
+    bad = []
+    scope = sorted(set(DOCS) | set(glob.glob("skills/**/*.md", recursive=True)))
+    for f in scope:
+        try:
+            text = open(f, encoding="utf-8").read()
+        except OSError:
+            continue
+        for m in FREE.finditer(text):
+            line = text.count("\n", 0, m.start()) + 1
+            bad.append(f"{f}:{line}")
+    if bad:
+        fail("a member/issue mention is called free in " + ", ".join(bad) +
+             " — REFERENCE §2 (measured 2026-08-15) found that ANY comment on an assigned issue "
+             "creates a run. The mention adds no run of its own; the comment carrying it is not "
+             "free. Say both halves or neither")
+    else:
+        print(f"  mention cost: {len(scope)} file(s) read, skills included — none calls a "
+              f"member/issue mention free")
+
+
 def check_core_overlap():
     core_p = "skills/mops/SKILL.md"
     try:
@@ -382,6 +431,7 @@ if __name__ == "__main__":
     check_fingerprint()
     check_prose_only()
     check_undated()
+    check_mention_cost()
     check_core_overlap()
     check_pin()
     if a.sources: check_sources()

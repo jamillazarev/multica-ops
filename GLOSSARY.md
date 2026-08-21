@@ -10,7 +10,7 @@ it; a term used in one file is that file's business.
 | These look alike | …and are not | The test |
 |---|---|---|
 | **update** · **upgrade** | update = **new bytes arrive**; upgrade = **the workspace moves onto them** | did anything change *here*? |
-| **assign** · **@-mention** | assignment is **accountability, and it enqueues a run**; a mention of an agent/squad **also enqueues a run**, of a member or an issue it is **free** | who is accountable — and does anyone wake? |
+| **assign** · **@-mention** | assignment is **accountability, and it enqueues a run** unless `--no-start`; a mention of an agent/squad **also enqueues one**; of a member or an issue it adds **none of its own — but the comment carrying it still wakes the issue's assignee** (REFERENCE §2, measured) | who is accountable — and does anyone wake? |
 | **rerun** · **retry** | a CLI `issue rerun` **starts fresh and resets the attempt counter**; a per-row retry in the app **resumes the session and reuses the working directory** | fresh after corrupt state, resume when it's cheaper |
 | **threshold** · **cap** | a threshold **asks before an action** above it; a cap **stops when a total is reached** | before each, or at the sum? |
 | **grade** · **model tier** | grade is a **routing fact in `TEAM.md`** — who gets the work; the tier is **what the agent runs on**. Grade never enters instructions as an identity | is it about routing, or about compute? |
