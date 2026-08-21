@@ -41,13 +41,26 @@ QUERY=${3:?usage: eval-run.sh <scenario-id> <run-no> <query>}
 
 # NB: no apostrophe in this message. Inside ${VAR:?word} bash opens a quote on it and the
 # script dies two dozen lines later with an EOF error that names the wrong place entirely.
+# **`--check-only` is parsed FIRST, above every guard it does not need.** Checking preconditions
+# dispatches nothing, so it must not require a player binary, a login, or a spent turn. Moving it
+# above the login probe was only half the repair — the `claude` presence check sat higher still,
+# and CI (which has no `claude`) exited 2 on all five eval-guard assertions while every local run
+# was green, because this machine has the binary. Measured 2026-08-22 on the first CI run of the
+# repair; reproduced locally only under `env -i PATH=/usr/bin:/bin`, since `claude` lives outside
+# Homebrew and stripping Homebrew was not enough. Flag positions only, never `$3` — the
+# operator's own query may contain the word.
+_check_only=no
+_i=0
+for _a in "$@"; do _i=$((_i+1)); [ "$_i" -le 3 ] && continue
+  [ "$_a" = "--check-only" ] && _check_only=yes; done
+
 : "${EVAL_WORKSPACE_ID:?set EVAL_WORKSPACE_ID to the TEST workspace id, never the real one}"
 : "${EVAL_PLAYER_MODEL:=claude-sonnet-4-6}"   # a tier below the team's floor
 : "${EVAL_TURNS:=55}"                          # raised 40→55 next door: interviews need them
 OUT=${EVAL_OUT:-$ROOT/evals/transcripts}
 mkdir -p "$OUT"
 
-command -v claude >/dev/null || { echo "no claude CLI on PATH"; exit 2; }
+[ "$_check_only" = yes ] || command -v claude >/dev/null || { echo "no claude CLI on PATH"; exit 2; }
 
 # The config home PERSISTS; the corpus copy does not.
 #
@@ -67,16 +80,6 @@ mkdir -p "$EVAL_HOME"
 # that is present but empty, which is exactly the state a half-finished login leaves behind.
 # The only honest test is asking the CLI. It costs one tiny turn and is cached for the round,
 # because a probe per run would cost more than the check is worth.
-# **`--check-only` is parsed HERE, before anything it should not pay for.** Its own comment
-# called it free; it was not — the login probe below spends a real CLI turn, and a missing login
-# refused the run outright, so exercising the preconditions needed credentials the preconditions
-# have nothing to do with. That is why the suite could not test the fixture guard without a
-# logged-in home. Measured 2026-08-21 (pass twelve). Flag positions only, never `$3`.
-_check_only=no
-_i=0
-for _a in "$@"; do _i=$((_i+1)); [ "$_i" -le 3 ] && continue
-  [ "$_a" = "--check-only" ] && _check_only=yes; done
-
 if [ "$_check_only" = no ] && [ ! -f "$EVAL_HOME/.eval-login-ok" ] && [ -z "${ANTHROPIC_API_KEY:-}" ]; then
   # `timeout` is Homebrew's on macOS, not the system's. Without it this probe fails with 127,
   # matches neither case below, and the run refuses a home that is perfectly logged in — the

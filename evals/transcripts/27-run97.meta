@@ -2,7 +2,7 @@ scenario: 27
 run: 97
 player-model: claude-sonnet-4-6
 workspace: probe
-corpus-sha: c5a5fe9
+corpus-sha: e195747
 corpus-dirty: yes
 fixture: evals/fixtures/27
 query: does --check-only work?

@@ -65,6 +65,16 @@ next round is the first that can measure them (11 and 27 have never been run at 
 
 ## 0.4.7 — 2026-08-16
 
+> **Correction, 2026-08-22.** This heading carries the date the entry was
+> **written**; the tag was cut **2026-08-20**, four days later. The gap is not sloppiness —
+> it is this repository's own law that the tag waits for the owner's word, so the writing
+> date and the shipping date differ by however long that takes, and a reader takes the
+> heading for the shipping date. The heading is left as it shipped, because a released
+> entry is frozen and a marked correction is the only permitted change. From 2026-08-22 a
+> check compares every tagged entry's date against its tag's, so this cannot recur
+> silently.
+
+
 **Three repairs to the gates 0.4.6 shipped, and one apology with a form attached.**
 
 **The CI-coverage check could not see the idiomatic form.** Added yesterday so a suite cannot fall

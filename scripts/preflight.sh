@@ -160,6 +160,48 @@ while IFS= read -r m; do
 done <<< "$(git ls-files '*.json' | grep -v '^company/')"
 [ "$swept" -ge 3 ] || say_warn "manifest sweep saw only $swept versioned manifest(s) — expected at least 3 (Claude Code, Codex, Gemini); has one stopped declaring a version?"
 
+# 1a-ter · a released entry's date must be the date it SHIPPED, not the date it was written.
+#          Measured 2026-08-22: 0.2.8 and 0.4.7 both said 2026-08-16 while their tags were cut on
+#          2026-08-20 — four days, and a reader takes the heading for the shipping date. The gap
+#          is structural rather than careless: this repository's own law is that the tag waits for
+#          the owner's word, so writing-date and shipping-date differ by however long that takes.
+#          The repair is that the date is set AT THE TAG (AGENTS.md → the release ritual), and this
+#          is the form that notices when it was not.
+#          FROM THE CUTOFF FORWARD, like every other dated rule here: older entries carry ±1-day
+#          gaps that are midnight-and-timezone artifacts (v0.1.16 tagged 22:54, v0.1.19 at 00:56),
+#          and retro-editing frozen entries to satisfy a new check is exactly what the frozen rule
+#          forbids. A marked correction blockquote naming the tag date satisfies this check too.
+python3 - <<'DATEPY' || FAIL=1
+import re, subprocess, sys, pathlib
+CUTOFF = "2026-08-22"
+text = pathlib.Path("CHANGELOG.md").read_text(encoding="utf-8")
+heads = {}
+for m in re.finditer(r"^## (\d+\.\d+\.\d+) — (\d{4}-\d\d-\d\d)\s*$", text, re.M):
+    heads[m.group(1)] = m.group(2)
+raw = subprocess.run(["git", "for-each-ref", "--format=%(refname:short) %(creatordate:short)",
+                      "refs/tags/v*"], capture_output=True, text=True).stdout
+bad = []
+for line in raw.split("\n"):
+    if not line.strip():
+        continue
+    tag, tdate = line.split()
+    if tdate < CUTOFF:
+        continue
+    ver = tag[1:]
+    entry = heads.get(ver)
+    if entry is None or entry == tdate:
+        continue
+    # a marked correction naming the tag's date is the permitted answer
+    sec = re.search(r"^## " + re.escape(ver) + r" — .*?(?=^## )", text, re.S | re.M)
+    if sec and re.search(r"^>.*" + re.escape(tdate), sec.group(0), re.M):
+        continue
+    bad.append(f"{ver}: entry says {entry}, tag cut {tdate}")
+for b in bad:
+    print("  \033[31m✗\033[0m " + b + " — a changelog date is read as the date the version "
+          "SHIPPED. Set it when the tag is cut, or add a marked correction naming the tag's date")
+sys.exit(1 if bad else 0)
+DATEPY
+
 # 1b · the documented skill-import URL pins THIS version, not a moving ref.
 #      An import becomes agent instructions, so `tree/main` means the content behind someone's
 #      agents can change without them moving — the substance of the auditors' W012 finding,
