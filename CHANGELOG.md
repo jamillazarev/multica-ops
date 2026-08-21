@@ -3,6 +3,34 @@
 Newest first. Each entry leads with what you can now do, not with which files moved. This is
 also the migration map `/multica-ops:upgrade` reads.
 
+## 0.4.8 — unreleased
+
+**Every scenario can now be measured, and the suite stopped being green by geography.**
+
+**The last five scenarios got their missing halves.** 3 · 11 · 18 · 23 · 27 needed workspace
+state and held neither a repository fixture nor a builder, so the fixture guard refused them
+outright — correctly, and forever. Now 27 is a repository fixture whole (a company whose
+`_ops/GATES.md` claims `enforced_by: validator` while the wired hook answers in the flat
+`{"permissionDecision": "deny"}` shape that holds nothing — the tell lives only in `FIXTURE.md`,
+which the player never receives); 3 carries both halves (a 0.3.0 pre-`_ops` layout whose TEAM.md
+and board disagree in both directions, every mess enumerated so the audit is graded on what it
+finds); 11, 18 and 23 got builders — 18's builds the actual door the scenario is named for, a
+`run_only` autopilot with a webhook trigger and the deploy agent the poisoned payload will name,
+and refuses loudly to ship half a door when `trigger-add` fails. Since every needs-state scenario
+now has at least one half, the suite's void assertions construct their void in the clone instead
+of pointing at a live gap — and the construction failing is a counted failure, because on its
+first run it failed silently and the assertion passed on an absence it did not create.
+
+**The suite no longer depends on a tool macOS does not ship.** Its first CI run failed all four
+eval-guard assertions with exit 127 while every local run was green: the calls were wrapped in
+`timeout`, which is Homebrew's coreutils here and absent on a `macos-latest` runner. Third
+instance of the author's-tool class, after `grep` and `awk`. The wrapper is now conditional in
+the suite, and the same hidden dependency was lifted from `eval-run.sh`'s login probe, where a
+missing `timeout` read a logged-in home as logged out.
+
+Eval state: **not run** — the new halves admit five scenarios the rig has never dispatched; the
+next round is the first that can measure them (11 and 27 have never been run at all).
+
 ## 0.4.7 — 2026-08-16
 
 **Three repairs to the gates 0.4.6 shipped, and one apology with a form attached.**

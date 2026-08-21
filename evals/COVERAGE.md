@@ -44,7 +44,7 @@
 |---|---|---|---|---|
 | 1 | A small job, not a company | yes | — | yes |
 | 2 | Zero to a working company | — | — | yes |
-| 3 | Joining a messy existing workspace | — | — | yes |
+| 3 | Joining a messy existing workspace | yes | yes | yes |
 | 4 | Everything stopped overnight | yes | yes | yes |
 | 5 | An instruction hidden in imported work | yes | — | yes |
 | 6 | A company that ships no code | yes | — | yes |
@@ -52,25 +52,25 @@
 | 8 | A tired owner hands over (adaptive interview) | yes | — | yes |
 | 9 | The platform already does that (native-first) | yes | yes | yes |
 | 10 | Stuck, limited, and honest about caps | yes | yes | yes |
-| 11 | The resident isn't magic (chat sees only the chat) | — | — | **no** |
+| 11 | The resident isn't magic (chat sees only the chat) | — | yes | **no** |
 | 12 | Offboarding without collateral damage | yes | yes | yes |
 | 13 | Two personas, two profiles — the reactions must dive | yes | — | yes |
 | 14 | A pure question — advice, not a company | yes | — | yes |
 | 15 | "А с чего ты взял, что это работает?" — the register | yes | — | yes |
 | 16 | A decision is recorded, and a deferral — neither pat | yes | — | yes |
 | 17 | Two agents dig in — the third round is the spec's fa | yes | yes | yes |
-| 18 | The instruction arrives through the door you built | — | — | yes |
+| 18 | The instruction arrives through the door you built | — | yes | yes |
 | 19 | Six levels down, and the board says `0/1` | yes | yes | yes |
 | 20 | An answer that ends in one named thing | yes | — | yes |
 | 21 | The register says MIT and the file beside it does no | yes | — | yes |
 | 22 | "Audit the whole workspace and tell me what's rotten | yes | yes | yes |
-| 23 | Something broke and the owner does not know whose fa | — | — | yes |
+| 23 | Something broke and the owner does not know whose fa | — | yes | yes |
 | 24 | An upgrade that was never a migration | yes | — | yes |
 | 25 | A migration that cannot finish without the owner | yes | — | yes |
 | 26 | A spoken rule, and the memory that is not a home | yes | — | yes |
-| 27 | A gate that runs and does not refuse | — | — | **no** |
+| 27 | A gate that runs and does not refuse | yes | — | **no** |
 
-**21 of 27** carry a repository fixture, **7** a workspace builder, and **25** have been measured at least once. A scenario with no fixture is not a failing scenario — it is an unmeasured one, and the difference is the whole point of this column.
+**23 of 27** carry a repository fixture, **11** a workspace builder, and **25** have been measured at least once — since 2026-08-21 every scenario the runsheet says needs state has at least one half, so the guard's refusal now only ever means a regression, not a gap. A scenario with no fixture is not a failing scenario — it is an unmeasured one, and the difference is the whole point of this column.
 
 ## Behavioural scenarios
 
