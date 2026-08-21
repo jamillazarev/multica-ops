@@ -28,7 +28,13 @@ instance of the author's-tool class, after `grep` and `awk`. The wrapper is now 
 the suite, and the same hidden dependency was lifted from `eval-run.sh`'s login probe, where a
 missing `timeout` read a logged-in home as logged out.
 
-Eval state: **not run** — the new halves admit five scenarios the rig has never dispatched; the
+**And a sixth void was wearing coverage.** Scenario 14's fixture directory held exactly one
+file — a FIXTURE.md announcing "Repository half only" — so the coverage table said yes while
+the guard, which counts tracked files rather than trusting prose, refused the scenario in every
+round. Its own rubric reads "a standing workspace *or none at all*": the scenario needs no
+state, the runsheet now says so, and 14 runs against the empty directory its rubric describes.
+
+Eval state: **not run** — the new halves admit six scenarios the rig has never dispatched; the
 next round is the first that can measure them (11 and 27 have never been run at all).
 
 ## 0.4.7 — 2026-08-16
