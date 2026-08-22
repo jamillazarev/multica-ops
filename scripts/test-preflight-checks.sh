@@ -202,6 +202,21 @@ perl -0pi -e 's{      - name: verify[^\n]*\n        run: python3 scripts/verify\
   && ok || bad "deleting the verify.py CI step went unnoticed — the sweep covers suites only"
 undo
 
+# TWO MARKERS ON ONE LINE. `grep -c` counts matching LINES under the grep a script actually gets,
+# so a reflowed line carrying two markers counted as 1, the guard passed, and the rewrite hit
+# whichever came first — leaving §10 stale at exit 0, which is the incident the marker exists to
+# stop. Measured 2026-08-23; the fourth instance of this class in two days.
+( cd "$T/c" && python3 - <<'ONELINE'
+import pathlib
+p = pathlib.Path("REFERENCE.md"); s = p.read_text()
+i = s.index("<!-- cli-pin -->"); j = s.rindex("\n", 0, i)
+p.write_text(s[:j] + "\n> also **v0.4.11** <!-- cli-pin --> on this very line" + s[j:])
+ONELINE
+) || bad "could not plant two markers on one line"
+[ "$(_regen | grep -c 'markers, not 1')" -ge 1 ] \
+  && ok || bad "two <!-- cli-pin --> markers on ONE line were counted as one — grep -c counts lines"
+undo
+
 # ── the WRITER's uniqueness guard, invoked ─────────────────────────────────────────────────
 # `--regen-cli` carries its own copy of the marker-uniqueness check, and only verify.py's copy was
 # ever exercised — so the half attached to the thing that REWRITES the pin could be deleted with

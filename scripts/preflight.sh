@@ -24,7 +24,15 @@ if [ "${1:-}" = "--regen-cli" ]; then
   # `<!-- cli-pin -->`" — silently becomes the pin. Measured 2026-08-15 (pass eleven): a line above
   # §10 carrying the marker made all readers return ITS version. The marker fixed the "any sentence
   # is the anchor" defect and reintroduced it one level in, so the uniqueness is the other half.
-  _pins=$(grep -c -- '<!-- cli-pin -->' REFERENCE.md || true)
+  # **`grep -c` counts LINES, not occurrences** — under /usr/bin/grep, BSD 2.6.0-FreeBSD, which is
+  # what a script gets. Two markers on ONE reflowed line counted as 1, this guard passed, and the
+  # anchored substitution below then rewrote whichever came first — leaving §10 stale and printing
+  # `✓ re-pinned … in §10` at exit 0. That is verbatim the 2026-08-15 incident the marker and this
+  # guard were both invented to stop, reintroduced through this repo's own most-documented machine
+  # note. verify.py's half used Python `.count()` and counted occurrences, so the two halves of the
+  # "same" guard disagreed — and the weaker half was the one attached to the thing that REWRITES.
+  # `grep -o … | grep -c .` counts occurrences everywhere. Measured 2026-08-23.
+  _pins=$(grep -o -- '<!-- cli-pin -->' REFERENCE.md | grep -c . || true)
   [ "${_pins:-0}" -eq 1 ] || { echo "→ REFERENCE.md carries ${_pins:-0} \`<!-- cli-pin -->\` markers, not 1 — every reader takes the first, so a second is a second pin. Leave exactly one, on §10's version"; exit 1; }
   echo "installed=$local_v pinned=$pinned"
   sec=$(awk '/## 10\./{f=1} f{print}' REFERENCE.md); diff=0

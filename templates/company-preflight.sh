@@ -239,7 +239,13 @@ while IFS= read -r -d '' mf; do
              [ -n "$_n" ] && { printf '%s\n' "$_old_names" | hits -xF -- "$_n" || printf '%s\n' "$_n"; }
            done)
   [ -n "$_names" ] && _dep_added="$_dep_added $mf" && _dep_names="$_dep_names $_names"
-done < <(changed --diff-filter=AMR -- 'package.json' 'requirements*.txt' 'pyproject.toml' 'go.mod' 'Cargo.toml' 'Gemfile' 'composer.json')
+# **Rooted AND at depth.** A bare `package.json` is a git pathspec anchored at the top
+# level, so a monorepo — `frontend/package.json`, `services/api/go.mod` — was invisible to
+# both this gate and the reach gate. That is exactly the case the reach gate was widened
+# for. Measured 2026-08-23. Lockfiles are skipped in the loop above, so `*/…` is safe.
+done < <(changed --diff-filter=AMR -- 'package.json' '*/package.json' 'requirements*.txt' \
+         '*/requirements*.txt' 'pyproject.toml' '*/pyproject.toml' 'go.mod' '*/go.mod' \
+         'Cargo.toml' '*/Cargo.toml' 'Gemfile' '*/Gemfile' 'composer.json' '*/composer.json')
 if [ -n "$_dep_added" ]; then
   _dec=$( ( git diff --cached -U0 -- _ops/DECISIONS.md 2>/dev/null || true ) | grep '^+' | grep -v '^+++ ' || true )
   _unnamed=""
@@ -247,7 +253,17 @@ if [ -n "$_dep_added" ]; then
     # WORD-BOUNDED. `hits -iF` was an unbounded substring test, so a decision about anything
     # containing the package name as a fragment — `date` inside `update`, `fs` inside `refs` —
     # satisfied it. Measured 2026-08-23.
-    printf '%s\n' "$_dec" | hits -iE "(^|[^A-Za-z0-9_.@/-])$(printf '%s' "$_d" | sed 's/[].[^$\\*\/]/\\&/g')([^A-Za-z0-9_.@/-]|$)" \
+    # **A full stop after the name must not break the match.** `.` is a NAME character here so
+    # `lodash.merge` and `github.com/x/y` hold together — and that made `left-pad.` fail the
+    # trailing boundary, so a maintainer who wrote exactly what the refusal asked was refused
+    # again, and told "says nothing about why" about a commit that said it. Measured 2026-08-23 in
+    # a lens's four-variant probe: name followed by a space passed, name followed by a full stop
+    # did not. This file is copied into other people's repositories; the only escapes were
+    # guessing the punctuation rule or `--no-verify`.
+    #
+    # So a `.` counts as part of the name only when a name character follows it.
+    _esc=$(printf '%s' "$_d" | sed 's/[].[^$\\*\/]/\\&/g')
+    printf '%s\n' "$_dec" | hits -iE "(^|[^A-Za-z0-9_.@/-])${_esc}([^A-Za-z0-9_.@/-]|\.([^A-Za-z0-9_@/-]|$)|$)" \
       || _unnamed="$_unnamed $_d"
   done
   [ -z "$_unnamed" ] \
