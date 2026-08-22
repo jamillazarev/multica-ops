@@ -220,8 +220,20 @@ while IFS= read -r -d '' mf; do
   # first), and it also COLLAPSES or EXPANDS them — `{"react": "^18.0.0"}` on one line becomes
   # three, so the removed side carries the name inside a brace and a line-anchored read missed it,
   # reporting a package nobody touched. Measured 2026-08-22, all three by this gate's own tests.
-  _pick() { grep -oE '"[A-Za-z0-9@/._-]+"[[:space:]]*:[[:space:]]*"[~^>=<0-9][^"]*"|^[[:space:]]*[A-Za-z0-9_.-]+[[:space:]]*([=~<>]{1,2}[[:space:]]*[0-9]|=[[:space:]]*"[0-9~^])' \
-             | grep -oE '^[[:space:]]*"[A-Za-z0-9@/._-]+"|^[[:space:]]*[A-Za-z0-9_.-]+' | tr -d '" \t' | grep -vE '^[0-9~^]' || true; }
+  # **Seven manifest kinds are named in the pathspec, so seven shapes are read.** The first
+  # version matched two — JSON `"n": "^1.0"` and `n==1.0` — and was blind to `"latest"`, `"*"`,
+  # `npm:`/`git+`/`file:` specifiers, bare `requirements.txt` names, `go.mod`'s `require`, TOML
+  # tables, and Gemfile `gem "x"`. Nine of sixteen realistic ways to add a dependency, in a gate
+  # whose pathspec promises all seven files. Measured 2026-08-23 by two lenses.
+  # The VALUE decides, not the key. Dropping the version-prefix requirement to catch `"latest"`
+  # and `"*"` made `"name": "renamed"` a dependency — caught by this gate's own suite within the
+  # minute. So the value must look like a version or a known specifier: a digit, `^ ~ > < =`,
+  # `latest`, `*`, or a `npm: git+ file: workspace: link:` prefix. A key blocklist was the other
+  # option and it rots; this reads what a dependency actually looks like.
+  _pick() { grep -oE '"[A-Za-z0-9@/._-]+"[[:space:]]*:[[:space:]]*"([~^>=<*0-9]|latest|npm:|git\+|file:|workspace:|link:)[^"]*"|^[[:space:]]*(require[[:space:]]+)?[A-Za-z0-9_.@/-]+[[:space:]]*([=~<>!]{1,2}[[:space:]]*[0-9v]|[[:space:]]+v?[0-9])|^[[:space:]]*gem[[:space:]]+"[^"]+"|^[[:space:]]*[A-Za-z0-9_.-]+[[:space:]]*=[[:space:]]*[{"][~^>=<*0-9]' \
+             | grep -oE '"[A-Za-z0-9@/._-]+"|^[[:space:]]*(gem[[:space:]]+"[^"]+"|require[[:space:]]+[A-Za-z0-9_.@/-]+|[A-Za-z0-9_.@/-]+)' \
+             | sed 's/^[[:space:]]*gem[[:space:]]*//; s/^[[:space:]]*require[[:space:]]*//' | tr -d '" \t' \
+             | grep -vE '^([0-9~^v]|require$|dependencies$|dev-dependencies$|tool$|project$|package$)' || true; }
   _old_names=$(printf '%s\n' "$_gone" | _pick)
   _names=$(printf '%s\n' "$_new" | _pick | while IFS= read -r _n; do
              [ -n "$_n" ] && { printf '%s\n' "$_old_names" | hits -xF -- "$_n" || printf '%s\n' "$_n"; }
@@ -232,7 +244,11 @@ if [ -n "$_dep_added" ]; then
   _dec=$( ( git diff --cached -U0 -- _ops/DECISIONS.md 2>/dev/null || true ) | grep '^+' | grep -v '^+++ ' || true )
   _unnamed=""
   for _d in $_dep_names; do
-    printf '%s\n' "$_dec" | hits -iF -- "$_d" || _unnamed="$_unnamed $_d"
+    # WORD-BOUNDED. `hits -iF` was an unbounded substring test, so a decision about anything
+    # containing the package name as a fragment — `date` inside `update`, `fs` inside `refs` —
+    # satisfied it. Measured 2026-08-23.
+    printf '%s\n' "$_dec" | hits -iE "(^|[^A-Za-z0-9_.@/-])$(printf '%s' "$_d" | sed 's/[].[^$\\*\/]/\\&/g')([^A-Za-z0-9_.@/-]|$)" \
+      || _unnamed="$_unnamed $_d"
   done
   [ -z "$_unnamed" ] \
     || say_fail "this commit adds$(printf '%s' "$_unnamed" | tr -s ' ') to$(printf '%s' "$_dep_added" | tr -s ' ') and says \
@@ -253,10 +269,20 @@ fi
 #      year. So a project with no package manifest at all is not exempt from the rung, which it
 #      was for the first hour of this gate's life.
 #
-#      A WARNING rather than a refusal, and the reason is the domain: outside software the honest
+#      It REFUSES, and the accepted answer is what makes that fair: outside software the honest
 #      answer is very often *we had none* — the work was not being done at all — and that is an
-#      answer, not an evasion. The register's own template already asks *what for*; what this asks
+#      answer, not an evasion, so writing it passes. It warned for its first hours and measured
+#      0 of 5; as a refusal, 2 of 5 (2026-08-22). The register's own template already asks *what for*; what this asks
 #      is the rung above choosing: **what was done before this, and why that stopped being enough.**
+# **It refuses rather than warns, and that was measured rather than argued.** It warned for its
+# first hours and scored 0 of 5 — three runs added the row, committed, and none said what came
+# before. The same day, in the same corpus, a rule that REFUSES scored 5 of 5. A warning is a
+# demand, and this system's own rounds put demands in the same band as prose. Accepting
+# `we had none` is what makes refusing fair: the gate refuses SILENCE, never the answer.
+#
+# The six lines above lived INSIDE the refusal string for a day — the closing quote sat after
+# them, so every reader of this gate's message got the author's commentary as part of it. Three
+# lenses found it, 2026-08-23. A comment inside a quoted argument is not a comment.
 _tool_rows=""
 if ( changed --diff-filter=AMR -- '_ops/TOOLING.md' ) | hits . ; then
   _tool_rows=$( ( git diff --cached -U0 -- _ops/TOOLING.md 2>/dev/null || true ) \
@@ -274,13 +300,7 @@ if [ -n "$_tool_rows" ]; then
 tool arrives in a minute and is maintained for a year, and the rung above choosing one is asking \
 whether the work already had a way — a clause in the row's own why, or a line in \
 _ops/DECISIONS.md: what was done before this, and why that stopped being enough. \`we had none\` \
-is a complete answer and often the true one outside software — write it and this passes.
-#
-#      **It refuses rather than warns, and that was measured rather than argued.** It warned for
-#      its first hours and scored 0 of 5: three runs added the row, committed, and none said what
-#      came before. The same day, in the same corpus, a rule that REFUSES scored 5 of 5. A warning
-#      is a demand, and this system's own rounds put demands in the same band as prose. Accepting
-#      \`we had none\` is what makes refusing fair: the gate refuses SILENCE, never the answer."
+is a complete answer and often the true one outside software — write it and this passes"
 fi
 
 

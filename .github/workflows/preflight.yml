@@ -43,6 +43,9 @@ jobs:
         run: bash scripts/test-dispatch-nudge.sh
       - name: the preflight's own checks — each mutant denied, each twin passing
         run: bash scripts/test-preflight-checks.sh
+
+      - name: the company guard — the file that ships into other people's repos
+        run: bash scripts/test-company-guard.sh
       # verify.py was run by NOTHING — not a workflow, not a suite, not preflight — so the three
       # text checks added on 2026-08-15 (prose-only membership, the staleness note's own count,
       # core/companion overlap) could not fail anywhere but a developer's terminal. Measured that
