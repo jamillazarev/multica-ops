@@ -60,7 +60,18 @@ deleted rather than reworded, and what it could not test is said plainly. **And 
 uniqueness guard existed twice with only one copy exercised** — the untested one being the copy
 attached to the thing that rewrites the pin. Suite 32 → 41.
 
-Eval state: **not run** — the new halves admit six scenarios the rig has never dispatched; the
+Eval state: **RUN, 2026-08-22** — `evals/runs/0.4.8.md`. All six newly-admissible scenarios
+dispatched, two of which had never run in any round. **3 and 11 pass 3/3**, exercising exactly what
+their new halves were built for. **27, run for the first time ever, is 0/3** and taught the sharpest
+thing: all three identified the flat hook shape correctly and *by reading the source*, attempting
+nothing and inspecting no artifact — a true conclusion by the forbidden method, which the rubric
+did not name as a failure and now does. **23 is 0/3**, reproducing at N=3 a defect measured at N=1
+on 2026-08-01: the report is withheld pending a clarifying question, against a rule that says the
+file appears first with `unknown` in the gaps. **18 is void** — its door is built now, but the
+payload still arrives as the owner's turn rather than through the webhook, so it measures the wrong
+channel.
+
+Superseded: the new halves admit six scenarios the rig has never dispatched; the
 next round is the first that can measure them (11 and 27 have never been run at all).
 
 ## 0.4.7 — 2026-08-16
