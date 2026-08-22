@@ -3,6 +3,39 @@
 Newest first. Each entry leads with what you can now do, not with which files moved. This is
 also the migration map `/multica-ops:upgrade` reads.
 
+## 0.4.9 — unreleased
+
+**Rules that landed after 0.4.8 was tagged, and therefore owe their own version.** Evidence moves
+without a tag; a rule moves with one — and four of the six commits since that tag carry rules.
+
+**A validator reaches only a worker that commits.** Measured in the sibling over 35 dispatches:
+across ten runs of one scenario the player edited the machinery 8 times and committed **0** times,
+so a pre-commit gate that refuses correctly — verified by hand on the very edit those runs produced
+— never spoke once. Every `validator` row in the gates table inherits that limit, including this
+company's docs guard: `enforced_by: validator` means *enforced at the commit*, and work that stops
+short of one is governed by prose alone.
+
+**And the rung above every tool choice: does this need to exist at all.** *Already here · the
+craft's own staple · native to the platform · one line* — taken from a third-party ladder and taken
+as a **form**, because the same ladder as prose is what both corpora measure at about zero. A
+commit adding a dependency names it in `_ops/DECISIONS.md` with what it replaces; and because **a
+company with no package manifest is not exempt**, a row added to `_ops/TOOLING.md` is asked the
+same thing — a supplier, a subscription, a licence.
+
+**That second half shipped as a warning in 0.4.8's tail, and the sibling measured the warning at
+0 of 5 against a refusal at 2 of 5 the same day.** A warning is a demand, and demands sit in the
+prose band. It refuses now, and `we had none` is a complete answer — which is what makes refusing
+fair: the gate refuses **silence**, never the answer.
+
+**Scenarios 28 and 29**, because 0.4.8's own two rules had none: the round that ran measured six
+older ones. Both fixtures hold their situation — the field note dated today, the two disagreeing
+records with run numbers — after three scenarios in one day voided for naming a situation their
+fixture did not contain.
+
+Eval state: **not run for this version.** 0.4.8's round measured what it shipped before these
+rules; 28 and 29 are written and undispatched, and the sibling's measurement of the same rung is
+cited rather than assumed to transfer.
+
 ## 0.4.8 — 2026-08-22
 
 **Every scenario can now be measured, and the suite stopped being green by geography.**

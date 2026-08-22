@@ -251,12 +251,17 @@ if [ -n "$_tool_rows" ]; then
     | grep '^+' | grep -v '^+++ ' || true )
   printf '%s\n%s\n' "$_tool_rows" "$_dec2" \
     | hits -iE 'instead of|replaces|rather than|already|by hand|nothing else|we had none|had no ' \
-    || say_warn "this commit adds a row to _ops/TOOLING.md and nothing says what it replaces. A \
+    || say_fail "this commit adds a row to _ops/TOOLING.md and nothing says what it replaces. A \
 tool arrives in a minute and is maintained for a year, and the rung above choosing one is asking \
 whether the work already had a way — a clause in the row's own why, or a line in \
 _ops/DECISIONS.md: what was done before this, and why that stopped being enough. \`we had none\` \
-is a complete answer and often the true one outside software, which is why this warns rather \
-than refuses"
+is a complete answer and often the true one outside software — write it and this passes.
+#
+#      **It refuses rather than warns, and that was measured rather than argued.** It warned for
+#      its first hours and scored 0 of 5: three runs added the row, committed, and none said what
+#      came before. The same day, in the same corpus, a rule that REFUSES scored 5 of 5. A warning
+#      is a demand, and this system's own rounds put demands in the same band as prose. Accepting
+#      \`we had none\` is what makes refusing fair: the gate refuses SILENCE, never the answer."
 fi
 
 
