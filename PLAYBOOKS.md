@@ -1000,6 +1000,15 @@ honest **`enforced_by`**, and the audit reads this table rather than assuming:
 
 ### A gate is not enforced until you have watched it refuse
 
+> [!IMPORTANT]
+> **A validator reaches only a worker that commits.** Measured in the sibling tree 2026-08-22 over
+> 35 dispatches: across ten runs of one scenario the player edited the file 8 times and committed
+> **0** times, so a pre-commit gate that refuses correctly — verified by hand on the very edit
+> those runs produced — never spoke once. The gate was not weak; it guards a moment the work never
+> arrived at. **Every `validator` row above inherits that limit**, including this company's docs
+> guard. `enforced_by: validator` means *enforced at the commit*; work that stops short of one is
+> governed by prose alone.
+
 **`enforced_by: validator` is a claim, and the cheapest way to be wrong about your own company
 is to write a gate, see it run, and never check that it says no.** Running is not refusing. A
 hook that executes on every call and whose refusal is discarded looks identical, from the
