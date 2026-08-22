@@ -463,6 +463,27 @@ def teardown(sid):
     return 0
 
 
+def workspace_reachable():
+    """One cheap call before any build, to tell a bad id from a broken builder.
+
+    **The refusal used to name the wrong cause.** `EVAL_WORKSPACE_ID` was checked for being
+    non-empty and never for being ACCEPTED, so the short ID prefix the console prints in its table
+    — `ee0929fe`, which every `workspace get/switch` subcommand takes — passed the check, every
+    CLI call failed with `invalid workspace_id`, and the run refused with *"Fix the builder, or
+    check the workspace credentials"*. Eight identical errors pointing at the wrong file.
+    Measured 2026-08-22, on four scenarios in a row. The API wants the **full UUID**
+    (`multica workspace list --full-id`).
+
+    Returns None when the workspace answers, or the CLI's own error line when it does not.
+    """
+    r = subprocess.run(["multica", "issue", "list", "--limit", "1", "--output", "json"],
+                       capture_output=True, text=True,
+                       env=dict(os.environ, MULTICA_WORKSPACE_ID=WS))
+    if r.returncode == 0:
+        return None
+    return (r.stderr or r.stdout).strip().splitlines()[0][:200] if (r.stderr or r.stdout) else "no output"
+
+
 def main():
     if not WS:
         print("set EVAL_WORKSPACE_ID to the TEST workspace id, never the real one", file=sys.stderr)
@@ -477,6 +498,14 @@ def main():
     if action != "build":
         print(f"unknown action: {action}", file=sys.stderr)
         return 2
+    why = workspace_reachable()
+    if why is not None:
+        print(f"the workspace {WS!r} does not answer: {why}", file=sys.stderr)
+        print("EVAL_WORKSPACE_ID must be the FULL UUID, not the short prefix the table prints — "
+              "`multica workspace list --full-id`. This is checked before building, because the "
+              "same failure used to arrive as eight `invalid workspace_id` lines and a refusal "
+              "blaming the builder.", file=sys.stderr)
+        return 7
     if sid not in BUILDERS:
         print(f"scenario {sid} needs no workspace state, or its builder is not written yet")
         return 0

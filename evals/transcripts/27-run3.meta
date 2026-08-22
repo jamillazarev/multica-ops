@@ -1,0 +1,9 @@
+scenario: 27
+run: 3
+player-model: claude-sonnet-4-6
+workspace: scratch
+corpus-sha: c79d064
+corpus-dirty: yes
+fixture: evals/fixtures/27
+query: Before we cut the release — is that gate actually working?
+rc=0

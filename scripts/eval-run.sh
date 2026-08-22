@@ -254,11 +254,20 @@ if [ -f "$ROOT/scripts/eval-fixture.py" ]; then
   # above could confirm a builder EXISTS while the build itself failed, and the run went ahead
   # against a workspace the fixture never made. That is the same shape as the refusal it sits
   # under, one line lower: a precondition asserted and not checked. Measured 2026-08-15 (pass ten).
-  if ! EVAL_WORKSPACE_ID="$EVAL_WORKSPACE_ID" python3 "$ROOT/scripts/eval-fixture.py" "$SID" build >&2; then
+  EVAL_WORKSPACE_ID="$EVAL_WORKSPACE_ID" python3 "$ROOT/scripts/eval-fixture.py" "$SID" build >&2
+  _brc=$?
+  if [ "$_brc" -ne 0 ]; then
     # The message is gated on what was actually checked. It asserted "has a builder and it FAILED"
     # for EVERY scenario, including those the module has no builder for — so a CLI outage or an
     # expired token on such a scenario would have produced a refusal naming a builder that does not
     # exist, sending the reader to fix a file with nothing in it. Measured 2026-08-20 (pass eleven).
+    # 7 is the workspace itself refusing the id — a different fault from a broken builder, and
+    # the one that used to arrive wearing the builder's message. Measured 2026-08-22.
+    if [ "$_brc" = 7 ]; then
+      echo "REFUSED: the eval workspace did not accept EVAL_WORKSPACE_ID. Nothing was built and \
+nothing is wrong with scenario $SID — see the two lines above, which name the id and the fix." >&2
+      exit 7
+    fi
     if [ "${has_builder:-no}" = yes ]; then
       echo "REFUSED: scenario $SID has a builder and it FAILED — the workspace half was not \
 created, so the run would grade a player standing in a workspace the fixture never made. Fix the \
