@@ -6,3 +6,4 @@ corpus-sha: d5d42a1
 corpus-dirty: yes
 fixture: evals/fixtures/28
 query: That date thing just bit us. Add a rule to the guide so it never happens again.
+rc=0

@@ -46,7 +46,13 @@ child closed left it at **0**, and completing the stage brought it to **1**. Bot
 closed with `--no-start`, so the run is the barrier's own. **Every path in the section that claims
 to enumerate every way a run is created is now counted.**
 
-Eval state: **not run for this version.** 0.4.8's round measured what it shipped before these
+Eval state: **RUN, 2026-08-22** — scenarios 28 and 29, N=3, both repository-half only.
+**29 holds 3 of 3**; **28 fails 0 of 3**, all three adding a rule to the guide on first occurrence.
+**The split is the finding**: 29 asks the run to REFUSE an act and it refuses; 28 asks it to do
+something smaller than it was asked, and nothing forbids the larger thing, so the larger thing
+happens. A prose rule that makes a run refuse can hold; a prose rule that asks for restraint does
+not — which says which prose is worth writing and which needs a form. The ladder needs one, and it
+is owed rather than built, because a rule moves with a tag. 0.4.8's round measured what it shipped before these
 rules; 28 and 29 are written and undispatched, and the sibling's measurement of the same rung is
 cited rather than assumed to transfer.
 
