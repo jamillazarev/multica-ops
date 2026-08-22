@@ -27,6 +27,12 @@ same thing — a supplier, a subscription, a licence.
 prose band. It refuses now, and `we had none` is a complete answer — which is what makes refusing
 fair: the gate refuses **silence**, never the answer.
 
+**And the guard stamps its own version.** It is a COPY, written into a company's repo at stand-up
+and never moving again, so a release adding a check leaves existing companies green while running
+fewer gates than their guide claims — the upgrade's layers named the skill's bytes, the format,
+attached skills and tooling versions, and the installed machinery was in none of them. It warns
+now when the guide disagrees, and prints the re-copy command.
+
 **Scenarios 28 and 29**, because 0.4.8's own two rules had none: the round that ran measured six
 older ones. Both fixtures hold their situation — the field note dated today, the two disagreeing
 records with run numbers — after three scenarios in one day voided for naming a situation their

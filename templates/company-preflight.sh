@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# guard-version: 0.4.9   <!-- stamped from the skill at ship time; read by the check below -->
 # Docs guard for a company Mops built — install it into the company's own repo, not ours.
 #
 #   cp templates/company-preflight.sh <repo>/scripts/preflight.sh
@@ -50,6 +51,14 @@ if [ "${1:-}" = "--install" ]; then
   echo "pre-commit hook installed at $hook"; exit 0
 fi
 
+# **The guard checks its OWN age against the guide.** This file is a COPY: written into the
+# company's repo at stand-up and never moving again by itself, so every release that adds a check
+# leaves existing companies on the old one — silently, green, running fewer gates than the version
+# their guide claims. The upgrade's layers named the skill's bytes, the format, attached skills and
+# tooling versions; the installed machinery was in none of them. Named 2026-08-22, when one release
+# added two checks here and nothing would have carried them into a single existing company.
+# A WARNING, not a refusal: sitting a version behind between upgrades is legitimate, and a guard
+# that blocks every commit is a guard people delete.
 fail=0; warn=0
 # Two helpers the sibling's guard already carries, brought over with the dependency gate that
 # needs them. `changed` takes a git PATHSPEC rather than filtering names in shell — a path with a
@@ -60,6 +69,16 @@ changed() { git -c core.quotePath=false diff --cached --name-only -z "$@" 2>/dev
 hits() { [ "$( grep -c "$@" 2>/dev/null | head -1 || true )" -gt 0 ] 2>/dev/null; }
 say_fail() { echo "  ✗ $1"; fail=1; }
 say_warn() { echo "  ! $1"; warn=1; }
+_gv=$(sed -n 's/^# guard-version:[[:space:]]*\([0-9.]*\).*/\1/p' "$0" | head -1)
+_pv=$(grep -m1 -oE '[Oo]perated by[^0-9]*([0-9]+\.[0-9]+\.[0-9]+)' CLAUDE.md 2>/dev/null \
+      | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | tail -1)
+if [ -n "$_gv" ] && [ -n "$_pv" ] && [ "$_gv" != "$_pv" ]; then
+  say_warn "this guard is version $_gv and the guide says the company runs $_pv — the guard is a \
+COPY and does not move with an upgrade, so any check added since $_gv is not running here and \
+nothing else will say so. Re-copy it: \`cp <skill>/templates/company-preflight.sh \
+_ops/preflight.sh\`. A stale guard does not complain; it does less"
+fi
+
 echo "preflight — _ops"
 
 # 1 · the docs the guide promises must exist. An agent told to read a file that
