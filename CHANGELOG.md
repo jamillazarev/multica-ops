@@ -38,6 +38,14 @@ older ones. Both fixtures hold their situation — the field note dated today, t
 records with run numbers — after three scenarios in one day voided for naming a situation their
 fixture did not contain.
 
+**And §2's eighth path is counted now, not cited.** The stage barrier was listed on 2026-08-21
+from the CLI's own help text — the only path in a roster of eight that had not been measured the
+way the other seven were. Measured 2026-08-22 in the test workspace: a parent assigned with
+`--no-start` carried 0 runs, two children created under it with `--stage 1` carried 0, the first
+child closed left it at **0**, and completing the stage brought it to **1**. Both children were
+closed with `--no-start`, so the run is the barrier's own. **Every path in the section that claims
+to enumerate every way a run is created is now counted.**
+
 Eval state: **not run for this version.** 0.4.8's round measured what it shipped before these
 rules; 28 and 29 are written and undispatched, and the sibling's measurement of the same rung is
 cited rather than assumed to transfer.

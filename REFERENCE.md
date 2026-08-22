@@ -491,7 +491,7 @@ and *"it does not hold the loop"* stops being a rule it could work around.
 
 ## 2. Eight trigger paths
 
-**Measured 2026-08-15 against CLI 0.4.26** (path 8 added 2026-08-21 from the CLI's own help text, not from a run count — it is documented behaviour this roster had denied), in a scratch workspace with three inert probe agents,
+**Measured 2026-08-15 against CLI 0.4.26**, and path 8 measured 2026-08-22 by the same method — so every path here is counted, none cited, in a scratch workspace with three inert probe agents,
 by counting `multica issue runs` before and after each act. Every probe run then failed downstream
 on an expired runtime OAuth, so **this measures whether a run is CREATED, not whether the agent
 finishes** — which is exactly what a trigger path is. This section had carried no date, no
@@ -523,7 +523,13 @@ measurement and no source until now, and the count in its own heading was wrong.
    assignee is woken only when every sub-issue in a stage finishes"*, and §6 has described the
    same barrier four times over. **It is the mechanism the whole conveyor runs on, and this
    roster — whose stated job is to enumerate every way a run is created — omitted it while item
-   7 denied it in passing.** Read from `--help`, 2026-08-15; listed here 2026-08-21.
+   7 denied it in passing.**
+   **Measured 2026-08-22 by counting, the same way the other seven were.** A parent assigned with
+   `--no-start` (0 runs), two children created under it with `--stage 1` (0 runs), the first child
+   closed (**still 0**), the second closed — completing the stage — and the parent then carried
+   **1 run**. Both children were closed with `--no-start`, so the run is the barrier's own and not
+   a status change leaking through. Listed here 2026-08-21 from `--help`; measured the next day,
+   which is the difference between a cited claim and a counted one.
 
 > [!NOTE]
 > **Paths 4 and 5 were missing from the version of this section dated 2026-08-15**, which had
