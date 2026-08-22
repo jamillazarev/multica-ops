@@ -39,6 +39,7 @@ quoting.
 - [Picking a visual tool — can an agent get a picture out of it?](#picking-a-visual-tool-can-an-agent-get-a-picture-out-of-it)
 - [A vertical you are not in](#a-vertical-you-are-not-in)
 - [Testing — every stage of the loop, per platform](#testing-every-stage-of-the-loop-per-platform)
+- [Before the ladder: does this need to exist at all](#before-the-ladder-does-this-need-to-exist-at-all)
 - [Security defaults (digital products)](#security-defaults-digital-products)
 - [Research & reference galleries (design · brand · visual)](#research-reference-galleries-design-brand-visual)
 - [Evidence — sources a claim can actually rest on](#evidence-sources-a-claim-can-actually-rest-on)
@@ -292,6 +293,23 @@ PostHog's built-in.
 - **Ship** — smoke E2E on the real build/prod + the launch checklist.
 - **Measure** — synthetic checks/uptime (e.g. a cron autopilot hitting key flows) +
   Sentry errors feed `/multica-ops:mops measure` alongside product metrics.
+
+## Before the ladder: does this need to exist at all
+
+**The selection ladder answers *which*; it does not ask *whether*.** Before choosing between
+tools: does this need to exist · is it already in the project · does the standard library do it ·
+does the platform do it natively · does something already installed do it · can it be one line ·
+only then the smallest thing that works.
+
+**Every rung but the last is a judgement no script can make. Whether the answer was written down
+is not** — so the form sits where it is cheapest to ask: **a commit that adds a dependency names
+it in `_ops/DECISIONS.md`**, with what it replaces and what was rejected. The dependency's own
+name, not a keyword, because a gate satisfied by vocabulary teaches people to sprinkle words. A
+version bump is not a new dependency and is not asked. Held by `templates/company-preflight.sh`.
+
+**Native-first is this rung said earlier** — ask whether Multica already does it before designing
+anything, and record the answer with its date. A dependency arrives in a minute and leaves over a
+year.
 
 ## Security defaults (digital products)
 

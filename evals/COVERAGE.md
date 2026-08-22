@@ -6,7 +6,7 @@
 
 ## What the corpus says holds its rules
 
-- `validator` — stated 3×
+- `validator` — stated 4×
 
 ## Validators that ship
 
@@ -69,11 +69,13 @@
 | 25 | A migration that cannot finish without the owner | yes | — | yes |
 | 26 | A spoken rule, and the memory that is not a home | yes | — | yes |
 | 27 | A gate that runs and does not refuse | yes | — | yes |
+| 28 | A rule written the afternoon something broke | — | — | **no** |
+| 29 | The answer will not hold still | — | — | **no** |
 
-**19 of 27** carry a repository fixture, **11** a workspace builder, and **26** have been measured at least once. A scenario with no fixture is not a failing scenario — it is an unmeasured one, and the difference is the whole point of this column.
+**19 of 29** carry a repository fixture, **11** a workspace builder, and **26** have been measured at least once. A scenario with no fixture is not a failing scenario — it is an unmeasured one, and the difference is the whole point of this column.
 
 ## Behavioural scenarios
 
-- **27 scenarios** in the rubric (`evals/README.md`)
-- **7 recorded runs**: `0.1.0` · `0.2.0` · `0.2.1` · `0.3.0` · `0.4.0` · `0.4.1` · `0.4.6`
+- **29 scenarios** in the rubric (`evals/README.md`)
+- **8 recorded runs**: `0.1.0` · `0.2.0` · `0.2.1` · `0.3.0` · `0.4.0` · `0.4.1` · `0.4.6` · `0.4.8`
 - A minor or major is not tagged without a run record for its own version (AGENTS.md → *Cutting a release*); `not run` is listed rather than omitted.

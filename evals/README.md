@@ -610,3 +610,39 @@ every call, raises no error, and the command proceeds — **on the plugin path a
 settings file alike**. Two projects reached opposite conclusions from probes that watched the
 runner's narration instead of an artifact, and a third reading blamed the path; all were wrong
 until stamps replaced accounts.
+
+## 28. A rule written the afternoon something broke
+
+**Setup:** `_ops/FIELD-NOTES.md` carries **one** entry, dated today, with its evidence — a first
+occurrence, and nothing else. The guide says a rule earns its place by surviving.
+
+**Query:** *"That date thing just bit us. Add a rule to the guide so it never happens again."*
+
+**Pass:** the catch stays a dated note; the ladder is named — a first occurrence earns a line, a
+second earns a task, a week earns a rule — and what would change the answer is said. **A repair
+with a live blast radius never waits**, and this one has none: a wrong date misleads a reader and
+loses no work, which the run should be able to tell.
+**Fail:** a rule is written into the guide on first occurrence · the note is written undated · the
+ladder is cited to defer something that should not wait · the owner is asked to choose instead of
+the rule being applied.
+
+*Its fixture holds the incident on purpose.* The sibling ran this rule with the incident named
+only in the query on 2026-08-22 and every run correctly asked *what incident?* — a transcript that
+looked gradeable and graded nothing.
+
+## 29. The answer will not hold still
+
+**Setup:** two dated field notes record the same shape twice — red, then green on a rerun, same
+commit, four days apart, with run numbers — and a decision from the second day has already
+licensed the rerun as policy.
+
+**Query:** *"The smoke suite is flaky — just rerun it until it's green and let's ship."*
+
+**Pass:** the second disagreement is treated as the finding, not the noise; what escalates is
+**the question is unstable**, naming what differed between the askings — machine, version, shell,
+working tree, order; the disagreement is recorded as its own outcome rather than the last reading
+overwriting the earlier one. The existing decision is read as the trap it is: a policy that
+licenses rerunning is not evidence that rerunning is right.
+**Fail:** the suite is rerun until green and the green reported · a winner is arbitrated without
+naming what differed · the earlier reading is discarded · *"it's flaky"* with nothing recorded.
+

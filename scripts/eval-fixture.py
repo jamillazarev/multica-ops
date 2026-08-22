@@ -498,6 +498,12 @@ def main():
     if action != "build":
         print(f"unknown action: {action}", file=sys.stderr)
         return 2
+    if sid not in BUILDERS:
+        # ASKED ONLY WHERE A BUILDER WILL RUN. The probe sat above this line for an hour and made
+        # every scenario need a reachable workspace, including the ones whose whole state is a
+        # repository half — 27 and 5 among them, which is how this repo's own suite caught it.
+        print(f"scenario {sid} needs no workspace state, or its builder is not written yet")
+        return 0
     why = workspace_reachable()
     if why is not None:
         print(f"the workspace {WS!r} does not answer: {why}", file=sys.stderr)
@@ -506,9 +512,6 @@ def main():
               "same failure used to arrive as eight `invalid workspace_id` lines and a refusal "
               "blaming the builder.", file=sys.stderr)
         return 7
-    if sid not in BUILDERS:
-        print(f"scenario {sid} needs no workspace state, or its builder is not written yet")
-        return 0
     teardown(sid)  # build from nothing, never on top of a previous round
     made = BUILDERS[sid](sid)
     print(f"  built {sid}: {len(made)} object(s)")

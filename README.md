@@ -117,7 +117,7 @@ Stated rather than wished away — every number carries where it came from:
 | **start dates are enforced by the team** | nothing on the platform stops an agent beginning early | cited |
 | **some rules are `prose-only`** | nothing enforces them; they are listed by name rather than believed in | measured |
 
-**27 stratified eval scenarios** — from a job too small to deserve a company to an import
+**29 stratified eval scenarios** — from a job too small to deserve a company to an import
 carrying a hidden instruction — judge the **end state, not the route**, with a player that never
 saw the rubric and a judge that did not write the transcript. Each release records its run in
 `evals/runs/<version>.md` with `not run` listed rather than omitted, and **a minor or major is
@@ -198,7 +198,7 @@ does ask for is named in **[SECURITY.md](SECURITY.md)**.
 | [REFERENCE.md](REFERENCE.md) | object model, anti-patterns, **CLI surface (§10)**, **frameworks (§11)** |
 | [WORKFLOW.md](WORKFLOW.md) | Mermaid diagrams of the whole process |
 | [CHANGELOG.md](CHANGELOG.md) | versioned history — the migration map `/multica-ops:upgrade` reads |
-| [evals/](evals/) | the 27 scenarios, plus `runs/` — the recorded verdicts per release |
+| [evals/](evals/) | the 29 scenarios, plus `runs/` — the recorded verdicts per release |
 | [templates/](templates/) · [scripts/](scripts/) | guide · roadmap · brand · component docs · decisions · architecture · tooling · team · **a docs guard for the companies Mops builds** · ops helpers · resumable backlog import |
 
 Everything but `skills/mops/SKILL.md` loads **only when its trigger fires**.

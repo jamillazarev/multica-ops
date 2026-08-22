@@ -51,6 +51,13 @@ if [ "${1:-}" = "--install" ]; then
 fi
 
 fail=0; warn=0
+# Two helpers the sibling's guard already carries, brought over with the dependency gate that
+# needs them. `changed` takes a git PATHSPEC rather than filtering names in shell — a path with a
+# newline survives that and does not survive `grep -z` under BSD. `hits` counts rather than
+# short-circuits: under `set -o pipefail` a `grep -q` SIGPIPEs its producer and the pipeline
+# returns that failure even when the phrase MATCHED, which reads as absent.
+changed() { git -c core.quotePath=false diff --cached --name-only -z "$@" 2>/dev/null || true; }
+hits() { [ "$( grep -c "$@" 2>/dev/null | head -1 || true )" -gt 0 ] 2>/dev/null; }
 say_fail() { echo "  ✗ $1"; fail=1; }
 say_warn() { echo "  ! $1"; warn=1; }
 echo "preflight — _ops"
@@ -154,6 +161,69 @@ mcp_config / custom-env, never in the repo. If it is already committed, rotate i
     say_warn "a long literal is assigned to a key-shaped name — check it is not a secret \
 (the real scan is gitleaks in CI, see the tooling register)"
   fi
+fi
+
+
+# 4e · **a new dependency says what it replaces.** The sharpest rung of *should this exist at all*
+#      is the one a commit can be asked about: adding a dependency. Everything above it in the
+#      ladder — is it already here · does the standard library do it · does the platform do it
+#      natively · can it be one line — is a judgement no script can make. **Whether the answer was
+#      written down is not.**
+#
+#      So this refuses a commit that ADDS a dependency line with nothing in the same commit saying
+#      what was considered. `unknown` is not the escape here that it is for a market figure: the
+#      answer is cheap and the asker is the person who just chose. One line in `_ops/DECISIONS.md`
+#      naming the dependency does it.
+#
+#      Enforced on what the commit CREATES, like every gate here — existing dependencies are the
+#      project's history and are not retro-justified.
+_dep_added=""
+_dep_names=""   # under `set -u` an unset name is not empty, it is the end of the script —
+                # and it ends BEFORE printing anything, so the failure arrives as a green
+                # tick with no refusal. Caught by this gate's own suite, 2026-08-22.
+while IFS= read -r -d '' mf; do
+  # the added lines of this manifest, fences and lockfiles aside
+  case "$mf" in *.lock|*lock.json|*.sum) continue;; esac
+  _new=$( ( git diff --cached -U0 -- "$mf" 2>/dev/null || true ) | grep '^+' | grep -v '^+++ ' | sed 's/^+//' )
+  # The NAME, not just the shape. A keyword list was the first version and the suite caught it
+  # inside the hour: it accepted a justification that happened to say `stdlib` and refused an
+  # honest one that did not — the substring-instead-of-value class, in a gate written the same day
+  # two others were repaired for it. Requiring the dependency's own NAME cannot be satisfied by
+  # vocabulary, and the person who just chose it is the one person who can write it.
+  # ADDED MINUS REMOVED. Writing a manifest reformats its neighbours — adding one dependency
+  # re-indents the line above it and puts a comma on it, so a naive read of the `+` side asked
+  # about a package nobody touched. It also, for free, stops a VERSION BUMP being treated as a
+  # new dependency: the name is on both sides, so it cancels. Both measured 2026-08-22, the first
+  # by this gate's own suite within the hour.
+  _gone=$( ( git diff --cached -U0 -- "$mf" 2>/dev/null || true ) | grep '^-' | grep -v '^--- ' | sed 's/^-//' )
+  # ANYWHERE in the line, not anchored to its start. Third iteration of this extractor, and
+  # reformatting was the adversary every time: writing a manifest re-indents neighbours (caught
+  # first), and it also COLLAPSES or EXPANDS them — `{"react": "^18.0.0"}` on one line becomes
+  # three, so the removed side carries the name inside a brace and a line-anchored read missed it,
+  # reporting a package nobody touched. Measured 2026-08-22, all three by this gate's own tests.
+  _pick() { grep -oE '"[A-Za-z0-9@/._-]+"[[:space:]]*:[[:space:]]*"[~^>=<0-9][^"]*"|^[[:space:]]*[A-Za-z0-9_.-]+[[:space:]]*([=~<>]{1,2}[[:space:]]*[0-9]|=[[:space:]]*"[0-9~^])' \
+             | grep -oE '^[[:space:]]*"[A-Za-z0-9@/._-]+"|^[[:space:]]*[A-Za-z0-9_.-]+' | tr -d '" \t' | grep -vE '^[0-9~^]' || true; }
+  _old_names=$(printf '%s\n' "$_gone" | _pick)
+  _names=$(printf '%s\n' "$_new" | _pick | while IFS= read -r _n; do
+             [ -n "$_n" ] && { printf '%s\n' "$_old_names" | hits -xF -- "$_n" || printf '%s\n' "$_n"; }
+           done)
+  [ -n "$_names" ] && _dep_added="$_dep_added $mf" && _dep_names="$_dep_names $_names"
+done < <(changed --diff-filter=AMR -- 'package.json' 'requirements*.txt' 'pyproject.toml' 'go.mod' 'Cargo.toml' 'Gemfile' 'composer.json')
+if [ -n "$_dep_added" ]; then
+  _dec=$( ( git diff --cached -U0 -- _ops/DECISIONS.md 2>/dev/null || true ) | grep '^+' | grep -v '^+++ ' || true )
+  _unnamed=""
+  for _d in $_dep_names; do
+    printf '%s\n' "$_dec" | hits -iF -- "$_d" || _unnamed="$_unnamed $_d"
+  done
+  [ -z "$_unnamed" ] \
+    || say_fail "this commit adds$(printf '%s' "$_unnamed" | tr -s ' ') to$(printf '%s' "$_dep_added" | tr -s ' ') and says \
+nothing about why. The cheapest code is the code nobody writes, and the ladder above a new \
+dependency — is it already here · does the standard library do it · does the platform do it \
+natively · can it be one line — is a judgement only the person choosing can make. Write the one \
+line they already know, in _ops/DECISIONS.md in this same commit, NAMING IT: what it replaces, \
+and what was rejected. The name is asked for rather than a keyword, because a gate satisfied by \
+vocabulary teaches people to sprinkle words. A dependency arrives in a minute and leaves over a \
+year"
 fi
 
 [ "$fail" = 0 ] && { [ "$warn" = 0 ] && echo "  ✓ clean" || echo "  ✓ passed with warnings"; }
