@@ -60,6 +60,14 @@ deleted rather than reworded, and what it could not test is said plainly. **And 
 uniqueness guard existed twice with only one copy exercised** — the untested one being the copy
 attached to the thing that rewrites the pin. Suite 32 → 41.
 
+**And the rung above every tool choice, generalised past code.** *Does this need to exist · is it
+already here · the craft's own staple · native to the platform · one line* — taken from a
+third-party ladder and taken as a **form**, because the same ladder as prose is what both corpora
+measure at about zero. A commit adding a dependency names it in `_ops/DECISIONS.md` with what it
+replaces; **and because a company with no package manifest is not exempt**, a row added to
+`_ops/TOOLING.md` is asked the same thing — a supplier, a subscription, a licence. That half warns
+rather than refuses, since outside software *we had none* is usually the true answer.
+
 Eval state: **RUN, 2026-08-22** — `evals/runs/0.4.8.md`. All six newly-admissible scenarios
 dispatched, two of which had never run in any round. **3 and 11 pass 3/3**, exercising exactly what
 their new halves were built for. **27, run for the first time ever, is 0/3** and taught the sharpest

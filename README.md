@@ -59,6 +59,9 @@ end to end rather than assumed.
 
 ## Different, by design
 
+- **A new standing commitment says what it replaces** — a library, a supplier, a subscription.
+  Does it need to exist · is it already here · native to the platform · one line: every rung but
+  the last is judgement, and whether the answer was written down is not.
 - **Native-first, not a parallel universe.** Squads, stage barriers, @mention handoffs,
   permissions and branch protection are Multica's real primitives; where the platform already
   does a thing, the skill uses it instead of growing a copy that drifts.
