@@ -310,8 +310,27 @@ fi
 if [ -n "$_tool_rows" ]; then
   _dec2=$( ( git diff --cached -U0 -- _ops/DECISIONS.md 2>/dev/null || true ) \
     | grep '^+' | grep -v '^+++ ' || true )
-  printf '%s\n%s\n' "$_tool_rows" "$_dec2" \
-    | hits -iE 'instead of|replaces|rather than|already|by hand|nothing else|we had none|had no ' \
+  # **A FIELD, not a vocabulary.** This was a keyword list — `instead of|replaces|already|…` —
+  # which is precisely the defect §4e was repaired away from in the same file on the same day: a
+  # gate satisfied by words teaches people to sprinkle them, and refuses an honest answer that
+  # happens to use different ones. A lens named the contradiction, 2026-08-23.
+  #
+  # So the register carries a **Replaces** column (`templates/TOOLING-template.md`) and this reads
+  # the cell. A register that predates the column falls back to the keyword list, and that fallback
+  # is named here rather than presented as a test — an old register is not a project's fault, and
+  # refusing every commit until it is reshaped is how a guard gets deleted.
+  _has_col=$(grep -m1 -i '^[[:space:]]*|.*|[[:space:]]*\*\*\?Replaces\*\*\?[[:space:]]*|' _ops/TOOLING.md 2>/dev/null | grep -c . || true)
+  if [ "${_has_col:-0}" -gt 0 ]; then
+    # the column's position, then the same cell in every added row
+    _ci=$(head -20 _ops/TOOLING.md | grep -m1 -i '\*\*\?Replaces\*\*\?' \
+          | awk -F'|' '{for(i=1;i<=NF;i++) if (tolower($i) ~ /replaces/) {print i; exit}}')
+    _blank=$(printf '%s\n' "$_tool_rows" \
+             | awk -F'|' -v c="${_ci:-0}" '{gsub(/^[ \t]+|[ \t]+$/,"",$c); if ($c=="") print}' | grep -c . || true)
+    [ "${_blank:-0}" -eq 0 ]
+  else
+    printf '%s\n%s\n' "$_tool_rows" "$_dec2" \
+      | hits -iE 'instead of|replaces|rather than|already|by hand|nothing else|we had none|had no '
+  fi \
     || say_fail "this commit adds a row to _ops/TOOLING.md and nothing says what it replaces. A \
 tool arrives in a minute and is maintained for a year, and the rung above choosing one is asking \
 whether the work already had a way — a clause in the row's own why, or a line in \
