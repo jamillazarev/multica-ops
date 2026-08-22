@@ -307,6 +307,22 @@ it in `_ops/DECISIONS.md`**, with what it replaces and what was rejected. The de
 name, not a keyword, because a gate satisfied by vocabulary teaches people to sprinkle words. A
 version bump is not a new dependency and is not asked. Held by `templates/company-preflight.sh`.
 
+```mermaid
+flowchart TB
+  Q(["a new standing commitment<br/>— a library · a supplier · a subscription · a licence"])
+  Q --> A{"does it need to exist?"} -->|no| X(["nothing is built"])
+  A -->|yes| B{"already here?"} -->|yes| X
+  B -->|no| C{"the craft's own staple?"} -->|yes| X
+  C -->|no| D{"native to Multica?"} -->|yes| X
+  D -->|no| E{"one line?"} -->|yes| X
+  E -->|no| G["the smallest thing that works —<br/>and the commit NAMES it"]
+  G -.->|"a manifest line"| S["refused without the name"]
+  G -.->|"a register row"| W["warned without the rung —<br/>`we had none` is an answer"]
+```
+
+**The two dotted edges are one rung in two vocabularies.** A company with no package manifest is
+not exempt: its dependency is a supplier or a subscription, and its manifest is `_ops/TOOLING.md`.
+
 **Native-first is this rung said earlier** — ask whether Multica already does it before designing
 anything, and record the answer with its date. A dependency arrives in a minute and leaves over a
 year.

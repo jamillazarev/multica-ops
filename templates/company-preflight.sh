@@ -226,5 +226,39 @@ vocabulary teaches people to sprinkle words. A dependency arrives in a minute an
 year"
 fi
 
+# 4f · **the same rung outside software.** A package manifest is one project's spelling of *a new
+#      standing commitment*. A bakery's is a supplier, a channel's is a subscription, a studio's
+#      is a stock licence — and this system is used in all of them (*a chip maker has no data
+#      flows and a bakery has no deploys*). **The universal register is `_ops/TOOLING.md`**: a row
+#      added there is the same act as a dependency line, arriving in a minute and maintained for a
+#      year. So a project with no package manifest at all is not exempt from the rung, which it
+#      was for the first hour of this gate's life.
+#
+#      A WARNING rather than a refusal, and the reason is the domain: outside software the honest
+#      answer is very often *we had none* — the work was not being done at all — and that is an
+#      answer, not an evasion. The register's own template already asks *what for*; what this asks
+#      is the rung above choosing: **what was done before this, and why that stopped being enough.**
+_tool_rows=""
+if ( changed --diff-filter=AMR -- '_ops/TOOLING.md' ) | hits . ; then
+  _tool_rows=$( ( git diff --cached -U0 -- _ops/TOOLING.md 2>/dev/null || true ) \
+    | grep '^+' | grep -v '^+++ ' | sed 's/^+//' \
+    | grep -E '^[[:space:]]*\|' \
+    | grep -vE '^[[:space:]]*\|[[:space:]]*-{2,}' \
+    | grep -viE '\|[[:space:]]*(tool|name|what)[[:space:]]*\|' || true )
+fi
+if [ -n "$_tool_rows" ]; then
+  _dec2=$( ( git diff --cached -U0 -- _ops/DECISIONS.md 2>/dev/null || true ) \
+    | grep '^+' | grep -v '^+++ ' || true )
+  printf '%s\n%s\n' "$_tool_rows" "$_dec2" \
+    | hits -iE 'instead of|replaces|rather than|already|by hand|nothing else|we had none|had no ' \
+    || say_warn "this commit adds a row to _ops/TOOLING.md and nothing says what it replaces. A \
+tool arrives in a minute and is maintained for a year, and the rung above choosing one is asking \
+whether the work already had a way — a clause in the row's own why, or a line in \
+_ops/DECISIONS.md: what was done before this, and why that stopped being enough. \`we had none\` \
+is a complete answer and often the true one outside software, which is why this warns rather \
+than refuses"
+fi
+
+
 [ "$fail" = 0 ] && { [ "$warn" = 0 ] && echo "  ✓ clean" || echo "  ✓ passed with warnings"; }
 exit "$fail"
