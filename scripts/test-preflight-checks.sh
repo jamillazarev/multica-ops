@@ -344,5 +344,32 @@ else
   echo "  (skipped 6: no multica CLI on PATH — these assert against the live command surface)"
 fi
 
+# ── the mention-cost guard flattens a wrapped paragraph and NOTHING else ───────────────────
+# It was wrong in both directions within two days. Flattening nothing missed a mutant that
+# straddled this corpus's ~98-column wrap; flattening everything matched across headings, blank
+# lines and list items, none of which carries a full stop — so honest prose under two unrelated
+# headings read as one claim (measured 2026-08-23). Both cases are asserted here so a later
+# "simplification" back to `text.replace("\n", " ")` fails instead of passing quietly.
+_mc(){ # <file body> → 1 when the guard calls it a free mention
+  printf '%b' "$1" > "$T/c/MENTIONPROBE.md"
+  ( cd "$T/c" && python3 - <<'MPY'
+import pathlib
+p = pathlib.Path("scripts/verify.py"); t = p.read_text()
+p.write_text(t.replace('scope = sorted(set(DOCS) | set(glob.glob("skills/**/*.md", recursive=True)))',
+                       'scope = ["MENTIONPROBE.md"]', 1))
+MPY
+  )
+  n=$( ( cd "$T/c" && python3 scripts/verify.py ) 2>&1 | grep -c "is called free in")
+  rm -f "$T/c/MENTIONPROBE.md"; undo; echo "$n"; }
+
+[ "$(_mc 'Remember that mentioning a member or an\nissue in a comment is free and costs nothing.\n')" -ge 1 ] \
+  && ok || bad "a retracted rule split by the hard wrap went undetected — the 2026-08-21 mutant"
+[ "$(_mc 'Mentioning a member or an issue in a comment is free.\n')" -ge 1 ] \
+  && ok || bad "the same claim on one line went undetected"
+[ "$(_mc '### Mentioning\n\n- what a mention does to an issue\n\n### Reading the board\n\n- the counters are free\n')" = 0 ] \
+  && ok || bad "honest prose under two headings matched as one claim — the flattening crossed a block boundary"
+[ "$(_mc '- mentioning a member is the act\n\n- issue counters are free\n')" = 0 ] \
+  && ok || bad "two unrelated list items matched as one sentence"
+
 echo "preflight-checks: $pass passed, $fail failed"
 exit "$fail"

@@ -392,6 +392,37 @@ def check_fingerprint_count():
         print(f"  fingerprint: PLAYBOOKS and STRUCTURAL agree at {n} classes")
 
 
+_BLOCK_START = re.compile(r"^(\s*([-*+]|\d+[.)])\s|\s*#{1,6}\s|\s*>|\s*\||\s*```|\s*<)")
+def _soft_flatten(text):
+    """Join lines the hard wrap broke, and KEEP every newline that is a block boundary.
+
+    The patterns that read this use `[^.\n]` to stay inside one sentence, so a newline is their
+    stop character — which makes the choice made here the whole behaviour of the check.
+
+    **Both directions were wrong once.** Flattening nothing missed the mutant: this corpus hard
+    wraps at ~98 columns, so a retracted rule became invisible the moment it straddled a line
+    break, and the guard reported clean over the sentence it exists to refuse (measured
+    2026-08-21, in this guard's own first hour). Flattening EVERYTHING then matched across
+    headings, blank lines and list items — none of which contains a full stop — so honest prose
+    under two unrelated headings read as one sentence (measured 2026-08-23: a heading, a bullet
+    about mentions, a second heading, and a bullet about counters being free, matched as a single
+    claim). The middle is the only correct answer: a wrapped paragraph is one sentence, and a new
+    block is a new thought.
+
+    **Same-length substitution, always** — newline to a single space, or newline kept. Every
+    offset still points at the original byte, so the reported line number stays true; that is
+    load-bearing, not tidiness, because the caller counts newlines up to `m.start()`.
+    """
+    lines = text.split("\n")
+    out = []
+    for i, ln in enumerate(lines[:-1]):
+        nxt = lines[i + 1]
+        joinable = ln.strip() and nxt.strip() and not _BLOCK_START.match(nxt)
+        out.append(ln + (" " if joinable else "\n"))
+    out.append(lines[-1])
+    return "".join(out)
+
+
 def check_mention_cost():
     """No file may still call a member/issue mention FREE.
 
@@ -424,7 +455,7 @@ def check_mention_cost():
         # mutant went undetected, and the guard reported clean over the sentence it exists to
         # refuse. Newline → space is a SAME-LENGTH substitution, so every offset still points at
         # the original byte and the reported line number stays true.
-        flat = text.replace("\n", " ")
+        flat = _soft_flatten(text)
         for m in FREE.finditer(flat):
             line = text.count("\n", 0, m.start()) + 1
             bad.append(f"{f}:{line}")
