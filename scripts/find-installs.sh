@@ -73,6 +73,21 @@ add() {
   fi
 }
 
+# A clone whose working tree is dirty cannot take the route its own row recommends.
+# Measured 2026-08-23 on the Antigravity install: 0.4.8 had been delivered there by rsync ON TOP
+# OF a git clone still at 0.4.7, so `git pull --ff-only` refused — permanently, and every release
+# after — with *"Your local changes to the following files would be overwritten"*. The output is
+# the trap: git prints `Aborting` and `Updating <old>..<new>` on adjacent lines, so a glance reads
+# it as success while the install sits two versions behind. Two delivery routes were used on one
+# directory, and the second one broke the first.
+clone_state() {
+  # $1: path → "" when fine, else a flag naming why the documented route will refuse
+  git -C "$1" rev-parse --is-inside-work-tree >/dev/null 2>&1 || { printf ''; return; }
+  if [ -n "$(git -C "$1" status --porcelain 2>/dev/null)" ]; then
+    printf 'ROUTE BROKEN — a clone with a dirty tree; `git pull --ff-only` will refuse every time. Stash or reset it to origin, then pull. Do NOT rsync onto a clone: that is what put it here'
+  fi
+}
+
 seen() { printf '%s' "$found_paths" | grep -Fxq "$1"; }
 
 classify_path() {
@@ -145,7 +160,7 @@ fi
 adir="$HOME_DIR/.gemini/config/plugins/$NAME"
 if [ -e "$adir" ]; then
   v=$(read_version "$adir")
-  add "$adir" "plugin, Antigravity" "git pull --ff-only in place if it is a clone (it usually is — checked 2026-08-01), else re-copy the source or agy plugin install <url>" "" "$v"
+  add "$adir" "plugin, Antigravity" "git pull --ff-only in place if it is a clone (it usually is — checked 2026-08-01), else re-copy the source or agy plugin install <url>" "$(clone_state "$adir")" "$v"
 fi
 
 # hermes: a mount in config.yaml is an install even though no file lands anywhere — and it
