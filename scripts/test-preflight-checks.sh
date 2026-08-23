@@ -310,6 +310,25 @@ C0PY
   && ok || bad "a flag between the interpreter and the path was refused"
 [ "$(_c0 '        run: echo scripts/test-preflight-checks.sh')" = 1 ] \
   && ok || bad "a bare path after echo counted as an invocation — the relaxation went too far"
+# Shell grammar and command wrappers, measured 2026-08-23 by an adversarial lens. `if` and `time`
+# are the two commonest ways anyone wraps a suite, and both were refused. These are not a guessed
+# vocabulary — they are the language the step is written in.
+[ "$(_c0 '        run: if bash scripts/test-preflight-checks.sh; then echo ok; fi')" = 0 ] \
+  && ok || bad "a suite inside an \`if\` was read as not invoked"
+[ "$(_c0 '        run: if ! bash scripts/test-preflight-checks.sh; then exit 1; fi')" = 0 ] \
+  && ok || bad "a negated \`if\` was read as not invoked"
+[ "$(_c0 '        run: time bash scripts/test-preflight-checks.sh')" = 0 ] \
+  && ok || bad "\`time\` hid the interpreter from the command-position test"
+[ "$(_c0 '        run: exec bash scripts/test-preflight-checks.sh')" = 0 ] \
+  && ok || bad "\`exec\` hid the interpreter"
+[ "$(_c0 '        run: xvfb-run bash scripts/test-preflight-checks.sh')" = 0 ] \
+  && ok || bad "a command wrapper hid the interpreter"
+# A `#` inside quotes must not eat the rest of the line. Unwrapping quotes before cutting comments
+# let it, and inverted the fix's intent: adding a space inside the quotes was what made it pass.
+[ "$(_c0 '        run: sed -i \"s/#.*//\" notes.txt \&\& bash scripts/test-preflight-checks.sh')" = 0 ] \
+  && ok || bad "a \`#\` inside quotes truncated the line and hid a real invocation"
+[ "$(_c0 '        run: git commit -m \"#123\" \&\& bash scripts/test-preflight-checks.sh')" = 0 ] \
+  && ok || bad "a quoted issue number truncated the line"
 
 # ── the CLI-removal registry, and the class that outlived its command ──────────────────────
 # Both added 2026-08-23, when `multica plugin` — a group that arrived in 0.4.26 and was made a

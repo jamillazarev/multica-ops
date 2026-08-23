@@ -540,18 +540,21 @@ whether a run is CREATED, not whether the agent finishes** — which is exactly 
 is.
 
 > [!NOTE]
-> **This paragraph used to say "every path here is counted, none cited", and that was false for
-> four of the eight. Its replacement said "half counted, half read" and was false too** — four
-> counted, two read, two neither, with the category that mattered most left out of the summary
-> entirely. A cold-read lens caught the second one the same day, directly above this note.
-> **The lesson survived two attempts to state it and the statements did not**, which is the
-> argument for the table rather than a better sentence: It was written on 2026-08-15 when the section held three counted paths,
-> and it survived two later edits that added paths read from `--help` and two that were never
-> measured at all. It also said the section "had carried no date until now" — a *now* that was
-> three revisions stale by the time anyone read it. **A blanket claim at the top of a list is the
-> shape that rots**: it is written once, about the list as it stood, and every later row inherits
-> a guarantee nobody re-checked. The table above cannot rot the same way, because a new row has
-> nowhere to hide.
+> **Two blanket claims stood at the top of this section and both were false.** The first said
+> *"every path here is counted, none cited"* — false for four of the eight. The second, written to
+> repair it, said *"half counted, half read"* — also false: four counted, two read, **two neither**,
+> and *neither* is the category the repair existed to expose.
+>
+> **Neither one rotted. Both were false the day they were written**, and the git log settles it:
+> the first landed 2026-08-22 (`1ab722e`), when every row it summarised was already on the page,
+> and the second lasted a few hours before a cold-read lens checked it against the table two lines
+> below. So the lesson is not *lists grow and summaries go stale* — it is narrower and worse.
+> **Summarising a list is work, and a summary written in the flow of a sentence gets checked the
+> way a sentence gets checked, not the way a table does.** The rows here were each true. Only the
+> sentence above them was wrong, twice, by two different authors' hands on the same afternoon.
+>
+> That is why the table replaced the sentence rather than a better sentence replacing it. A row
+> that says *neither* has nowhere to hide; a clause that says *half* has everywhere.
 
 1. **Issue assignment** — to an agent runs it; to a squad wakes **only the leader** (measured with
    a squad holding a leader *and* a member: exactly one run, the leader's). `multica issue assign`

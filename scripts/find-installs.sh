@@ -160,7 +160,14 @@ fi
 adir="$HOME_DIR/.gemini/config/plugins/$NAME"
 if [ -e "$adir" ]; then
   v=$(read_version "$adir")
-  add "$adir" "plugin, Antigravity" "git pull --ff-only in place if it is a clone (it usually is — checked 2026-08-01), else re-copy the source or agy plugin install <url>" "$(clone_state "$adir")" "$v"
+  # Ask, do not guess. "it usually is a clone" was true on 2026-08-01 and is the sentence a reader
+  # skims past; the two routes are mutually destructive, so the row states which one applies here.
+  if git -C "$adir" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    _aroute="a CLONE — git pull --ff-only in place; never rsync onto it, that is what breaks the pull"
+  else
+    _aroute="a COPY — rsync the source over it, or agy plugin install <url>; if it ever becomes a clone, switch to git pull"
+  fi
+  add "$adir" "plugin, Antigravity" "$_aroute" "$(clone_state "$adir")" "$v"
 fi
 
 # hermes: a mount in config.yaml is an install even though no file lands anywhere — and it

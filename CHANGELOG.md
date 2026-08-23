@@ -20,10 +20,13 @@ named them; this is the repair.
   full stop — which markdown structure does not contain. Honest prose under two unrelated
   headings read as one claim. It now joins only lines the wrap broke and keeps every block
   boundary, same-length so the reported line number stays true.
-- **§4f read your register's header as a row** unless your first column was called Tool, Name or
-  What — so standing up `_ops/TOOLING.md` from the template was refused for saying nothing about
-  what it replaced. The header is found structurally now, above the `|---|` separator, and a
-  fenced example table is not a row.
+- **§4f read your register's header as a row** unless your first column happened to be called
+  Tool, Name or What — so a register with columns named anything else was refused, at stand-up,
+  for saying nothing about what it replaced. The header is found structurally now, above the
+  separator, in any GFM dialect; a fenced example is not a row.
+- **And §4f cited a `Replaces` column this repository's own template did not have**, so every
+  register stood up here fell through to a keyword list — the defect the column exists to avoid.
+  The template carries the column now, and says what the gate does with it.
 
 **And REFERENCE §2 stopped claiming more evidence than it has.** It opened with *"every path here
 is counted, none cited"* — true of the three paths it held when that was written on 2026-08-15,
@@ -31,8 +34,11 @@ and false for the four added after: two read from `--help` and two never measure
 There is a table now saying, per path, whether it is counted, read, or neither. **Chat and
 autopilot are marked plainly as unmeasured**, which is the honest state and was not visible before.
 
-Eval state: **not run.** Thirteen assertions added across the two suites (19 · 57); nothing here
-changes what a run is asked to do.
+Eval state: **not run.** Nothing here changes what a run is asked to do, and every change above
+is held by an assertion in the suite that owns it — `test-company-guard.sh` and
+`test-preflight-checks.sh`, each of which prints its own total, which is the only count with a
+guard on it. (An earlier draft of this line said *thirteen*; it was twelve at the time and is
+more now. That is the argument, not an aside.)
 
 ## 0.4.10 — 2026-08-23
 
