@@ -392,6 +392,9 @@ def check_fingerprint_count():
         print(f"  fingerprint: PLAYBOOKS and STRUCTURAL agree at {n} classes")
 
 
+# A heading and a table row occupy exactly one line by construction, so the newline after one is
+# always a block boundary. Everything else in _BLOCK_START may legitimately wrap.
+_ONE_LINE = re.compile(r"^[ \t]*(#{1,6}[ \t]|\|)")
 _BLOCK_START = re.compile(r"^(\s*([-*+]|\d+[.)])\s|\s*#{1,6}\s|\s*>|\s*\||\s*```|\s*<)")
 def _soft_flatten(text):
     """Join lines the hard wrap broke, and KEEP every newline that is a block boundary.
@@ -417,7 +420,16 @@ def _soft_flatten(text):
     out = []
     for i, ln in enumerate(lines[:-1]):
         nxt = lines[i + 1]
-        joinable = ln.strip() and nxt.strip() and not _BLOCK_START.match(nxt)
+        # **Both sides are asked, and they are asked different questions.** Testing only `nxt`
+        # let a heading join the prose under it whenever no blank line separated them —
+        # `## Mentioning a member or an issue` + `the counters are free` read as one claim
+        # (measured 2026-08-23 by a cold-read lens; the docstring above had promised otherwise,
+        # which is an overclaim by the person who wrote both). A heading and a table row are
+        # always exactly one line, so their newline is always a boundary. A list item or a
+        # blockquote line is the opposite: it wraps, and joining its continuation is the whole
+        # reason this function exists — so `ln` being one of those is not a boundary by itself.
+        ends_here = _ONE_LINE.match(ln)
+        joinable = ln.strip() and nxt.strip() and not _BLOCK_START.match(nxt) and not ends_here
         out.append(ln + (" " if joinable else "\n"))
     out.append(lines[-1])
     return "".join(out)
@@ -448,14 +460,7 @@ def check_mention_cost():
             text = open(f, encoding="utf-8").read()
         except OSError:
             continue
-        # **Match on a flattened copy**, because this corpus hard-wraps at ~98 columns and the
-        # patterns above use `[^.\n]` to stay inside one sentence — so the retracted rule became
-        # INVISIBLE the moment it happened to straddle a line break. Measured 2026-08-21, on this
-        # guard's own first hour: after the core was rewrapped to fit its line budget, the planted
-        # mutant went undetected, and the guard reported clean over the sentence it exists to
-        # refuse. Newline → space is a SAME-LENGTH substitution, so every offset still points at
-        # the original byte and the reported line number stays true.
-        flat = _soft_flatten(text)
+        flat = _soft_flatten(text)   # see its docstring: what is joined, and what is not
         for m in FREE.finditer(flat):
             line = text.count("\n", 0, m.start()) + 1
             bad.append(f"{f}:{line}")

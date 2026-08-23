@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# guard-version: 0.4.9   <!-- stamped from the skill at ship time; read by the check below -->
+# guard-version: 0.4.11   <!-- stamped from the skill at ship time; read by the check below -->
 # Docs guard for a company Mops built — install it into the company's own repo, not ours.
 #
 #   cp templates/company-preflight.sh <repo>/scripts/preflight.sh
@@ -333,32 +333,45 @@ fi
 if [ -n "$_tool_rows" ]; then
   _dec2=$( ( git diff --cached -U0 -- _ops/DECISIONS.md 2>/dev/null || true ) \
     | grep '^+' | grep -v '^+++ ' || true )
-  # **A FIELD, not a vocabulary.** This was a keyword list — `instead of|replaces|already|…` —
-  # which is precisely the defect §4e was repaired away from in the same file on the same day: a
-  # gate satisfied by words teaches people to sprinkle them, and refuses an honest answer that
-  # happens to use different ones. A lens named the contradiction, 2026-08-23.
+  # **The gate was stricter than its own message, which is the §4e defect one section down.**
+  # With the column present this read the cell and NOTHING else, so a maintainer doing exactly
+  # what the refusal prescribed — writing the reason in `_ops/DECISIONS.md` — was refused again,
+  # by the same message, with no hint that a column existed. Measured 2026-08-23 by a cold-read
+  # lens, and reproduced: row added, decision written, still refused.
   #
-  # So the register carries a **Replaces** column (`templates/TOOLING-template.md`) and this reads
-  # the cell. A register that predates the column falls back to the keyword list, and that fallback
-  # is named here rather than presented as a test — an old register is not a project's fault, and
-  # refusing every commit until it is reshaped is how a guard gets deleted.
+  # Both homes are answers now, and the decision line must NAME the tool — the same field test
+  # §4e uses, not a vocabulary. A register predating the column keeps the keyword fallback, named
+  # here rather than presented as a test: an old register is not a project's fault, and refusing
+  # every commit until it is reshaped is how a guard gets deleted.
   _has_col=$(grep -m1 -i '^[[:space:]]*|.*|[[:space:]]*\*\*\?Replaces\*\*\?[[:space:]]*|' _ops/TOOLING.md 2>/dev/null | grep -c . || true)
   if [ "${_has_col:-0}" -gt 0 ]; then
-    # the column's position, then the same cell in every added row
     _ci=$(head -20 _ops/TOOLING.md | grep -m1 -i '\*\*\?Replaces\*\*\?' \
           | awk -F'|' '{for(i=1;i<=NF;i++) if (tolower($i) ~ /replaces/) {print i; exit}}')
-    _blank=$(printf '%s\n' "$_tool_rows" \
-             | awk -F'|' -v c="${_ci:-0}" '{gsub(/^[ \t]+|[ \t]+$/,"",$c); if ($c=="") print}' | grep -c . || true)
-    [ "${_blank:-0}" -eq 0 ]
+    _unanswered=0
+    while IFS= read -r _row; do
+      [ -n "$_row" ] || continue
+      _cell=$(printf '%s' "$_row" | awk -F'|' -v c="${_ci:-0}" '{gsub(/^[ \t]+|[ \t]+$/,"",$c); print $c}')
+      [ -n "$_cell" ] && continue
+      # The cell is blank — a decision line naming this row's tool is the other complete answer.
+      _tool=$(printf '%s' "$_row" | awk -F'|' '{gsub(/^[ \t*]+|[ \t*]+$/,"",$2); print $2}')
+      if [ -n "$_tool" ]; then
+        _esc2=$(printf '%s' "$_tool" | sed 's/[].[^$\\*\/]/\\&/g')
+        printf '%s\n' "$_dec2" | hits -iE "(^|[^A-Za-z0-9_-])${_esc2}([^A-Za-z0-9_-]|$)" && continue
+      fi
+      _unanswered=$((_unanswered+1))
+    done <<TOOLROWS
+$_tool_rows
+TOOLROWS
+    [ "$_unanswered" -eq 0 ]
   else
     printf '%s\n%s\n' "$_tool_rows" "$_dec2" \
       | hits -iE 'instead of|replaces|rather than|already|by hand|nothing else|we had none|had no '
   fi \
-    || say_fail "this commit adds a row to _ops/TOOLING.md and nothing says what it replaces. A \
-tool arrives in a minute and is maintained for a year, and the rung above choosing one is asking \
-whether the work already had a way — a clause in the row's own why, or a line in \
-_ops/DECISIONS.md: what was done before this, and why that stopped being enough. \`we had none\` \
-is a complete answer and often the true one outside software — write it and this passes"
+    || say_fail "this commit adds a row to _ops/TOOLING.md and nothing says what it replaces. Two \
+places count, and either one is enough: the row's own **Replaces** cell, or a line in \
+_ops/DECISIONS.md that NAMES this tool and says what was done before it. \`we had none\` is a \
+complete answer and often the true one outside software — write it in the cell and this passes. \
+A tool arrives in a minute and is maintained for a year, which is why the rung is asked at all"
 fi
 
 

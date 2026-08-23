@@ -521,10 +521,12 @@ and *"it does not hold the loop"* stops being a rule it could work around.
 
 ## 2. Eight trigger paths
 
-**Half of these are counted and half are read, and each one says which.** Counting means a
-scratch workspace with three inert probe agents and `multica issue runs` read before and after the
-act; reading means the CLI's own `--help` says the act starts a run. Both are evidence and they
-are not the same evidence — a `--help` sentence describes intent, a count describes what happened.
+**Each path below says what it rests on, and the table is the claim — this paragraph is not.**
+Counting means a scratch workspace with three inert probe agents and `multica issue runs` read
+before and after the act. Reading means the CLI's own `--help` says the act starts a run. Neither
+means neither: listed from the product surface and never tested here. All three are honest states
+and only the first two are evidence — a `--help` sentence describes intent, a count describes what
+happened.
 
 | | how it is known | when |
 |---|---|---|
@@ -539,7 +541,11 @@ is.
 
 > [!NOTE]
 > **This paragraph used to say "every path here is counted, none cited", and that was false for
-> four of the eight.** It was written on 2026-08-15 when the section held three counted paths,
+> four of the eight. Its replacement said "half counted, half read" and was false too** — four
+> counted, two read, two neither, with the category that mattered most left out of the summary
+> entirely. A cold-read lens caught the second one the same day, directly above this note.
+> **The lesson survived two attempts to state it and the statements did not**, which is the
+> argument for the table rather than a better sentence: It was written on 2026-08-15 when the section held three counted paths,
 > and it survived two later edits that added paths read from `--help` and two that were never
 > measured at all. It also said the section "had carried no date until now" — a *now* that was
 > three revisions stale by the time anyone read it. **A blanket claim at the top of a list is the

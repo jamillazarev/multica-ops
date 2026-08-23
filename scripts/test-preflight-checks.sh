@@ -386,6 +386,17 @@ MPY
   && ok || bad "honest prose under two headings matched as one claim — the flattening crossed a block boundary"
 [ "$(_mc '- mentioning a member is the act\n\n- issue counters are free\n')" = 0 ] \
   && ok || bad "two unrelated list items matched as one sentence"
+# A heading and a table row are one line by construction; the newline after one is always a
+# boundary, blank line or not. Testing only the FOLLOWING line let a heading join the prose
+# beneath it — found 2026-08-23 by a cold-read lens, against a docstring that had promised the
+# opposite. The wrapped list item below is the case that must still join: it is the whole reason
+# any joining happens at all, and a fix that broke it would have traded one blind spot for another.
+[ "$(_mc '## Mentioning a member or an issue\nthe counters are free\n')" = 0 ] \
+  && ok || bad "a heading joined the prose under it — one line by construction, always a boundary"
+[ "$(_mc '| Mentioning a member or an issue | x |\nthe counters are free\n')" = 0 ] \
+  && ok || bad "a table row joined the prose under it"
+[ "$(_mc '- mentioning a member or an\n  issue in a comment is free.\n')" -ge 1 ] \
+  && ok || bad "a claim wrapped inside a list item went undetected — the join that must survive"
 
 echo "preflight-checks: $pass passed, $fail failed"
 exit "$fail"
