@@ -7,10 +7,21 @@ rotates, and whose breaking change surprises the team.
 One row per tool. **Operating detail does not live here** — it lives in
 `_ops/runbooks/<tool>.md`, so this stays scannable and the runbook stays deep.
 
-| Tool | What it's for | Access & where the secret lives | Wired how | Checked |
-|---|---|---|---|---|
-| {{Sentry}} | {{error tracking for the web app}} | {{conductor + web engineer · token in `mcp_config`}} | {{MCP server}} | {{2026-07-23}} |
-| {{Vercel}} | {{hosting + preview deploys}} | {{owner only — deploys are outward}} | {{CLI on the daemon machine}} | {{2026-07-23}} |
+| Tool | What it's for | **Replaces** | Access & where the secret lives | Wired how | Checked |
+|---|---|---|---|---|---|
+| {{Sentry}} | {{error tracking for the web app}} | {{we had none — errors went unseen}} | {{conductor + web engineer · token in `mcp_config`}} | {{MCP server}} | {{2026-07-23}} |
+| {{Vercel}} | {{hosting + preview deploys}} | {{the rsync script on the old box}} | {{owner only — deploys are outward}} | {{CLI on the daemon machine}} | {{2026-07-23}} |
+
+**The `Replaces` column is a gate, not a nicety.** The guard refuses a commit that adds a row and
+leaves it blank — because a tool arrives in a minute and is maintained for a year, and the rung
+above *which tool* is *did the work already have a way, and why did that stop being enough.*
+**`we had none` is a complete answer** and outside software it is usually the true one, so write it
+plainly; the guard does not judge the answer, only its absence. If you would rather answer in
+`_ops/DECISIONS.md`, a line there that **names the tool** counts too.
+
+*(This column was cited by the guard for a day before it existed here — so every register stood up
+from this template fell through to a keyword list, which is the defect the guard was built to
+avoid. Found 2026-08-23.)*
 
 **Rules that keep this honest:**
 

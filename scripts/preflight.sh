@@ -138,13 +138,31 @@ for f in sys.argv[1:]:
 # dropping exists to kill — `echo "run bash scripts/test-foo.sh to reproduce"` — is prose and
 # always has spaces in it. Structural, not a word list: a bare quoted path is an argument, a
 # quoted sentence is documentation.
+# **Comments are cut BEFORE quotes are unwrapped, and only outside quotes.** Unwrapping first
+# let a `#` that had been safely inside a quoted span survive into the plain text, where
+# `split("#")` then ate the rest of the line: `sed -i "s/#.*//" x.txt && bash scripts/test-foo.sh`
+# became `sed -i s/` and the suite read as never invoked. A regression from the quote change,
+# measured 2026-08-23 — and inverted from its intent, since adding a space inside the quotes was
+# what made it pass. Scan once, tracking quote state, and cut at the first `#` that is genuinely
+# outside one.
 _q = chr(39)
 def _keep(m):
     inner = m.group(0)[1:-1]
     return inner if inner and not re.search(r"\s", inner) else " "
+def _strip_comment(s):
+    q = None
+    for i, ch in enumerate(s):
+        if q:
+            if ch == q:
+                q = None
+        elif ch in (chr(34), _q):
+            q = ch
+        elif ch == "#":
+            return s[:i]
+    return s
 def _code(s):
-    s = re.sub('"[^"]*"|' + _q + "[^" + _q + "]*" + _q, _keep, s)
-    return s.split("#", 1)[0]
+    s = _strip_comment(s)
+    return re.sub('"[^"]*"|' + _q + "[^" + _q + "]*" + _q, _keep, s)
 out = [c for c in (_code(l) for l in out) if c.strip()]
 print("\n".join(out))
 RUNPY
@@ -159,7 +177,16 @@ RUNPY
   # `bash -e x.sh` were both refused until 2026-08-23 — measured against eleven ordinary shapes,
   # of which four failed. What must NOT relax is the command POSITION itself: the interpreter
   # still has to open the command, so a name inside an echo or a sentence stays a mention.
-  _inv="(^|[;&|]+)[[:space:]]*(([A-Za-z_][A-Za-z0-9_]*=[^[:space:]]*|env)[[:space:]]+)*((bash|sh|python3)[[:space:]]+(-[^[:space:]]+[[:space:]]+)*|\./)[^[:space:]]*${_b}"
+  # The prefixes allowed before the interpreter are SHELL GRAMMAR — a closed set the shell itself
+  # defines — plus the wrappers that take a command as their argument. That is not the kind of
+  # vocabulary this repository distrusts: `if`, `!`, `then`, `time` and `exec` are not wording
+  # somebody might phrase differently, they are the language. Six ordinary shapes were refused
+  # before this, measured 2026-08-23 — `if bash x.sh; then`, `if ! bash x.sh`, `time bash x.sh`,
+  # `sudo bash x.sh`, `exec bash x.sh`, `xvfb-run bash x.sh` — and `if` and `time` are the two
+  # commonest ways anyone wraps a suite. What still must NOT relax is the command position: a
+  # suite named inside an `echo` or a sentence is a mention, not a run.
+  _pre="([A-Za-z_][A-Za-z0-9_]*=[^[:space:]]*|env|if|then|else|do|elif|!|time|exec|sudo|nice|command|xvfb-run|dbus-run-session)"
+  _inv="(^|[;&|(]+)[[:space:]]*(${_pre}[[:space:]]+)*((bash|sh|python3)[[:space:]]+(-[^[:space:]]+[[:space:]]+)*|\./)[^[:space:]]*${_b}"
   if [ "$(printf '%s\n' "$_runs" | grep -cE "$_inv")" -eq 0 ]; then
     say_fail "$_b is in scripts/ and no workflow \`run:\` step invokes it — CI does not execute it, and its green tick says otherwise"
   fi

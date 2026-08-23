@@ -301,29 +301,33 @@ fi
 # lenses found it, 2026-08-23. A comment inside a quoted argument is not a comment.
 _tool_rows=""
 if ( changed --diff-filter=AMR -- '_ops/TOOLING.md' ) | hits . ; then
-  # **What counts as a register row is decided by the FILE, and the diff only says which of them
-  # are new.** Reading the diff alone cannot know a line's context: `-U0` hands over added lines
-  # with no surroundings, so a `|` line inside a fenced example is indistinguishable from a real
-  # row — and this file's own templates ship fenced examples, which is how the market gate came to
-  # refuse the very template it ships beside.
-  #
-  # The header is found by STRUCTURE too: it is the line above the `|---|` separator. That filter
-  # used to be `tool|name|what`, a vocabulary one level below the vocabulary §4e was cured of in
-  # this same file, on the same day. A register naming its first column anything else had its own
-  # header read as a data row, so standing one up from a template — headers, no tools yet —
-  # was refused for saying nothing about what it replaced.
-  _real=$(awk '
-    /^[[:space:]]*```/ { fence = !fence; next }
-    !fence { n++; L[n] = $0 }
+  # **Everything is read from the INDEX, because that is what a pre-commit hook judges.** The
+  # first version of this took the register from the WORKTREE and the added lines from the index,
+  # then intersected them — so the moment the two disagreed the intersection was empty and the
+  # rung went silent. Staging a row and then aligning the table's pipes, which is what a person
+  # does next, made the gate pass a row it had just refused. Measured 2026-08-23 by an adversarial
+  # lens; a regression against the version before it, whose single source could not disagree with
+  # itself. One source, and the question it answers is the right one: what is about to be committed.
+  _staged=$(git show :_ops/TOOLING.md 2>/dev/null || true)
+  # A separator is one-or-more dashes: `|-|-|` is valid GFM and `-{2,}` read the separator itself
+  # as a data row, so a register standing up in that dialect was still refused. The header is the
+  # line above it — structure, never the words in it — and fences are skipped because this file's
+  # own templates ship example tables.
+  _rowsrc='
+    /^[[:space:]]*```/ { f = !f; next }
+    !f { n++; L[n] = $0 }
+  '
+  _hdr=$(printf '%s\n' "$_staged" | awk "$_rowsrc"'
+    END { for (i = 1; i <= n; i++) if (L[i+1] ~ /^[ \t]*\|[ \t]*:?-+/) { print L[i]; exit } }')
+  _real=$(printf '%s\n' "$_staged" | awk "$_rowsrc"'
     END {
       for (i = 1; i <= n; i++) {
         if (L[i] !~ /^[ \t]*\|/) continue
-        if (L[i] ~ /^[ \t]*\|[ \t]*:?-{2,}/) continue
-        if (L[i+1] ~ /^[ \t]*\|[ \t]*:?-{2,}/) continue
+        if (L[i] ~ /^[ \t]*\|[ \t]*:?-+/) continue
+        if (L[i+1] ~ /^[ \t]*\|[ \t]*:?-+/) continue
         print L[i]
       }
-    }
-  ' _ops/TOOLING.md 2>/dev/null || true)
+    }')
   _added=$( ( git diff --cached -U0 -- _ops/TOOLING.md 2>/dev/null || true ) \
     | grep '^+' | grep -v '^+++ ' | sed 's/^+//' | grep -E '^[[:space:]]*\|' || true )
   if [ -n "$_real" ] && [ -n "$_added" ]; then
@@ -333,6 +337,15 @@ fi
 if [ -n "$_tool_rows" ]; then
   _dec2=$( ( git diff --cached -U0 -- _ops/DECISIONS.md 2>/dev/null || true ) \
     | grep '^+' | grep -v '^+++ ' || true )
+  # **A FIELD, not a vocabulary.** This was a keyword list — `instead of|replaces|already|…` —
+  # which is precisely the defect §4e was repaired away from in the same file on the same day: a
+  # gate satisfied by words teaches people to sprinkle them, and refuses an honest answer that
+  # happens to use different ones. A lens named the contradiction, 2026-08-23.
+  #
+  # So the register carries a **Replaces** column (`templates/TOOLING-template.md`) and this reads
+  # the cell. A register that predates the column falls back to the keyword list, and that fallback
+  # is named here rather than presented as a test — an old register is not a project's fault, and
+  # refusing every commit until it is reshaped is how a guard gets deleted.
   # **The gate was stricter than its own message, which is the §4e defect one section down.**
   # With the column present this read the cell and NOTHING else, so a maintainer doing exactly
   # what the refusal prescribed — writing the reason in `_ops/DECISIONS.md` — was refused again,
@@ -343,10 +356,16 @@ if [ -n "$_tool_rows" ]; then
   # §4e uses, not a vocabulary. A register predating the column keeps the keyword fallback, named
   # here rather than presented as a test: an old register is not a project's fault, and refusing
   # every commit until it is reshaped is how a guard gets deleted.
-  _has_col=$(grep -m1 -i '^[[:space:]]*|.*|[[:space:]]*\*\*\?Replaces\*\*\?[[:space:]]*|' _ops/TOOLING.md 2>/dev/null | grep -c . || true)
-  if [ "${_has_col:-0}" -gt 0 ]; then
-    _ci=$(head -20 _ops/TOOLING.md | grep -m1 -i '\*\*\?Replaces\*\*\?' \
-          | awk -F'|' '{for(i=1;i<=NF;i++) if (tolower($i) ~ /replaces/) {print i; exit}}')
+  # The column index comes from the header line found above, not from a grep of the file's first
+  # twenty lines. Two ways that failed, both measured 2026-08-23: a header past line 20 left the
+  # index EMPTY, so awk read `$0` — the whole row, never blank — and every row passed silently;
+  # and a sentence in the preamble mentioning *Replaces* was picked instead, giving field 1, which
+  # is the empty string before the first pipe, so every row was refused. Four lines of extra
+  # preamble were the whole margin either way. Bold is optional too — a plain `| Replaces |`
+  # header is the same column, and requiring the asterisks sent an honestly filled register to the
+  # keyword fallback this block exists to avoid.
+  _ci=$(printf '%s' "$_hdr" | awk -F'|' '{for(i=1;i<=NF;i++){c=tolower($i); gsub(/[^a-z]/,"",c); if(c=="replaces"){print i; exit}}}')
+  if [ -n "$_ci" ]; then
     _unanswered=0
     while IFS= read -r _row; do
       [ -n "$_row" ] || continue
