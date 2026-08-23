@@ -3,7 +3,7 @@
 Newest first. Each entry leads with what you can now do, not with which files moved. This is
 also the migration map `/multica-ops:upgrade` reads.
 
-## 0.4.9 — unreleased
+## 0.4.9 — 2026-08-23
 
 **Rules that landed after 0.4.8 was tagged, and therefore owe their own version.** Evidence moves
 without a tag; a rule moves with one — and four of the six commits since that tag carry rules.
@@ -45,6 +45,15 @@ way the other seven were. Measured 2026-08-22 in the test workspace: a parent as
 child closed left it at **0**, and completing the stage brought it to **1**. Both children were
 closed with `--no-start`, so the run is the barrier's own. **Every path in the section that claims
 to enumerate every way a run is created is now counted.**
+
+**Pass thirteen read this range before it shipped, and its criticals are repaired here.**
+**`--regen-cli` rewrote the wrong `<!-- cli-pin -->` marker**, left §10 stale and reported success:
+`grep -c` counts matching LINES under the grep a script actually gets, so two markers on one
+reflowed line counted as one and the guard invented against that exact incident passed it. Fourth
+instance of this class in two days. **The company guard got its first test at all** — 101 lines of
+new gate that `grep -rl` found named only in prose. **§4f asked for a vocabulary**, the defect §4e
+had been cured of in the same file; it reads a **Replaces** column now. And §4e's word boundary
+refused a decision line ending in a full stop — the remedy its own refusal prescribes.
 
 Eval state: **RUN, 2026-08-22** — scenarios 28 and 29, N=3, both repository-half only.
 **29 holds 3 of 3**; **28 fails 0 of 3**, all three adding a rule to the guide on first occurrence.

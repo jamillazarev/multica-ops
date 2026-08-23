@@ -59,6 +59,11 @@ end to end rather than assumed.
 
 ## Different, by design
 
+- **A catch does not become a rule the day it is caught** — a dated line immediately, a task on
+  the second occurrence, and a week before it enters the guide. Repairs never wait; the ladder
+  governs lessons. **Measured at 0 of 3**, and named as prose that needs a form.
+- **Two runs that disagree stop the work** at the second disagreement, not the third — the count
+  is flips, not attempts, and what escalates is *the question is unstable*. **Measured at 3 of 3.**
 - **A new standing commitment says what it replaces** — a library, a supplier, a subscription.
   Does it need to exist · is it already here · native to the platform · one line: every rung but
   the last is judgement, and whether the answer was written down is not.
