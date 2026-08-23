@@ -3,6 +3,37 @@
 Newest first. Each entry leads with what you can now do, not with which files moved. This is
 also the migration map `/multica-ops:upgrade` reads.
 
+## 0.4.11 — unreleased
+
+**Two guards were refusing honest work and one was blind to a whole class of it.** Pass thirteen
+named them; this is the repair.
+
+- **CI check 0 refused four ordinary shapes of a workflow step.** `bash "scripts/x.sh"`,
+  `bash 'scripts/x.sh'`, `env CI=1 bash scripts/x.sh` and `bash -e scripts/x.sh` were all read as
+  *the suite is not invoked* — measured against eleven ordinary forms, of which seven passed.
+  **If this gate refused a workflow you knew was correct, it was wrong and you were right.** A
+  quoted span is now dropped only when it contains whitespace, which is what separates an
+  argument from a sentence; environment assignments and interpreter flags are allowed at the
+  command position. What did not relax: a suite named inside an `echo` is still not a run.
+- **The mention-cost guard matched across headings, blank lines and list items.** It flattened
+  the whole file to one line so a hard-wrapped claim could not hide, and the patterns stop at a
+  full stop — which markdown structure does not contain. Honest prose under two unrelated
+  headings read as one claim. It now joins only lines the wrap broke and keeps every block
+  boundary, same-length so the reported line number stays true.
+- **§4f read your register's header as a row** unless your first column was called Tool, Name or
+  What — so standing up `_ops/TOOLING.md` from the template was refused for saying nothing about
+  what it replaced. The header is found structurally now, above the `|---|` separator, and a
+  fenced example table is not a row.
+
+**And REFERENCE §2 stopped claiming more evidence than it has.** It opened with *"every path here
+is counted, none cited"* — true of the three paths it held when that was written on 2026-08-15,
+and false for the four added after: two read from `--help` and two never measured here at all.
+There is a table now saying, per path, whether it is counted, read, or neither. **Chat and
+autopilot are marked plainly as unmeasured**, which is the honest state and was not visible before.
+
+Eval state: **not run.** Thirteen assertions added across the two suites (19 · 57); nothing here
+changes what a run is asked to do.
+
 ## 0.4.10 — 2026-08-23
 
 **One sentence in this reference had become its own opposite, and it took six CLI releases to
