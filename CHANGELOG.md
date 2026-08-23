@@ -3,6 +3,58 @@
 Newest first. Each entry leads with what you can now do, not with which files moved. This is
 also the migration map `/multica-ops:upgrade` reads.
 
+## 0.4.12 — unreleased
+
+**The lenses were run again over 0.4.11's own repairs, and two of them had introduced defects.**
+
+- **check 0 could be satisfied by a step that cannot run.** `if: false` is one line and read as
+  *CI executes this suite* forever — the same shape as commenting the invocation out, which this
+  gate already refuses, arriving through the step's condition instead of its body. Only a literal
+  false disqualifies: a real condition is a judgement this script does not make.
+- **And unwrapping a quoted token could synthesise a command position the shell never sees.**
+  `echo "|bash" scripts/x.sh` spliced a pipe into the stream and read as an invocation — a class
+  0.4.11's own quote change created. The set of characters that does this was then drawn too wide:
+  **a quoted path containing `$` was refused**, so `bash "$GITHUB_WORKSPACE/scripts/x.sh"` — an
+  ordinary step — failed the check while the message beside it said quoting was optional. Only
+  what opens a command position counts now.
+- **`if: false` written BELOW `run:` in the same step did not disqualify it.** YAML mappings are
+  unordered and the first version walked forward from the `if:` line. A step is judged whole now,
+  and `if: 0` counts the same as `if: false`.
+- **§4f asked the rung of retirements.** A `_ops/TOOLING.md` that carries a second table —
+  `## Retired`, recording that something went **away** — had every row in it checked for what it
+  replaces, which is the opposite question. Rows belong to their own table now, found by the
+  header that actually carries the `Replaces` column. **The guard is a shared file, so this landed
+  in both methodologies at once**; the reasoning lives in `templates/company-preflight.sh` §4f,
+  which is the section this and every other §-reference in this entry names. The register is read from
+  the index now, and a `## Retired` table's rows are not the register's.
+
+**Two refusal messages stopped leaving the reader stuck.** check 0 said flatly *"no workflow `run:`
+step invokes it"* to somebody looking at a step that plainly runs it — a gate that reads as wrong
+gets the workflow edited to please it. It names the accepted shapes now, and says that if one of
+them still fires, **the matcher is wrong and not you**. And the `cli-removed` message offered
+burial as the only remedy for a condition **a stale local CLI produces just as readily** — a reader
+on an old install would have followed it and permanently documented a live command as gone. It
+prints the installed version and asks which side is behind, first.
+
+**`find-installs.sh` flagged installs that were fine** — it fired on untracked files, which do not
+stop `git pull --ff-only`, and prescribed a reset. Tracked modifications only, **AT RISK** rather
+than BROKEN, and pasteable remedies. It had no test; it has twelve, wired into CI.
+
+> [!IMPORTANT]
+> **The suite now asserts that `scripts/preflight.sh` parses and runs at all**, because for one
+> commit in this range it did not, and nothing else would have said so — every other assertion in
+> that file was running against a corpse. The cause is worth carrying: **a lone backtick inside a
+> double-quoted string, inside a heredoc, inside `$( … )`** kills the file, because bash 3.2 scans
+> for the closing paren straight through the heredoc while tracking double quotes. Measured: the
+> backtick alone breaks it; parentheses do not, balanced or unbalanced; a `$` does not; the same
+> backtick in single quotes does not.
+>
+> **And `bash -n` catches it instantly.** An earlier draft of this entry said the opposite. That
+> claim was never measured — `bash -n` had been run against a version without the fault, come back
+> clean, and then been blamed for the miss. Run it after touching anything inside that heredoc.
+
+Eval state: **not run.** Nothing here changes what a run is asked to do.
+
 ## 0.4.11 — 2026-08-23
 
 **Two guards were refusing honest work and one was blind to a whole class of it.** Pass thirteen

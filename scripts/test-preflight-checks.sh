@@ -329,6 +329,49 @@ C0PY
   && ok || bad "a \`#\` inside quotes truncated the line and hid a real invocation"
 [ "$(_c0 '        run: git commit -m \"#123\" \&\& bash scripts/test-preflight-checks.sh')" = 0 ] \
   && ok || bad "a quoted issue number truncated the line"
+# `if: false` on the step is one line and satisfied "CI executes this" forever — the same shape as
+# commenting the invocation out, arriving through the step's condition instead of its body.
+# Only a LITERAL false disqualifies: a real condition is a judgement this script is not making,
+# and guessing at one would turn an honest matrix step into a refusal.
+[ "$(_c0 '        if: false\n        run: bash scripts/test-preflight-checks.sh')" = 1 ] \
+  && ok || bad "a step that cannot run counted as running the suite"
+[ "$(_c0 '        if: ${{ false }}\n        run: bash scripts/test-preflight-checks.sh')" = 1 ] \
+  && ok || bad "the expression form of a literal false was not seen"
+# **A step is a unit, and YAML mappings are unordered.** The first version walked forward from the
+# `if:` line, so `run:` written ABOVE `if: false` in the same step still counted — legal YAML, and
+# the refusal message asserts the opposite. Cold-read lens, 2026-08-23.
+[ "$(_c0 '        run: bash scripts/test-preflight-checks.sh\n        if: false')" = 1 ] \
+  && ok || bad "\`if: false\` written after \`run:\` in the same step did not disqualify it"
+[ "$(_c0 '        run: bash scripts/test-preflight-checks.sh\n        if: 0')" = 1 ] \
+  && ok || bad "\`if: 0\` did not disqualify — the code accepts it and the message now says so"
+# A quoted path carrying `$` is an ordinary CI step, and the message says quoting is optional.
+# `$`, `<` and `>` were in the metacharacter set and should not have been: none opens a command
+# position. `$(` is still caught, by the paren.
+[ "$(_c0 '        run: bash \"\$GITHUB_WORKSPACE/scripts/test-preflight-checks.sh\"')" = 0 ] \
+  && ok || bad "a quoted path containing \$ was refused, while the message promises quoting is fine"
+[ "$(_c0 '        run: echo \"\$(bash)\" scripts/test-preflight-checks.sh')" = 1 ] \
+  && ok || bad "a command substitution smuggled inside quotes opened a fake command position"
+[ "$(_c0 '        if: always()\n        run: bash scripts/test-preflight-checks.sh')" = 0 ] \
+  && ok || bad "an honest condition was treated as disqualifying"
+[ "$(_c0 '        if: github.event_name == \"push\"\n        run: bash scripts/test-preflight-checks.sh')" = 0 ] \
+  && ok || bad "a real condition was guessed at and refused"
+# Unwrapping a quoted token could SYNTHESISE a command position the shell never sees: `echo
+# "|bash" scripts/x.sh` spliced a pipe into the stream and read as an invocation. A class the
+# quote change introduced, found 2026-08-23 by probing its own new behaviour.
+[ "$(_c0 '        run: echo \"|bash\" scripts/test-preflight-checks.sh')" = 1 ] \
+  && ok || bad "a pipe smuggled inside quotes opened a fake command position"
+[ "$(_c0 '        run: echo \";bash\" scripts/test-preflight-checks.sh')" = 1 ] \
+  && ok || bad "a semicolon smuggled inside quotes opened a fake command position"
+# **And the script must still PARSE**, which is not implied by any assertion above: the fix for
+# the two cases above was first written as a literal character class carrying a lone backtick
+# inside a double-quoted Python string, and bash 3.2 scans for the closing paren of the enclosing
+# `$( … )` straight through the heredoc, tracking double quotes — so the backtick opened a
+# substitution that never closed and the whole script died with "unexpected EOF" 590 lines later.
+# `bash -n` catches it instantly, and the note beside the fix now says so; this assertion is the
+# belt to that braces, because nothing else here would notice a corpse.
+bash scripts/preflight.sh >/dev/null 2>&1; _rc=$?
+[ "$_rc" -le 1 ] \
+  && ok || bad "scripts/preflight.sh does not parse or run — exit $_rc, and every assertion above ran against a corpse"
 
 # ── the CLI-removal registry, and the class that outlived its command ──────────────────────
 # Both added 2026-08-23, when `multica plugin` — a group that arrived in 0.4.26 and was made a
@@ -347,7 +390,7 @@ if old not in t:
 p.write_text(t.replace(old, sys.argv[1], 1))
 RPY
     )
-    n=$( ( cd "$T/c" && python3 scripts/check-structure.py ) 2>&1 | grep -c "no such command group")
+    n=$( ( cd "$T/c" && python3 scripts/check-structure.py ) 2>&1 | grep -cE "no such (command )?group")
     undo; echo "$n"; }
 
   [ "$(_reg '<!-- cli-removed: plugin 2026-08-23 -->')" = 0 ] \

@@ -264,6 +264,15 @@ if shutil.which("multica"):
             continue
         _m = re.match(r"^\s*<!--\s*cli-removed:\s*([a-z][a-z-]+)\s+(\d{4}-\d{2}-\d{2})\s*-->\s*$", _ln)
         if not _m:
+            # **A near-miss is louder than silence.** A line that opens `<!-- cli-removed:` and
+            # does not parse was simply skipped, so a reader who pasted the message's template
+            # verbatim — placeholder and all — saw the identical refusal next run with nothing
+            # saying their line had been rejected. Measured 2026-08-23 by a cold-read lens.
+            if _ln.lstrip().startswith("<!--") and "cli-removed" in _ln:
+                warn(f"a line in REFERENCE looks like a cli-removed marker and does not parse: "
+                     f"{_ln.strip()[:90]} — it must be alone on its line, outside any fence, as "
+                     f"`<!-- cli-removed: <group> YYYY-MM-DD -->` with a real calendar date. As "
+                     f"written it exempts nothing")
             continue
         try:
             datetime.date.fromisoformat(_m.group(2))
@@ -289,9 +298,38 @@ if shutil.which("multica"):
         if h is None:
             if g in RETIRED:
                 continue          # named in the removal registry, with a date — a burial, not a promise
-            fail(f"docs reference `multica {g}` — no such command group. If the platform removed "
-                 f"it, bury it: add `<!-- cli-removed: {g} YYYY-MM-DD -->` to REFERENCE and say "
-                 f"in §10 what replaced it, so a reader with it in a runbook finds out why")
+            # **Two things produce this, and only one of them is a removal.** The check fires
+            # whenever `multica <group> --help` exits non-zero — which is equally what happens
+            # when the CLI installed HERE is older than the docs. The message used to offer
+            # burial as the single remedy, so a reader on a stale CLI would follow it and
+            # permanently document a live command as gone. Named 2026-08-23 by a cold-read lens.
+            _lv = subprocess.run(["multica", "--version"], capture_output=True, text=True).stdout
+            _lv = (re.search(r"\d+\.\d+\.\d+", _lv or "") or [None])
+            _lv = _lv.group(0) if hasattr(_lv, "group") else "unknown"
+            # The marker is printed as a LITERAL you can paste, with the date filled in from
+            # today, and the instruction to change it sits outside the backticks. The first
+            # version put prose inside them — `<the date you verified it, YYYY-MM-DD>` — which the
+            # parser above does not match, so a reader who pasted exactly what they were shown got
+            # the identical refusal on the next run with nothing saying their line was rejected.
+            # That is the defect this whole message was rewritten to stop. Named 2026-08-23.
+            _today = datetime.date.today().isoformat()
+            fail(f"docs reference `multica {g}` and the CLI on this machine (v{_lv}) has no such "
+                 f"group. **Two different things cause this, so check which before writing "
+                 f"anything down.**\n"
+                 f"      · Your CLI may be older than the docs. REFERENCE §10 carries the version "
+                 f"they were checked against — if v{_lv} is behind it, run `multica update` (or "
+                 f"upgrade however you installed it) and run this again. The group is probably "
+                 f"alive and this is your install talking.\n"
+                 f"      · If you cannot upgrade right now, this check will keep refusing, and "
+                 f"that is correct — the docs and the CLI here disagree. Commit with your "
+                 f"repository's own bypass, or upgrade first; do NOT bury a command to get past "
+                 f"it.\n"
+                 f"      · If the platform really removed `{g}`, bury it. Paste this line into "
+                 f"REFERENCE.md, on a line of its own, outside any fence, and change the date to "
+                 f"the day you verified the removal:\n"
+                 f"        <!-- cli-removed: {g} {_today} -->\n"
+                 f"      then say in §10 what replaced it, so a reader with `multica {g}` in a "
+                 f"runbook finds out why it stopped working")
         elif not re.search(rf"^\s+{re.escape(sub)}:", h, re.M) and not sub.startswith("-"):
             if not re.search(rf"--{re.escape(sub)}\b", h):
                 warn(f"docs reference `multica {g} {sub}` — not in that group's help")

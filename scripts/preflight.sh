@@ -108,9 +108,49 @@ out = []
 for f in sys.argv[1:]:
     try: lines = open(f, encoding="utf-8").read().split("\n")
     except OSError: continue
+    # **A step that cannot run does not run it.** `if: false` on the step is one line and satisfies
+    # "CI executes this" forever — the same shape as commenting the invocation out, which this
+    # extractor already refuses, arriving through the step's condition instead of its body.
+    # Measured 2026-08-23 by an adversarial lens. Only a LITERAL false disqualifies a step: a real
+    # condition is a judgement about a run this script is not having, and guessing at one would
+    # turn an honest matrix step into a refusal.
+    # **A step is a unit, and YAML mappings are unordered.** The first version of this walked
+    # FORWARD from an `if:` line and marked what followed, so `run:` written ABOVE `if: false` in
+    # the same step still counted — legal YAML, and the message beside this check asserts the
+    # opposite. Measured 2026-08-23 by a cold-read lens. Group the lines into steps first, then
+    # judge each step whole. `0` counts as false the same as `false`; the message says so too.
+    dead = set()
+    step_start = None
+    step_indent = None
+    steps = []
+    for j, ln in enumerate(lines):
+        if not ln.strip():
+            continue
+        ind = len(ln) - len(ln.lstrip())
+        if re.match(r"^\s*-\s", ln) and (step_indent is None or ind <= step_indent):
+            if step_start is not None:
+                steps.append((step_start, j))
+            step_start, step_indent = j, ind
+        elif step_indent is not None and ind <= step_indent:
+            steps.append((step_start, j)); step_start = step_indent = None
+    if step_start is not None:
+        steps.append((step_start, len(lines)))
+    for s, e in steps:
+        for k in range(s, e):
+            c = re.match(r"^\s*-?\s*if:\s*(.+?)\s*$", lines[k])
+            if not c:
+                continue
+            val = c.group(1).strip().strip(chr(34)).strip(chr(39))
+            val = re.sub(r"^\$\{\{\s*(.*?)\s*\}\}$", r"\1", val).strip().lower()
+            if val in ("false", "0"):
+                dead.update(range(s, e))
+                break
     i = 0
     while i < len(lines):
         m = re.match(r"^(\s*)-?\s*run:\s*(\|[-+]?|>[-+]?)?\s*(.*)$", lines[i])
+        if m and i in dead:
+            i += 1
+            continue
         if m:
             indent, block, rest = len(m.group(1)), m.group(2), m.group(3)
             if rest: out.append(rest)
@@ -147,8 +187,40 @@ for f in sys.argv[1:]:
 # outside one.
 _q = chr(39)
 def _keep(m):
+    # A quoted token is unwrapped only when it could be an ARGUMENT: no whitespace, and no shell
+    # metacharacter that would open a command position the shell itself never sees. Returning the
+    # inner text unconditionally created a new evasion — `echo "|bash" scripts/test-foo.sh` spliced
+    # a pipe into the stream and read as an invocation, where the old blanking could not.
+    # Measured 2026-08-23; a class this change introduced, caught by probing its own new behaviour.
+    # The metacharacter set is built from ordinals, and the reason is narrower than it looks.
+    # **An UNPAIRED backtick inside a DOUBLE-QUOTED span kills this whole file**, because bash 3.2
+    # scans for the closing paren of the surrounding command substitution straight through a
+    # quoted heredoc, tracking double quotes as it goes — and a backtick inside them opens a
+    # substitution that never closes. The script then dies with "unexpected EOF looking for
+    # matching" at the line the substitution OPENED, hundreds of lines above the real fault.
+    #
+    # Measured 2026-08-23, after writing this set as a literal class and breaking the file:
+    # unpaired backtick in double quotes FAILS · the same backtick in single quotes parses · a
+    # paired pair in double quotes parses · one in a Python comment parses · parentheses parse,
+    # balanced or not · a dollar parses. **The parentheses are innocent**, which the first version
+    # of this note blamed them for.
+    #
+    # **And `bash -n` DOES catch it** — `/bin/bash -n scripts/preflight.sh` reports the same
+    # unexpected-EOF in milliseconds. The first version of this note said the opposite, and that
+    # claim was never measured: `bash -n` had been run against a version that did not carry the
+    # fault, come back clean, and then been blamed for the miss. **Run `bash -n` on this file
+    # after touching anything inside a `$( … )` heredoc.**
+    # Only what can OPEN A COMMAND POSITION: `;` `&` `|` `(` `)` and the backtick. `$`, `<` and
+    # `>` were in this set and should not have been — `$` alone is a variable, not a command, and
+    # a redirection is not a command position either. Keeping them refused
+    # `bash "$GITHUB_WORKSPACE/scripts/test-x.sh"`, an ordinary and correct CI step, while the
+    # message beside this check told the reader quoting was optional. `$(` is still caught, by the
+    # paren. Measured 2026-08-23 by a cold-read lens reading the message against the code.
+    _meta = "".join(chr(c) for c in (59, 38, 124, 40, 41, 96))
     inner = m.group(0)[1:-1]
-    return inner if inner and not re.search(r"\s", inner) else " "
+    if inner and not re.search(r"\s", inner) and not any(ch in _meta for ch in inner):
+        return inner
+    return " "
 def _strip_comment(s):
     q = None
     for i, ch in enumerate(s):
@@ -188,7 +260,19 @@ RUNPY
   _pre="([A-Za-z_][A-Za-z0-9_]*=[^[:space:]]*|env|if|then|else|do|elif|!|time|exec|sudo|nice|command|xvfb-run|dbus-run-session)"
   _inv="(^|[;&|(]+)[[:space:]]*(${_pre}[[:space:]]+)*((bash|sh|python3)[[:space:]]+(-[^[:space:]]+[[:space:]]+)*|\./)[^[:space:]]*${_b}"
   if [ "$(printf '%s\n' "$_runs" | grep -cE "$_inv")" -eq 0 ]; then
-    say_fail "$_b is in scripts/ and no workflow \`run:\` step invokes it — CI does not execute it, and its green tick says otherwise"
+    # **Name the shape, because the reader is looking at a step that plainly runs it.** The old
+    # message asserted "no workflow step invokes it" flatly, which reads as wrong to anyone whose
+    # workflow does — and a gate that reads as wrong gets its workflow edited to please it, which
+    # is how the honest shape becomes the rare one. This check matches a COMMAND POSITION, not the
+    # file's name anywhere on a line; saying so is the difference between a reader fixing their
+    # step and a reader deleting this gate. Named 2026-08-23 by a cold-read lens at the terminal.
+    say_fail "$_b is in scripts/ and no workflow \`run:\` step is seen to INVOKE it — CI would not \
+execute it, and its green tick says otherwise. What counts is an interpreter at a command \
+position: \`bash scripts/$_b\` (the path as CI sees it, from the repo root — not the bare basename), \`sh\`, \`python3\`, or \`./scripts/$_b\` — optionally after \`if\`, \`time\`, \`sudo\`, \
+\`exec\`, \`env\`, a VAR=value assignment, or a wrapper like \`xvfb-run\`, and optionally with the \
+path quoted. What does NOT count, on purpose: the name inside an \`echo\` or a comment, and a step \
+carrying \`if: false\` or \`if: 0\` anywhere in it. If your step is one of the accepted shapes and this still fires, \
+the matcher is wrong and not you: commit with your repository's own bypass and open an issue quoting the step, rather than rewriting a workflow that works"
   fi
 done
 

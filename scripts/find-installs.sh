@@ -73,7 +73,8 @@ add() {
   fi
 }
 
-# A clone whose working tree is dirty cannot take the route its own row recommends.
+# A clone with modified TRACKED files may not be able to take the route its own row
+# recommends — see the measured limits below; untracked files are not the trigger.
 # Measured 2026-08-23 on the Antigravity install: 0.4.8 had been delivered there by rsync ON TOP
 # OF a git clone still at 0.4.7, so `git pull --ff-only` refused — permanently, and every release
 # after — with *"Your local changes to the following files would be overwritten"*. The output is
@@ -81,10 +82,25 @@ add() {
 # it as success while the install sits two versions behind. Two delivery routes were used on one
 # directory, and the second one broke the first.
 clone_state() {
-  # $1: path → "" when fine, else a flag naming why the documented route will refuse
+  # $1: path → "" when fine, else a flag naming what puts the documented route at risk
   git -C "$1" rev-parse --is-inside-work-tree >/dev/null 2>&1 || { printf ''; return; }
-  if [ -n "$(git -C "$1" status --porcelain 2>/dev/null)" ]; then
-    printf 'ROUTE BROKEN — a clone with a dirty tree; `git pull --ff-only` will refuse every time. Stash or reset it to origin, then pull. Do NOT rsync onto a clone: that is what put it here'
+  # **TRACKED modifications only.** `git status --porcelain` also lists untracked files, and an
+  # untracked file does not stop `git pull --ff-only` — measured 2026-08-23, after a cold-read
+  # lens pointed out that the flag promised a refusal the trigger could not support. So a stray
+  # note in the directory used to be reported as ROUTE BROKEN, and the remedy offered was a
+  # reset: destructive advice for a false positive, which is worse than saying nothing.
+  # (An untracked file CAN block a pull by colliding with an incoming path. That is not knowable
+  # without fetching, and this script does not fetch — so it is not claimed.)
+  #
+  # **And the flag says AT RISK, not BROKEN, because that is what is true.** A modified tracked
+  # file only stops a fast-forward when an incoming commit touches that same file — a test written
+  # for this check refused the stronger wording within a minute of being written, by pulling
+  # successfully with a modified file the upstream had not gone near. It is a certainty in the
+  # case that matters, because an rsync rewrites exactly the files the next release changes.
+  _mods=$(git -C "$1" status --porcelain 2>/dev/null | grep -cv '^??' || true)
+  if [ "${_mods:-0}" -gt 0 ]; then
+    _br=$(git -C "$1" rev-parse --abbrev-ref --symbolic-full-name '@{u}' 2>/dev/null || echo origin/main)
+    printf 'ROUTE AT RISK — a clone with %s modified tracked file(s). `git pull --ff-only` refuses as soon as an incoming commit touches any of them, which an rsync over a clone guarantees, since it rewrites the same files the next release changes. Recover with `git -C %s stash` then pull, or `git -C %s reset --hard %s` to discard them. Do NOT rsync onto a clone: that is what puts it here' "$_mods" "$1" "$1" "$_br"
   fi
 }
 

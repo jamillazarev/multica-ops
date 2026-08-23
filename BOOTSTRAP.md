@@ -508,7 +508,7 @@ stage finished" (that is @mentions and barriers). Offer at setup, default "later
    *guide* skill, not this one — multica-ops is Mops's brain), so Mops in Multica *is* the
    same Mops:
    - **Install idempotently, never blindly.** First `multica skill list` — if `multica-ops`
-     isn't there, `multica skill import --url github.com/jamillazarev/multica-ops/tree/v0.4.11/skills/mops`. If it
+     isn't there, `multica skill import --url github.com/jamillazarev/multica-ops/tree/v0.4.12/skills/mops`. If it
      **already exists** (re-run, or a teammate imported it), **compare versions**: same →
      skip; older → refresh through `/multica-ops:upgrade` (backup current to `_ops/skill-backups/` →
      `import --on-conflict overwrite`), **never a second copy**. (`import` supports

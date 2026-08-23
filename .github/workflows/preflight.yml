@@ -46,6 +46,14 @@ jobs:
 
       - name: the company guard — the file that ships into other people's repos
         run: bash scripts/test-company-guard.sh
+
+      # `find-installs.sh` decides whether an install's documented update route can actually be
+      # walked, and it shipped with no test — under a commit titled "a route nobody verifies is a
+      # route nobody has". A cold-read lens named the irony on 2026-08-23. Its check was wrong in
+      # the direction that costs most: it promised a refusal on a condition that does not cause
+      # one, then prescribed a reset, which discards work.
+      - name: the install inventory's route check
+        run: bash scripts/test-find-installs.sh
       # verify.py was run by NOTHING — not a workflow, not a suite, not preflight — so the three
       # text checks added on 2026-08-15 (prose-only membership, the staleness note's own count,
       # core/companion overlap) could not fail anywhere but a developer's terminal. Measured that

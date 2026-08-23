@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# guard-version: 0.4.11   <!-- stamped from the skill at ship time; read by the check below -->
+# guard-version: 0.4.12   <!-- stamped from the skill at ship time; read by the check below -->
 # Docs guard for a company Mops built — install it into the company's own repo, not ours.
 #
 #   cp templates/company-preflight.sh <repo>/scripts/preflight.sh
@@ -323,75 +323,117 @@ if ( changed --diff-filter=AMR -- '_ops/TOOLING.md' ) | hits . ; then
     c { if ($0 ~ /-->/) c = 0; next }
     !f { n++; L[n] = $0 }
   '
-  _hdr=$(printf '%s\n' "$_staged" | awk "$_rowsrc"'
-    END { for (i = 1; i <= n; i++) if (L[i+1] ~ /^[ \t]*\|[ \t]*:?-+/) { print L[i]; exit } }')
-  _real=$(printf '%s\n' "$_staged" | awk "$_rowsrc"'
+  # **One awk pass, and the header never makes a round trip through the shell.** Passing it back
+  # as `HDR="$_hdr"` was an evasion anyone could trigger with a single character: awk
+  # escape-processes a command-line assignment, so a header containing `c:\temp` arrived with a
+  # TAB in it and `\|` — markdown's own pipe escape — arrived as a bare pipe. The equality test
+  # then matched nothing and **§4f went silent for that file, permanently**. Measured 2026-08-23
+  # by an adversarial lens; a regression introduced the same day the table-scoping was.
+  #
+  # **Which table is the register**: the first one, plus any table whose header carries a
+  # `Replaces` column. The first, because a file's opening table is its subject; the others,
+  # because a decoy table above the register would otherwise capture the gate and a `Replaces`
+  # column on the wrong table would otherwise steal it. Both were measured as evasions. The cost
+  # is that a `## Retired` table which itself carries a `Replaces` column gets asked — coherent,
+  # since its author put the column there.
+  #
+  # Each row is emitted with ITS OWN table's column index, so two tables with the column in
+  # different positions are both read correctly. Index 0 means "this table has no such column" and
+  # sends the row to the keyword fallback below.
+  # **Cells are split by an unescaped pipe outside a code span**, not by `-F"|"`. Markdown's own
+  # escape `\|` and a pipe inside backticks both shift every field after them, so a header
+  # carrying either put the column index one place out and the gate read the wrong cell —
+  # `| Otter | x |  | d |` answered with the date. Both measured 2026-08-23.
+  #
+  # The whole judgement happens here, in one pass, and the shell is handed a verdict rather than
+  # an index: Y the cell is filled · N the cell is blank · K this table has no such column.
+  _cand=$(printf '%s\n' "$_staged" | awk "$_rowsrc"'
+    function cells(s, A,   i, ch, cur, k, tick) {
+      k = 0; cur = ""; tick = 0
+      for (i = 1; i <= length(s); i++) {
+        ch = substr(s, i, 1)
+        if (ch == "\\" && i < length(s)) { cur = cur substr(s, i+1, 1); i++; continue }
+        if (ch == "`") { tick = !tick; cur = cur ch; continue }
+        if (ch == "|" && !tick) { A[++k] = cur; cur = ""; continue }
+        cur = cur ch
+      }
+      A[++k] = cur
+      return k
+    }
+    function trim(s) { gsub(/^[ \t*]+|[ \t*]+$/, "", s); return s }
+    # `c` is the HTML-comment flag in _rowsrc above; a local of that name clobbers it mid-scan.
+    # No apostrophe in this comment: the whole program is single-quoted, and one would end it.
+    function colof(h,   i, m, cc) {
+      m = cells(h, F)
+      for (i = 1; i <= m; i++) { cc = tolower(F[i]); gsub(/[^a-z]/, "", cc); if (cc == "replaces") return i }
+      return 0
+    }
     END {
+      tbl = 0
       for (i = 1; i <= n; i++) {
-        if (L[i] !~ /^[ \t]*\|/) continue
-        if (L[i] ~ /^[ \t]*\|[ \t]*:?-+/) continue
-        if (L[i+1] ~ /^[ \t]*\|[ \t]*:?-+/) continue
-        print L[i]
+        if (L[i+1] !~ /^[ \t]*\|[ \t]*:?-+/) continue
+        tbl++
+        ci = colof(L[i])
+        if (tbl != 1 && ci == 0) continue
+        for (j = i + 2; j <= n; j++) {
+          if (L[j] !~ /^[ \t]*\|/) break
+          if (L[j] ~ /^[ \t]*\|[ \t]*:?-+/) continue
+          m = cells(L[j], R)
+          state = (ci == 0) ? "K" : ((ci <= m && trim(R[ci]) != "") ? "Y" : "N")
+          printf "%s\t%s\t%s\n", state, trim(R[2]), L[j]
+        }
       }
     }')
+  _real=$(printf '%s\n' "$_cand" | cut -f3- | grep . || true)
   _added=$( ( git diff --cached -U0 -- _ops/TOOLING.md 2>/dev/null || true ) \
     | grep '^+' | grep -v '^+++ ' | sed 's/^+//' | grep -E '^[[:space:]]*\|' || true )
-  if [ -n "$_real" ] && [ -n "$_added" ]; then
-    _tool_rows=$(printf '%s\n' "$_added" | grep -Fxf <(printf '%s\n' "$_real") || true)
+  if [ -n "$_cand" ] && [ -n "$_added" ]; then
+    # keep each candidate WITH its own table's column index; the diff only says which are new
+    _tool_rows=$(printf '%s\n' "$_cand" \
+      | while IFS= read -r _l; do
+          _r=$(printf '%s' "$_l" | cut -f3-)
+          printf '%s\n' "$_added" | grep -Fxq -- "$_r" && printf '%s\n' "$_l"
+        done || true)
   fi
 fi
 if [ -n "$_tool_rows" ]; then
   _dec2=$( ( git diff --cached -U0 -- _ops/DECISIONS.md 2>/dev/null || true ) \
     | grep '^+' | grep -v '^+++ ' || true )
-  # **A FIELD, not a vocabulary.** This was a keyword list — `instead of|replaces|already|…` —
-  # which is precisely the defect §4e was repaired away from in the same file on the same day: a
-  # gate satisfied by words teaches people to sprinkle them, and refuses an honest answer that
-  # happens to use different ones. A lens named the contradiction, 2026-08-23.
+  # **A FIELD, not a vocabulary.** This began as a keyword list — `instead of|replaces|already|…`
+  # — which is precisely the defect §4e was repaired away from in this same file on the same day:
+  # a gate satisfied by words teaches people to sprinkle them, and refuses an honest answer that
+  # uses different ones. The register carries a **Replaces** column
+  # (`templates/TOOLING-template.md`) and this reads the cell.
   #
-  # So the register carries a **Replaces** column (`templates/TOOLING-template.md`) and this reads
-  # the cell. A register that predates the column falls back to the keyword list, and that fallback
-  # is named here rather than presented as a test — an old register is not a project's fault, and
-  # refusing every commit until it is reshaped is how a guard gets deleted.
-  # **The gate was stricter than its own message, which is the §4e defect one section down.**
-  # With the column present this read the cell and NOTHING else, so a maintainer doing exactly
-  # what the refusal prescribed — writing the reason in `_ops/DECISIONS.md` — was refused again,
-  # by the same message, with no hint that a column existed. Measured 2026-08-23 by a cold-read
-  # lens, and reproduced: row added, decision written, still refused.
-  #
-  # Both homes are answers now, and the decision line must NAME the tool — the same field test
-  # §4e uses, not a vocabulary. A register predating the column keeps the keyword fallback, named
-  # here rather than presented as a test: an old register is not a project's fault, and refusing
-  # every commit until it is reshaped is how a guard gets deleted.
-  # The column index comes from the header line found above, not from a grep of the file's first
-  # twenty lines. Two ways that failed, both measured 2026-08-23: a header past line 20 left the
-  # index EMPTY, so awk read `$0` — the whole row, never blank — and every row passed silently;
-  # and a sentence in the preamble mentioning *Replaces* was picked instead, giving field 1, which
-  # is the empty string before the first pipe, so every row was refused. Four lines of extra
-  # preamble were the whole margin either way. Bold is optional too — a plain `| Replaces |`
-  # header is the same column, and requiring the asterisks sent an honestly filled register to the
-  # keyword fallback this block exists to avoid.
-  _ci=$(printf '%s' "$_hdr" | awk -F'|' '{for(i=1;i<=NF;i++){c=tolower($i); gsub(/[^a-z]/,"",c); if(c=="replaces"){print i; exit}}}')
-  if [ -n "$_ci" ]; then
-    _unanswered=0
-    while IFS= read -r _row; do
-      [ -n "$_row" ] || continue
-      _cell=$(printf '%s' "$_row" | awk -F'|' -v c="${_ci:-0}" '{gsub(/^[ \t]+|[ \t]+$/,"",$c); print $c}')
-      [ -n "$_cell" ] && continue
-      # The cell is blank — a decision line naming this row's tool is the other complete answer.
-      _tool=$(printf '%s' "$_row" | awk -F'|' '{gsub(/^[ \t*]+|[ \t*]+$/,"",$2); print $2}')
-      if [ -n "$_tool" ]; then
-        _esc2=$(printf '%s' "$_tool" | sed 's/[].[^$\\*\/]/\\&/g')
-        printf '%s\n' "$_dec2" | hits -iE "(^|[^A-Za-z0-9_-])${_esc2}([^A-Za-z0-9_-]|$)" && continue
-      fi
-      _unanswered=$((_unanswered+1))
-    done <<TOOLROWS
+  # **Two homes count and either is enough** — the cell, or a line in `_ops/DECISIONS.md` that
+  # NAMES the row's tool. With only the cell read, a maintainer doing exactly what the refusal
+  # prescribed was refused again by the same message, with no hint a column existed. A register
+  # that predates the column keeps the keyword fallback, and that fallback is named here rather
+  # than presented as a test: an old register is not a project's fault, and refusing every commit
+  # until it is reshaped is how a guard gets deleted.
+  _unanswered=0
+  while IFS= read -r _entry; do
+    [ -n "$_entry" ] || continue
+    _state=$(printf '%s' "$_entry" | cut -f1)
+    _tool=$(printf '%s' "$_entry" | cut -f2)
+    _row=$(printf '%s' "$_entry" | cut -f3-)
+    [ "$_state" = "Y" ] && continue
+    if [ "$_state" = "K" ]; then
+      # this row's table has no Replaces column — the older shape, judged by the keyword list
+      printf '%s\n' "$_row" \
+        | hits -iE 'instead of|replaces|rather than|already|by hand|nothing else|we had none|had no ' \
+        && continue
+    fi
+    # the cell is blank (or the row said nothing) — a decision naming this tool is the other answer
+    if [ -n "$_tool" ]; then
+      _esc2=$(printf '%s' "$_tool" | sed 's/[].[^$\\*\/]/\\&/g')
+      printf '%s\n' "$_dec2" | hits -iE "(^|[^A-Za-z0-9_-])${_esc2}([^A-Za-z0-9_-]|$)" && continue
+    fi
+    _unanswered=$((_unanswered+1))
+  done <<TOOLROWS
 $_tool_rows
 TOOLROWS
-    [ "$_unanswered" -eq 0 ]
-  else
-    printf '%s\n%s\n' "$_tool_rows" "$_dec2" \
-      | hits -iE 'instead of|replaces|rather than|already|by hand|nothing else|we had none|had no '
-  fi \
+  [ "$_unanswered" -eq 0 ] \
     || say_fail "this commit adds a row to _ops/TOOLING.md and nothing says what it replaces. Two \
 places count, and either one is enough: the row's own **Replaces** cell, or a line in \
 _ops/DECISIONS.md that NAMES this tool and says what was done before it. \`we had none\` is a \
