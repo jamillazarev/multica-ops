@@ -521,11 +521,31 @@ and *"it does not hold the loop"* stops being a rule it could work around.
 
 ## 2. Eight trigger paths
 
-**Measured 2026-08-15 against CLI 0.4.26**, and path 8 measured 2026-08-22 by the same method — so every path here is counted, none cited, in a scratch workspace with three inert probe agents,
-by counting `multica issue runs` before and after each act. Every probe run then failed downstream
-on an expired runtime OAuth, so **this measures whether a run is CREATED, not whether the agent
-finishes** — which is exactly what a trigger path is. This section had carried no date, no
-measurement and no source until now, and the count in its own heading was wrong.
+**Half of these are counted and half are read, and each one says which.** Counting means a
+scratch workspace with three inert probe agents and `multica issue runs` read before and after the
+act; reading means the CLI's own `--help` says the act starts a run. Both are evidence and they
+are not the same evidence — a `--help` sentence describes intent, a count describes what happened.
+
+| | how it is known | when |
+|---|---|---|
+| 1 assignment · 2 mention · 3 comment on an assigned issue | **counted** | 2026-08-15 |
+| 8 stage barrier | **counted** | 2026-08-22 |
+| 4 status change · 5 issue update | **read** from `--no-start`'s own help | 2026-08-15, re-read 2026-08-23 |
+| 6 chat · 7 autopilot | **neither** — listed from the product surface, never measured here | — |
+
+Every probe run then failed downstream on an expired runtime OAuth, so **the counts measure
+whether a run is CREATED, not whether the agent finishes** — which is exactly what a trigger path
+is.
+
+> [!NOTE]
+> **This paragraph used to say "every path here is counted, none cited", and that was false for
+> four of the eight.** It was written on 2026-08-15 when the section held three counted paths,
+> and it survived two later edits that added paths read from `--help` and two that were never
+> measured at all. It also said the section "had carried no date until now" — a *now* that was
+> three revisions stale by the time anyone read it. **A blanket claim at the top of a list is the
+> shape that rots**: it is written once, about the list as it stood, and every later row inherits
+> a guarantee nobody re-checked. The table above cannot rot the same way, because a new row has
+> nowhere to hide.
 
 1. **Issue assignment** — to an agent runs it; to a squad wakes **only the leader** (measured with
    a squad holding a leader *and* a member: exactly one run, the leader's). `multica issue assign`
