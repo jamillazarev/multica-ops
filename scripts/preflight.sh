@@ -133,9 +133,17 @@ for f in sys.argv[1:]:
 # of single quotes here made the substitution swallow 230 further lines and die on a `case` arm
 # 240 lines below. Measured 2026-08-21; the same family as this repo's note about `)` in case
 # patterns inside `$( … )`.
+# A quoted span is dropped only when it holds WHITESPACE. `bash "scripts/test-foo.sh"` is an
+# ordinary quoted argument and was being refused (measured 2026-08-23), while the thing this
+# dropping exists to kill — `echo "run bash scripts/test-foo.sh to reproduce"` — is prose and
+# always has spaces in it. Structural, not a word list: a bare quoted path is an argument, a
+# quoted sentence is documentation.
 _q = chr(39)
+def _keep(m):
+    inner = m.group(0)[1:-1]
+    return inner if inner and not re.search(r"\s", inner) else " "
 def _code(s):
-    s = re.sub('"[^"]*"|' + _q + "[^" + _q + "]*" + _q, " ", s)
+    s = re.sub('"[^"]*"|' + _q + "[^" + _q + "]*" + _q, _keep, s)
     return s.split("#", 1)[0]
 out = [c for c in (_code(l) for l in out) if c.strip()]
 print("\n".join(out))
@@ -146,7 +154,13 @@ RUNPY
   # not merely appear somewhere on the line. `[[:space:]]*` after the separator because a
   # continued line is indented, and dropping that allowance broke every honest block-scalar
   # step (measured, first attempt, 2026-08-21).
-  if [ "$(printf '%s\n' "$_runs" | grep -cE "(^|[;&|]+)[[:space:]]*(bash |sh |python3 |\./)[^ ]*${_b}")" -eq 0 ]; then
+  # Between the separator and the interpreter an honest step may carry environment assignments
+  # or `env`; between the interpreter and the path it may carry flags. `env CI=1 bash x.sh` and
+  # `bash -e x.sh` were both refused until 2026-08-23 — measured against eleven ordinary shapes,
+  # of which four failed. What must NOT relax is the command POSITION itself: the interpreter
+  # still has to open the command, so a name inside an echo or a sentence stays a mention.
+  _inv="(^|[;&|]+)[[:space:]]*(([A-Za-z_][A-Za-z0-9_]*=[^[:space:]]*|env)[[:space:]]+)*((bash|sh|python3)[[:space:]]+(-[^[:space:]]+[[:space:]]+)*|\./)[^[:space:]]*${_b}"
+  if [ "$(printf '%s\n' "$_runs" | grep -cE "$_inv")" -eq 0 ]; then
     say_fail "$_b is in scripts/ and no workflow \`run:\` step invokes it — CI does not execute it, and its green tick says otherwise"
   fi
 done

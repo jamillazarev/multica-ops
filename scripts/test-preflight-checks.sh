@@ -11,6 +11,7 @@ git clone -q --local . "$T/c"
 run(){ ( cd "$T/c" && bash scripts/preflight.sh ) > "$T/out" 2>&1; }
 undo(){ ( cd "$T/c" && git checkout -q -- . ); }
 pass=0; fail=0
+_SQ=$(printf '\047')
 ok(){ pass=$((pass+1)); }; bad(){ fail=$((fail+1)); echo "  ✗ $1"; }
 
 # the twin: an untouched clone passes (warnings allowed, exit 0 required)
@@ -294,6 +295,21 @@ C0PY
   && ok || bad "a suite commented out inside a block scalar still counted as invoked"
 [ "$(_c0 '        run: echo \"run bash scripts/test-preflight-checks.sh\"')" = 1 ] \
   && ok || bad "a suite named inside an echo counted as invoked — an instruction is not a run"
+# Four honest shapes this gate refused until 2026-08-23. Measured against eleven ordinary forms of
+# a CI step; seven passed and these four did not, so the gate was failing in both directions at
+# once — silent on a commented-out suite before pass twelve, and loud on an ordinary quoted path
+# after the anchoring work that fixed it. A gate that cries wolf gets its workflow edited to
+# please it, which is how the honest shape becomes the rare one.
+[ "$(_c0 '        run: bash \"scripts/test-preflight-checks.sh\"')" = 0 ] \
+  && ok || bad "a double-quoted path was refused — an argument is not prose"
+[ "$(_c0 "        run: bash ${_SQ}scripts/test-preflight-checks.sh${_SQ}")" = 0 ] \
+  && ok || bad "a single-quoted path was refused"
+[ "$(_c0 '        run: env CI=1 bash scripts/test-preflight-checks.sh')" = 0 ] \
+  && ok || bad "an env prefix hid the interpreter from the command-position test"
+[ "$(_c0 '        run: bash -e scripts/test-preflight-checks.sh')" = 0 ] \
+  && ok || bad "a flag between the interpreter and the path was refused"
+[ "$(_c0 '        run: echo scripts/test-preflight-checks.sh')" = 1 ] \
+  && ok || bad "a bare path after echo counted as an invocation — the relaxation went too far"
 
 # ── the CLI-removal registry, and the class that outlived its command ──────────────────────
 # Both added 2026-08-23, when `multica plugin` — a group that arrived in 0.4.26 and was made a
