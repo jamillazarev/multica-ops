@@ -3,7 +3,7 @@
 Newest first. Each entry leads with what you can now do, not with which files moved. This is
 also the migration map `/multica-ops:upgrade` reads.
 
-## 0.4.11 — unreleased
+## 0.4.11 — 2026-08-23
 
 **Two guards were refusing honest work and one was blind to a whole class of it.** Pass thirteen
 named them; this is the repair.
