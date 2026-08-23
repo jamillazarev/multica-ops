@@ -234,8 +234,21 @@ def check_fingerprint():
     # have hashed an `unknown command`. The unclassified-group check below catches an ADDED group;
     # nothing caught a REMOVED one until this. Measured 2026-08-23.
     # a CLI group that is neither hashed nor knowingly ignored is unclassified
-    top = subprocess.run(["multica", "--help"], capture_output=True, text=True).stdout
-    groups = set(re.findall(r"^  ([a-z][a-z-]+):", top, re.M))
+    # **The parse has to prove it worked before anything downstream trusts it.** `groups` is read
+    # with a hard-coded two-space indent; a cosmetic change to `multica --help` — four spaces, or
+    # help on stderr — yields an empty set, and then every check below is skipped while this
+    # function still prints `N/N structural classes covered`. That is verbatim the failure this
+    # same function's comment condemns twenty lines up: *a gate that reports the claim it was
+    # written to check is worse than no gate.* Measured 2026-08-23 with PATH shims.
+    _h = subprocess.run(["multica", "--help"], capture_output=True, text=True)
+    top = _h.stdout or _h.stderr
+    groups = set(re.findall(r"^\s+([a-z][a-z-]+):", top, re.M))
+    if not groups:
+        fail("`multica --help` yielded no command groups, so the fingerprint's coverage checks "
+             "did not run — and this line is the only thing that would have said so. Either the "
+             "CLI is broken here or its help format changed; fix the parse before trusting any "
+             "green from this section")
+        return
     # The other direction, and the one that was missing: a class we hash that the CLI no longer
     # exposes. The recipe would run `multica <gone> list`, get `unknown command` on stderr, and
     # hash the empty stdout — a stable hash for a class that does not exist, which reads as
@@ -429,7 +442,13 @@ def _soft_flatten(text):
         # blockquote line is the opposite: it wraps, and joining its continuation is the whole
         # reason this function exists — so `ln` being one of those is not a boundary by itself.
         ends_here = _ONE_LINE.match(ln)
-        joinable = ln.strip() and nxt.strip() and not _BLOCK_START.match(nxt) and not ends_here
+        # A blockquote that wraps is one thought, and `> ` on the continuation made every
+        # `_BLOCK_START` test read it as a new block — so a claim written as a two-line quote was
+        # invisible to this guard entirely. REFERENCE alone carries 61 quoted lines; they are live
+        # prose here, not decoration. Measured 2026-08-23 by an adversarial lens.
+        both_quoted = ln.lstrip().startswith(">") and nxt.lstrip().startswith(">")
+        joinable = ln.strip() and nxt.strip() and not ends_here and (
+            both_quoted or not _BLOCK_START.match(nxt))
         out.append(ln + (" " if joinable else "\n"))
     out.append(lines[-1])
     return "".join(out)
@@ -466,9 +485,11 @@ def check_mention_cost():
             bad.append(f"{f}:{line}")
     if bad:
         fail("a member/issue mention is called free in " + ", ".join(bad) +
-             " — REFERENCE §2 (measured 2026-08-15) found that ANY comment on an assigned issue "
-             "creates a run. The mention adds no run of its own; the comment carrying it is not "
-             "free. Say both halves or neither")
+             " — REFERENCE §2 found that ANY comment on an assigned issue creates a run. The "
+             "mention adds no run of its own; the comment carrying it is not free. **Write the "
+             "two halves as two sentences**: this check reads one sentence at a time, so putting "
+             "them in one — `the mention adds no run of its own, and unassigned issues are free` "
+             "— is refused by this very message, which is not a hint you should have to discover")
     else:
         print(f"  mention cost: {len(scope)} file(s) read, skills included — none calls a "
               f"member/issue mention free")

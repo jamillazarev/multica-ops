@@ -2,7 +2,7 @@
 """Structural integrity of the docs. Every check here exists because the defect it
 looks for actually shipped once — see the 2.1.0 entry. Prints FAIL:/WARN: lines
 for preflight to render; deterministic classes fail, heuristic ones warn."""
-import glob, json, os, re, shutil, subprocess, sys
+import datetime, glob, json, os, re, shutil, subprocess, sys
 
 DOCS = sorted(set(glob.glob("*.md")) | set(glob.glob("templates/*.md")) | set(glob.glob("evals/*.md")))
 out = []
@@ -248,7 +248,30 @@ if shutil.which("multica"):
         _ref = open("REFERENCE.md", encoding="utf-8", errors="ignore").read()
     except OSError:
         _ref = ""
-    RETIRED = {g for g, _d in re.findall(r"<!--\s*cli-removed:\s*([a-z][a-z-]+)\s+(\d{4}-\d{2}-\d{2})\s*-->", _ref)}
+    # **The marker must be a marker, not a mention of one.** A regex over raw bytes accepted the
+    # registry's own documentation as an exemption: a §10 paragraph explaining the format with a
+    # real group name in it, the same thing quoted in inline code, and a marker parked inside a
+    # `<!-- DRAFT, do not apply: … -->` wrapper all buried a live command. Measured 2026-08-23 by
+    # an adversarial lens, which is the right place to have found it — the exemption is the one
+    # part of this check that says *stop looking*. So: alone on its line, outside every fence, and
+    # carrying a date that is a real calendar day rather than four digits and some punctuation.
+    _lines, _fence, RETIRED = _ref.split("\n"), False, set()
+    for _ln in _lines:
+        if _ln.lstrip().startswith("```") or _ln.lstrip().startswith("~~~"):
+            _fence = not _fence
+            continue
+        if _fence:
+            continue
+        _m = re.match(r"^\s*<!--\s*cli-removed:\s*([a-z][a-z-]+)\s+(\d{4}-\d{2}-\d{2})\s*-->\s*$", _ln)
+        if not _m:
+            continue
+        try:
+            datetime.date.fromisoformat(_m.group(2))
+        except ValueError:
+            fail(f"the cli-removed line for `{_m.group(1)}` carries `{_m.group(2)}`, which is not a "
+                 f"calendar date — a burial with no real date is not a record of when")
+            continue
+        RETIRED.add(_m.group(1))
     claimed = set()
     for f in DOCS + sorted(glob.glob("scripts/*")):
         try:

@@ -416,6 +416,13 @@ MPY
   && ok || bad "a table row joined the prose under it"
 [ "$(_mc '- mentioning a member or an\n  issue in a comment is free.\n')" -ge 1 ] \
   && ok || bad "a claim wrapped inside a list item went undetected — the join that must survive"
+# A blockquote that wraps is one thought. REFERENCE alone carries 61 quoted lines, so writing the
+# retracted rule as a two-line quote defeated this guard entirely (adversarial, 2026-08-23).
+[ "$(_mc '> Remember that mentioning a member or an issue in a\n> comment is free and costs nothing.\n')" -ge 1 ] \
+  && ok || bad "the claim written as a two-line blockquote was invisible"
+# And the shape the failure message prescribes must PASS, or the gate refuses its own remedy.
+[ "$(_mc 'The mention of a member or an issue adds no run of its own.\nAn unassigned issue is free.\n')" = 0 ] \
+  && ok || bad "both halves as two sentences was refused — that is the remedy the message asks for"
 
 echo "preflight-checks: $pass passed, $fail failed"
 exit "$fail"
