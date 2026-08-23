@@ -313,8 +313,14 @@ if ( changed --diff-filter=AMR -- '_ops/TOOLING.md' ) | hits . ; then
   # as a data row, so a register standing up in that dialect was still refused. The header is the
   # line above it — structure, never the words in it — and fences are skipped because this file's
   # own templates ship example tables.
+  # Fences come in dialects, and all of them hide an example the same way: ``` and ~~~ both open
+  # and close one, and an HTML comment is how a register parks a draft row it does not mean yet.
+  # Only ``` was skipped, so a ~~~ example and a commented-out row were both read as live rows
+  # and refused — four documentation-only edits, measured 2026-08-23 by an adversarial lens.
   _rowsrc='
-    /^[[:space:]]*```/ { f = !f; next }
+    /^[[:space:]]*(```|~~~)/ { f = !f; next }
+    /<!--/ { c = 1 }
+    c { if ($0 ~ /-->/) c = 0; next }
     !f { n++; L[n] = $0 }
   '
   _hdr=$(printf '%s\n' "$_staged" | awk "$_rowsrc"'

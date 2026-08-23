@@ -28,6 +28,27 @@ named them; this is the repair.
   register stood up here fell through to a keyword list — the defect the column exists to avoid.
   The template carries the column now, and says what the gate does with it.
 
+**Four lenses read the range before it was tagged, and two of the repairs above were themselves
+defective.** check 0's quote change let a `#` that had been safely inside quotes survive into the
+plain text and eat the rest of the line, so `sed -i "s/#.*//" x && bash suite.sh` read as never
+invoked — inverted from the intent, since a space inside the quotes made it pass. Comments are cut
+quote-aware now. **Six more wrapper shapes were refused** — `if`, `if !`, `time`, `sudo`, `exec`,
+`xvfb-run` — and `if` and `time` are the two commonest ways anyone wraps a suite.
+
+`_soft_flatten` asked only the *following* line, so a heading with no blank line after it joined
+the prose beneath it; and a claim written as a **two-line blockquote was invisible to the guard
+entirely**, in a corpus where REFERENCE alone carries 61 quoted lines. Both fixed. **And the
+guard's failure message prescribed a sentence the guard refuses** — *"say both halves or neither"*,
+in one sentence, is caught. It now tells you to write them as two, which is the shape that passes.
+
+**Two gates were reporting green while checking nothing.** The fingerprint parsed `multica --help`
+with a hard-coded two-space indent and skipped every check when that yielded nothing, while still
+printing its coverage line — verbatim the failure its own comment condemns twenty lines above. And
+the `cli-removed` registry accepted **its own documentation** as an exemption: a paragraph
+explaining the format, the same thing in inline code, or a marker parked inside a `<!-- DRAFT -->`
+wrapper all buried a live command. The marker must now be alone on its line, outside every fence,
+carrying a real calendar date.
+
 **And REFERENCE §2 stopped claiming more evidence than it has.** It opened with *"every path here
 is counted, none cited"* — true of the three paths it held when that was written on 2026-08-15,
 and false for the four added after: two read from `--help` and two never measured here at all.
