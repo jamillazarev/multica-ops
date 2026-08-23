@@ -3,7 +3,7 @@
 Newest first. Each entry leads with what you can now do, not with which files moved. This is
 also the migration map `/multica-ops:upgrade` reads.
 
-## 0.4.10 — unreleased
+## 0.4.10 — 2026-08-23
 
 **One sentence in this reference had become its own opposite, and it took six CLI releases to
 notice.** §3 read *"MCP is per agent, and there is no workspace level"* — measured true against
