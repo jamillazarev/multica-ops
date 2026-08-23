@@ -301,11 +301,34 @@ fi
 # lenses found it, 2026-08-23. A comment inside a quoted argument is not a comment.
 _tool_rows=""
 if ( changed --diff-filter=AMR -- '_ops/TOOLING.md' ) | hits . ; then
-  _tool_rows=$( ( git diff --cached -U0 -- _ops/TOOLING.md 2>/dev/null || true ) \
-    | grep '^+' | grep -v '^+++ ' | sed 's/^+//' \
-    | grep -E '^[[:space:]]*\|' \
-    | grep -vE '^[[:space:]]*\|[[:space:]]*-{2,}' \
-    | grep -viE '\|[[:space:]]*(tool|name|what)[[:space:]]*\|' || true )
+  # **What counts as a register row is decided by the FILE, and the diff only says which of them
+  # are new.** Reading the diff alone cannot know a line's context: `-U0` hands over added lines
+  # with no surroundings, so a `|` line inside a fenced example is indistinguishable from a real
+  # row — and this file's own templates ship fenced examples, which is how the market gate came to
+  # refuse the very template it ships beside.
+  #
+  # The header is found by STRUCTURE too: it is the line above the `|---|` separator. That filter
+  # used to be `tool|name|what`, a vocabulary one level below the vocabulary §4e was cured of in
+  # this same file, on the same day. A register naming its first column anything else had its own
+  # header read as a data row, so standing one up from a template — headers, no tools yet —
+  # was refused for saying nothing about what it replaced.
+  _real=$(awk '
+    /^[[:space:]]*```/ { fence = !fence; next }
+    !fence { n++; L[n] = $0 }
+    END {
+      for (i = 1; i <= n; i++) {
+        if (L[i] !~ /^[ \t]*\|/) continue
+        if (L[i] ~ /^[ \t]*\|[ \t]*:?-{2,}/) continue
+        if (L[i+1] ~ /^[ \t]*\|[ \t]*:?-{2,}/) continue
+        print L[i]
+      }
+    }
+  ' _ops/TOOLING.md 2>/dev/null || true)
+  _added=$( ( git diff --cached -U0 -- _ops/TOOLING.md 2>/dev/null || true ) \
+    | grep '^+' | grep -v '^+++ ' | sed 's/^+//' | grep -E '^[[:space:]]*\|' || true )
+  if [ -n "$_real" ] && [ -n "$_added" ]; then
+    _tool_rows=$(printf '%s\n' "$_added" | grep -Fxf <(printf '%s\n' "$_real") || true)
+  fi
 fi
 if [ -n "$_tool_rows" ]; then
   _dec2=$( ( git diff --cached -U0 -- _ops/DECISIONS.md 2>/dev/null || true ) \

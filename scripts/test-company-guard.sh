@@ -104,6 +104,24 @@ git -C "$R" add -A
 [ "$(grc)" != 0 ] && ok || bad "§4f warned instead of refusing"
 reset
 
+# The header is found by STRUCTURE — the line above the `|---|` — never by the words in it, and a
+# fenced example is not the register. The filter used to drop any row matching `tool|name|what`,
+# a vocabulary one level below the one §4e was cured of in the same file. A register naming its
+# columns anything else had its own header read as a data row, so standing one up from a template
+# was refused for saying nothing about what it replaced.
+printf '# Tooling\n\n| Thing | Why we have it | Owner |\n|---|---|---|\n' > "$R/_ops/TOOLING.md"
+git -C "$R" add -A
+[ "$(g | grep -c 'what it replaces')" = 0 ] \
+  && ok || bad "a register standing up with headers and no rows was refused — the header read as a row"
+printf '| Otter | interview transcripts | me |\n' >> "$R/_ops/TOOLING.md"; git -C "$R" add -A
+[ "$(g | grep -c 'what it replaces')" -ge 1 ] \
+  && ok || bad "a real row in an unfamiliarly-headed register was not seen at all"
+printf '# Tooling\n\n| Thing | Why | Owner |\n|---|---|---|\n\nExample:\n\n```\n| Foo | bar | me |\n```\n' > "$R/_ops/TOOLING.md"
+git -C "$R" add -A
+[ "$(g | grep -c 'what it replaces')" = 0 ] \
+  && ok || bad "a fenced example row was treated as a register row"
+reset
+
 # ── the guard notices its own age ──────────────────────────────────────────────────────────
 printf '# Co\n\n**Operated by** multica-ops **0.0.1**\n' > "$R/CLAUDE.md"; git -C "$R" add -A
 g | grep -q 'guard is version' \
