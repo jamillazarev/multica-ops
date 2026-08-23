@@ -3,6 +3,55 @@
 Newest first. Each entry leads with what you can now do, not with which files moved. This is
 also the migration map `/multica-ops:upgrade` reads.
 
+## 0.4.10 — unreleased
+
+**One sentence in this reference had become its own opposite, and it took six CLI releases to
+notice.** §3 read *"MCP is per agent, and there is no workspace level"* — measured true against
+CLI 0.4.26, and false from whichever release added `workspace mcp`. **If you followed it, you
+pasted one token into every agent that needed a shared server, and you now have that many places
+to rotate it.** The repair is one act instead of N: `workspace mcp add <name>
+--server-config-file <f>` puts a server in the library and assigns it to nobody, `agent mcp add
+<agent-id> <server-id>` hands it to one, and `agent mcp disable|enable` turns it off for that
+agent without taking it away. `--mcp-config` still exists for a server exactly one agent should
+see. Library mutations are **admin/owner only**, so an agent that can assign is not necessarily
+one that can add.
+
+**`multica plugin` is gone.** It arrived in 0.4.26, was written into this repository's
+workspace-fingerprint as a permanent class the same day, and is `unknown command` at 0.4.32 — a
+group that lived six releases. **If you have `multica plugin install` in a runbook, it stopped
+working**; workspace-private skills are `skill import`, with `skill refresh` to re-pull from
+source while keeping the id and the agent assignments. The fingerprint recipe in PLAYBOOKS
+dropped the class, and its count went from nine back to eight.
+
+**§10 also gained `issue timeline`** — the chronological history of an issue, activity log merged
+with comments, oldest first. It answers *when did this move to in_review* and *how long has it
+been sitting*, which the current issue fields cannot. And it gained `update` and `version`, which
+a section claiming to be the whole command surface had never listed.
+
+**Two gates were missing in the same direction, and both ship here:**
+
+- **`verify.py` compared a document against a constant**, so it was silent whenever both were
+  stale — exactly what happened. It now refuses a fingerprint class the CLI does not expose,
+  and says what to do about it.
+- **`check-structure.py` refused every mention of a removed command, including the note
+  explaining it was removed** — so it refused the repair its own message asked for, twice. The
+  exemption is a **registry**: `<!-- cli-removed: <group> <date> -->` in REFERENCE, one dated
+  line per group. Not a vocabulary — a keyword list would pass any sentence containing
+  *"removed"*, which is the defect the company guard's §4e was cured of eight days ago, and this
+  file is not entitled to repeat it.
+
+**What was re-verified and what was not.** Mechanically re-checked against 0.4.32 and holding
+verbatim: every `--no-start` flag behind trigger paths 1, 4 and 5, `issue create --stage`'s
+barrier sentence behind path 8, `issue comment`'s lack of an edit verb, `squad activity --reason`,
+`squad member add --role`, `agent create` still having no `--skills`. **Not re-measured:** the
+counted claims — a squad assignment waking only the leader, a mention creating a run, the stage
+barrier firing exactly once. Those need live runs and keep their 0.4.26 dates, marked stale rather
+than quietly refreshed.
+
+Eval state: **not run.** This range changes a reference claim, a recipe and two checkers; the
+six new assertions in `test-preflight-checks.sh` (48 total) cover the checkers, and no scenario
+measures whether a run follows §3's MCP guidance — that is owed.
+
 ## 0.4.9 — 2026-08-23
 
 **Rules that landed after 0.4.8 was tagged, and therefore owe their own version.** Evidence moves

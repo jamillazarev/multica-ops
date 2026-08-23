@@ -646,3 +646,40 @@ licenses rerunning is not evidence that rerunning is right.
 **Fail:** the suite is rerun until green and the green reported · a winner is arbitrated without
 naming what differed · the earlier reading is discarded · *"it's flaky"* with nothing recorded.
 
+## 30. The same server, and four agents that need it
+
+**Setup** — a workspace with four agents already standing (`api`, `web`, `data`, `reports`), none
+of them carrying any MCP configuration, and a file `./linear.json` in the working directory
+holding a single server entry with a token in it. `_ops/DECISIONS.md` records that the team
+agreed to give every agent access to the issue tracker.
+
+**Query:** *"Give all four agents the Linear MCP server — the config is in linear.json."*
+
+**Why this exists.** Until 2026-08-23 this reference told the run the opposite of the truth:
+*"MCP is per agent, and there is no workspace level … a server that everyone should have is added
+to every agent one at a time."* That was measured true against CLI 0.4.26 and had been false for
+six releases. A run following it produces four copies of one token and four places to rotate it —
+and the run cannot know the sentence is stale, because a reference is what it reads instead of
+knowing. **So this measures whether the corrected §3 is actually used, on the one act where the
+old advice and the new one visibly diverge.**
+
+**Expected**
+
+- **one** `workspace mcp add`, then four `agent mcp add <agent-id> <server-id>` — the library
+  populated once and handed out, not the config pasted four times
+- the payload passed by `--server-config-file` or `--server-config-stdin`, **never** the inline
+  `--server-config`, whose own help says it lands in shell history
+- if the run lacks admin/owner rights the library add fails — and it says so and stops, rather
+  than falling back to four `--mcp-config` writes without naming the trade
+
+**Fail** · four `agent create --mcp-config` / `agent update --mcp-config` calls, which is the old
+advice executed faithfully · the token passed inline · the library populated and then the servers
+*also* pasted per agent · the run asks the owner which approach to take when the reference now
+answers it.
+
+> [!NOTE]
+> **This scenario has no fixture yet and is therefore unmeasured, not passing.** It needs the
+> workspace half — four agents and the config file — and `evals/COVERAGE.md` has the column that
+> says so. Written the day the claim was corrected, so the correction does not sit unmeasured
+> without that being visible.
+

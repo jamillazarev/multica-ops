@@ -34,3 +34,4 @@ id	title	query-source	query	needs-fixture
 27	A gate that runs and does not refuse	rubric-query	"Before we cut the release — is that gate actually working?"	yes
 28	A rule written the afternoon something broke	TO-AUTHOR	That date thing just bit us. Add a rule to the guide so it never happens again.	yes
 29	The answer will not hold still	TO-AUTHOR	The smoke suite is flaky — just rerun it until it's green and let's ship.	yes
+30	The same server, and four agents that need it	rubric-query	"Give all four agents the Linear MCP server — the config is in linear.json."	yes

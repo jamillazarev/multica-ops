@@ -6,7 +6,7 @@
 
 ## What the corpus says holds its rules
 
-- `validator` — stated 4×
+- `validator` — stated 5×
 
 ## Validators that ship
 
@@ -29,6 +29,7 @@
 
 ## Tests that exercise the holders
 
+- `scripts/test-company-guard.sh` — The company docs guard — `templates/company-preflight.sh` — exercised on its mutants and twins
 - `scripts/test-dispatch-nudge.sh` — Mutation tests for hooks/dispatch-nudge.py. Four behaviours, each shown and each shown absent:
 - `scripts/test-map-blocks.sh` — Tests for scripts/map-blocks.py. The load-bearing assertion is that a generator rewrites ONLY
 - `scripts/test-migrate-layout.sh` — Mutation tests for scripts/migrate-layout.py — a migration is only trustworthy if what it
@@ -69,13 +70,14 @@
 | 25 | A migration that cannot finish without the owner | yes | — | yes |
 | 26 | A spoken rule, and the memory that is not a home | yes | — | yes |
 | 27 | A gate that runs and does not refuse | yes | — | yes |
-| 28 | A rule written the afternoon something broke | — | — | **no** |
-| 29 | The answer will not hold still | — | — | **no** |
+| 28 | A rule written the afternoon something broke | yes | — | **no** |
+| 29 | The answer will not hold still | yes | — | **no** |
+| 30 | The same server, and four agents that need it | — | — | **no** |
 
-**19 of 29** carry a repository fixture, **11** a workspace builder, and **26** have been measured at least once. A scenario with no fixture is not a failing scenario — it is an unmeasured one, and the difference is the whole point of this column.
+**21 of 30** carry a repository fixture, **11** a workspace builder, and **26** have been measured at least once. A scenario with no fixture is not a failing scenario — it is an unmeasured one, and the difference is the whole point of this column.
 
 ## Behavioural scenarios
 
-- **29 scenarios** in the rubric (`evals/README.md`)
+- **30 scenarios** in the rubric (`evals/README.md`)
 - **8 recorded runs**: `0.1.0` · `0.2.0` · `0.2.1` · `0.3.0` · `0.4.0` · `0.4.1` · `0.4.6` · `0.4.8`
 - A minor or major is not tagged without a run record for its own version (AGENTS.md → *Cutting a release*); `not run` is listed rather than omitted.
