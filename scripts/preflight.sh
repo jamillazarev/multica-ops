@@ -208,6 +208,18 @@ while IFS= read -r m; do
   [ "$mv_" = "$sv" ] || say_fail "version straggler: $m=$mv_ but skills/mops/SKILL.md=$sv"
 done <<< "$(git ls-files '*.json' | grep -v '^company/')"
 [ "$swept" -ge 3 ] || say_warn "manifest sweep saw only $swept versioned manifest(s) — expected at least 3 (Claude Code, Codex, Gemini); has one stopped declaring a version?"
+# **The guard's own stamp is a version site the sweep could not see, because it is not JSON.**
+# `templates/company-preflight.sh` carries `# guard-version:` on line 2, and the guard compares it
+# against the company's guide to say *this copy is older than the skill running it*. So it must
+# equal the shipping version EVERY release, whether or not the guard changed — otherwise a company
+# that has just upgraded and re-copied the guard is told the guard is stale, and **re-copying, the
+# remedy the message prescribes, does not clear it.** Measured 2026-08-23: the stamp sat at 0.4.9
+# against a declared 0.4.11, two releases, so every company that upgraded to either met a warning
+# it could not act on.
+gv_=$(sed -n 's/^# guard-version:[[:space:]]*\([0-9.]*\).*/\1/p' templates/company-preflight.sh | head -1)
+[ "$gv_" = "$sv" ] || say_fail "templates/company-preflight.sh is stamped guard-version $gv_ while \
+skills/mops/SKILL.md declares $sv — the guard compares that stamp against the company's guide, so \
+every upgraded company would be warned its guard is stale and re-copying would not clear it. Bump line 2"
 
 # 1a-ter · a released entry's date must be the date it SHIPPED, not the date it was written.
 #          Measured 2026-08-22: 0.2.8 and 0.4.7 both said 2026-08-16 while their tags were cut on

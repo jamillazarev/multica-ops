@@ -120,6 +120,28 @@ printf '# Tooling\n\n| Thing | Why | Owner |\n|---|---|---|\n\nExample:\n\n```\n
 git -C "$R" add -A
 [ "$(g | grep -c 'what it replaces')" = 0 ] \
   && ok || bad "a fenced example row was treated as a register row"
+printf '# Tooling\n\n| Thing | Why | Owner |\n|---|---|---|\n\n~~~\n| Foo | bar | me |\n~~~\n' > "$R/_ops/TOOLING.md"
+git -C "$R" add -A
+[ "$(g | grep -c 'what it replaces')" = 0 ] \
+  && ok || bad "a ~~~ fenced example row was treated as a register row"
+printf '# Tooling\n\n| Thing | Why | Owner |\n|---|---|---|\n\n<!--\n| Draft | not yet | me |\n-->\n' > "$R/_ops/TOOLING.md"
+git -C "$R" add -A
+[ "$(g | grep -c 'what it replaces')" = 0 ] \
+  && ok || bad "a row parked in an HTML comment was treated as live"
+# The register is read from the INDEX. Reading it from the worktree while the added lines came
+# from the index made the rung fall silent the moment the two disagreed — a regression measured
+# 2026-08-23, and whitespace alignment was enough to trigger it.
+printf '# Tooling\n\n| Tool | What for | **Replaces** | Checked |\n|---|---|---|---|\n' > "$R/_ops/TOOLING.md"
+git -C "$R" add -A && git -C "$R" -c user.email=t@t -c user.name=t commit -qm reg >/dev/null 2>&1
+printf '| Figma | design files |  | 2026-08-23 |\n' >> "$R/_ops/TOOLING.md"
+git -C "$R" add -A
+python3 - "$R" <<'MUT'
+import pathlib, sys
+p = pathlib.Path(sys.argv[1]) / "_ops/TOOLING.md"; t = p.read_text()
+p.write_text(t.replace("| Figma | design files |  |", "| Figma  | design files  |  |"))
+MUT
+[ "$(g | grep -c 'what it replaces')" -ge 1 ] \
+  && ok || bad "the rung fell open when the worktree and the index disagreed"
 reset
 
 # ── the guard notices its own age ──────────────────────────────────────────────────────────
