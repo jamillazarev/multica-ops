@@ -203,11 +203,11 @@ def check_live():
 # the fingerprint is blind to it until someone adds it — so verify the recipe covers
 # every structural group, and flag any new CLI group to be classified.
 STRUCTURAL = {"agent", "squad", "skill", "label", "autopilot", "project", "runtime",
-              "property", "plugin"}        # workspace shape; not the volatile issue/chat
-# `plugin` classified 2026-08-15, on arrival in CLI 0.4.26: a workspace-private Skill Plugin
-# is installed into a workspace and changes what its agents can do — the same category as
-# `skill`, which is already here. This repository does not use them yet; the fingerprint
-# hashes them so that the day one appears, the drift is seen rather than discovered.
+              "property"}                  # workspace shape; not the volatile issue/chat
+# `plugin` was classified 2026-08-15 on arrival in CLI 0.4.26 and **removed 2026-08-23**, because
+# the CLI removed the group: `multica plugin` is `unknown command` at 0.4.32. The recipe would
+# have called it and hashed an error. What let that sit is below — this pair of checks agreed
+# with a document, and both were stale in the same direction.
 IGNORE = {"issue", "chat", "attachment", "auth", "config", "daemon", "setup", "update",
           "user", "version", "login", "repo", "workspace", "completion", "help"}
 def check_fingerprint():
@@ -228,9 +228,24 @@ def check_fingerprint():
     for grp in sorted(STRUCTURAL):
         if grp not in hashed:
             fail(f"fingerprint recipe (PLAYBOOKS) does not hash `{grp}` — drift in it goes unseen")
+    # The check above compares a document against a constant, so it is silent when BOTH are stale
+    # — which is exactly what happened to `plugin`: classified on arrival in 0.4.26, removed from
+    # the CLI by 0.4.32, and still agreed upon by these two for six releases while the recipe would
+    # have hashed an `unknown command`. The unclassified-group check below catches an ADDED group;
+    # nothing caught a REMOVED one until this. Measured 2026-08-23.
     # a CLI group that is neither hashed nor knowingly ignored is unclassified
     top = subprocess.run(["multica", "--help"], capture_output=True, text=True).stdout
     groups = set(re.findall(r"^  ([a-z][a-z-]+):", top, re.M))
+    # The other direction, and the one that was missing: a class we hash that the CLI no longer
+    # exposes. The recipe would run `multica <gone> list`, get `unknown command` on stderr, and
+    # hash the empty stdout — a stable hash for a class that does not exist, which reads as
+    # "nothing drifted here" forever. Only assert when the CLI answered at all, so a broken
+    # `--help` cannot empty the set and condemn every class at once.
+    if groups:
+        for grp in sorted(STRUCTURAL - groups):
+            fail(f"`{grp}` is hashed as workspace structure and the CLI has no such group — "
+                 f"the recipe would hash an `unknown command`. Remove it from STRUCTURAL and "
+                 f"from the fingerprint loop, and say in the changelog that the class is gone")
     for g in sorted(groups - STRUCTURAL - IGNORE - hashed):
         warn(f"CLI group `{g}` is new — decide if it is workspace structure the fingerprint "
              f"should hash, then add it or add it to IGNORE")

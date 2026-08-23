@@ -25,12 +25,20 @@ this table: even an attributed, dated figure rots in a long-lived table and temp
 quoting.
 
 > [!NOTE]
-> **Multica gained a native plugin system in CLI 0.4.26** — `multica plugin init · install ·
-> list · pack · status · validate`, for workspace-private Skill Plugins. It is a distribution
-> shape this repository does not use yet: the resident copy still arrives as
-> `multica skill import`. Named here because deciding between them is a real choice and
-> because a capability that arrives and goes unnoticed is how a workaround outlives its
-> reason. **Surface verified 2026-08-15; not run.**
+> **Multica gained a native plugin system in CLI 0.4.26 and had removed it by 0.4.32.**
+> `multica plugin init · install · list · pack · status · validate` is `unknown command` now, and
+> workspace-private skills arrive the way they always did here — `multica skill import`, with
+> `skill refresh` to re-pull from source while keeping the id and the agent assignments. So the
+> choice this note was written to flag no longer exists, and nothing in this repository has to
+> change: the shape it recommended waiting on is the shape that survived.
+>
+> **The lesson is the one worth keeping.** The note said *a capability that arrives and goes
+> unnoticed is how a workaround outlives its reason* — and the mirror image cost more: a
+> capability that arrives, gets built into a checker as a permanent class, and then leaves. It
+> was hashed as workspace structure for six releases after the platform dropped it, and the check
+> that would have caught it now exists (`verify.py`, the STRUCTURAL-minus-CLI assertion).
+> **Surface verified 2026-08-15 against 0.4.26; re-verified 2026-08-23 against 0.4.32, where it
+> is gone. Never run.**
 
 ## Contents
 

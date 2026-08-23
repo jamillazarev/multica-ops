@@ -268,7 +268,7 @@ forces mid-task compaction, which is exactly where work gets lost and redone.
 | **Guide + role skills + the agent's own instructions** — the target | **≤ 8%** | ~16k tokens |
 | The line where something is wrong | ~12% | ~25k tokens |
 
-For calibration: the shipped `GUIDE-template.md` is **~2.9k tokens** (measure yours — it grows, and this figure has moved three times already), a median community skill
+For calibration: the shipped `GUIDE-template.md` is **~3.2k tokens** (measured 2026-08-23; measure yours — it grows, and this figure has now moved four times, which is the point of measuring rather than quoting), a median community skill
 is ~1–2k, and a deliberately heavy one runs ~8k. So the working budget is roughly *the guide
 plus two heavy skills, or a handful of ordinary ones*. On a smaller-window model the same
 percentages yield smaller numbers — which is the point of expressing it this way.

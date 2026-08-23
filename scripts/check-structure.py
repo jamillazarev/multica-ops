@@ -235,7 +235,20 @@ except (OSError, subprocess.CalledProcessError):
     pass
 
 # h · every `multica <group> <sub>` the docs promise must exist in the installed CLI.
+# **Except a group the docs are burying.** When the platform removes a command, the honest act is
+# a note saying so where a reader who wrote it into a runbook will look — and that note has to
+# name the command, which made this check refuse the very repair it was asking for (measured
+# 2026-08-23, on `plugin`: arrived 0.4.26, gone by 0.4.32, and the obituary tripped the gate
+# twice). The exemption is a REGISTRY, not a vocabulary: `<!-- cli-removed: <group> <date> -->`
+# in REFERENCE, one line per group, dated. A keyword list would have let any sentence containing
+# "removed" through — the defect §4e in the company guard was cured of, and this file is not
+# entitled to repeat it. Adding a line to the registry is a deliberate act with a date on it.
 if shutil.which("multica"):
+    try:
+        _ref = open("REFERENCE.md", encoding="utf-8", errors="ignore").read()
+    except OSError:
+        _ref = ""
+    RETIRED = {g for g, _d in re.findall(r"<!--\s*cli-removed:\s*([a-z][a-z-]+)\s+(\d{4}-\d{2}-\d{2})\s*-->", _ref)}
     claimed = set()
     for f in DOCS + sorted(glob.glob("scripts/*")):
         try:
@@ -251,7 +264,11 @@ if shutil.which("multica"):
             groups[g] = r.stdout if r.returncode == 0 else None
         h = groups[g]
         if h is None:
-            fail(f"docs reference `multica {g}` — no such command group")
+            if g in RETIRED:
+                continue          # named in the removal registry, with a date — a burial, not a promise
+            fail(f"docs reference `multica {g}` — no such command group. If the platform removed "
+                 f"it, bury it: add `<!-- cli-removed: {g} YYYY-MM-DD -->` to REFERENCE and say "
+                 f"in §10 what replaced it, so a reader with it in a runbook finds out why")
         elif not re.search(rf"^\s+{re.escape(sub)}:", h, re.M) and not sub.startswith("-"):
             if not re.search(rf"--{re.escape(sub)}\b", h):
                 warn(f"docs reference `multica {g} {sub}` — not in that group's help")

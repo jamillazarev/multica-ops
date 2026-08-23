@@ -295,5 +295,54 @@ C0PY
 [ "$(_c0 '        run: echo \"run bash scripts/test-preflight-checks.sh\"')" = 1 ] \
   && ok || bad "a suite named inside an echo counted as invoked — an instruction is not a run"
 
+# ── the CLI-removal registry, and the class that outlived its command ──────────────────────
+# Both added 2026-08-23, when `multica plugin` — a group that arrived in 0.4.26 and was made a
+# permanent fingerprint class the same day — turned out to be `unknown command` at 0.4.32. Two
+# gates were missing in the same direction: nothing noticed a class the CLI had REMOVED (both
+# the recipe and the constant were stale, and they agreed), and the gate that DID notice could
+# not tell an obituary from a promise, so it refused the repair it was asking for.
+if command -v multica >/dev/null 2>&1; then
+  _reg(){ # <registry line> → count of `no such command group` refusals
+    ( cd "$T/c" && python3 - "$1" <<'RPY'
+import sys, pathlib
+p = pathlib.Path("REFERENCE.md"); t = p.read_text()
+old = "<!-- cli-removed: plugin 2026-08-23 -->"
+if old not in t:
+    sys.exit(3)
+p.write_text(t.replace(old, sys.argv[1], 1))
+RPY
+    )
+    n=$( ( cd "$T/c" && python3 scripts/check-structure.py ) 2>&1 | grep -c "no such command group")
+    undo; echo "$n"; }
+
+  [ "$(_reg '<!-- cli-removed: plugin 2026-08-23 -->')" = 0 ] \
+    && ok || bad "a group buried in the registry, with a date, was still refused"
+  [ "$(_reg '')" -ge 1 ] \
+    && ok || bad "a docs mention of a removed CLI group passed with no registry line"
+  [ "$(_reg '<!-- cli-removed: plugin someday -->')" -ge 1 ] \
+    && ok || bad "an undated registry line was accepted — a burial with no date is not a record"
+  [ "$(_reg '<!-- cli-removed: skill 2026-08-23 -->')" -ge 1 ] \
+    && ok || bad "burying a DIFFERENT group exempted the one actually mentioned"
+
+  # and the other direction: a class hashed as structure that the CLI no longer has
+  _struct(){ ( cd "$T/c" && python3 - "$1" <<'SPY'
+import sys, pathlib
+p = pathlib.Path("scripts/verify.py"); t = p.read_text()
+old = '"property"}                  # workspace shape'
+if old not in t:
+    sys.exit(3)
+p.write_text(t.replace(old, sys.argv[1], 1))
+SPY
+    )
+    n=$( ( cd "$T/c" && python3 scripts/verify.py ) 2>&1 | grep -c "the CLI has no such group")
+    undo; echo "$n"; }
+  [ "$(_struct '"property", "plugin"}        # workspace shape')" -ge 1 ] \
+    && ok || bad "a fingerprint class the CLI no longer exposes was hashed in silence"
+  [ "$(_struct '"property"}                  # workspace shape')" = 0 ] \
+    && ok || bad "the honest class list was condemned"
+else
+  echo "  (skipped 6: no multica CLI on PATH — these assert against the live command surface)"
+fi
+
 echo "preflight-checks: $pass passed, $fail failed"
 exit "$fail"

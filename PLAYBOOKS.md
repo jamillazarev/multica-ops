@@ -1350,7 +1350,7 @@ Write after any state-changing operation, compare on wake:
 # list` gave the identical hash. A service outage, an expired token, a CLI too old to know the
 # group, and an empty list were one value — and every transition between them read as workspace
 # drift that never happened.
-for k in agent squad skill label autopilot project runtime property plugin; do
+for k in agent squad skill label autopilot project runtime property; do
   out=$(multica $k list --output json 2>/dev/null) \
     && printf '%s %s\n' "$k" "$(printf '%s' "$out" | shasum -a 256 | cut -c1-16)" \
     || printf '%s UNREADABLE\n' "$k"
@@ -1376,8 +1376,11 @@ done
 git rev-parse HEAD                                                        # repo pointer
 ```
 
-**Nine classes plus members, resources and the repo pointer — and the list grows with the
-platform.** (Eight until `plugin` was classified on 2026-08-15 and this sentence was not moved with it — a count in prose beside a list in code, which is why `verify.py` now reads the number rather than trusting it.) When Multica gains an object type, the fingerprint is blind to it until someone
+**Eight classes plus members, resources and the repo pointer — and the list follows the
+platform in both directions.** (Eight, then nine when `plugin` was classified on 2026-08-15, and
+eight again on 2026-08-23 when the CLI **removed** the group it was classified for — a class that
+lived six releases. The count is read by `verify.py` rather than trusted, which is why it moved
+this time instead of drifting: the sentence did not move on the way up.) When Multica gains an object type, the fingerprint is blind to it until someone
 adds it here; a class nobody hashes is drift nobody sees. Store as `_ops/.workspace-state.json` (`{class: hash}` + `head` + `taken_at`). On wake,
 recompute and diff. Something moved that Mops didn't move → **attribute first**
 (`agent tasks` initiator/originator · issue comments · `git log`), then ask the person who

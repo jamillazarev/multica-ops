@@ -56,7 +56,9 @@ sub-issue, not another level.
   taste.** The platform gives `--description`, `--instructions`, `--model`, `--runtime-id`,
   `--mcp-config`, `--custom-env`, `--max-concurrent-tasks`, `--permission-mode`. **Skills are
   not among them** — they attach through their own group, `multica agent skills add|set|list`,
-  and `agent create` has no `--skills` flag (checked against CLI 0.4.26, 2026-08-15). This line
+  and `agent create` has no `--skills` flag (checked against CLI 0.4.26 on 2026-08-15, and again
+  against 0.4.32 on 2026-08-23 — still absent, and `agent skills` still offers add · list · set).
+  This line
   claimed one for months: `verify.py` validates every flag inside a fenced RECIPE and never one
   named in prose, and no recipe runs it.
   It has **no field for type, grade, autonomy or the evidence behind them** — and the temptation
@@ -301,20 +303,36 @@ sub-issue, not another level.
   prevented. And **the strongest control is still the one measured**: an agent that never needed
   the key does not get it, and then no storage question arises at all.
 
-- **MCP is per agent, and there is no workspace level.** `--mcp-config` sits on the agent; a
-  workspace has no MCP surface (`workspace update` has no such flag). So **a server that
-  "everyone should have" is added to every agent one at a time, and to each new hire after** —
-  that is the real cost of an integration here, and it is worth saying before a team of eight
-  is standing. Two consequences: agents also **inherit the runtime's local MCP servers and
-  skills**, so the inventory is *runtime plus agent*, never agent alone; and **`mcp_config` is
-  secret material** (it usually carries tokens) — pass it by file or stdin, never on the command
-  line where the shell history and `ps` can see it.
+- **MCP has a workspace library and a per-agent assignment, and the two are different acts.**
+  `workspace mcp add <name> --server-config-file <f>` puts a server in the library and assigns it
+  to **nobody**; `agent mcp add <agent-id> <server-id>` gives it to one, and `agent mcp
+  disable|enable` turns it off for that agent without taking it away. `--mcp-config` still sits on
+  `agent create`/`update` for a server only one agent should ever see. **So the shared integration
+  is configured once and handed out, not pasted into every agent** — and the token lives in one
+  place, which is the security half of the same change.
+
+  > [!IMPORTANT]
+  > **This bullet said the opposite until 2026-08-23, and said it for six CLI releases.** It read
+  > *"MCP is per agent, and there is no workspace level … a server that everyone should have is
+  > added to every agent one at a time"*, evidenced by `workspace update` having no such flag —
+  > true when measured against 0.4.26, and false from whichever release added `workspace mcp`.
+  > A reader following it would have pasted one token into eight agents and had eight places to
+  > rotate it. The pin is what caught this: `verify.py` had been warning *"every claim in
+  > REFERENCE was measured against 0.4.26"* on every run, and this is what that warning was for.
+
+  Two things the change does **not** alter: agents still **inherit the runtime's local MCP servers
+  and skills**, so the inventory is *runtime plus agent*, never agent alone; and the payload is
+  still **secret material** — `--server-config-file` or `--server-config-stdin`, never the inline
+  flag, whose own help says it lands in shell history. Library mutations are **admin/owner only**,
+  so an agent that can assign is not necessarily one that can add.
 
 - **What attaches where — three different things that feel alike.** **Resources belong to a
   project and to nothing else**: `project resource add --type github_repo | local_directory` is
   *what agents work on*. A workspace has no resources, and neither does an agent. **The agent
   carries capability instead** — `agent skills` (what it can do), `agent env` (secrets, audited),
-  `--mcp-config` (servers). **The workspace carries containment and context.**
+  `agent mcp` / `--mcp-config` (servers). **The workspace carries containment, context — and, since
+  `workspace mcp`, a library of servers to hand out**, which is the one place the old
+  "workspace holds no capability" line no longer holds.
 
   **So an agent is not bound to a repository — the issue's project is.** Which code a run
   touches is decided by where the issue lives, not by who executes it. Measured 2026-08-01: an
@@ -468,9 +486,21 @@ and *"it does not hold the loop"* stops being a rule it could work around.
 **Multiple workspaces.** A user can have several workspaces (separate companies). The console operates on **one at a time** — the profile's default (`workspace list` shows them). When more than one exists, Mops **confirms which workspace it's acting on** before doing anything, and switches on request: `workspace switch <id>` (or `--workspace-id` per command) — `/multica-ops:mops workspace [name]`. Each workspace is its own company — own team, roadmap, and, if enabled, its own resident Mops in Multica; nothing crosses between them. A Mops in Multica lives in exactly one workspace, so switching is a console-only notion.
 
 > [!NOTE]
-> **CLI re-verified against 0.4.26 on 2026-08-15** — §10's surface was regenerated from
+> **CLI re-verified against 0.4.32 on 2026-08-23**; the previous pass was 0.4.26 on 2026-08-15.
+> Six releases had gone by, and the gap cost one false claim — see §3's marked correction on the
+> MCP workspace library. §10 gained `agent mcp`, `issue timeline` and `workspace mcp`, and lost
+> nothing: a two-way diff found no command §10 names that the CLI no longer has.
+>
+> **What was re-verified mechanically and holds verbatim:** every `--no-start` flag behind paths
+> 1, 4 and 5, `issue create --stage`'s barrier sentence behind path 8, `issue comment`'s lack of
+> an edit verb, `squad activity --reason`, `squad member add --role`. **What was NOT re-measured:**
+> the counted claims — that a squad assignment wakes only the leader, that a mention creates a run,
+> that the stage barrier fires exactly once. Those need live runs and keep their 0.4.26 dates
+> below, honestly stale rather than quietly refreshed.
+>
+> **The earlier banner** — §10's surface was regenerated from
 > `--help` and gained what fourteen releases added: `skill refresh`, and a whole `plugin`
-> group (workspace-private Skill Plugins). **§2 was then measured** on the same day, in a
+> group (workspace-private Skill Plugins) — *which the platform then removed again by 0.4.32*. **§2 was then measured** on the same day, in a
 > scratch workspace with probe agents, and it gained three trigger paths it had been
 > silent about — a plain comment on an assigned issue, a status change and an issue update, the
 > last two evidenced by their own `--no-start` flags; §3's squad claim was measured with it. `MUL-5958` (**v0.4.23** — checked against the
@@ -867,7 +897,7 @@ possible move and looks identical to diligence in a transcript.
 
 This map makes multica-ops a **complete CLI-competence layer**: an agent loading the
 skill knows not just the method but **every command that exists**. It's the full surface
-of `multica` **v0.4.26** <!-- cli-pin -->, regenerated from `--help` and verified 2026-08-15 — but it lists *what exists*, not exact flags, since the CLI
+of `multica` **v0.4.32** <!-- cli-pin -->, regenerated from `--help` and verified 2026-08-23 — but it lists *what exists*, not exact flags, since the CLI
 evolves, so **always confirm with `multica <group> <cmd> --help`** and consult
 https://multica.ai/docs. **Precedence: live `--help` wins over this map** — on any
 mismatch trust the CLI, and regenerate this section when the skill is upgraded
@@ -875,17 +905,29 @@ mismatch trust the CLI, and regenerate this section when the skill is upgraded
 or explain any of the below directly, no methodology assumed.
 
 **Work objects**
-- `agent` — archive · avatar · **copy** · create · env · get · list · restore · skills · tasks · update
+- `agent` — archive · avatar · **copy** · create · env · get · list · **mcp** (add/disable/enable/list/remove) · restore · skills · tasks · update
 - `squad` — activity · create · delete · get · list · member · update
 - `project` — create · delete · get · list · resource (add/list/remove/update) · status · update
-- `issue` — assign · cancel-task · children · comment (add/delete/list/resolve/unresolve) · create · get · label · list · metadata · property · pull-requests · reorder · rerun · run-messages · runs · search · status · subscriber (add/list/remove) · update · usage
+- `issue` — assign · cancel-task · children · comment (add/delete/list/resolve/unresolve) · create · get · label · list · metadata · property · pull-requests · reorder · rerun · run-messages · runs · search · status · subscriber (add/list/remove) · **timeline** · update · usage
 - `label` — create · delete · get · list · update
 - `property` — archive · create · get · list · unarchive · update (workspace custom issue properties)
 - `repo` — add · checkout · list · remove
 - `skill` — create · delete · files · get · import · list · **refresh** · search · update
-- `plugin` — init · install · list · pack · status · validate  **(new in 0.4.26 — workspace-private Skill Plugins)**
+- `update` · `version` — the CLI's own two, listed here because §10 claims to be the whole surface
+  and a two-way diff on 2026-08-23 found them named nowhere in it
+
+<!-- cli-removed: plugin 2026-08-23 -->
+
+> [!NOTE]
+> **`plugin` was here and is gone.** `multica plugin` — init · install · list · pack · status ·
+> validate — arrived in 0.4.26, was classified as a fingerprint class the same day, and is
+> `unknown command` at 0.4.32: a group that lived six releases. Workspace-private skills are
+> `skill import` / `skill refresh` now. It is named here rather than deleted silently because a
+> reader who wrote `multica plugin install` into a runbook needs to find out from this page why
+> it stopped working. **`workspace mcp` and `agent mcp` arrived in the same window** — see §3's
+> marked correction, which this pin's warning is what surfaced.
 - `autopilot` — create · delete · get · list · runs · trigger · trigger-add · trigger-delete · trigger-rotate-url · trigger-update · update
-- `workspace` — create · get · list · member (invite/list) · switch · update
+- `workspace` — create · get · list · **mcp** (add/list/remove/update) · member (invite/list) · switch · update
 - `attachment` — download · upload
 - `chat` — history · thread (**read-only**; scoped to the agent's own current thread)
 
