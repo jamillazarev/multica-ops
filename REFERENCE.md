@@ -320,6 +320,16 @@ sub-issue, not another level.
   > rotate it. The pin is what caught this: `verify.py` had been warning *"every claim in
   > REFERENCE was measured against 0.4.26"* on every run, and this is what that warning was for.
 
+  **And a wired server is weight, not only reach.** Where a runtime loads every tool's schema
+  before the first word, forty tools are tens of thousands of tokens spent on a session that says
+  hello — the same budget as an always-loaded instruction, arriving from outside the workspace and
+  paid by every agent the server is assigned to. Runtimes have begun answering this themselves, by
+  listing tools by name and fetching a schema only when one is called for; where a runtime does
+  not, **the remedy is fewer assignments, not a cleverer wrapper**. The library makes that cheap to
+  get right: a server sits in it assigned to nobody until an agent has a reason, and `agent mcp
+  disable` takes the weight off one without unpicking the wiring. Observed 2026-08-23 — state the
+  runtime and the date, because this is moving.
+
   Two things the change does **not** alter: agents still **inherit the runtime's local MCP servers
   and skills**, so the inventory is *runtime plus agent*, never agent alone; and the payload is
   still **secret material** — `--server-config-file` or `--server-config-stdin`, never the inline
