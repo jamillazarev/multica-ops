@@ -119,7 +119,32 @@ for f in sys.argv[1:]:
     # the same step still counted — legal YAML, and the message beside this check asserts the
     # opposite. Measured 2026-08-23 by a cold-read lens. Group the lines into steps first, then
     # judge each step whole. `0` counts as false the same as `false`; the message says so too.
+    # **A job-level `if: false` disables every step in it**, and the step grouper below only ever
+    # looked inside `- ` sequence items — so `jobs.<id>.if`, the canonical way to switch a job off,
+    # was invisible while the refusal message advertised that a step-level one counts. Measured
+    # 2026-08-27. A job that cannot run runs none of its steps, so the whole file's steps are dead
+    # when every job is off; here it is enough to kill the steps under that job's block.
     dead = set()
+    _j = 0
+    while _j < len(lines):
+        _c = re.match(r"^(\s{2,})([A-Za-z0-9_.-]+):\s*$", lines[_j])
+        if _c:
+            _ji, _k = len(_c.group(1)), _j + 1
+            _off = False
+            while _k < len(lines) and (not lines[_k].strip()
+                                       or len(lines[_k]) - len(lines[_k].lstrip()) > _ji):
+                _ic = re.match(r"^\s+if:\s*(.+?)\s*$", lines[_k])
+                if _ic and len(lines[_k]) - len(lines[_k].lstrip()) == _ji + 2:
+                    _v = _ic.group(1).strip().strip(chr(34)).strip(chr(39))
+                    _v = re.sub(r"^\$\{\{\s*(.*?)\s*\}\}$", r"\1", _v).strip().lower()
+                    if _v in ("false", "0"):
+                        _off = True
+                _k += 1
+            if _off:
+                dead.update(range(_j, _k))
+            _j = _k
+            continue
+        _j += 1
     step_start = None
     step_indent = None
     steps = []

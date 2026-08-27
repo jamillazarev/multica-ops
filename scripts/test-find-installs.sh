@@ -82,10 +82,32 @@ printf '%s' "$(clone_state "$T/clean")" | grep -q 'ROUTE AT RISK' \
 # is a remedy they will improvise, and the improvisation here discards their work.
 printf '%s' "$_flag" | grep -q 'git -C .* stash' \
   && ok || bad "the flag does not give a runnable stash command"
-printf '%s' "$_flag" | grep -q 'reset --hard' \
+# **The discard must be path-scoped.** `reset --hard` is repo-wide, and so was the detection:
+# an install inside a larger repository was flagged for an edit elsewhere, and following the
+# remedy destroyed it. Measured 2026-08-27 with real data loss.
+printf '%s' "$_flag" | grep -q 'restore --source=HEAD' \
   && ok || bad "the flag does not give a runnable discard command"
+printf '%s' "$_flag" | grep -q 'reset --hard' \
+  && bad "the flag still prescribes a repo-wide reset, which destroys unrelated work" || ok
 printf '%s' "$_flag" | grep -q 'Do NOT rsync onto a clone' \
   && ok || bad "the flag does not name the act that causes this"
+
+# ── an install inside a larger repository is judged on ITS OWN directory ────────────────────
+# `git status --porcelain` is repo-wide. A dotfiles clone carrying `.claude/plugins/<skill>` had
+# the install flagged because of an edit in an unrelated folder — and the remedy printed was
+# `reset --hard`, which discarded that edit. Measured 2026-08-27, with the file actually lost.
+NEST="$T/nest"
+git clone -q "$T/src" "$NEST" 2>/dev/null
+mkdir -p "$NEST/plugins/skill" "$NEST/unrelated"
+printf 'door\n' > "$NEST/plugins/skill/a.txt"
+printf 'important v1\n' > "$NEST/unrelated/notes.md"
+( cd "$NEST" && git add -A && git -c user.email=t@t -c user.name=t commit -qm nest ) >/dev/null 2>&1
+printf 'important v2 EDITED\n' > "$NEST/unrelated/notes.md"
+[ -z "$(clone_state "$NEST/plugins/skill")" ] \
+  && ok || bad "a clean install inside a dirty repository was flagged for someone else's edit"
+printf 'door edited\n' > "$NEST/plugins/skill/a.txt"
+[ -n "$(clone_state "$NEST/plugins/skill")" ] \
+  && ok || bad "an edit INSIDE the install directory was not seen"
 
 echo "find-installs: $pass passed, $fail failed"
 exit "$fail"

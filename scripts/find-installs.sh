@@ -84,23 +84,22 @@ add() {
 clone_state() {
   # $1: path → "" when fine, else a flag naming what puts the documented route at risk
   git -C "$1" rev-parse --is-inside-work-tree >/dev/null 2>&1 || { printf ''; return; }
-  # **TRACKED modifications only.** `git status --porcelain` also lists untracked files, and an
-  # untracked file does not stop `git pull --ff-only` — measured 2026-08-23, after a cold-read
-  # lens pointed out that the flag promised a refusal the trigger could not support. So a stray
-  # note in the directory used to be reported as ROUTE BROKEN, and the remedy offered was a
-  # reset: destructive advice for a false positive, which is worse than saying nothing.
-  # (An untracked file CAN block a pull by colliding with an incoming path. That is not knowable
-  # without fetching, and this script does not fetch — so it is not claimed.)
+  # **Scoped to THIS directory, and the remedy never leaves it.** `git status --porcelain` is
+  # repo-wide, so an install sitting inside a larger repository — a dotfiles clone with
+  # `.claude/plugins/…` in it — was reported at risk because of an edit somewhere else entirely,
+  # and the remedy printed was `reset --hard`, which is also repo-wide. Measured 2026-08-27: the
+  # install directory was clean, the flag fired, and following it destroyed an unrelated
+  # uncommitted file. **That is our own advice deleting work the install had nothing to do with**,
+  # which is worse than the silence the flag replaced. Detection is path-scoped now and the
+  # discard is `git restore` on the named paths — never `reset`.
   #
-  # **And the flag says AT RISK, not BROKEN, because that is what is true.** A modified tracked
-  # file only stops a fast-forward when an incoming commit touches that same file — a test written
-  # for this check refused the stronger wording within a minute of being written, by pulling
-  # successfully with a modified file the upstream had not gone near. It is a certainty in the
-  # case that matters, because an rsync rewrites exactly the files the next release changes.
-  _mods=$(git -C "$1" status --porcelain 2>/dev/null | grep -cv '^??' || true)
+  # TRACKED modifications only: an untracked file does not stop `git pull --ff-only`, so a stray
+  # note is not a broken route. And the flag says AT RISK, not BROKEN, because a modified file
+  # stops a fast-forward only when an incoming commit touches that same file — a certainty after
+  # an rsync, which rewrites exactly what the next release changes.
+  _mods=$(git -C "$1" status --porcelain -- "$1" 2>/dev/null | grep -cv '^??' || true)
   if [ "${_mods:-0}" -gt 0 ]; then
-    _br=$(git -C "$1" rev-parse --abbrev-ref --symbolic-full-name '@{u}' 2>/dev/null || echo origin/main)
-    printf 'ROUTE AT RISK — a clone with %s modified tracked file(s). `git pull --ff-only` refuses as soon as an incoming commit touches any of them, which an rsync over a clone guarantees, since it rewrites the same files the next release changes. Recover with `git -C %s stash` then pull, or `git -C %s reset --hard %s` to discard them. Do NOT rsync onto a clone: that is what puts it here' "$_mods" "$1" "$1" "$_br"
+    printf 'ROUTE AT RISK — %s modified tracked file(s) under this directory. `git pull --ff-only` refuses as soon as an incoming commit touches one of them, which an rsync over a clone guarantees, since it rewrites exactly what the next release changes. Recover with `git -C "%s" stash push -- "%s"` then pull, or `git -C "%s" restore --source=HEAD -- "%s"` to discard just these. Do NOT rsync onto a clone: that is what puts it here' "$_mods" "$1" "$1" "$1" "$1"
   fi
 }
 

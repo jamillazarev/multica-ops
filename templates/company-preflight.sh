@@ -317,13 +317,49 @@ if ( changed --diff-filter=AMR -- '_ops/TOOLING.md' ) | hits . ; then
   # and close one, and an HTML comment is how a register parks a draft row it does not mean yet.
   # Only ``` was skipped, so a ~~~ example and a commented-out row were both read as live rows
   # and refused — four documentation-only edits, measured 2026-08-23 by an adversarial lens.
+  # **A comment hides a LINE, never the rest of the file, and never a live row it sits inside.**
+  # The first version set a flag on any line containing `<!--` and skipped until one carried
+  # `-->`. Three ways that silenced the gate, all measured 2026-08-27: an inline `<!-- todo -->`
+  # in a live row made that row invisible while GFM still rendered it; a bare `<!--` with no
+  # closer anywhere made every row after it invisible **permanently**; and a fence marker inside
+  # a comment left the fence flag set, with the same effect.
+  #
+  # Lines are buffered RAW — the diff is matched against the file's own bytes, so a line rewritten
+  # for analysis would never match what was staged. Comments are resolved afterwards, where the
+  # whole file is visible and an opener can be told from an opener that never closes.
   _rowsrc='
-    /^[[:space:]]*(```|~~~)/ { f = !f; next }
-    /<!--/ { c = 1 }
-    c { if ($0 ~ /-->/) c = 0; next }
-    !f { n++; L[n] = $0 }
-  '
-  # **One awk pass, and the header never makes a round trip through the shell.** Passing it back
+    { n++; L[n] = $0 }
+    function resolve(   i, j, k, s, opens, hidden, fence) {
+      for (i = 1; i <= n; i++) hide[i] = 0
+      i = 1
+      while (i <= n) {
+        s = L[i]
+        gsub(/<!--[^>]*-->/, "", s)
+        S[i] = s
+        if (s ~ /<!--/) {
+          # an opener with no closer later in the file is ordinary text, not a comment
+          k = 0
+          for (j = i + 1; j <= n; j++) if (L[j] ~ /-->/) { k = j; break }
+          if (k) { for (j = i; j <= k; j++) hide[j] = 1; i = k + 1; continue }
+        }
+        i++
+      }
+      # A fence opener with no closer after it is not a fence — it is a stray line. Toggling on it
+      # left every row below hidden and the gate silent for the rest of the file, which one
+      # accidental ``` at the top of a register achieved. Measured 2026-08-27, same shape as the
+      # unterminated comment above and cured the same way: look for the closer before believing
+      # the opener.
+      i = 1
+      while (i <= n) {
+        if (hide[i] || S[i] !~ /^[ \t]*(```|~~~)/) { i++; continue }
+        k = 0
+        for (j = i + 1; j <= n; j++) if (!hide[j] && S[j] ~ /^[ \t]*(```|~~~)/) { k = j; break }
+        if (!k) { i++; continue }
+        for (j = i; j <= k; j++) hide[j] = 1
+        i = k + 1
+      }
+    }
+  '  # **One awk pass, and the header never makes a round trip through the shell.** Passing it back
   # as `HDR="$_hdr"` was an evasion anyone could trigger with a single character: awk
   # escape-processes a command-line assignment, so a header containing `c:\temp` arrived with a
   # TAB in it and `\|` — markdown's own pipe escape — arrived as a bare pipe. The equality test
@@ -360,7 +396,10 @@ if ( changed --diff-filter=AMR -- '_ops/TOOLING.md' ) | hits . ; then
       A[++k] = cur
       return k
     }
-    function trim(s) { gsub(/^[ \t*]+|[ \t*]+$/, "", s); return s }
+    # `\r` is in the class because a CRLF register whose last column is `Replaces` and whose rows
+    # omit the optional trailing pipe left `" \r"` in the final cell — non-empty, so a blank answer
+    # read as filled. One character, measured 2026-08-27.
+    function trim(s) { gsub(/^[ \t\r*]+|[ \t\r*]+$/, "", s); return s }
     # `c` is the HTML-comment flag in _rowsrc above; a local of that name clobbers it mid-scan.
     # No apostrophe in this comment: the whole program is single-quoted, and one would end it.
     function colof(h,   i, m, cc) {
@@ -369,18 +408,27 @@ if ( changed --diff-filter=AMR -- '_ops/TOOLING.md' ) | hits . ; then
       return 0
     }
     END {
+      resolve()
       tbl = 0
       for (i = 1; i <= n; i++) {
-        if (L[i+1] !~ /^[ \t]*\|[ \t]*:?-+/) continue
+        if (hide[i]) continue
+        if (i + 1 > n || hide[i+1] || S[i+1] !~ /^[ \t]*\|[ \t]*:?-+/) continue
         tbl++
-        ci = colof(L[i])
+        ci = colof(S[i])
         if (tbl != 1 && ci == 0) continue
         for (j = i + 2; j <= n; j++) {
-          if (L[j] !~ /^[ \t]*\|/) break
-          if (L[j] ~ /^[ \t]*\|[ \t]*:?-+/) continue
-          m = cells(L[j], R)
+          if (hide[j]) continue
+          if (S[j] !~ /^[ \t]*\|/) break
+          if (S[j] ~ /^[ \t]*\|[ \t]*:?-+/) continue
+          m = cells(S[j], R)
           state = (ci == 0) ? "K" : ((ci <= m && trim(R[ci]) != "") ? "Y" : "N")
-          printf "%s\t%s\t%s\n", state, trim(R[2]), L[j]
+          # The tool name is emitted with its own tabs squeezed out: the three fields travel to the
+          # shell tab-delimited, so one interior tab in a cell shifted `cut -f2`/`-f3-` and the row
+          # was dropped from the intersection entirely — the gate silent on a row v0.2.11 refused.
+          # A regression of the round trip itself, measured 2026-08-27. The raw line still goes out
+          # whole as the third field, because that is what must match the diff.
+          _tool = trim(R[2]); gsub(/\t/, " ", _tool)
+          printf "%s\t%s\t%s\n", state, _tool, L[j]
         }
       }
     }')
