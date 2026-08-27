@@ -3,6 +3,41 @@
 Newest first. Each entry leads with what you can now do, not with which files moved. This is
 also the migration map `/multica-ops:upgrade` reads.
 
+## 0.4.13 — unreleased
+
+**The lenses read the tagged 0.4.12 and found that a repair in it destroyed data.**
+
+- **`find-installs.sh` told you an install was at risk because of an edit somewhere else, and the
+  remedy it printed deleted that edit.** It read `git status` across the whole repository, so an
+  install living inside a larger one was flagged for a change in an unrelated folder, and the
+  `git reset --hard` it prescribed is repo-wide too. **If you ran that command, check what else it
+  discarded.** Detection now reads only the install directory, and the discard is `git restore
+  --source=HEAD` on those paths.
+
+- **Three ways `_ops/TOOLING.md` could be made invisible to §4f**, all closed: an inline
+  `<!-- … -->` in a live row hid that row while the page still rendered it · a `<!--` with no
+  closer hid every row after it, permanently · a stray fence marker at the top did the same. A tab
+  inside a tool name dropped its row, and a CRLF register read a blank answer as filled — both
+  introduced by 0.4.12's own rewrite of that block.
+
+- **check 0 could not see a job-level `if: false`** — the canonical way to switch a job off — while
+  its own refusal message advertised that a step-level one counts, which is a map to the hole one
+  level up. A whole disabled job's steps are dead now.
+
+- **`templates/TOOLING-template.md` described the guard differently from the one shipping beside
+  it.** Its sibling's copy said a `_ops/DECISIONS.md` line naming the tool is a complete answer;
+  this one did not, so a register author here was told the cell was the only way. Both say the same
+  thing now.
+
+**And `REFERENCE.md` gained what this repository operates and its sibling does not**: a wired MCP
+server is weight, not only reach. Where a runtime loads every tool's schema before the first word,
+forty tools are tens of thousands of tokens on a session that says hello — paid by every agent the
+server is assigned to. The library is what makes the remedy cheap: a server sits in it assigned to
+nobody until an agent has a reason, and `agent mcp disable` takes the weight off one without
+unpicking the wiring.
+
+Eval state: **not run.** No scenario measures any of this.
+
 ## 0.4.12 — 2026-08-23
 
 **The lenses were run again over 0.4.11's own repairs, and two of them had introduced defects.**
