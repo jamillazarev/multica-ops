@@ -12,7 +12,8 @@ One row per tool. **Operating detail does not live here** — it lives in
 | {{Sentry}} | {{error tracking for the web app}} | {{we had none — errors went unseen}} | {{conductor + web engineer · token in `mcp_config`}} | {{MCP server}} | {{2026-07-23}} |
 | {{Vercel}} | {{hosting + preview deploys}} | {{the rsync script on the old box}} | {{owner only — deploys are outward}} | {{CLI on the daemon machine}} | {{2026-07-23}} |
 
-**The `Replaces` column is a gate, not a nicety.** The guard refuses a commit that adds a row and
+**The `Replaces` column is a gate, not a nicety.** The guard refuses a row that leaves it blank **unless a line in `_ops/DECISIONS.md` names this tool** and says what came before — either place counts, and the guard says so when it refuses.
+It does not judge the answer, only its absence. The guard refuses a commit that adds a row and
 leaves it blank — because a tool arrives in a minute and is maintained for a year, and the rung
 above *which tool* is *did the work already have a way, and why did that stop being enough.*
 **`we had none` is a complete answer** and outside software it is usually the true one, so write it

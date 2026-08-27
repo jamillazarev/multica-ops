@@ -327,8 +327,8 @@ sub-issue, not another level.
   listing tools by name and fetching a schema only when one is called for; where a runtime does
   not, **the remedy is fewer assignments, not a cleverer wrapper**. The library makes that cheap to
   get right: a server sits in it assigned to nobody until an agent has a reason, and `agent mcp
-  disable` takes the weight off one without unpicking the wiring. Observed 2026-08-23 — state the
-  runtime and the date, because this is moving.
+  disable` takes the weight off one without unpicking the wiring. Observed on Claude Code 2.1.220, 2026-08-27 — and the version is here because this file's own
+  convention is that a claim about the outside carries the release it was checked against, which the bullet above this one exists to remember.
 
   Two things the change does **not** alter: agents still **inherit the runtime's local MCP servers
   and skills**, so the inventory is *runtime plus agent*, never agent alone; and the payload is

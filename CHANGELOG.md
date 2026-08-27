@@ -55,6 +55,17 @@ than BROKEN, and pasteable remedies. It had no test; it has twelve, wired into C
 
 Eval state: **not run.** Nothing here changes what a run is asked to do.
 
+> [!IMPORTANT]
+> **Correction, 2026-08-27.** This entry said *"The register is read from the index now"* — that
+> shipped in **0.4.11**, not here, and a lens caught the same over-claim in the sibling's entry the
+> day it was written. What is genuinely in this range is the table scoping: a `## Retired` table's
+> rows are not the register's.
+>
+> It also omitted the range's most important repair: **a single-character bypass of §4f**, where a
+> backslash in the register's header switched the rung off for that file permanently. **If you are
+> on 0.4.11 or earlier, that is the reason to move.** The heading is frozen, so this is a marked
+> correction rather than a rewrite.
+
 ## 0.4.11 — 2026-08-23
 
 **Two guards were refusing honest work and one was blind to a whole class of it.** Pass thirteen
@@ -499,6 +510,14 @@ style at the start of a sentence — was exempt, and the exemption was the defau
 word for `measured`, which carries this corpus's strongest claims. Fixed with a note on the trap
 that broke it twice: **an odd number of backticks inside `$( <<HEREDOC )` breaks bash parsing**
 thirty lines further down, so the regex writes the character as `\x60`.
+
+> [!NOTE]
+> **Correction, 2026-08-27 — the mechanism above is not what happens.** Measured on bash 3.2:
+> what kills the parse is an **unpaired backtick inside a DOUBLE-QUOTED span**, because the scan
+> for the closing paren tracks double quotes through a quoted heredoc. A backtick in single quotes
+> parses; a paired pair in double quotes parses; one in a comment parses; parentheses parse,
+> balanced or not. The count is not the rule and the escape is still right for a different reason.
+> The measured account lives beside `_keep()` in `scripts/preflight.sh`.
 
 **The scenario count drifted a second time — so it is a form now, not a third correction.**
 README advertised 26 against a rubric holding 27, and it was **published**: one page of the site
