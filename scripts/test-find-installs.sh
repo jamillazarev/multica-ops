@@ -82,13 +82,17 @@ printf '%s' "$(clone_state "$T/clean")" | grep -q 'ROUTE AT RISK' \
 # is a remedy they will improvise, and the improvisation here discards their work.
 printf '%s' "$_flag" | grep -q 'git -C .* stash' \
   && ok || bad "the flag does not give a runnable stash command"
-# **The discard must be path-scoped.** `reset --hard` is repo-wide, and so was the detection:
-# an install inside a larger repository was flagged for an edit elsewhere, and following the
-# remedy destroyed it. Measured 2026-08-27 with real data loss.
-printf '%s' "$_flag" | grep -q 'restore --source=HEAD' \
-  && ok || bad "the flag does not give a runnable discard command"
-printf '%s' "$_flag" | grep -q 'reset --hard' \
-  && bad "the flag still prescribes a repo-wide reset, which destroys unrelated work" || ok
+# **Detection is repo-wide because the ROUTE is; the remedy is what had to narrow.** `git pull
+# --ff-only` refuses on a modified tracked file anywhere in the enclosing repository, so scoping
+# the detection went silent on a genuinely broken route — measured 2026-08-27, with `pull` aborting
+# while the flag said nothing. What was wrong before that was the remedy: `reset --hard` is
+# repo-wide and destroyed an uncommitted file the install had nothing to do with.
+printf '%s' "$_flag" | grep -q 'restore --staged --worktree --source=HEAD' \
+  && ok || bad "the discard command does not clear a STAGED change, so the flag would fire again"
+printf '%s' "$_flag" | grep -q 'Do not `reset --hard`' \
+  && ok || bad "the flag does not warn against the repo-wide reset that caused the data loss"
+printf '%s' "$_flag" | grep -qE 'Recover with .*reset --hard|or `git -C [^`]*reset --hard' \
+  && bad "the flag still PRESCRIBES a repo-wide reset" || ok
 printf '%s' "$_flag" | grep -q 'Do NOT rsync onto a clone' \
   && ok || bad "the flag does not name the act that causes this"
 
@@ -103,8 +107,15 @@ printf 'door\n' > "$NEST/plugins/skill/a.txt"
 printf 'important v1\n' > "$NEST/unrelated/notes.md"
 ( cd "$NEST" && git add -A && git -c user.email=t@t -c user.name=t commit -qm nest ) >/dev/null 2>&1
 printf 'important v2 EDITED\n' > "$NEST/unrelated/notes.md"
-[ -z "$(clone_state "$NEST/plugins/skill")" ] \
-  && ok || bad "a clean install inside a dirty repository was flagged for someone else's edit"
+# **This assertion used to demand the opposite, and it was wrong.** It asserted that a clean
+# install inside a dirty repository must NOT be flagged — but the pull it is judging is repo-wide,
+# so that route is genuinely at risk and the silence was a false negative I had just written in.
+# A lens caught it. What the flag must do is FIRE and say how much of the damage is the install.
+_nf=$(clone_state "$NEST/plugins/skill")
+[ -n "$_nf" ] \
+  && ok || bad "a genuinely at-risk route went unflagged because the edit was outside the install"
+printf '%s' "$_nf" | grep -q '(0 of them under the install itself)' \
+  && ok || bad "the flag does not separate what is under the install from what is not"
 printf 'door edited\n' > "$NEST/plugins/skill/a.txt"
 [ -n "$(clone_state "$NEST/plugins/skill")" ] \
   && ok || bad "an edit INSIDE the install directory was not seen"

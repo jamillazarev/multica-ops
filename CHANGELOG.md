@@ -547,12 +547,16 @@ that broke it twice: **an odd number of backticks inside `$( <<HEREDOC )` breaks
 thirty lines further down, so the regex writes the character as `\x60`.
 
 > [!NOTE]
-> **Correction, 2026-08-27 — the mechanism above is not what happens.** Measured on bash 3.2:
-> what kills the parse is an **unpaired backtick inside a DOUBLE-QUOTED span**, because the scan
-> for the closing paren tracks double quotes through a quoted heredoc. A backtick in single quotes
-> parses; a paired pair in double quotes parses; one in a comment parses; parentheses parse,
-> balanced or not. The count is not the rule and the escape is still right for a different reason.
-> The measured account lives beside `_keep()` in `scripts/preflight.sh`.
+> **Correction, 2026-08-27 — and a correction to that correction the same day.** The sentence above
+> says an odd number of backticks breaks the parse. A first correction claimed the real rule was
+> *an unpaired backtick inside a double-quoted span*; a lens produced the counter-example, and it
+> is wrong too — an unpaired backtick in a plain expression fails just as hard, and two unpaired
+> ones PAIR ACROSS whatever sits between them.
+>
+> **Measured on bash 3.2:** every backtick the shell's lexer can see inside `$( … )` must pair,
+> quoted heredoc or not — and **single quotes and a `#` comment hide one from it, while double
+> quotes do not.** So the original count was right and incomplete, not wrong. The full account is
+> beside `_keep()` in `scripts/preflight.sh`; nothing else in the corpus should restate it.
 
 **The scenario count drifted a second time — so it is a form now, not a third correction.**
 README advertised 26 against a rubric holding 27, and it was **published**: one page of the site

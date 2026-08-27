@@ -84,23 +84,26 @@ add() {
 clone_state() {
   # $1: path → "" when fine, else a flag naming what puts the documented route at risk
   git -C "$1" rev-parse --is-inside-work-tree >/dev/null 2>&1 || { printf ''; return; }
-  # **Scoped to THIS directory, and the remedy never leaves it.** `git status --porcelain` is
-  # repo-wide, so an install sitting inside a larger repository — a dotfiles clone with
-  # `.claude/plugins/…` in it — was reported at risk because of an edit somewhere else entirely,
-  # and the remedy printed was `reset --hard`, which is also repo-wide. Measured 2026-08-27: the
-  # install directory was clean, the flag fired, and following it destroyed an unrelated
-  # uncommitted file. **That is our own advice deleting work the install had nothing to do with**,
-  # which is worse than the silence the flag replaced. Detection is path-scoped now and the
-  # discard is `git restore` on the named paths — never `reset`.
+  # **The route is repo-wide, so the DETECTION has to be too — it was the REMEDY that had to
+  # narrow.** `git pull --ff-only` refuses on a modified tracked file anywhere in the enclosing
+  # repository, not only under the install, so an install inside a dotfiles clone with an edit in
+  # a sibling folder has a genuinely broken route. A first repair scoped the detection instead and
+  # went silent on exactly that — measured 2026-08-27, `pull` aborting while this said nothing.
   #
-  # TRACKED modifications only: an untracked file does not stop `git pull --ff-only`, so a stray
-  # note is not a broken route. And the flag says AT RISK, not BROKEN, because a modified file
-  # stops a fast-forward only when an incoming commit touches that same file — a certainty after
-  # an rsync, which rewrites exactly what the next release changes.
-  _mods=$(git -C "$1" status --porcelain -- "$1" 2>/dev/null | grep -cv '^??' || true)
-  if [ "${_mods:-0}" -gt 0 ]; then
-    printf 'ROUTE AT RISK — %s modified tracked file(s) under this directory. `git pull --ff-only` refuses as soon as an incoming commit touches one of them, which an rsync over a clone guarantees, since it rewrites exactly what the next release changes. Recover with `git -C "%s" stash push -- "%s"` then pull, or `git -C "%s" restore --source=HEAD -- "%s"` to discard just these. Do NOT rsync onto a clone: that is what puts it here' "$_mods" "$1" "$1" "$1" "$1"
-  fi
+  # What was wrong before that was the REMEDY: this printed `git reset --hard`, which is repo-wide,
+  # for a condition that may be entirely outside the install — and following it destroyed an
+  # uncommitted file the install had nothing to do with. Never a reset, and the counts are split so
+  # a reader can see whose work is at stake.
+  #
+  # Tracked modifications only: an untracked file does not stop a fast-forward. And AT RISK, not
+  # BROKEN — a modified file blocks the pull only when an incoming commit touches it, which an
+  # rsync over a clone guarantees since it rewrites what the next release changes.
+  _top=$(git -C "$1" rev-parse --show-toplevel 2>/dev/null || printf '%s' "$1")
+  _all=$(git -C "$1" status --porcelain 2>/dev/null | grep -cv '^??' || true)
+  [ "${_all:-0}" -gt 0 ] || { printf ''; return; }
+  _here=$(git -C "$1" status --porcelain -- "$1" 2>/dev/null | grep -cv '^??' || true)
+  _else=$((_all - _here))
+  printf 'ROUTE AT RISK — %s modified tracked file(s) in the repository this install lives in (%s of them under the install itself). `git pull --ff-only` is repo-wide and refuses as soon as an incoming commit touches any of them. See them with `git -C "%s" status --porcelain`. Stash them with `git -C "%s" stash push`, or discard only what is under the install with `git -C "%s" restore --staged --worktree --source=HEAD -- "%s"`. **Do not `reset --hard`** — it is repo-wide and would take work that has nothing to do with this install. Do NOT rsync onto a clone: that is what puts it here' "$_all" "$_here" "$_top" "$_top" "$1" "$1"
 }
 
 seen() { printf '%s' "$found_paths" | grep -Fxq "$1"; }

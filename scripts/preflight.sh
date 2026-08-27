@@ -217,30 +217,23 @@ def _keep(m):
     # inner text unconditionally created a new evasion — `echo "|bash" scripts/test-foo.sh` spliced
     # a pipe into the stream and read as an invocation, where the old blanking could not.
     # Measured 2026-08-23; a class this change introduced, caught by probing its own new behaviour.
-    # The metacharacter set is built from ordinals, and the reason is narrower than it looks.
-    # **An UNPAIRED backtick inside a DOUBLE-QUOTED span kills this whole file**, because bash 3.2
-    # scans for the closing paren of the surrounding command substitution straight through a
-    # quoted heredoc, tracking double quotes as it goes — and a backtick inside them opens a
-    # substitution that never closes. The script then dies with "unexpected EOF looking for
-    # matching" at the line the substitution OPENED, hundreds of lines above the real fault.
+    # The metacharacter set is built from ordinals, and the reason is one rule with two hiding
+    # places. **bash 3.2 lexes the body of `$( … )` as shell text even through a quoted heredoc**,
+    # and every BACKTICK that lexer can see must pair — an odd one opens a substitution that never
+    # closes, and the file dies with "unexpected EOF" at the line the substitution OPENED, hundreds
+    # of lines above the fault.
     #
-    # Measured 2026-08-23, after writing this set as a literal class and breaking the file:
-    # unpaired backtick in double quotes FAILS · the same backtick in single quotes parses · a
-    # paired pair in double quotes parses · one in a Python comment parses · parentheses parse,
-    # balanced or not · a dollar parses. **The parentheses are innocent**, which the first version
-    # of this note blamed them for.
+    # **Single quotes and a `#` comment hide a backtick from that lexer. Double quotes do not.**
+    # Measured on bash 3.2, 2026-08-27: unpaired in an expression FAILS · unpaired inside double
+    # quotes FAILS · unpaired inside single quotes parses · unpaired in a comment parses · and two
+    # unpaired ones PAIR ACROSS whatever sits between them, so two separate double-quoted spans
+    # each holding one parse fine. Parentheses are innocent, balanced or not; a dollar is innocent.
     #
-    # **And `bash -n` DOES catch it** — `/bin/bash -n scripts/preflight.sh` reports the same
-    # unexpected-EOF in milliseconds. The first version of this note said the opposite, and that
-    # claim was never measured: `bash -n` had been run against a version that did not carry the
-    # fault, come back clean, and then been blamed for the miss. **Run `bash -n` on this file
-    # after touching anything inside a `$( … )` heredoc.**
-    # Only what can OPEN A COMMAND POSITION: `;` `&` `|` `(` `)` and the backtick. `$`, `<` and
-    # `>` were in this set and should not have been — `$` alone is a variable, not a command, and
-    # a redirection is not a command position either. Keeping them refused
-    # `bash "$GITHUB_WORKSPACE/scripts/test-x.sh"`, an ordinary and correct CI step, while the
-    # message beside this check told the reader quoting was optional. `$(` is still caught, by the
-    # paren. Measured 2026-08-23 by a cold-read lens reading the message against the code.
+    # **Two earlier accounts of this were wrong and both shipped.** "An odd number of backticks"
+    # was right about the count and silent about the hiding places; the correction that replaced it
+    # — "an unpaired backtick inside a double-quoted span" — was wrong about the span, because an
+    # unquoted one fails just as hard. The count IS the rule; what needed saying is *what the lexer
+    # can see*. **`bash -n` catches all of it instantly** — run it after touching anything in here.
     _meta = "".join(chr(c) for c in (59, 38, 124, 40, 41, 96))
     inner = m.group(0)[1:-1]
     if inner and not re.search(r"\s", inner) and not any(ch in _meta for ch in inner):
@@ -732,9 +725,9 @@ for f in glob.glob("*.md") + glob.glob("templates/*.md") + glob.glob("sources/*.
         # in this corpus are the ones that say "measured <date>", and they aged unseen. The gate
         # had never fired, because nothing is 180 days old yet, so green meant nothing about half
         # the file and would first have admitted it in 2027.
-        # NOTE: the backtick is written \x60 on purpose. A literal one here makes an odd number
-        # of backticks inside $( <<HEREDOC ), which bash tokenises for nesting even in a quoted
-        # heredoc — the file then dies with "unexpected end of file" 30 lines further down.
+        # NOTE: the backtick is written \x60 on purpose — every backtick the shell's lexer can see
+        # inside $( <<HEREDOC ) must pair, and a double-quoted span does not hide one. The measured
+        # account is beside _keep(), above; do not restate it here, the two copies disagreed once.
         # Up to three words may sit between the verb and the date: this corpus writes
         # "re-verified behaviourally 2026-08-01", "Measured end to end 2026-08-01" and
         # "measured on this machine 2026-08-01" — 41 stamps escaped the first repair for

@@ -321,21 +321,28 @@ if ( changed --diff-filter=AMR -- '_ops/TOOLING.md' ) | hits . ; then
   # The first version set a flag on any line containing `<!--` and skipped until one carried
   # `-->`. Three ways that silenced the gate, all measured 2026-08-27: an inline `<!-- todo -->`
   # in a live row made that row invisible while GFM still rendered it; a bare `<!--` with no
-  # closer anywhere made every row after it invisible **permanently**; and a fence marker inside
-  # a comment left the fence flag set, with the same effect.
+  # closer anywhere made every row after it invisible **permanently**; and a stray fence opener
+  # with no closer at the top of the register did the same. **An opener is believed only when a
+  # closer exists** — the one cure for both.
   #
   # Lines are buffered RAW — the diff is matched against the file's own bytes, so a line rewritten
   # for analysis would never match what was staged. Comments are resolved afterwards, where the
   # whole file is visible and an opener can be told from an opener that never closes.
   _rowsrc='
     { n++; L[n] = $0 }
-    function resolve(   i, j, k, s, opens, hidden, fence) {
+    function resolve(   i, j, k, s) {
       for (i = 1; i <= n; i++) hide[i] = 0
       i = 1
       while (i <= n) {
         s = L[i]
         gsub(/<!--[^>]*-->/, "", s)
         S[i] = s
+        # **A line that was ENTIRELY an inline comment is a hidden line, not an empty one.** Left
+        # visible-but-empty it read as the end of the table, so one parked draft row —
+        # `<!-- | draft | parked | | -->`, the idiom the comment above recommends — silenced
+        # the gate for every live row below it. Measured 2026-08-27; a regression against the
+        # version before this rewrite, which refused that file.
+        if (L[i] ~ /<!--/ && s ~ /^[ \t]*$/) { hide[i] = 1; i++; continue }
         if (s ~ /<!--/) {
           # an opener with no closer later in the file is ordinary text, not a comment
           k = 0
@@ -400,7 +407,6 @@ if ( changed --diff-filter=AMR -- '_ops/TOOLING.md' ) | hits . ; then
     # omit the optional trailing pipe left `" \r"` in the final cell — non-empty, so a blank answer
     # read as filled. One character, measured 2026-08-27.
     function trim(s) { gsub(/^[ \t\r*]+|[ \t\r*]+$/, "", s); return s }
-    # `c` is the HTML-comment flag in _rowsrc above; a local of that name clobbers it mid-scan.
     # No apostrophe in this comment: the whole program is single-quoted, and one would end it.
     function colof(h,   i, m, cc) {
       m = cells(h, F)
