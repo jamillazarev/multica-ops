@@ -12,10 +12,27 @@ also the migration map `/multica-ops:upgrade` reads.
   install living inside a larger one was flagged for a change in an unrelated folder, and the
   `git reset --hard` it prescribed is repo-wide too. **If you ran that command, check what else it
   discarded.** **Detection stays repo-wide, because the route it predicts is** — `git pull
-  --ff-only` aborts on a modified tracked file anywhere in the enclosing repository. What narrowed
-  is the remedy: the flag counts what is modified, says how much is under the install, and offers
-  an install-scoped discard only when there is something there to discard. Where there is not, it
-  says so and points at stash-pull-pop, because that work is not yours to throw away.
+  --ff-only` aborts on a modified tracked file anywhere in the enclosing repository. **What changed
+  is that the flag no longer prescribes a discard at all.** Three remedies shipped here in two days
+  and two destroyed work: `reset --hard` took an unrelated file, and a scoped
+  `restore --staged --worktree --source=HEAD` **deletes a staged new file outright** — which cannot
+  block a fast-forward in the first place, so the flag was firing on it and prescribing its
+  destruction. It names what is at risk, says how much is under the install, offers
+  `stash push` → `pull` → `stash pop`, and states that discarding belongs to whoever owns the work.
+
+- **§4f could still be silenced by one character.** A line that was entirely an inline comment read
+  as the end of the table, taking every live row below it with it — the parked-draft idiom the
+  guard's own message recommends — and the strip that fixed that could not cross a `>`, so a row
+  containing `->` or an HTML tag brought the silence straight back. A CR did too. **And this repo
+  shipped that fix with none of its tests**, so a code comment claimed a measured regression that
+  nothing here verified. It has four assertions now.
+
+- **The bash-parsing note stopped trying to be a rule.** Three statements of it have shipped wrong
+  — *an odd number of backticks*, then *an unpaired backtick inside a double-quoted span*, then a
+  version that exonerated parentheses, which obey the same balance law. What survives is small and
+  true: bash lexes the `$( … )` body as shell text through a quoted heredoc, and what it sees must
+  balance. **`/bin/bash -n` finds every case instantly, and the suite runs it as an assertion.**
+  The prose was the hope; the check is the form.
 
 - **Three ways `_ops/TOOLING.md` could be made invisible to §4f**, all closed: an inline
   `<!-- … -->` in a live row hid that row while the page still rendered it · a `<!--` with no
