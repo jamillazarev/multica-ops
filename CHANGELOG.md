@@ -11,8 +11,11 @@ also the migration map `/multica-ops:upgrade` reads.
   remedy it printed deleted that edit.** It read `git status` across the whole repository, so an
   install living inside a larger one was flagged for a change in an unrelated folder, and the
   `git reset --hard` it prescribed is repo-wide too. **If you ran that command, check what else it
-  discarded.** Detection now reads only the install directory, and the discard is `git restore
-  --source=HEAD` on those paths.
+  discarded.** **Detection stays repo-wide, because the route it predicts is** — `git pull
+  --ff-only` aborts on a modified tracked file anywhere in the enclosing repository. What narrowed
+  is the remedy: the flag counts what is modified, says how much is under the install, and offers
+  an install-scoped discard only when there is something there to discard. Where there is not, it
+  says so and points at stash-pull-pop, because that work is not yours to throw away.
 
 - **Three ways `_ops/TOOLING.md` could be made invisible to §4f**, all closed: an inline
   `<!-- … -->` in a live row hid that row while the page still rendered it · a `<!--` with no
@@ -87,6 +90,13 @@ than BROKEN, and pasteable remedies. It had no test; it has twelve, wired into C
 > **And `bash -n` catches it instantly.** An earlier draft of this entry said the opposite. That
 > claim was never measured — `bash -n` had been run against a version without the fault, come back
 > clean, and then been blamed for the miss. Run it after touching anything inside that heredoc.
+>
+> **Correction, 2026-08-27:** the mechanism stated above — *a lone backtick inside a double-quoted
+> string* — is not the rule either. A third attempt at stating it exonerated parentheses, which is
+> also false. **The corpus has stopped describing this mechanism**: what survives is that bash
+> lexes the `$( … )` body as shell text through a quoted heredoc, what it sees must balance, and
+> `/bin/bash -n` finds every case in milliseconds — which the suite now runs as an assertion. Three
+> statements shipped wrong; the check does not.
 
 Eval state: **not run.** Nothing here changes what a run is asked to do.
 

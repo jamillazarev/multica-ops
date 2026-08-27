@@ -84,26 +84,40 @@ add() {
 clone_state() {
   # $1: path → "" when fine, else a flag naming what puts the documented route at risk
   git -C "$1" rev-parse --is-inside-work-tree >/dev/null 2>&1 || { printf ''; return; }
-  # **The route is repo-wide, so the DETECTION has to be too — it was the REMEDY that had to
-  # narrow.** `git pull --ff-only` refuses on a modified tracked file anywhere in the enclosing
-  # repository, not only under the install, so an install inside a dotfiles clone with an edit in
-  # a sibling folder has a genuinely broken route. A first repair scoped the detection instead and
-  # went silent on exactly that — measured 2026-08-27, `pull` aborting while this said nothing.
+  # **This message does not prescribe discarding anything, and that is the whole design.** Three
+  # remedies have shipped here in two days and two of them destroyed work: `reset --hard`, which is
+  # repo-wide and took an unrelated file; then a scoped `restore --staged --worktree --source=HEAD`,
+  # which deletes a STAGED NEW file outright, because a path absent from HEAD is restored to
+  # not existing. Both measured, both with the file actually gone. **A discard belongs to the
+  # person whose work it is** — this says what is at risk and offers the reversible move.
   #
-  # What was wrong before that was the REMEDY: this printed `git reset --hard`, which is repo-wide,
-  # for a condition that may be entirely outside the install — and following it destroyed an
-  # uncommitted file the install had nothing to do with. Never a reset, and the counts are split so
-  # a reader can see whose work is at stake.
-  #
-  # Tracked modifications only: an untracked file does not stop a fast-forward. And AT RISK, not
-  # BROKEN — a modified file blocks the pull only when an incoming commit touches it, which an
-  # rsync over a clone guarantees since it rewrites what the next release changes.
+  # **The route is repo-wide, so the detection is too**: `git pull --ff-only` aborts on a modified
+  # tracked file anywhere in the enclosing repository, so scoping detection to the install goes
+  # silent on a route that is genuinely broken. Counted are tracked files that EXIST in HEAD and
+  # differ from it — a staged new file cannot be overwritten by an incoming commit that does not
+  # know about it — `--diff-filter=MDRT` is what leaves it out — and an untracked file never
+  # blocks one either. AT RISK, not BROKEN: the pull
+  # aborts only when an incoming commit touches one of them, which an rsync over a clone
+  # guarantees, since it rewrites exactly what the next release changes.
   _top=$(git -C "$1" rev-parse --show-toplevel 2>/dev/null || printf '%s' "$1")
-  _all=$(git -C "$1" status --porcelain 2>/dev/null | grep -cv '^??' || true)
+  _all=$(git -C "$1" diff --name-only --diff-filter=MDRT HEAD 2>/dev/null | grep -c . || true)
   [ "${_all:-0}" -gt 0 ] || { printf ''; return; }
-  _here=$(git -C "$1" status --porcelain -- "$1" 2>/dev/null | grep -cv '^??' || true)
-  _else=$((_all - _here))
-  printf 'ROUTE AT RISK — %s modified tracked file(s) in the repository this install lives in (%s of them under the install itself). `git pull --ff-only` is repo-wide and refuses as soon as an incoming commit touches any of them. See them with `git -C "%s" status --porcelain`. Stash them with `git -C "%s" stash push`, or discard only what is under the install with `git -C "%s" restore --staged --worktree --source=HEAD -- "%s"`. **Do not `reset --hard`** — it is repo-wide and would take work that has nothing to do with this install. Do NOT rsync onto a clone: that is what puts it here' "$_all" "$_here" "$_top" "$_top" "$1" "$1"
+  # `-- <path>` on a path git will not accept (a symlinked install, a path outside the work tree)
+  # exits 128 and used to be swallowed into a confident "0 under the install". Unknown says so.
+  # git's own exit code decides, not the pipeline's: `grep -c .` exits 1 on a count of zero, so
+  # `|| unknown` caught the ordinary zero and reported every clean install as unmeasurable.
+  _hlist=$(git -C "$1" diff --name-only --diff-filter=MDRT HEAD -- "$1" 2>/dev/null); _hrc=$?
+  if [ "$_hrc" -ne 0 ]; then _here="unknown"
+  else _here=$(printf '%s' "$_hlist" | grep -c . || true); fi
+  if [ "$_here" = "unknown" ]; then
+    _scope="git could not tell how many are under the install itself"
+  elif [ "$_here" -eq 0 ]; then
+    _scope="NONE of them under the install itself — the work at risk is not yours to touch"
+  else
+    _scope="${_here} of them under the install itself"
+  fi
+  printf 'ROUTE AT RISK — %s tracked file(s) differ from HEAD in the repository this install lives in; %s. git pull --ff-only is repo-wide and aborts as soon as an incoming commit touches one of them. See them: git -C "%s" diff --name-only --diff-filter=MDRT HEAD. The reversible way through, and the only one this prints: git -C "%s" stash push, then git -C "%s" pull --ff-only, then git -C "%s" stash pop. Discarding is your call and this does not offer a command for it — reset --hard is repo-wide, and restore --source=HEAD deletes a staged new file outright. Do NOT rsync onto a clone: that is what puts it here' \
+    "$_all" "$_scope" "$_top" "$_top" "$1" "$_top"
 }
 
 seen() { printf '%s' "$found_paths" | grep -Fxq "$1"; }

@@ -217,23 +217,22 @@ def _keep(m):
     # inner text unconditionally created a new evasion — `echo "|bash" scripts/test-foo.sh` spliced
     # a pipe into the stream and read as an invocation, where the old blanking could not.
     # Measured 2026-08-23; a class this change introduced, caught by probing its own new behaviour.
-    # The metacharacter set is built from ordinals, and the reason is one rule with two hiding
-    # places. **bash 3.2 lexes the body of `$( … )` as shell text even through a quoted heredoc**,
-    # and every BACKTICK that lexer can see must pair — an odd one opens a substitution that never
-    # closes, and the file dies with "unexpected EOF" at the line the substitution OPENED, hundreds
-    # of lines above the fault.
+    # The metacharacter set is built from ordinals because a literal backtick here can kill the
+    # whole file. **Three attempts to state the rule precisely have shipped wrong** — "an odd
+    # number of backticks", then "unpaired inside a double-quoted span", then a version that
+    # exonerated parentheses and named the hiding places without naming the lexer state they hide
+    # in. Each was measured, each was closer, each was still false somewhere.
     #
-    # **Single quotes and a `#` comment hide a backtick from that lexer. Double quotes do not.**
-    # Measured on bash 3.2, 2026-08-27: unpaired in an expression FAILS · unpaired inside double
-    # quotes FAILS · unpaired inside single quotes parses · unpaired in a comment parses · and two
-    # unpaired ones PAIR ACROSS whatever sits between them, so two separate double-quoted spans
-    # each holding one parse fine. Parentheses are innocent, balanced or not; a dollar is innocent.
+    # So this stops trying to be a rule and gives you the check. **What is true and small enough to
+    # hold:** bash lexes the body of `$( … )` as shell text even through a quoted heredoc, and what
+    # it sees there must balance — backticks, parentheses, quotes. Single quotes and a `#` at a
+    # word start hide things from it; double quotes hide less than you expect. The failure is
+    # always the same shape: `unexpected EOF` reported at the line the substitution OPENED,
+    # hundreds of lines above the fault.
     #
-    # **Two earlier accounts of this were wrong and both shipped.** "An odd number of backticks"
-    # was right about the count and silent about the hiding places; the correction that replaced it
-    # — "an unpaired backtick inside a double-quoted span" — was wrong about the span, because an
-    # unquoted one fails just as hard. The count IS the rule; what needed saying is *what the lexer
-    # can see*. **`bash -n` catches all of it instantly** — run it after touching anything in here.
+    # **`/bin/bash -n scripts/preflight.sh` catches every case of it instantly, and the suite runs
+    # that check** (`test-preflight-checks.sh`). Write what you need, run it, and do not re-derive
+    # the mechanism from this comment — three people have, and all three were wrong.
     _meta = "".join(chr(c) for c in (59, 38, 124, 40, 41, 96))
     inner = m.group(0)[1:-1]
     if inner and not re.search(r"\s", inner) and not any(ch in _meta for ch in inner):

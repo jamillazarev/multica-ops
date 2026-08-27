@@ -87,19 +87,33 @@ printf '%s' "$_flag" | grep -q 'git -C .* stash' \
 # the detection went silent on a genuinely broken route — measured 2026-08-27, with `pull` aborting
 # while the flag said nothing. What was wrong before that was the remedy: `reset --hard` is
 # repo-wide and destroyed an uncommitted file the install had nothing to do with.
-printf '%s' "$_flag" | grep -q 'restore --staged --worktree --source=HEAD' \
-  && ok || bad "the discard command does not clear a STAGED change, so the flag would fire again"
-printf '%s' "$_flag" | grep -q 'Do not `reset --hard`' \
-  && ok || bad "the flag does not warn against the repo-wide reset that caused the data loss"
+# **No discard is prescribed at all, and that is the assertion.** Three remedies shipped here in
+# two days and two destroyed work: `reset --hard` took an unrelated file, and a scoped
+# `restore --staged --worktree --source=HEAD` deletes a STAGED NEW file, because a path absent
+# from HEAD is restored to not existing. Both measured with the file gone. The message names the
+# risk and offers the reversible move; discarding belongs to whoever owns the work.
+# A PRESCRIPTION, not a mention: the message names both destructive commands in order to warn
+# against them, so the test looks for an imperative shape rather than the strings themselves.
+printf '%s' "$_flag" | grep -qE '(Recover with|Discard (just|only)|to discard) [^.]*(restore|reset)' \
+  && bad "the flag prescribes a discard — two of those have destroyed work" || ok
+printf '%s' "$_flag" | grep -q 'Discarding is your call' \
+  && ok || bad "the flag does not say whose call a discard is"
+printf '%s' "$_flag" | grep -q 'stash pop' \
+  && ok || bad "the stash is offered with no way to get the work back"
+printf '%s' "$_flag" | grep -q 'diff --name-only --diff-filter=MDRT HEAD' \
+  && ok || bad "the look-at-them command does not match what was counted"
+printf '%s' "$_flag" | grep -qE '\*\*|`git ' \
+  && bad "the flag prints markdown to a terminal — asterisks read literally, backticked commands paste as substitutions" || ok
 printf '%s' "$_flag" | grep -qE 'Recover with .*reset --hard|or `git -C [^`]*reset --hard' \
   && bad "the flag still PRESCRIBES a repo-wide reset" || ok
 printf '%s' "$_flag" | grep -q 'Do NOT rsync onto a clone' \
   && ok || bad "the flag does not name the act that causes this"
 
-# ── an install inside a larger repository is judged on ITS OWN directory ────────────────────
-# `git status --porcelain` is repo-wide. A dotfiles clone carrying `.claude/plugins/<skill>` had
-# the install flagged because of an edit in an unrelated folder — and the remedy printed was
-# `reset --hard`, which discarded that edit. Measured 2026-08-27, with the file actually lost.
+# ── an install inside a larger repository is AT RISK, and the flag must say whose work ──────
+# The route is repo-wide: `git pull --ff-only` aborts on a modified tracked file anywhere in the
+# enclosing repository, so a clean install in a dirty dotfiles clone is genuinely at risk and
+# silence there is a false negative. What must never happen is the remedy that caused the loss —
+# `reset --hard` was printed for this case and discarded an unrelated file. Measured 2026-08-27.
 NEST="$T/nest"
 git clone -q "$T/src" "$NEST" 2>/dev/null
 mkdir -p "$NEST/plugins/skill" "$NEST/unrelated"
@@ -114,8 +128,17 @@ printf 'important v2 EDITED\n' > "$NEST/unrelated/notes.md"
 _nf=$(clone_state "$NEST/plugins/skill")
 [ -n "$_nf" ] \
   && ok || bad "a genuinely at-risk route went unflagged because the edit was outside the install"
-printf '%s' "$_nf" | grep -q '(0 of them under the install itself)' \
+printf '%s' "$_nf" | grep -q 'NONE of them under the install itself' \
   && ok || bad "the flag does not separate what is under the install from what is not"
+# A STAGED NEW FILE does not block a fast-forward — an incoming commit cannot overwrite a path it
+# does not know about — so it must not be counted, and the remedy that used to be printed for it
+# deleted it. Measured 2026-08-27 with the file gone.
+printf 'brand new\n' > "$NEST/plugins/skill/fresh.txt"
+( cd "$NEST" && git add plugins/skill/fresh.txt ) >/dev/null 2>&1
+[ "$(clone_state "$NEST/plugins/skill")" = "$_nf" ] \
+  && ok || bad "a staged new file changed the count, though it cannot block a fast-forward"
+( cd "$NEST" && git rm -q --cached plugins/skill/fresh.txt ) >/dev/null 2>&1
+rm -f "$NEST/plugins/skill/fresh.txt"
 printf 'door edited\n' > "$NEST/plugins/skill/a.txt"
 [ -n "$(clone_state "$NEST/plugins/skill")" ] \
   && ok || bad "an edit INSIDE the install directory was not seen"

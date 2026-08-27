@@ -128,6 +128,24 @@ printf '# Tooling\n\n| Thing | Why | Owner |\n|---|---|---|\n\n<!--\n| Draft | n
 git -C "$R" add -A
 [ "$(g | grep -c 'what it replaces')" = 0 ] \
   && ok || bad "a row parked in an HTML comment was treated as live"
+
+# ── a comment hides a LINE, and only when it is one ─────────────────────────────────────────
+# **This repo shipped the §4f comment fix with none of its tests** — the code comment claimed a
+# measured regression and nothing here verified it, against clause 2 of the capability bar. Three
+# ways the register went silent, all measured 2026-08-27: a line that was entirely an inline
+# comment read as the end of the table and silenced every live row below it · the same with a `>`
+# inside, which the strip could not cross · the same with a CR at the end.
+_reg2(){ printf '%b' "$1" > "$R/_ops/TOOLING.md"; git -C "$R" add -A
+         local n; n=$(g | grep -c 'what it replaces'); reset; echo "$n"; }
+_H='# T\n\n| Tool | What for | **Replaces** | Checked |\n|---|---|---|---|\n'
+[ "$(_reg2 "$_H<!-- | draft | parked |  | d | -->\n| live | notes |  | d |\n")" -ge 1 ] \
+  && ok || bad "a parked draft row silenced the gate for the live row below it"
+[ "$(_reg2 "$_H<!-- | draft | a -> b |  | d | -->\n| live | notes |  | d |\n")" -ge 1 ] \
+  && ok || bad "a parked row containing > silenced the gate"
+[ "$(_reg2 "$_H<!-- sorted by date -->\n| live | notes |  | d |\n")" -ge 1 ] \
+  && ok || bad "a comment-only note between rows ended the table early"
+[ "$(_reg2 "$_H| live | notes | the intern | d |\n")" = 0 ] \
+  && ok || bad "an honest answer was refused"
 # The register is read from the INDEX. Reading it from the worktree while the added lines came
 # from the index made the rung fall silent the moment the two disagreed — a regression measured
 # 2026-08-23, and whitespace alignment was enough to trigger it.

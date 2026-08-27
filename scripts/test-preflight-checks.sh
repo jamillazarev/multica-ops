@@ -369,6 +369,11 @@ C0PY
 # substitution that never closed and the whole script died with "unexpected EOF" 590 lines later.
 # `bash -n` catches it instantly, and the note beside the fix now says so; this assertion is the
 # belt to that braces, because nothing else here would notice a corpse.
+# **`bash -n` is the form; the prose about backticks was the hope.** Three attempts to state the
+# parsing rule shipped wrong, so the corpus stopped describing it and points here instead. This
+# must run, and it must run on /bin/bash — the 3.2 every macOS ships, not whatever is on PATH.
+/bin/bash -n scripts/preflight.sh 2>/dev/null \
+  && ok || bad "scripts/preflight.sh does not parse under /bin/bash — the check the backtick note now defers to"
 bash scripts/preflight.sh >/dev/null 2>&1; _rc=$?
 [ "$_rc" -le 1 ] \
   && ok || bad "scripts/preflight.sh does not parse or run — exit $_rc, and every assertion above ran against a corpse"

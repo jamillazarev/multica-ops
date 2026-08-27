@@ -334,15 +334,26 @@ if ( changed --diff-filter=AMR -- '_ops/TOOLING.md' ) | hits . ; then
       for (i = 1; i <= n; i++) hide[i] = 0
       i = 1
       while (i <= n) {
+        # **The inline strip must survive a `>` and a CR.** `<!--[^>]*-->` cannot cross a `>`, so a
+        # parked row containing `->`, `>=` or any HTML tag was neither stripped nor hidden — it
+        # stayed as non-pipe text and the row scan read it as the end of the table, silencing every
+        # live row below. `[ \t]` excluded `\r`, so a CRLF register did the same. Both measured
+        # 2026-08-27, both surviving instances of the defect the strip was written to close: the
+        # repair had generalised the finding and not the rule.
         s = L[i]
-        gsub(/<!--[^>]*-->/, "", s)
+        while (match(s, /<!--/)) {
+          _st = RSTART
+          _rest = substr(s, _st + 4)
+          if (!match(_rest, /-->/)) break
+          s = substr(s, 1, _st - 1) substr(_rest, RSTART + 3)
+        }
         S[i] = s
         # **A line that was ENTIRELY an inline comment is a hidden line, not an empty one.** Left
         # visible-but-empty it read as the end of the table, so one parked draft row —
         # `<!-- | draft | parked | | -->`, the idiom the comment above recommends — silenced
         # the gate for every live row below it. Measured 2026-08-27; a regression against the
         # version before this rewrite, which refused that file.
-        if (L[i] ~ /<!--/ && s ~ /^[ \t]*$/) { hide[i] = 1; i++; continue }
+        if (L[i] ~ /<!--/ && s ~ /^[ \t\r]*$/) { hide[i] = 1; i++; continue }
         if (s ~ /<!--/) {
           # an opener with no closer later in the file is ordinary text, not a comment
           k = 0
