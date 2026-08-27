@@ -84,21 +84,19 @@ add() {
 clone_state() {
   # $1: path → "" when fine, else a flag naming what puts the documented route at risk
   git -C "$1" rev-parse --is-inside-work-tree >/dev/null 2>&1 || { printf ''; return; }
-  # **This message does not prescribe discarding anything, and that is the whole design.** Three
-  # remedies have shipped here in two days and two of them destroyed work: `reset --hard`, which is
-  # repo-wide and took an unrelated file; then a scoped `restore --staged --worktree --source=HEAD`,
-  # which deletes a STAGED NEW file outright, because a path absent from HEAD is restored to
-  # not existing. Both measured, both with the file actually gone. **A discard belongs to the
-  # person whose work it is** — this says what is at risk and offers the reversible move.
+  # **This message prescribes no discard, and that is the design.** Three remedies shipped here and
+  # two destroyed work: `reset --hard` is repo-wide and took an unrelated file; a scoped
+  # `restore --source=HEAD` deletes a staged new file, because a path absent from HEAD is restored
+  # to not existing. A discard belongs to whoever owns the work — this says what is at risk and
+  # offers the reversible move.
   #
-  # **The route is repo-wide, so the detection is too**: `git pull --ff-only` aborts on a modified
+  # **Detection is repo-wide because the route is**: `git pull --ff-only` aborts on a modified
   # tracked file anywhere in the enclosing repository, so scoping detection to the install goes
-  # silent on a route that is genuinely broken. Counted are tracked files that EXIST in HEAD and
-  # differ from it — a staged new file cannot be overwritten by an incoming commit that does not
-  # know about it — `--diff-filter=MDRT` is what leaves it out — and an untracked file never
-  # blocks one either. AT RISK, not BROKEN: the pull
-  # aborts only when an incoming commit touches one of them, which an rsync over a clone
-  # guarantees, since it rewrites exactly what the next release changes.
+  # silent on a route that is genuinely broken. `--diff-filter=MDRT` counts only tracked files that
+  # exist in HEAD and differ from it — a staged new file cannot be overwritten by an incoming
+  # commit that does not know it, and an untracked file never blocks a fast-forward. AT RISK, not
+  # BROKEN: the pull aborts only when an incoming commit touches one of them, which an rsync over a
+  # clone guarantees.
   _top=$(git -C "$1" rev-parse --show-toplevel 2>/dev/null || printf '%s' "$1")
   _all=$(git -C "$1" diff --name-only --diff-filter=MDRT HEAD 2>/dev/null | grep -c . || true)
   [ "${_all:-0}" -gt 0 ] || { printf ''; return; }

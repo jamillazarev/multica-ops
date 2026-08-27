@@ -82,18 +82,11 @@ printf '%s' "$(clone_state "$T/clean")" | grep -q 'ROUTE AT RISK' \
 # is a remedy they will improvise, and the improvisation here discards their work.
 printf '%s' "$_flag" | grep -q 'git -C .* stash' \
   && ok || bad "the flag does not give a runnable stash command"
-# **Detection is repo-wide because the ROUTE is; the remedy is what had to narrow.** `git pull
-# --ff-only` refuses on a modified tracked file anywhere in the enclosing repository, so scoping
-# the detection went silent on a genuinely broken route — measured 2026-08-27, with `pull` aborting
-# while the flag said nothing. What was wrong before that was the remedy: `reset --hard` is
-# repo-wide and destroyed an uncommitted file the install had nothing to do with.
-# **No discard is prescribed at all, and that is the assertion.** Three remedies shipped here in
-# two days and two destroyed work: `reset --hard` took an unrelated file, and a scoped
-# `restore --staged --worktree --source=HEAD` deletes a STAGED NEW file, because a path absent
-# from HEAD is restored to not existing. Both measured with the file gone. The message names the
-# risk and offers the reversible move; discarding belongs to whoever owns the work.
-# A PRESCRIPTION, not a mention: the message names both destructive commands in order to warn
-# against them, so the test looks for an imperative shape rather than the strings themselves.
+# **No discard is prescribed, and that is the assertion.** Three remedies shipped here and two
+# destroyed work — `reset --hard` is repo-wide, and a scoped `restore --source=HEAD` deletes a
+# staged new file, because a path absent from HEAD is restored to not existing. The message names
+# the risk and offers the reversible move; a discard belongs to whoever owns the work. The test
+# looks for an imperative shape, because the message names both commands in order to warn off them.
 printf '%s' "$_flag" | grep -qE '(Recover with|Discard (just|only)|to discard) [^.]*(restore|reset)' \
   && bad "the flag prescribes a discard — two of those have destroyed work" || ok
 printf '%s' "$_flag" | grep -q 'Discarding is your call' \
@@ -110,10 +103,8 @@ printf '%s' "$_flag" | grep -q 'Do NOT rsync onto a clone' \
   && ok || bad "the flag does not name the act that causes this"
 
 # ── an install inside a larger repository is AT RISK, and the flag must say whose work ──────
-# The route is repo-wide: `git pull --ff-only` aborts on a modified tracked file anywhere in the
-# enclosing repository, so a clean install in a dirty dotfiles clone is genuinely at risk and
-# silence there is a false negative. What must never happen is the remedy that caused the loss —
-# `reset --hard` was printed for this case and discarded an unrelated file. Measured 2026-08-27.
+# The route is repo-wide, so a clean install in a dirty enclosing repository is genuinely at risk
+# and silence there is a false negative.
 NEST="$T/nest"
 git clone -q "$T/src" "$NEST" 2>/dev/null
 mkdir -p "$NEST/plugins/skill" "$NEST/unrelated"
