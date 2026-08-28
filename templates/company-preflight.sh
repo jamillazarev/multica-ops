@@ -319,11 +319,15 @@ if ( changed --diff-filter=AMR -- '_ops/TOOLING.md' ) | hits . ; then
   # and refused — four documentation-only edits, measured 2026-08-23 by an adversarial lens.
   # **A comment hides a LINE, never the rest of the file, and never a live row it sits inside.**
   # The first version set a flag on any line containing `<!--` and skipped until one carried
-  # `-->`. Three ways that silenced the gate, all measured 2026-08-27: an inline `<!-- todo -->`
-  # in a live row made that row invisible while GFM still rendered it; a bare `<!--` with no
-  # closer anywhere made every row after it invisible **permanently**; and a stray fence opener
-  # with no closer at the top of the register did the same. **An opener is believed only when a
-  # closer exists** — the one cure for both.
+  # `-->`. **Six ways silenced the gate, all measured 2026-08-27, and they need three cures.**
+  # An opener is believed only when a closer exists — that answers the first three: an inline
+  # `<!-- todo -->` in a live row made that row invisible while GFM still rendered it; a bare
+  # `<!--` with no closer anywhere made every row after it invisible **permanently**; a stray
+  # fence opener with no closer at the top did the same. A line left empty by the strip is HIDDEN
+  # rather than read as a boundary — that answers the fourth, the parked draft row. And the strip
+  # itself has to survive the text it walks — that answers the last two, a `>` inside a parked row
+  # and a CR at the end of it. **This sentence has said "three ways · one cure" through three of
+  # those discoveries**; when the next one lands, the count moves with it.
   #
   # Lines are buffered RAW — the diff is matched against the file's own bytes, so a line rewritten
   # for analysis would never match what was staged. Comments are resolved afterwards, where the
@@ -340,21 +344,41 @@ if ( changed --diff-filter=AMR -- '_ops/TOOLING.md' ) | hits . ; then
         # live row below. `[ \t]` excluded `\r`, so a CRLF register did the same. Both measured
         # 2026-08-27, both surviving instances of the defect the strip was written to close: the
         # repair had generalised the finding and not the rule.
-        s = L[i]
+        # **Three more things this loop has to survive, all measured 2026-08-28.**
+        # (a) It rebuilt the WHOLE line each pass — prefix included — so the next match rescanned
+        #     everything already walked: 27.8s on a 390 KB row against 0.06s for the single gsub
+        #     it replaced. A guard that slow is one people run with --no-verify, which this
+        #     file names as its own failure mode. The prefix is consumed into _acc and never
+        #     scanned again; same output, 0.7s.
+        # (b) An opener inside a CODE SPAN is text. A register documenting its own parking idiom
+        #     — a row whose cell reads `<!--` in backticks — had no closer on that line, so the
+        #     multi-line path fired and swallowed every live row down to the next `-->`. The gate
+        #     went silent on the very file that explained it. Backtick parity is carried across
+        #     the line in _par, counted chunk by chunk so it stays linear.
+        # (c) A bare `-->` left standing is not a row, and the walk read it as the end of one.
+        _open = 0
+        s = L[i]; _acc = ""; _par = 0
         while (match(s, /<!--/)) {
           _st = RSTART
+          _pre = substr(s, 1, _st - 1)
+          _t = _pre; _par += gsub(/`/, "&", _t)
+          if (_par % 2 == 1) { _acc = _acc _pre "<!--"; s = substr(s, _st + 4); continue }
           _rest = substr(s, _st + 4)
-          if (!match(_rest, /-->/)) break
-          s = substr(s, 1, _st - 1) substr(_rest, RSTART + 3)
+          if (!match(_rest, /-->/)) { _open = 1; break }
+          _t = substr(_rest, 1, RSTART + 2); _par += gsub(/`/, "&", _t)
+          _acc = _acc _pre
+          s = substr(_rest, RSTART + 3)
         }
+        s = _acc s
         S[i] = s
+        if (s ~ /^[ \t\r]*-->[ \t\r]*$/) { hide[i] = 1; i++; continue }
         # **A line that was ENTIRELY an inline comment is a hidden line, not an empty one.** Left
         # visible-but-empty it read as the end of the table, so one parked draft row —
         # `<!-- | draft | parked | | -->`, the idiom the comment above recommends — silenced
         # the gate for every live row below it. Measured 2026-08-27; a regression against the
         # version before this rewrite, which refused that file.
         if (L[i] ~ /<!--/ && s ~ /^[ \t\r]*$/) { hide[i] = 1; i++; continue }
-        if (s ~ /<!--/) {
+        if (_open) {
           # an opener with no closer later in the file is ordinary text, not a comment
           k = 0
           for (j = i + 1; j <= n; j++) if (L[j] ~ /-->/) { k = j; break }

@@ -15,10 +15,18 @@ also the migration map `/multica-ops:upgrade` reads.
   --ff-only` aborts on a modified tracked file anywhere in the enclosing repository. **What changed
   is that the flag no longer prescribes a discard at all.** Three remedies shipped here in two days
   and two destroyed work: `reset --hard` took an unrelated file, and a scoped
-  `restore --staged --worktree --source=HEAD` **deletes a staged new file outright** — which cannot
-  block a fast-forward in the first place, so the flag was firing on it and prescribing its
-  destruction. It names what is at risk, says how much is under the install, offers
-  `stash push` → `pull` → `stash pop`, and states that discarding belongs to whoever owns the work.
+  `restore --staged --worktree --source=HEAD` **deletes a staged new file outright**. Two more were
+  caught before shipping. **The fourth** counted with `--diff-filter=MDRT`, whose `R` rows name a
+  rename's *destination* — absent from HEAD, so the very `restore` it printed would delete it;
+  the count is `--no-renames --diff-filter=MDT` now, for which "every path exists in HEAD" is true
+  and demonstrable, and the suite checks it against a tree containing a rename. **The fifth was in
+  the message the whole time:** `stash push` exits **0 having saved nothing** when the only
+  difference is a submodule gitlink, and the `pop` that follows takes whatever was already on the
+  stack — measured, with an unrelated stash dumped into the tree. The sequence is printed guarded,
+  and the suite runs the printed line verbatim and requires the stranger's entry to survive.
+  **The count also has two blind spots, now stated wherever it is described:** a staged-new or
+  untracked file at a path an incoming commit *adds* aborts the pull with the count at 0. So the
+  flag leads with the pull, which is free and is the only exact test.
 
 - **§4f could still be silenced by one character.** A line that was entirely an inline comment read
   as the end of the table, taking every live row below it with it — the parked-draft idiom the
@@ -29,16 +37,41 @@ also the migration map `/multica-ops:upgrade` reads.
 
 - **The bash-parsing note stopped trying to be a rule.** Three statements of it have shipped wrong
   — *an odd number of backticks*, then *an unpaired backtick inside a double-quoted span*, then a
-  version that exonerated parentheses, which obey the same balance law. What survives is small and
-  true: bash lexes the `$( … )` body as shell text through a quoted heredoc, and what it sees must
+  version that exonerated parentheses **on the stated grounds that they obey the same balance law
+  — which is the fourth wrong statement, written into the entry announcing that the corpus had
+  stopped making them.** Measured on bash 3.2: an unbalanced paren inside double quotes parses
+  fine, an unpaired backtick in the same position does not. They differ at exactly the case that
+  produced two of the three earlier errors. What survives is small and true: bash lexes the `$( … )` body as shell text through a quoted heredoc, and what it sees must
   balance. **`/bin/bash -n` finds every case instantly, and the suite runs it as an assertion.**
   The prose was the hope; the check is the form.
 
-- **Three ways `_ops/TOOLING.md` could be made invisible to §4f**, all closed: an inline
+- **Eight ways `_ops/TOOLING.md` could be made invisible to §4f**, all closed: an inline
   `<!-- … -->` in a live row hid that row while the page still rendered it · a `<!--` with no
-  closer hid every row after it, permanently · a stray fence marker at the top did the same. A tab
-  inside a tool name dropped its row, and a CRLF register read a blank answer as filled — both
-  introduced by 0.4.12's own rewrite of that block.
+  closer hid every row after it, permanently · a stray fence marker at the top did the same · a
+  line that was entirely a comment read as the end of the table · the strip that fixed that could
+  not cross a `>` · nor survive a CR · **a live row quoting the opener in backticks** disarmed the
+  gate on the very register that documents the parking idiom · and **a bare `-->`** was read as the
+  end of a table. A tab inside a tool name dropped its row, and a CRLF register read a blank answer
+  as filled — both introduced by 0.4.12's own rewrite of that block.
+
+  **This suite had an assertion for none of them, while the entry above listed three as closed.**
+  The reason is worth keeping: the fixture register here has no `Replaces` column, so §4f never
+  fired on it at all — and a rung that never fires cannot fail. Nine assertions cover it now,
+  mirroring the sibling's fixtures deliberately, because **the guard is a shared file and coverage
+  in only one repository is coverage in neither** the next time it is edited from the other side.
+  Reverting the strip fails six of them.
+
+  The strip also **rebuilt the whole line every pass** — 27.8s on a 390 KB row against 0.7s for the
+  form that consumes what it has walked. Same output, measured 2026-08-28.
+
+- **`dispatch-nudge.py` was giving orders to the runs that read it, and this suite required that
+  it did.** After fourteen read-only calls it said *"Assign it to an agent"* and *"take the next
+  real step"* — text a run weighs rather than obeys, and for one of the two readings it fits (a
+  review, an investigation, a question answered from the record) a long unbroken read is the work
+  being done properly, not a stall. The sibling repaired its twin eight days earlier; a
+  contradiction lens found this one still standing. It names both readings and says it cannot tell
+  which. **The assertion that asked for the order is now its opposite**, and a mutant restoring an
+  imperative fails it.
 
 - **check 0 could not see a job-level `if: false`** — the canonical way to switch a job off — while
   its own refusal message advertised that a step-level one counts, which is a map to the hole one
@@ -584,6 +617,13 @@ thirty lines further down, so the regex writes the character as `\x60`.
 > quoted heredoc or not — and **single quotes and a `#` comment hide one from it, while double
 > quotes do not.** So the original count was right and incomplete, not wrong. The full account is
 > beside `_keep()` in `scripts/preflight.sh`; nothing else in the corpus should restate it.
+>
+> **Correction to this correction, 2026-08-28.** That pointer no longer resolves: the note beside
+> `_keep()` was cut to its minimum, and the second copy — which restated the mechanism while
+> forbidding the restatement — was cut with it. A fourth statement is not what was needed.
+> **`/bin/bash -n` is the account now**, and the suite runs it as an assertion. The sentence above
+> is still true of backticks and **not** of parentheses, which a double-quoted span does hide;
+> 0.4.13 corrects a claim that the two obey the same law.
 
 **The scenario count drifted a second time — so it is a form now, not a third correction.**
 README advertised 26 against a rubric holding 27, and it was **published**: one page of the site

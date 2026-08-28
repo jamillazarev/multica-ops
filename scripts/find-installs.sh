@@ -98,24 +98,43 @@ clone_state() {
   # BROKEN: the pull aborts only when an incoming commit touches one of them, which an rsync over a
   # clone guarantees.
   _top=$(git -C "$1" rev-parse --show-toplevel 2>/dev/null || printf '%s' "$1")
-  _all=$(git -C "$1" diff --name-only --diff-filter=MDRT HEAD 2>/dev/null | grep -c . || true)
+  # **`--no-renames` is load-bearing, not a tidy-up.** With rename detection on (git's default
+  # since 2.9) a `git mv` is reported as R at its DESTINATION path — which by definition is not in
+  # HEAD, so a `restore --source=HEAD` aimed at it DELETES it. Measured 2026-08-27, one command
+  # short of shipping the fourth work-destroying remedy in this function. `--no-renames`
+  # decomposes that R into D at the OLD path, which is both present in HEAD and the path an
+  # incoming commit can actually collide with. Every path MDT prints exists in HEAD; MDRT's do not.
+  #
+  # **What this count does NOT see, measured 2026-08-28.** `git pull --ff-only` also aborts on a
+  # staged new file (`A`) and on an untracked file when the incoming commit ADDS THAT SAME PATH —
+  # verified, both abort with the count at 0. So the count is a warning, never a verdict, and the
+  # message says so: the pull itself is the only exact test, and it is free to run. Those two
+  # classes are deliberately not counted, because the incoming commit is unknown without a fetch
+  # and counting every untracked file would fire on nearly every install — which is the false
+  # positive that started this whole sequence. **An earlier version of this comment said flatly
+  # that an untracked file never blocks a pull.** That was the stray-file measurement generalised
+  # into a rule it does not support, in a function whose changelog entry accuses an earlier repair
+  # of exactly that.
+  _all=$(git -C "$1" diff --no-renames --name-only --diff-filter=MDT HEAD 2>/dev/null | grep -c . || true)
   [ "${_all:-0}" -gt 0 ] || { printf ''; return; }
-  # `-- <path>` on a path git will not accept (a symlinked install, a path outside the work tree)
-  # exits 128 and used to be swallowed into a confident "0 under the install". Unknown says so.
-  # git's own exit code decides, not the pipeline's: `grep -c .` exits 1 on a count of zero, so
-  # `|| unknown` caught the ordinary zero and reported every clean install as unmeasurable.
-  _hlist=$(git -C "$1" diff --name-only --diff-filter=MDRT HEAD -- "$1" 2>/dev/null); _hrc=$?
+  _hlist=$(git -C "$1" diff --no-renames --name-only --diff-filter=MDT HEAD -- "$1" 2>/dev/null); _hrc=$?
   if [ "$_hrc" -ne 0 ]; then _here="unknown"
   else _here=$(printf '%s' "$_hlist" | grep -c . || true); fi
   if [ "$_here" = "unknown" ]; then
-    _scope="git could not tell how many are under the install itself"
+    _scope="git would not scope the count to the install — that path is probably a symlink or outside the work tree; resolve it with readlink -f and re-run"
   elif [ "$_here" -eq 0 ]; then
-    _scope="NONE of them under the install itself — the work at risk is not yours to touch"
+    _scope="NONE of them under the install itself, so the work at risk is someone else's and they should be the one to move it"
   else
     _scope="${_here} of them under the install itself"
   fi
-  printf 'ROUTE AT RISK — %s tracked file(s) differ from HEAD in the repository this install lives in; %s. git pull --ff-only is repo-wide and aborts as soon as an incoming commit touches one of them. See them: git -C "%s" diff --name-only --diff-filter=MDRT HEAD. The reversible way through, and the only one this prints: git -C "%s" stash push, then git -C "%s" pull --ff-only, then git -C "%s" stash pop. Discarding is your call and this does not offer a command for it — reset --hard is repo-wide, and restore --source=HEAD deletes a staged new file outright. Do NOT rsync onto a clone: that is what puts it here' \
-    "$_all" "$_scope" "$_top" "$_top" "$1" "$_top"
+  # **The stash sequence is printed GUARDED, and the guard is the whole point.** `git stash push`
+  # exits 0 having saved NOTHING when the only difference is a submodule gitlink — measured
+  # 2026-08-28 — and an unguarded `stash pop` then pops whatever was already on the stack, dumping
+  # a stranger's abandoned work into the tree. That is the fifth remedy this one message has
+  # carried and the third able to touch work nobody pointed it at. Comparing refs/stash across the
+  # push is the only local test that does not depend on why the push was empty.
+  printf 'ROUTE AT RISK — %s tracked file(s) differ from HEAD in the repository this install lives in; %s. git pull --ff-only is repo-wide and aborts as soon as an incoming commit touches one of them. TRY (free, and the only exact test — this count is a warning, and it does not see a staged-new or untracked file that an incoming commit adds): git -C "%s" pull --ff-only. KEEP, if it aborts — paste whole, the guard is load-bearing: S=$(git -C "%s" rev-parse -q --verify refs/stash); git -C "%s" stash push -u -m pre-pull; git -C "%s" pull --ff-only; [ "$S" != "$(git -C "%s" rev-parse -q --verify refs/stash)" ] && git -C "%s" stash pop. Bare stash push/pop is NOT safe here: push saves nothing and still exits 0 when the difference is a submodule gitlink, and the pop then drops an unrelated stash entry into your tree. SEE: git -C "%s" diff --no-renames --name-only --diff-filter=MDT HEAD. DISCARD one, only from THAT list: git -C "%s" restore --staged --worktree --source=HEAD -- <that path> — every path it prints exists in HEAD, so restore cannot delete it, and --staged is required or the index keeps differing while this flag reads clean. Never reset --hard: repo-wide. Do NOT rsync onto a clone; that is what puts it here' \
+    "$_all" "$_scope" "$_top" "$_top" "$_top" "$_top" "$_top" "$_top" "$_top" "$_top"
 }
 
 seen() { printf '%s' "$found_paths" | grep -Fxq "$1"; }

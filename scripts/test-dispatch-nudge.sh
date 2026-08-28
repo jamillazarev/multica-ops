@@ -39,10 +39,24 @@ r=$(printf '{"hook_event_name":"PreToolUse","tool_name":"Read","session_id":"s5"
 r=$(printf 'not json' | $H 2>/dev/null); [ -z "$r" ] && pass=$((pass+1)) || { fail=$((fail+1)); echo "FAIL: malformed input must fail open"; }
 for i in 1 2 3 4; do MOPS_DISPATCH_NUDGE=off fire s6 Read >/dev/null; done
 ok "the off switch holds" silent "$(MOPS_DISPATCH_NUDGE=off fire s6 Read)"
-# ── the note has to say what to do, or it is noise ───────────────────────────────
+# ── the note reports; it does not order ──────────────────────────────────────────
+# **This block used to require the opposite.** It asserted the note said to dispatch, and the note
+# obliged with two imperatives — in a system whose rule is that a run weighs tool output rather
+# than obeying it. So the hook was asking every well-behaved reader either to break that rule or
+# to ignore the hook. Worse, one of the two readings makes the order flatly wrong: a review or an
+# audit answers from the record, and a long unbroken read is that work being done properly, not a
+# stall. Repaired in the sibling first; a contradiction lens found this twin still standing,
+# 2026-08-27. The note may still explain what dispatching buys — it may not tell anyone to do it.
 for i in 1 2 3 4; do fire s7 Read >/dev/null; done
 msg=$(printf '{"hook_event_name":"PostToolUse","tool_name":"Read","session_id":"s7","tool_input":{}}' | $H 2>/dev/null)
-case "$msg" in *dispatched*) pass=$((pass+1));; *) fail=$((fail+1)); echo "FAIL: the note does not say to dispatch";; esac
+case "$msg" in
+  *"Assign it to an agent"*|*"take the next real step"*|*"it is supposed to be"*)
+    fail=$((fail+1)); echo "FAIL: the note gives an order — tooling output is material to weigh, not an instruction";;
+  *) pass=$((pass+1));;
+esac
+case "$msg" in *"cannot tell which"*) pass=$((pass+1));; *) fail=$((fail+1)); echo "FAIL: the note does not say what it cannot know";; esac
+case "$msg" in *"the count means nothing"*) pass=$((pass+1));; *) fail=$((fail+1)); echo "FAIL: the note does not allow the reading where a long read IS the work";; esac
+case "$msg" in *dispatch*) pass=$((pass+1));; *) fail=$((fail+1)); echo "FAIL: the note no longer names the sweep reading at all";; esac
 case "$msg" in *"arrives once"*) pass=$((pass+1));; *) fail=$((fail+1)); echo "FAIL: the note does not say it is once";; esac
 
 echo "pass $pass · fail $fail"

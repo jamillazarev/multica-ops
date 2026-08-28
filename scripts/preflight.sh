@@ -724,9 +724,11 @@ for f in glob.glob("*.md") + glob.glob("templates/*.md") + glob.glob("sources/*.
         # in this corpus are the ones that say "measured <date>", and they aged unseen. The gate
         # had never fired, because nothing is 180 days old yet, so green meant nothing about half
         # the file and would first have admitted it in 2027.
-        # NOTE: the backtick is written \x60 on purpose — every backtick the shell's lexer can see
-        # inside $( <<HEREDOC ) must pair, and a double-quoted span does not hide one. The measured
-        # account is beside _keep(), above; do not restate it here, the two copies disagreed once.
+        # NOTE: the backtick is written \x60 on purpose — a literal one here can break the parse
+        # of the enclosing $( <<HEREDOC ). **This comment deliberately does not say why.** It used
+        # to, in the same breath as forbidding the restatement 490 lines below it — and its version
+        # was the second of the three accounts that shipped wrong. The check is the form:
+        # /bin/bash -n finds every case instantly, and the suite runs it as an assertion.
         # Up to three words may sit between the verb and the date: this corpus writes
         # "re-verified behaviourally 2026-08-01", "Measured end to end 2026-08-01" and
         # "measured on this machine 2026-08-01" — 41 stamps escaped the first repair for

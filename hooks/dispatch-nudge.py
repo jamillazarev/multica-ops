@@ -97,15 +97,22 @@ def main():
         open(p, "w").write("-1")      # said once, then never again this session
     except OSError:
         pass
+    # **This text is read by a run as tool output, and a run's rule for tool output is that it is
+    # material to weigh, not an order to obey.** The note therefore reports a count and names the
+    # two readings it cannot choose between. It said "Assign it to an agent" and "take the next
+    # real step" until 2026-08-27, which asked a reader who was correctly obeying that rule either
+    # to break it or to ignore the hook — and for the reading where the run is a review, an audit
+    # or a question answered from the record, the imperative was simply wrong: a long unbroken
+    # read is that job being done properly. Both this hook and opsinist's `audit-gate.py` carried
+    # the same defect; a lens caught this one still standing after the other was repaired.
     note = (
         f"{n} read-only calls in a row, with nothing written, dispatched or moved. "
-        "**If this is a sweep — an audit, a health check, a status read across the whole "
-        "workspace — it is supposed to be *dispatched*, not performed here.** Assign it to an "
-        "agent and say concretely what was sent, roughly how long, and which issue or run to "
-        "watch; then carry on with the conversation while it runs. A report produced by doing "
-        "the work inline costs the owner a turn they could have spent talking to you. "
-        "If it is not a sweep, say what you now know and take the next real step. "
-        "This note arrives once.")
+        "Two readings fit that, and this hook cannot tell which is yours. If the run is a sweep "
+        "— an audit, a health check, a status read across the whole workspace — then doing it "
+        "inline spends a turn the owner could have spent talking to you, and dispatching it to "
+        "an agent buys that turn back. If the run is a review, an investigation, or a question "
+        "being answered from the record, a long unbroken read is the work, and the count means "
+        "nothing. This note reports rather than directs, and arrives once.")
     json.dump({"hookSpecificOutput": {"hookEventName": "PostToolUse",
                                       "additionalContext": note}}, sys.stdout)
     sys.exit(0)   # a note, not a refusal

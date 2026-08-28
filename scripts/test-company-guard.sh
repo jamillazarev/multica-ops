@@ -172,5 +172,100 @@ g | grep -q 'guard is version' \
   && bad "the guard complained about its age while matching the guide" || ok
 reset
 
+# ── §4f: every way the register was made invisible ──────────────────────────────────────────
+# **This suite had no assertion for any of them**, while this repo's own changelog listed three
+# as closed — found by a contradiction lens 2026-08-28. The reason it went unnoticed is worth
+# keeping: the fixture register above has no `Replaces` column, so §4f never fired on it at all,
+# and a rung that never fires cannot fail. The helper below builds a register that does have one.
+# The guard file is byte-identical to the sibling's, so these mirror its fixtures deliberately —
+# a shared file with coverage in only one repository is covered in neither, next time it is edited
+# from the other side.
+_reg(){ python3 - "$1" > "$R/_ops/TOOLING.md" <<'RPY'
+import sys
+sys.stdout.write(sys.argv[1])
+RPY
+  git -C "$R" add -A >/dev/null 2>&1
+  local n; n=$( ( cd "$R" && bash _ops/preflight.sh 2>&1 || true ) | grep -c 'what it replaces' )
+  git -C "$R" reset -q; git -C "$R" checkout -q -- . 2>/dev/null; printf '%s' "$n"; }
+
+# the control: a live row with a blank Replaces cell must be refused, or nothing below means much
+[ "$(_reg '# Tooling
+
+| Tool | Replaces |
+|---|---|
+| ripgrep |  |
+')" -ge 1 ] && ok || bad "§4f did not refuse a live row with a blank Replaces cell — every assertion below is vacuous"
+
+# an inline comment in a live row hid that row while the page still rendered it
+[ "$(_reg '# Tooling
+
+| Tool | Replaces |
+|---|---|
+| ripgrep |  | <!-- todo -->
+')" -ge 1 ] && ok || bad "an inline comment in a live row made that row invisible to the gate"
+
+# an opener with no closer hid every row after it, permanently. **It sits INSIDE a cell**: a
+# `<!--` alone on its line has no pipes, and a line with no pipes is where a markdown table
+# genuinely ends — refusing there would be the gate inventing a table the page does not render.
+[ "$(_reg '# Tooling
+
+| Tool | Replaces |
+|---|---|
+| beta | write <!-- here |
+| ripgrep |  |
+')" -ge 1 ] && ok || bad "an unterminated comment inside a cell swallowed every row after it"
+
+# a stray fence opener at the top did the same
+[ "$(_reg '# Tooling
+
+```
+| Tool | Replaces |
+|---|---|
+| ripgrep |  |
+')" -ge 1 ] && ok || bad "an unclosed fence marker voided the whole register"
+
+# a line that is ENTIRELY a comment read as the end of the table — the parked-draft idiom
+[ "$(_reg '# Tooling
+
+| Tool | Replaces |
+|---|---|
+<!-- | draft | parked | -->
+| ripgrep |  |
+')" -ge 1 ] && ok || bad "a parked draft row read as the end of the table and hid the live rows below"
+
+# the strip has to cross a > and survive a CR
+[ "$(_reg '# Tooling
+
+| Tool | Replaces |
+|---|---|
+<!-- | draft | a -> b <span> | -->
+| ripgrep |  |
+')" -ge 1 ] && ok || bad "a parked row containing > was neither stripped nor hidden"
+printf '# Tooling\r\n\r\n| Tool | Replaces |\r\n|---|---|\r\n<!-- | draft | x | -->\r\n| ripgrep |  |\r\n' > "$R/_ops/TOOLING.md"
+git -C "$R" add -A >/dev/null 2>&1
+[ "$( ( cd "$R" && bash _ops/preflight.sh 2>&1 || true ) | grep -c 'what it replaces' )" -ge 1 ] \
+  && ok || bad "a CRLF register read a parked row as the end of the table"
+git -C "$R" reset -q; git -C "$R" checkout -q -- . 2>/dev/null
+
+# a live row quoting the opener in backticks — the register that documents its own idiom
+[ "$(_reg '# Tooling
+
+| Tool | Replaces |
+|---|---|
+| parkdoc | park a draft by wrapping it in `<!--` |
+| ripgrep |  |
+<!-- | someday | x | -->
+')" -ge 1 ] && ok || bad "a live row quoting a comment opener in backticks silenced every live row below it"
+
+# a stray closer left standing is not a row boundary
+[ "$(_reg '# Tooling
+
+| Tool | Replaces |
+|---|---|
+| other | x |
+  -->
+| ripgrep |  |
+')" -ge 1 ] && ok || bad "a stray --> line was read as the end of the table, hiding every row after it"
+
 echo "company-guard: $pass passed, $fail failed"
 exit "$fail"

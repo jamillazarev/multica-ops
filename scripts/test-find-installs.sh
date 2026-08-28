@@ -44,10 +44,16 @@ git clone -q "$T/src" "$T/clean" 2>/dev/null
 [ -z "$(clone_state "$T/clean")" ] \
   && ok || bad "a clean clone was flagged as broken"
 
-# ── an UNTRACKED file does not stop `git pull --ff-only`, so it must not be flagged ─────────
+# ── a STRAY untracked file does not stop `git pull --ff-only`, so it must not be flagged ────
 # This is the finding. The flag used to fire here and tell the reader to reset — destructive
 # advice for a directory whose route works. Measured against real git, 2026-08-23: with the
 # upstream ahead and one stray untracked file, the pull fast-forwards.
+# **"Stray" is the whole of the claim, and this comment used to omit it.** An untracked file
+# whose path an incoming commit ADDS does abort the pull — *"The following untracked working
+# tree files would be overwritten by merge"* — measured 2026-08-28, with this counter reading 0.
+# So does a staged new file at such a path. Both are left uncounted on purpose: the incoming
+# commit is unknown without a fetch, and counting every untracked file recreates the original
+# false positive. The flag says outright that the count is a warning and the pull is the test.
 printf 'note\n' > "$T/clean/stray.md"
 [ -z "$(clone_state "$T/clean")" ] \
   && ok || bad "a stray untracked file was reported as a broken route"
@@ -82,25 +88,92 @@ printf '%s' "$(clone_state "$T/clean")" | grep -q 'ROUTE AT RISK' \
 # is a remedy they will improvise, and the improvisation here discards their work.
 printf '%s' "$_flag" | grep -q 'git -C .* stash' \
   && ok || bad "the flag does not give a runnable stash command"
-# **No discard is prescribed, and that is the assertion.** Three remedies shipped here and two
-# destroyed work — `reset --hard` is repo-wide, and a scoped `restore --source=HEAD` deletes a
-# staged new file, because a path absent from HEAD is restored to not existing. The message names
-# the risk and offers the reversible move; a discard belongs to whoever owns the work. The test
-# looks for an imperative shape, because the message names both commands in order to warn off them.
-printf '%s' "$_flag" | grep -qE '(Recover with|Discard (just|only)|to discard) [^.]*(restore|reset)' \
-  && bad "the flag prescribes a discard — two of those have destroyed work" || ok
-printf '%s' "$_flag" | grep -q 'Discarding is your call' \
-  && ok || bad "the flag does not say whose call a discard is"
+# **The discard IS prescribed now, and what makes that safe is measured here, not asserted.**
+# Three remedies shipped before this one and two destroyed work; a fourth was one command from
+# shipping on 2026-08-27, when a lens correctly said the restraint had gone too far and I reached
+# for `--diff-filter=MDRT` — whose R rows name the rename DESTINATION, absent from HEAD, which
+# `restore --source=HEAD` deletes. The assertions below take the listing command out of the
+# printed message itself, run it against a tree containing a rename, and require every path it
+# yields to exist in HEAD. The mutant check underneath proves those assertions can fail.
+_list=$(printf '%s' "$_flag" | sed -n 's/.*SEE: git -C "[^"]*" \(diff [^.]*HEAD\)\..*/\1/p')
+[ -n "$_list" ] \
+  && ok || bad "no listing command could be lifted out of the flag — the safety assertions below cannot run"
+printf '%s' "$_flag" | grep -q 'restore --staged --worktree --source=HEAD' \
+  && ok || bad "the flag names no per-path discard in its full form — without --staged the index keeps differing, which stops the pull while this flag reads clean (measured 2026-08-27), and the bare form was the one deleted as known-wrong a release earlier"
+printf 'renamable\n' > "$T/clean/torename.txt"
+( cd "$T/clean" && git add torename.txt \
+  && git -c user.email=t@t -c user.name=t commit -qm rn ) >/dev/null 2>&1
+( cd "$T/clean" && git mv torename.txt renamed-away.txt ) >/dev/null 2>&1
+_unsafe=0
+for _p in $( cd "$T/clean" && git $_list 2>/dev/null ); do
+  ( cd "$T/clean" && git cat-file -e "HEAD:$_p" ) 2>/dev/null || _unsafe=$((_unsafe+1))
+done
+[ "$_unsafe" -eq 0 ] \
+  && ok || bad "the listing the flag prints yields $_unsafe path(s) absent from HEAD — restore --source=HEAD DELETES those, which is how three earlier remedies destroyed work"
+# **The mutant.** Same tree, rename detection left on: the destination path appears and is not in
+# HEAD. If this ever comes back clean, the assertion above has stopped testing anything.
+_mut=0
+for _p in $( cd "$T/clean" && git diff --name-only --diff-filter=MDRT HEAD 2>/dev/null ); do
+  ( cd "$T/clean" && git cat-file -e "HEAD:$_p" ) 2>/dev/null || _mut=$((_mut+1))
+done
+[ "$_mut" -gt 0 ] \
+  && ok || bad "the MDRT mutant produced no HEAD-absent path, so the safety assertion above proves nothing on this git"
+( cd "$T/clean" && git mv renamed-away.txt torename.txt ) >/dev/null 2>&1
 printf '%s' "$_flag" | grep -q 'stash pop' \
   && ok || bad "the stash is offered with no way to get the work back"
-printf '%s' "$_flag" | grep -q 'diff --name-only --diff-filter=MDRT HEAD' \
-  && ok || bad "the look-at-them command does not match what was counted"
+printf '%s' "$_flag" | grep -q 'diff --no-renames --name-only --diff-filter=MDT HEAD' \
+  && ok || bad "the listing command does not match what was counted — a reader discarding from a different listing is discarding from a set nobody proved safe"
 printf '%s' "$_flag" | grep -qE '\*\*|`git ' \
   && bad "the flag prints markdown to a terminal — asterisks read literally, backticked commands paste as substitutions" || ok
 printf '%s' "$_flag" | grep -qE 'Recover with .*reset --hard|or `git -C [^`]*reset --hard' \
   && bad "the flag still PRESCRIBES a repo-wide reset" || ok
 printf '%s' "$_flag" | grep -q 'Do NOT rsync onto a clone' \
   && ok || bad "the flag does not name the act that causes this"
+
+# ── the stash sequence is printed GUARDED, and the guard is exercised ───────────────────────
+# **`git stash push` exits 0 having saved NOTHING when the only difference is a submodule
+# gitlink** (measured 2026-08-28), so an unguarded `push; pull; pop` pops whatever was already
+# on the stack — a stranger's abandoned work, dumped into the tree. That was the fifth remedy
+# this one message has carried and the third able to touch work nobody pointed it at. The
+# assertion below is not a spelling check: it runs the printed sequence verbatim against exactly
+# that repository and requires the unrelated stash to survive.
+printf '%s' "$_flag" | grep -q 'rev-parse -q --verify refs/stash' \
+  && ok || bad "the flag prints an unguarded stash sequence — push exits 0 saving nothing on a submodule-only difference, and the pop then takes an unrelated entry"
+_gseq=$(printf '%s' "$_flag" | sed -n 's/.*load-bearing: \(S=.*stash pop\)\. Bare.*/\1/p')
+[ -n "$_gseq" ] \
+  && ok || bad "the guarded sequence could not be lifted out of the flag — the behavioural test below cannot run"
+git init -q "$T/smod"
+( cd "$T/smod" && printf 'v1\n' > s.txt && git add -A \
+  && git -c user.email=t@t -c user.name=t commit -qm s1 \
+  && printf 'v2\n' > s.txt && git add -A \
+  && git -c user.email=t@t -c user.name=t commit -qm s2 ) >/dev/null 2>&1
+git init -q "$T/host"
+( cd "$T/host" && git -c protocol.file.allow=always submodule add -q "$T/smod" mod \
+  && git add -A && git -c user.email=t@t -c user.name=t commit -qm init ) >/dev/null 2>&1
+if [ -d "$T/host/mod" ]; then
+  ( cd "$T/host/mod" && git checkout -q HEAD~1 ) >/dev/null 2>&1
+  printf 'A STRANGER WIP\n' > "$T/host/stranger.txt"
+  ( cd "$T/host" && git add stranger.txt \
+    && git -c user.email=t@t -c user.name=t stash push -q -m unrelated ) >/dev/null 2>&1
+  [ "$(cd "$T/host" && git stash list | grep -c .)" -eq 1 ] \
+    && ok || bad "the submodule fixture did not produce the unrelated stash entry the test needs"
+  # the flag must fire here at all, or the sequence below is being tested on a quiet repo
+  [ -n "$(clone_state "$T/host")" ] \
+    && ok || bad "a submodule whose gitlink differs from HEAD did not raise the flag, so the guard is untested"
+  _mine=$(printf '%s' "$_gseq" | sed "s|git -C \"[^\"]*\"|git -C \"$T/host\"|g")
+  ( cd "$T/host" && eval "$_mine" ) >/dev/null 2>&1
+  [ "$(cd "$T/host" && git stash list | grep -c .)" -eq 1 ] \
+    && ok || bad "the printed sequence consumed an unrelated stash entry — this is the measured data-loss path, not a hypothetical"
+  [ ! -f "$T/host/stranger.txt" ] \
+    && ok || bad "the printed sequence dumped a stranger's stashed work into the tree"
+  # **The mutant.** The bare sequence the guard replaced, run on the same fixture. If this ever
+  # comes back clean, the two assertions above have stopped testing anything.
+  ( cd "$T/host" && git stash push -u -m pre-pull && git pull --ff-only; git stash pop ) >/dev/null 2>&1
+  [ "$(cd "$T/host" && git stash list | grep -c .)" -eq 0 ] \
+    && ok || bad "the unguarded mutant left the stash intact, so the guard assertions above prove nothing on this git"
+else
+  bad "the submodule fixture could not be built (git refused the file protocol?) — the guard is UNTESTED on this machine, which is worse than a red assertion"
+fi
 
 # ── an install inside a larger repository is AT RISK, and the flag must say whose work ──────
 # The route is repo-wide, so a clean install in a dirty enclosing repository is genuinely at risk
