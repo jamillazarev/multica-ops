@@ -124,6 +124,19 @@ directories the sweep did and confirmed its silence while the always-loaded core
 stale paths — and **a suite must own its state directory**, or markers survive between runs and
 it passes *less* the more often you run it.
 
+**A third, paid for on 2026-08-28: a mutant that never applied is indistinguishable from a
+toothless assertion.** A wrong anchor makes the edit a no-op, the suite stays green, and the
+green reads as *the mutant survived* — so the conclusion drawn is about the assertion when the
+truth is about the patch. Every mutation asserts that it changed the file before the suite runs.
+Two neighbours of the same shape, both measured the same day: **restoring a fixture with
+`git checkout -- <file>` restores from the INDEX**, so state staged by an earlier assertion
+survives and later ones pass on the leftover rather than on what they test (`git checkout HEAD --`
+is the one that means it); and **reusing a record id an earlier commit already took** means a
+gate scoped to *added* files never looks at the fixture at all. All three produce a green
+assertion that is measuring nothing, which is worse than a red one — so a "must not fire"
+assertion is paired with a "must fire" twin on the same fixture, and the pair is what proves the
+subject was examined.
+
 **3 · A scenario, and the fixture that scenario needs.** A behaviour with no scenario has no
 regression test; a scenario with no fixture is **unmeasured, not passing**, and `evals/COVERAGE.md`
 has a column that says which. Four things a fixture owes, each measured:

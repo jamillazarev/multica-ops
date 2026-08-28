@@ -1,6 +1,6 @@
 {
   "name": "multica-ops",
-  "version": "0.4.13",
+  "version": "0.4.14",
   "description": "Build and run an autonomous company of AI agents on Multica \u2014 Mops interviews you, stands the team up, runs the conveyor, and stays your console for status, cost, recovery and shipping.",
   "skills": "./skills/"
 }

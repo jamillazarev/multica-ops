@@ -3,6 +3,35 @@
 Newest first. Each entry leads with what you can now do, not with which files moved. This is
 also the migration map `/multica-ops:upgrade` reads.
 
+## 0.4.14 — unreleased
+
+- **A third mutation-test trap, paid for the day it was written** (AGENTS.md §2). **A mutant that
+  never applied is indistinguishable from a toothless assertion**: a wrong anchor makes the edit a
+  no-op, the suite stays green, and the green reads as *the mutant survived* — a conclusion about
+  the assertion when the truth is about the patch. Every mutation asserts that it changed the file
+  first. Two neighbours of the same shape, measured the same day: `git checkout -- <file>` restores
+  from the **index**, so state staged by an earlier assertion survives and later ones pass on the
+  leftover (`git checkout HEAD --` means it); and reusing a record id an earlier commit already
+  took means a gate scoped to *added* files never examines the fixture. **All three make a green
+  assertion that measures nothing** — so a *must not fire* check is paired with a *must fire* twin
+  on the same fixture, and the pair is what proves the subject was looked at.
+
+- **The contradiction stop's prose-only entry is a design now, not a shrug** (PLAYBOOKS → the
+  prose-only list). It said *the seam exists and the field does not* and stopped there. It names
+  the field: **`verdict` — `pass` · `fail` · `mixed` · `none`**, beside `outcome`, answering *what
+  did this run conclude* where `outcome` answers *how did it stop*. It names the comparison that
+  keeps a gate from becoming noise — **only `pass` against `fail` clashes**, and recording the
+  disagreement satisfies it, since what is refused is the second opposite verdict landing with
+  nothing saying anyone noticed. **And it names the harder half, which the entry had left
+  implied:** a commit-time gate reads files in a repository, while `issue runs` is remote platform
+  state a git hook cannot see. Two candidate homes — the `_ops/analytics/` rollups, which do land
+  in the repo, and `issue comment resolve|unresolve`, the platform's own *this is settled*, which
+  would make the human-in-the-thread rule literal. **Neither is worth building for the gate's sake
+  alone.** Still `prose-only`, and still listed by name.
+
+Eval state: **not run.** Nothing here changes what a run is asked to do; it changes what the next
+person writing a mutation test is required to prove, and what the contradiction entry hands them.
+
 ## 0.4.13 — 2026-08-28
 
 **The lenses read the tagged 0.4.12 and found that a repair in it destroyed data.**

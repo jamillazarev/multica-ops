@@ -1046,7 +1046,22 @@ nothing enforces is the failure this table guards against:
 - **three attempts stop a task** — counted from `issue runs`, stopped by whoever is watching
 - **two runs that disagree stop the work** — `issue runs` records that both *finished*, not what
   either concluded, so a contradiction between two `completed` runs is invisible to any check
-  here; the seam exists and the field does not
+  here; the seam exists and the field does not. **`opsinist` shipped this as a working gate
+  on 2026-08-28, and what it learned narrows this entry from a shrug to a design.** The missing
+  thing is not "a field" but a named one beside `outcome`: **`verdict` — `pass` · `fail` ·
+  `mixed` · `none`**, answering *what did this run conclude*, where `outcome` answers *how did it
+  stop*. The comparison that makes a gate safe rather than noisy is narrow: **only `pass` against
+  `fail` clashes**, `mixed`, `none`, an unfilled cell and a run that never finished conflict with
+  nothing, and **recording the disagreement satisfies it** — what is refused is the second
+  opposite verdict landing with nothing saying anyone noticed. **And the harder half is structural
+  here, which this entry should say and did not**: that gate runs at commit time against files in
+  a repository, while `issue runs` is remote platform state a git hook cannot read. Two homes
+  could close it — the `_ops/analytics/` rollups, which do land in the repo, and
+  `issue comment resolve|unresolve`, which is the platform's own *this is settled* and would make
+  the human-in-the-thread rule literal. **Neither is worth building for the gate's sake alone**;
+  both become worth it the moment a review's conclusion is wanted in writing for its own reasons.
+  One measured trap comes with it: an affordance explained *beside* the form and absent *from* it
+  does not get used — 0 of 5 runs wrote the accepted word when the cell did not carry it
 - **a lesson waits a week before it becomes a rule** — the field-note `date` and the promotion's
   citation are both readable, but nothing compares them, and nothing notices a rule citing
   nothing at all
@@ -1196,7 +1211,7 @@ conventions its owner never chose.
 
 ## Resident Mops — install / refresh
 
-`multica skill list` → absent: `skill import --url github.com/jamillazarev/multica-ops/tree/v0.4.13/skills/mops`;
+`multica skill list` → absent: `skill import --url github.com/jamillazarev/multica-ops/tree/v0.4.14/skills/mops`;
 present: compare versions — same → skip, older → the Skill-upgrade recipe above. Never a
 second copy. Then `agent create` (name **Mops**) → `agent skills` attach (+ find-skills)
 → `agent avatar` per chosen library (Mops in Multica keeps `assets/mops-avatar.png`) → subtitle "Executive Advisor · resident" → rights
