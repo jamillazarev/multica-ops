@@ -1047,12 +1047,12 @@ nothing enforces is the failure this table guards against:
 - **two runs that disagree stop the work** — `issue runs` records that both *finished*, not what
   either concluded, so a contradiction between two `completed` runs is invisible to any check
   here; the seam exists and the field does not. **`opsinist` shipped this as a working gate
-  on 2026-08-28, and what it learned narrows this entry from a shrug to a design.** The missing
+  in its 0.2.14, and what it learned narrows this entry from a shrug to a design.** The missing
   thing is not "a field" but a named one beside `outcome`: **`verdict` — `pass` · `fail` ·
   `mixed` · `none`**, answering *what did this run conclude*, where `outcome` answers *how did it
   stop*. The comparison that makes a gate safe rather than noisy is narrow: **only `pass` against
-  `fail` clashes**, `mixed`, `none`, an unfilled cell and a run that never finished conflict with
-  nothing, and **recording the disagreement satisfies it** — what is refused is the second
+  `fail` clashes — every other value, and every run that did not complete, is excused**, and
+  **recording the disagreement satisfies it** — what is refused is the second
   opposite verdict landing with nothing saying anyone noticed. **And the harder half is structural
   here, which this entry should say and did not**: that gate runs at commit time against files in
   a repository, while `issue runs` is remote platform state a git hook cannot read. Two homes
