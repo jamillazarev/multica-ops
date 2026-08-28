@@ -3,7 +3,7 @@
 Newest first. Each entry leads with what you can now do, not with which files moved. This is
 also the migration map `/multica-ops:upgrade` reads.
 
-## 0.4.13 — unreleased
+## 0.4.13 — 2026-08-28
 
 **The lenses read the tagged 0.4.12 and found that a repair in it destroyed data.**
 
