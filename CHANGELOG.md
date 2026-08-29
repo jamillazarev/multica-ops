@@ -3,7 +3,7 @@
 Newest first. Each entry leads with what you can now do, not with which files moved. This is
 also the migration map `/multica-ops:upgrade` reads.
 
-## 0.4.14 — unreleased
+## 0.4.14 — 2026-08-29
 
 - **A third mutation-test trap, paid for the day it was written** (AGENTS.md §2). **A mutant that
   never applied is indistinguishable from a toothless assertion**: a wrong anchor makes the edit a
