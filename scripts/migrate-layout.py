@@ -108,7 +108,15 @@ def main():
 
     # What stayed behind is the point, not an afterthought: say it by name so nobody has to
     # guess whether the migration finished or gave up halfway.
-    leftovers = sorted(p.name for p in (root / "docs").iterdir()) if (root / "docs").is_dir() else []
+    # **What this run is about to move is not left behind, and a dry run must not say it is.**
+    # This read the directory from disk, which is right after a real move and wrong before a
+    # previewed one: under `--dry-run` nothing has moved yet, so every file the preview had just
+    # promised to move was printed a second time as staying put. The behaviour was correct and
+    # only the preview lied — in the one place a preview exists for. Reported 2026-09-05 against
+    # the sibling and reproduced here unchanged.
+    _claimed = {s for s, _ in moves}
+    leftovers = sorted(p.name for p in (root / "docs").iterdir()
+                       if f"docs/{p.name}" not in _claimed) if (root / "docs").is_dir() else []
     if leftovers:
         print(f"  left in docs/, as the project's own: {', '.join(leftovers)}")
 

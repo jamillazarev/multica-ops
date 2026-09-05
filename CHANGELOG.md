@@ -3,6 +3,24 @@
 Newest first. Each entry leads with what you can now do, not with which files moved. This is
 also the migration map `/multica-ops:upgrade` reads.
 
+## 0.4.15 — unreleased
+
+- **`--dry-run` printed one file as both moved and left behind.** `leftovers` read the directory
+  from disk, which is right after a real move and wrong before a previewed one: under `--dry-run`
+  nothing has moved yet, so every file the preview had just promised to move appeared a second
+  time as staying put. **The behaviour was correct throughout; only the preview lied — in the one
+  place a preview exists for**, since what a reader consults *before* trusting the thing is the
+  whole point of a preview. Reported 2026-09-05 against `opsinist` and reproduced here unchanged,
+  the line being identical in both. Three assertions cover it, and restoring the old form fails
+  them.
+
+  The report's other two findings do not apply here: this methodology has neither the role checks
+  nor a role template — its roles live in the platform, not as files — and its `ENTITY_DIRS` never
+  claimed `skills/`.
+
+Eval state: **not run.** Nothing here changes what a run is asked to do; it changes what a preview
+tells the person deciding whether to let it run.
+
 ## 0.4.14 — 2026-08-29
 
 - **A third mutation-test trap, paid for the day it was written** (AGENTS.md §2). **A mutant that

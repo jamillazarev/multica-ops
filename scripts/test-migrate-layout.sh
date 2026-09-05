@@ -107,5 +107,23 @@ git -C "$G" add -A >/dev/null; git -C "$G" commit -qm init
 python3 "$M" "$G" > "$T/o9" 2>&1; ok "our own tree still migrates" 0 $?
 [ -f "$G/_ops/TEAM.md" ]; ok "and the move happened" 0 $?
 
+# ── a dry run must not print one file as both moved and left behind ─────────────────────────
+# Reported 2026-09-05 against the sibling and reproduced here unchanged: `leftovers` read the
+# directory from disk, which is right after a real move and wrong before a previewed one — so the
+# preview contradicted itself in the one place a preview exists for. The behaviour was correct
+# throughout; only the thing a reader consults BEFORE trusting it was lying.
+DR="$T/dryrun"; mkdir -p "$DR/docs"
+printf '# arch\n' > "$DR/docs/ARCHITECTURE.md"
+printf '# mine\n' > "$DR/docs/MINE.md"
+printf 'adapter: claude\n' > "$DR/config.md"
+( cd "$DR" && git init -q && git add -A >/dev/null 2>&1
+  git -c user.email=t@t -c user.name=t commit -qm init ) >/dev/null 2>&1
+( cd "$DR" && python3 "$M" . --dry-run ) > "$T/dr.txt" 2>&1
+has   "the dry run names the move it previews"        "ARCHITECTURE.md  →" "$T/dr.txt"
+grep -E 'left in docs/' "$T/dr.txt" > "$T/dr-left.txt" 2>/dev/null || : > "$T/dr-left.txt"
+hasnt "and does not also call it left behind"          "ARCHITECTURE"      "$T/dr-left.txt"
+has   "while still naming what genuinely stays"        "MINE"              "$T/dr-left.txt"
+
+
 echo "pass $pass · fail $fail"
 [ "$fail" = 0 ]
