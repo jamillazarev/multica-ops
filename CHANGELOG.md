@@ -16,10 +16,11 @@ also the migration map `/multica-ops:upgrade` reads.
 
   The report's other findings land differently here. Two do not apply: this methodology has
   neither the role checks nor a role template — its roles live in the platform, not as files — and
-  its `ENTITY_DIRS` never claimed `skills/`. **The third is worse than not applying.** The sibling
+  this repository's own migration script never claimed `skills/` — the list it walks is
+  `DOCS_DIRS`, and `skills` was never on it. **The third is worse than not applying.** The sibling
   repaired a self-review check that could not see its own template's format; **this repository has
   no self-review check at all** — the rule that a review goes to someone other than the author is
-  stated in three files and held by nothing, which is `prose-only`'s honest name for it and is
+  stated in file after file and held by nothing, which is `prose-only`'s honest name for it and is
   already on that list. A reader comparing the two entries would otherwise conclude the check is
   fine here.
 
@@ -42,6 +43,14 @@ also the migration map `/multica-ops:upgrade` reads.
   starting on something with a published end date is the one thing it must not suggest. Recorded
   here rather than struck through in place, so the shelf stays a list of what to reach for and the
   reason a name left it stays findable.
+
+- **And the script arrived without a test suite, which this repository's own guard refused.** Four
+  defects had been found in it by hand and repaired by hand, the worst being that `gh`'s exit
+  status was discarded — so no authentication read as *"0 releases checked, every one matches its
+  entry"*, a check reporting green on something it never read. Fourteen assertions with a stubbed
+  `gh`, four mutants one per original defect. **The refusal came from §-the-CI-check here, not from
+  a reader**: a test script in `scripts/` that no workflow invokes is a green tick that means
+  nothing, and it fired the moment the file landed.
 
 Eval state: **not run.** Nothing here changes what a run is asked to do; it changes what a preview
 tells the person deciding whether to let it run, and what the ritual asks before a tag.

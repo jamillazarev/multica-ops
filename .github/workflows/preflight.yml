@@ -54,6 +54,9 @@ jobs:
       # one, then prescribed a reset, which discards work.
       - name: the install inventory's route check
         run: bash scripts/test-find-installs.sh
+
+      - name: release notes match their entries
+        run: bash scripts/test-check-releases.sh
       # verify.py was run by NOTHING — not a workflow, not a suite, not preflight — so the three
       # text checks added on 2026-08-15 (prose-only membership, the staleness note's own count,
       # core/companion overlap) could not fail anywhere but a developer's terminal. Measured that

@@ -7,9 +7,12 @@
 # Release**, whose notes were written once at publish time. So the file admits an error and the
 # page most people actually read goes on repeating it.
 #
-# Measured 2026-08-29, when the owner noticed the site showing two correction blocks where the
-# release showed one: three releases had drifted this way across the two repositories, every
-# missing block dated after its own tag.
+# The measurement, the count and the date live in one home — the sibling methodology's release
+# ritual, and this repository's own count is in its changelog: **four of its releases had drifted**.
+# This header carried "three across the two repositories" for a week: an early count by
+# correction-block, superseded once whole entries were compared. The sibling's copy of this file
+# names that divergence as the argument against restating, and **the fix reached one of two
+# byte-identical copies** — which is the same argument, made twice.
 #
 # This is a REPORT, not a gate: it needs the network and `gh`, so it cannot live in preflight,
 # which must run offline. It prints the command that closes each gap; publishing is outward and
