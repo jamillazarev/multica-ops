@@ -14,12 +14,37 @@ also the migration map `/multica-ops:upgrade` reads.
   the line being identical in both. Three assertions cover it, and restoring the old form fails
   them.
 
-  The report's other two findings do not apply here: this methodology has neither the role checks
-  nor a role template — its roles live in the platform, not as files — and its `ENTITY_DIRS` never
-  claimed `skills/`.
+  The report's other findings land differently here. Two do not apply: this methodology has
+  neither the role checks nor a role template — its roles live in the platform, not as files — and
+  its `ENTITY_DIRS` never claimed `skills/`. **The third is worse than not applying.** The sibling
+  repaired a self-review check that could not see its own template's format; **this repository has
+  no self-review check at all** — the rule that a review goes to someone other than the author is
+  stated in three files and held by nothing, which is `prose-only`'s honest name for it and is
+  already on that list. A reader comparing the two entries would otherwise conclude the check is
+  fine here.
+
+  **The guard's version stamp moves and its behaviour does not.** `templates/company-preflight.sh`
+  changes by one byte-range this release, so §4b-bis will ask every downstream company to re-copy a
+  guard that checks exactly what it checked before. The re-copy is a formality here; saying so is
+  cheaper than a warning nobody can act on.
+
+- **`scripts/check-releases.sh` arrives, and step 7 of the release ritual now names it.** A
+  published release's notes are a snapshot taken at publish time, so a marked correction added to a
+  frozen entry afterwards reaches `CHANGELOG.md` and the site and never the release page. Four of
+  this repository's releases had drifted that way. **It shipped here unreferenced by anything** —
+  no ritual step, no entry — which a deletion lens caught before the tag: a script no ritual points
+  at is a script nobody runs.
+
+- **The `All-in-one client DB` row is gone from the shelf: InstantDB is sunsetting.** Read at
+  source 2026-09-05 — *"Instant is sunsetting. Services will continue until August 31st, 2027"*,
+  the team having joined OpenAI. **The service outlives the recommendation by a year**, which is
+  the reason to take the row out rather than date it: a shelf exists to be started from, and
+  starting on something with a published end date is the one thing it must not suggest. Recorded
+  here rather than struck through in place, so the shelf stays a list of what to reach for and the
+  reason a name left it stays findable.
 
 Eval state: **not run.** Nothing here changes what a run is asked to do; it changes what a preview
-tells the person deciding whether to let it run.
+tells the person deciding whether to let it run, and what the ritual asks before a tag.
 
 ## 0.4.14 — 2026-08-29
 

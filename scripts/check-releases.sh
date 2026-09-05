@@ -19,11 +19,21 @@ cd "$(dirname "$0")/.." || exit 1
 
 # `--emit <dir>` writes each drifted entry to a file and prints the one command that closes the
 # gap. It writes nothing outward: publishing a release is the owner's hand, every time.
-EMIT=""
-if [ "${1:-}" = "--emit" ]; then EMIT=${2:-}; shift 2 || shift $#
-  [ -n "$EMIT" ] || { echo "--emit needs a directory"; exit 2; }
-  mkdir -p "$EMIT" || exit 2
-fi
+# `--emit <dir>` is accepted in ANY position: it shipped recognised only as `$1`, so the natural
+# `check-releases.sh owner/name --emit <dir>` silently did nothing, which is the shape of failure
+# this whole release is about.
+EMIT=""; ARGS=""
+while [ "$#" -gt 0 ]; do
+  if [ "$1" = "--emit" ]; then
+    EMIT=${2:-}
+    [ -n "$EMIT" ] || { echo "--emit needs a directory"; exit 2; }
+    mkdir -p "$EMIT" || exit 2
+    shift 2
+  else
+    ARGS="$1"; shift
+  fi
+done
+set -- ${ARGS:+"$ARGS"}
 
 REPO=${1:-}
 if [ -z "$REPO" ]; then
@@ -46,14 +56,31 @@ entry() {
     f { print }' "$CH"
 }
 
+# **A listing that failed is not a listing of nothing.** `gh release list`'s exit status was
+# discarded, so no auth, the wrong repository or no network read as *"0 releases checked, every one
+# matches its entry"* — a green report on a check that did not happen, which is `facts.md` 254
+# shipped in the same three commits that quote it. Measured 2026-09-05 with a stub `gh`.
+TAGS=$(gh release list --repo "$REPO" --limit 40 --json tagName -q '.[].tagName' 2>/dev/null); _rc=$?
+if [ "$_rc" -ne 0 ]; then
+  echo "  gh could not list releases for $REPO (exit $_rc) — not authenticated, wrong repository,"
+  echo "  or offline. This is not a clean result; nothing was compared."
+  exit 2
+fi
+if [ -z "$TAGS" ]; then
+  echo "  $REPO has no published releases. Nothing to compare — say that, do not call it clean."
+  exit 0
+fi
+
 drift=0; checked=0
 while IFS= read -r tag; do
   [ -n "$tag" ] || continue
   v=${tag#v}
   e=$(entry "$v")
+  # counted BEFORE the entry lookup, or a release the changelog does not describe bumps `drift`
+  # alone and the summary reads "3 of 0" — measured 2026-09-05.
+  checked=$((checked+1))
   [ -n "$e" ] || { printf '  %-10s no entry named %s in %s — the release exists and the changelog does not describe it\n' "$tag" "$v" "$CH"; drift=$((drift+1)); continue; }
   b=$(gh release view "$tag" --repo "$REPO" --json body -q .body 2>/dev/null | tr -d '\r')
-  checked=$((checked+1))
   # **Blank-line and trailing-space differences are not drift**, and saying they are is how a
   # check gets ignored: the first version of this flagged 23 of 35 releases, of which 3 were real
   # — every other one differed by a single empty line after the date. Both sides are squeezed to
@@ -73,7 +100,7 @@ while IFS= read -r tag; do
   else
     printf '             fix: re-run with --emit <dir>, then gh release edit %s --notes-file <dir>/%s.md\n' "$tag" "$tag"
   fi
-done < <(gh release list --repo "$REPO" --limit 40 --json tagName -q '.[].tagName' 2>/dev/null)
+done < <(printf '%s\n' "$TAGS")
 
 echo
 if [ "$drift" -eq 0 ]; then
