@@ -3,7 +3,7 @@
 Newest first. Each entry leads with what you can now do, not with which files moved. This is
 also the migration map `/multica-ops:upgrade` reads.
 
-## 0.4.15 — unreleased
+## 0.4.15 — 2026-09-05
 
 - **`--dry-run` printed one file as both moved and left behind.** `leftovers` read the directory
   from disk, which is right after a real move and wrong before a previewed one: under `--dry-run`
