@@ -495,6 +495,35 @@ and *"it does not hold the loop"* stops being a rule it could work around.
 
 **Multiple workspaces.** A user can have several workspaces (separate companies). The console operates on **one at a time** — the profile's default (`workspace list` shows them). When more than one exists, Mops **confirms which workspace it's acting on** before doing anything, and switches on request: `workspace switch <id>` (or `--workspace-id` per command) — `/multica-ops:mops workspace [name]`. Each workspace is its own company — own team, roadmap, and, if enabled, its own resident Mops in Multica; nothing crosses between them. A Mops in Multica lives in exactly one workspace, so switching is a console-only notion.
 
+> [!CAUTION]
+> **Ten releases have shipped since this file was measured, and none of them has been verified
+> here.** The pin below stays at **0.4.32** on purpose — it records what was measured, and moving
+> it without measuring is the *quietly refreshed* failure this file names elsewhere. **0.4.42 is
+> current** (published 2026-09-09); the local install on the developer's machine is also 0.4.32,
+> which is why the pin check reads green against the binary and only the outside number shows the
+> gap — **the second time that exact shape has bitten** (`scripts/verify.py`, whose own comment
+> records 0.4.12-against-0.4.26 on 2026-08-15).
+>
+> **Read from the release notes 2026-09-10, not verified against a running CLI** — this is a list
+> of what to re-check, not a correction:
+> - **§10, the surface** — `0.4.33` made a local environment *"a named object with one verb"* ·
+>   `0.4.35` added `/new` and `/clear` conversation controls · `0.4.39` gave `issue list` filtering
+>   and sorting by custom property · `0.4.41` added `--fields` to its JSON output and resolves
+>   custom property names. **A two-way diff is owed**: what §10 names that the CLI lost, as well.
+> - **§3, what is native** — `0.4.33` added ACP terminals for the Kimi runtime · `0.4.36` added MCP
+>   config for Oh-My-Pi · `0.4.35` priced Qwen/Kimi/Ark models.
+> - **§2, the trigger paths** — `0.4.39` made a scheduled autopilot run carry *the trigger
+>   creator's* authorization, and `0.4.40` stopped an armed autopilot subscribing that creator.
+>   **Both are behaviour changes inside a path this file counts**, and counted claims need live
+>   runs rather than a `--help` diff.
+> - **Documented defaults that moved** — `0.4.36` raised the agent inactivity budget to **2h**,
+>   corrected the daemon poll-interval default, and **retired** the heartbeat index and the runtime
+>   sampler metrics.
+>
+> **Upgrade before re-verifying**: `brew upgrade multica`, then re-run §10 from `--help`, re-measure
+> §2 in a scratch workspace, and date what you re-verify. Until then every claim below carries its
+> 0.4.32 date honestly.
+
 > [!NOTE]
 > **CLI re-verified against 0.4.32 on 2026-08-23**; the previous pass was 0.4.26 on 2026-08-15.
 > Six releases had gone by, and the gap cost one false claim — see §3's marked correction on the
