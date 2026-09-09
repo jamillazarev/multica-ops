@@ -39,6 +39,35 @@ Move, don't squeeze: the newest rarely-needed block becomes a companion, and the
 one pointer line. Compression (`/multica-ops:skill optimize`) is the second resort, deletion the
 third; raising the budget is a decision with a stated cost, not a reflex.
 
+## The refusal it was tested against — a required section where the skill has commands
+
+**A skill nobody tested is a hypothesis, and this is the line that says whether anyone did.**
+`skills.md` already asks for it in prose — *every command it contains is run before the file is
+saved, against an input it must reject* — and prose measured **0 of 5** on exactly that clause,
+counted from the transcripts of `N61` rather than graded, three rounds across three corpora.
+**One of those runs declared it tested by reading a manual**, which is this corpus's own
+documented failure (*reading a command does not find what running it finds*) reproduced by a
+player that had the sentence in front of it. A stronger sentence cannot repair a rule that was
+already strong; a field can, because **it asks for two things a reading cannot produce**:
+
+```markdown
+## Tested against
+
+- **Input:** {{the defective input the command was given — a path, a string, a file}}
+- **Refused with:** {{what it actually printed, pasted — not "it errored", not "it works"}}
+- **Run on:** {{YYYY-MM-DD}}
+```
+
+**Why these three and not a checkbox.** A passing case proves nothing — *a checker that reads
+nothing and a checker that finds nothing wrong return the identical silence* — so the input must
+be one the command is supposed to stop. **"Refused with" is the field a reading cannot fill**:
+you cannot paste output you never produced, and *"I read the docs"* is visibly not a refusal
+message. The date is what makes it re-checkable when the command changes underneath.
+
+**Where the skill has no commands, the section says so and why** — `none: this skill routes and
+runs nothing`. That is a legitimate answer and the common one for a door; an **empty** section is
+not, because silence and *nothing to test* are the same shape on the page and different in fact.
+
 ## Growing out
 
 A companion that other agents want on its own = a candidate for its own skill. A skill that

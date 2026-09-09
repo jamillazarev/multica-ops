@@ -14,7 +14,17 @@ their check-date at the moment of use, never cached here to rot.
 
 **One fixed form per entry**, so a wrong entry is visibly wrong:
 **id · full citation · live URL/DOI/arXiv · archive link · licence · one-paragraph distillate
-(our words) · check-date · cited-by**.
+(our words) · check-date · cited-by**
+
+**`Reads against` is the field that stops a register becoming a pile.** A register that can only
+answer *"what do we have on X"* will hold two entries pulling opposite ways and never say so. The
+field names the entries this one must be read beside **and what the tension is**, or one of two
+words that are not the same answer: **`none found`** — looked, nothing here pulls against it — or
+**`not checked`**, honest ignorance. An empty field is a defect; the two words are not. **It is
+symmetric**, and `python3 scripts/fetch-source.py --verify-reads` refuses the pair that only points
+one way. **Ported from the sibling 2026-09-10, where it caught two one-way pairs on its first run**;
+here it reports **15 of 15 still `not checked`**, which is a fact about this register rather than a
+defect in it..
 
 **A back-pointer names a section and proves what it said** — `file.md#anchor (sha:…, checked …)`
 — minted by `scripts/fetch-source.py --cite <file.md>#<anchor>`. A line number names a *position*,
@@ -48,6 +58,7 @@ reminded of is a deletion). Both run each release (AGENTS.md → Cutting a relea
 - **Licence:** copyrighted (author © under arXiv's non-exclusive distribution licence) — cite + archive + our distillate
 - **Distillate:** Agents built from a person's **own self-reports** reproduce that person's survey answers at **83%** (interview-grounded) / **82%** (survey-grounded) / **86%** (both) of the person's two-week test-retest ceiling, versus **74%** for demographics-only; a free-text "persona paragraph" scores **0.71**, below even the demographics baseline (0.74). Self-report grounding also **reduces accuracy disparities** across racial and ideological groups. The takeaway the skill leans on: the grounding artifact — the interview transcript — *is* the product, not a written bio.
 - **Check-date:** 2026-07-27
+- **Reads against:** `not checked`
 - **Cited-by:** MODULES.md#persona-theatre-synthetic-and-live-audiences (sha:dbfc6761, checked 2026-08-07), MODULES.md#staging-proto-persona-validated-persona (sha:f8ca5f73, checked 2026-08-07), templates/PERSONA-template.md#bias-profile-24-named-biases-each-with-its-source (sha:80d2a6dd, checked 2026-08-07)
 
 ### park-hai-brief · Park et al., Stanford HAI policy brief
@@ -58,6 +69,7 @@ reminded of is a deletion). Both run each release (AGENTS.md → Cutting a relea
 - **Licence:** copyrighted (Stanford HAI, free to read) — cite + archive + our distillate
 - **Distillate:** The policy brief frames the **consent machinery** for simulating individuals and legitimizes the **AI-conducted interview** as the grounding step. It matches the v1 ("1,000 People") framing and carries the stronger **"demographic personas amplify stereotype bias"** phrasing that the current peer-reviewed version later softened to "reduces accuracy disparities" — which is why the skill attributes the sharper claim to the brief, not the paper.
 - **Check-date:** 2026-07-27
+- **Reads against:** `not checked`
 - **Cited-by:** MODULES.md#persona-theatre-synthetic-and-live-audiences (sha:dbfc6761, checked 2026-08-07), templates/PERSONA-template.md#bias-profile-24-named-biases-each-with-its-source (sha:80d2a6dd, checked 2026-08-07)
 
 ### ashokkumar-nature · Ashokkumar et al., direction not magnitude
@@ -67,6 +79,7 @@ reminded of is a deletion). Both run each release (AGENTS.md → Cutting a relea
 - **Licence:** copyrighted (Springer Nature) — cite + archive + our distillate
 - **Distillate:** Across a large replication set, LLM simulations track the **direction** of experimental effects at about **r≈0.85** while **systematically overestimating their magnitude**. This is the evidence for the theatre's hardest rule: a synthetic verdict may state direction, **never a magnitude** (no "23% would churn").
 - **Check-date:** 2026-07-27
+- **Reads against:** `not checked`
 - **Cited-by:** MODULES.md#persona-theatre-synthetic-and-live-audiences (sha:dbfc6761, checked 2026-08-07)
 
 ### ls-types · Lewis & Sauro, a taxonomy of synthetic users
@@ -76,6 +89,7 @@ reminded of is a deletion). Both run each release (AGENTS.md → Cutting a relea
 - **Licence:** copyrighted (MeasuringU) — cite + archive + our distillate
 - **Distillate:** Names five types of synthetic user — AI proto-persona, demographic-based, persona-based, research-grounded, and digital twin — ordered by the **strength of their tie to real human data**. This is the stage vocabulary the theatre uses (proto vs validated vs twin).
 - **Check-date:** 2026-07-27
+- **Reads against:** `not checked`
 - **Cited-by:** MODULES.md#persona-theatre-synthetic-and-live-audiences (sha:dbfc6761, checked 2026-08-07)
 
 ### ls-review · Lewis & Sauro, a review of synthetic-user experiments
@@ -85,6 +99,7 @@ reminded of is a deletion). Both run each release (AGENTS.md → Cutting a relea
 - **Licence:** copyrighted (MeasuringU) — cite + archive + our distillate
 - **Distillate:** Reviews ~12 recent experiments with synthetic users and finds mixed results, with synthetic responses showing **artificially low variability** and **distorted magnitudes** relative to real respondents — so they can indicate direction but not the size of an effect. (Their framing — low variability and distortion — is what the skill states, *not* "clustering toward neutral.")
 - **Check-date:** 2026-07-27
+- **Reads against:** `not checked`
 - **Cited-by:** MODULES.md#persona-theatre-synthetic-and-live-audiences (sha:dbfc6761, checked 2026-08-07), MODULES.md#accuracy-score-and-consent-for-twins-of-real-people (sha:2deafaa5, checked 2026-08-07)
 
 <!-- Mahajan restore point: MODULES.md previously credited a "Mahajan synthetic-users taxonomy"
@@ -101,6 +116,7 @@ reminded of is a deletion). Both run each release (AGENTS.md → Cutting a relea
 - **Licence:** copyrighted (author © under arXiv's non-exclusive distribution licence) — cite + archive + our distillate
 - **Distillate:** Sycophancy — telling the user what they want to hear — is a **trained-in property** of RLHF'd assistants, consistent across several models and tasks. A persona built on such a model **inherits that compliance**, which is why the theatre's calibration layer suppresses sycophancy explicitly (a synthetic respondent is a pleaser unless corrected).
 - **Check-date:** 2026-07-27
+- **Reads against:** `not checked`
 - **Cited-by:** MODULES.md#bias-profiles-every-persona-carries-24-each-with-its-source (sha:a01bd41f, checked 2026-08-07)
 
 ### tjuatja-biases · Tjuatja et al., LLM response biases ≠ human ones
@@ -110,6 +126,7 @@ reminded of is a deletion). Both run each release (AGENTS.md → Cutting a relea
 - **Licence:** copyrighted (author © under arXiv's non-exclusive distribution licence) — cite + archive + our distillate
 - **Distillate:** Tests whether LLMs reproduce known **human survey response biases** (acquiescence, question-order effects) and finds their biases **do not reliably mirror human ones** — sometimes absent, sometimes inverted. Caveats how far a synthetic survey respondent can stand in for a human one.
 - **Check-date:** 2026-07-27
+- **Reads against:** `not checked`
 - **Cited-by:** theatre canon (skill distillation pending 2.7)
 
 ### argyle-silicon · Argyle et al., silicon sampling and its diversity limits
@@ -119,6 +136,7 @@ reminded of is a deletion). Both run each release (AGENTS.md → Cutting a relea
 - **Licence:** copyrighted (Cambridge University Press) — cite + archive + our distillate
 - **Distillate:** Introduces **"silicon sampling"** — conditioning an LLM on demographic backstories to simulate human survey samples — and shows it can reproduce some subgroup patterns while **collapsing within-group diversity**. Backs the caution that synthetic samples flatten variety rather than represent it.
 - **Check-date:** 2026-07-27
+- **Reads against:** `not checked`
 - **Cited-by:** theatre canon (skill distillation pending 2.7)
 
 ### wang-flattening · Wang et al., identity flattening
@@ -128,6 +146,7 @@ reminded of is a deletion). Both run each release (AGENTS.md → Cutting a relea
 - **Licence:** copyrighted (author © under arXiv's non-exclusive distribution licence; journal © Springer Nature) — cite + archive + our distillate
 - **Distillate:** Finds that using LLMs to replace human participants can **harmfully misportray and flatten identity groups** — reproducing majority stereotypes and erasing within-group variation. This is the direct evidence for the **never-assign-a-bias-from-demographics** rule: a demographic backstory produces a caricature, not a person.
 - **Check-date:** 2026-07-27
+- **Reads against:** `not checked`
 - **Cited-by:** MODULES.md#staging-proto-persona-validated-persona (sha:f8ca5f73, checked 2026-08-07), templates/PERSONA-template.md#bias-profile-24-named-biases-each-with-its-source (sha:80d2a6dd, checked 2026-08-07)
 
 ### kapania-simulacrum · Kapania et al., LLMs as qualitative participants
@@ -137,6 +156,7 @@ reminded of is a deletion). Both run each release (AGENTS.md → Cutting a relea
 - **Licence:** copyrighted (author © under arXiv's non-exclusive distribution licence) — cite + archive + our distillate
 - **Distillate:** Treating LLMs as **qualitative research participants** yields plausible but hollow "simulacra of stories" that miss the lived specificity of real interviews. Marks the boundary of synthetic personas in qualitative work — a **supplement, never a replacement** for a real transcript.
 - **Check-date:** 2026-07-27
+- **Reads against:** `not checked`
 - **Cited-by:** theatre canon (skill distillation pending 2.7)
 
 ## Cost routing — cheap-first, conditional on a good verifier
@@ -148,6 +168,7 @@ reminded of is a deletion). Both run each release (AGENTS.md → Cutting a relea
 - **Licence:** copyrighted (author © under arXiv's non-exclusive distribution licence) — cite + archive + our distillate
 - **Distillate:** A **cascade** that queries cheaper models first and escalates only on low confidence can **match the best single model's accuracy at up to −98% cost**. The evidence for cheap-first-then-escalate routing at decomposition.
 - **Check-date:** 2026-07-27
+- **Reads against:** `not checked`
 - **Cited-by:** ROLES.md#grades-fit-check-and-the-talent-pool (sha:99e0c8c2, checked 2026-08-07)
 
 ### routerbench · Hu et al., RouterBench
@@ -157,6 +178,7 @@ reminded of is a deletion). Both run each release (AGENTS.md → Cutting a relea
 - **Licence:** copyrighted (author © under arXiv's non-exclusive distribution licence) — cite + archive + our distillate
 - **Distillate:** Cascades beat both any individual LLM and a zero-cost router **only when the verifier is good** — judge error **≤0.1**, deteriorating past **0.2**. The load-bearing caveat: cheap-first routing is **conditional on a good verifier**. In the skill, the **review gates are that verifier**, so the condition is already met — the caveat reads as a strength, not a risk.
 - **Check-date:** 2026-07-27
+- **Reads against:** `not checked`
 - **Cited-by:** ROLES.md#grades-fit-check-and-the-talent-pool (sha:99e0c8c2, checked 2026-08-07)
 
 ## Repository context files
@@ -168,6 +190,7 @@ reminded of is a deletion). Both run each release (AGENTS.md → Cutting a relea
 - **Licence:** copyrighted (author © under arXiv's non-exclusive distribution licence) — cite + archive + our distillate
 - **Distillate:** A coding-agent benchmark finds repository-level context files (AGENTS.md) **do not improve task success rates** and add roughly **+20% inference cost**; **LLM-generated** context files perform **slightly worse** than none. The evidence behind "curate the shared guide, don't autogenerate it."
 - **Check-date:** 2026-07-27
+- **Reads against:** `not checked`
 - **Cited-by:** skills/mops/SKILL.md:78 *(line form: the claim sits in the core's preamble, above its first heading, so there is no section to anchor to)*
 
 ## Method provenance and standards (references, not evidence claims)
@@ -179,6 +202,7 @@ reminded of is a deletion). Both run each release (AGENTS.md → Cutting a relea
 - **Licence:** free — cookiy's `user-research-skill` is **MIT** (a copy may be carried later; today only the method shape is adapted, nothing embedded). agentman: **no licence stated on the page**; concepts taken, nothing embedded (no code carried, so no licence obligation).
 - **Distillate:** Method lineage, not evidence. cookiy's MIT skill supplied the **shape** of the qualitative-research flows (its `qualitative-research-planner` → our persona-interview flow, its `synthesize-research-report` → our QDA step), adapted through the import gate. agentman supplied the **calibration and cohort concepts** behind the persona response-calibration layer. Recorded so every adaptation is auditable and no vendor wrapper is smuggled in.
 - **Check-date:** 2026-07-27
+- **Reads against:** `not checked`
 - **Cited-by:** MODULES.md#staging-proto-persona-validated-persona (sha:f8ca5f73, checked 2026-08-07), MODULES.md#bias-profiles-every-persona-carries-24-each-with-its-source (sha:a01bd41f, checked 2026-08-07), MODULES.md#mixed-live-synthetic-hypothesis-beside-fact (sha:5f160353, checked 2026-08-07), ROLES.md#any-role-from-conversation-the-role-builder (sha:f3c1b1e6, checked 2026-08-07)
 
 ### standards-cluster · named review standards
@@ -188,4 +212,5 @@ reminded of is a deletion). Both run each release (AGENTS.md → Cutting a relea
 - **Licence:** WCAG is a **W3C open standard** (free); Nielsen's heuristics are **copyrighted** (NN/g) — cited, never reproduced; cognitive walkthrough is a **named academic method** (not copyrightable as a procedure).
 - **Distillate:** The external rubrics the design lens points at — **not** evidence claims about the world. Nielsen's 10 usability heuristics (the usability lens), WCAG (accessibility), and the cognitive-walkthrough method (first-use flows). Referenced as standards a reviewer applies, never copied into the skill.
 - **Check-date:** 2026-07-27
+- **Reads against:** `not checked`
 - **Cited-by:** REFERENCE.md#1-objects (sha:1711aabc, checked 2026-08-07)

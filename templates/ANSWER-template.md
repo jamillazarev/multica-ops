@@ -18,6 +18,32 @@ sentence per slot beats a page without them.
 
 ---
 
+## Depth — chosen before the run, and priced when it is offered
+
+**This is the price list; the field lives on the finding.** An answer worth keeping becomes
+`research/<question>.md` in the workspace (`templates/FINDING-template.md`), which carries `Depth:` as a
+required field — one layer, one home. Use the table below to **quote the rung before the work**,
+and quote it in the words of what it buys rather than in hours.
+**A research document that does not say how hard anyone looked reads as if someone looked hard**,
+which is the failure this field exists to stop. The owner picks; where they have not, the advisor
+**proposes one with its price and waits**, because how long this takes is a spend and spending is
+owner-confirmed (`permissions.md`).
+
+| Depth | What it buys | What it costs | What it does **not** buy |
+|---|---|---|---|
+| **`orienting`** | is there an answer at all, and where does it live — a handful of sources, the shape of the disagreement, no synthesis | minutes, one turn | anything quotable. **This is a direction, not a finding** |
+| **`deciding`** | enough to make the call and defend it: the canonical sources for *this* question, their tensions named, each one an entry in the register | tens of minutes, several turns and a few fetches | completeness. It answers the question asked, not the field around it |
+| **`standing`** | something that will be quoted back in a year: everything `deciding` buys, plus every entry's `Reads against` **completed rather than `not checked`**, and an archive link per source | hours, and it is the only rung worth saying no to | a guarantee. It rots like everything else — `Research rots as a whole document` |
+
+**Say the number before the work, not after.** The three rows above are the estimate the owner is
+agreeing to; if the run outgrows its rung, that is a **new** question at a new price, not a quiet
+overrun — the same rule a task follows when it outgrows its container.
+
+**Native-first, answered 2026-09-10:** no runtime offers a research-depth setting, so this is
+ours to hold. Deep-research products solve it with automatic tier routing and a budget cap; the
+part worth borrowing is that **the tier is decided before the first fetch and stated**, and the
+part not worth borrowing is deciding it silently on the owner's behalf.
+
 ## 1 · Choose between named options
 
 > *"Postgres or SQLite?"* · *"Which tracker?"* · *"What should we use for X?"*

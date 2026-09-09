@@ -267,5 +267,112 @@ git -C "$R" reset -q; git -C "$R" checkout -q -- . 2>/dev/null
 | ripgrep |  |
 ')" -ge 1 ] && ok || bad "a stray --> line was read as the end of the table, hiding every row after it"
 
+# ── §15 · a skill that runs commands records what it refused ───────────────────────────────
+# Ported from the sibling 2026-09-10, where the rule measured 0 of 5 as prose. The twins come
+# first: a gate that refuses everything and a gate that reads nothing look identical from here.
+mkdir -p "$R/_ops/skills/assemble"
+sk="$R/_ops/skills/assemble/SKILL.md"
+
+cat > "$sk" <<'SK'
+# Assemble
+
+    python3 _ops/scripts/assemble.py --check
+
+## Tested against
+
+- **Input:** `_ops/drafts/empty.md` — a draft whose body is only a heading
+- **Refused with:** `assemble.py: refusing _ops/drafts/empty.md — body is a heading and nothing else`
+- **Run on:** 2026-09-10
+SK
+( cd "$R" && git add -A >/dev/null 2>&1 )
+[ "$(grc)" = "0" ] && ok || bad "§15 refused an honest skill"
+
+cat > "$sk" <<'SK'
+# A door
+
+Load the advisor skill and follow the flow.
+
+## Tested against
+
+- none: this skill routes and runs nothing
+SK
+( cd "$R" && git add -A >/dev/null 2>&1 )
+[ "$(grc)" = "0" ] && ok || bad "§15 refused a door that runs nothing"
+
+printf '# Assemble\n\n    python3 _ops/scripts/assemble.py --check\n' > "$sk"
+( cd "$R" && git add -A >/dev/null 2>&1 )
+[ "$(grc)" != "0" ] && ok || bad "a skill running commands with no Tested-against passed"
+
+cat > "$sk" <<'SK'
+# Assemble
+
+    python3 _ops/scripts/assemble.py --check
+
+## Tested against
+
+- **Input:** {{the defective input}}
+- **Refused with:** {{what it printed}}
+SK
+( cd "$R" && git add -A >/dev/null 2>&1 )
+[ "$(grc)" != "0" ] && ok || bad "an unfilled Tested-against template passed"
+
+cat > "$sk" <<'SK'
+# Assemble
+
+    python3 _ops/scripts/assemble.py --check
+
+## Tested against
+
+- **Input:** read the documentation and the flags look right
+- **Run on:** 2026-09-10
+SK
+( cd "$R" && git add -A >/dev/null 2>&1 )
+[ "$(grc)" != "0" ] && ok || bad "a test claimed with nothing under Refused with passed"
+rm -rf "$R/_ops/skills"
+( cd "$R" && git add -A >/dev/null 2>&1 )
+
+# ── §17 · a finding carries what orders it and what expires it ─────────────────────────────
+mkdir -p "$R/_ops/research/raw"
+fd="$R/_ops/research/panels.md"
+honest_fd() { cat > "$fd" <<'FD'
+# Should we pay for synthetic panels
+
+**Decides**: [T-AB12CD](../tasks/T-AB12CD-panels.md) · **Status**: settled · **Depth**: deciding
+**Answered**: 2026-09-10 · **Recheck when**: a replacement for the grounding study ships
+
+## What we now believe
+
+No, for percentages; yes, for surfacing an angle nobody asked about.
+FD
+}
+honest_fd; ( cd "$R" && git add -A >/dev/null 2>&1 )
+[ "$(grc)" = "0" ] && ok || bad "§17 refused an honest finding"
+
+honest_fd; printf '# transcript\n\nraw\n' > "$R/_ops/research/raw/notes.md"
+( cd "$R" && git add -A >/dev/null 2>&1 )
+[ "$(grc)" = "0" ] && ok || bad "§17 judged a raw artifact as a finding"
+
+honest_fd; sed -i '' 's/^\*\*Decides\*\*.*· \*\*Status\*\*/**Status**/' "$fd"
+( cd "$R" && git add -A >/dev/null 2>&1 )
+[ "$(grc)" != "0" ] && ok || bad "a finding with no Decides passed"
+
+honest_fd; sed -i '' 's/a replacement for the grounding study ships/{{a named event}}/' "$fd"
+( cd "$R" && git add -A >/dev/null 2>&1 )
+[ "$(grc)" != "0" ] && ok || bad "an unanswered Recheck passed"
+
+honest_fd; sed -i '' 's/\*\*Depth\*\*: deciding/**Depth**: thorough/' "$fd"
+( cd "$R" && git add -A >/dev/null 2>&1 )
+[ "$(grc)" != "0" ] && ok || bad "free text in Depth passed"
+
+honest_fd; sed -i '' '/^No, for percentages/d' "$fd"
+( cd "$R" && git add -A >/dev/null 2>&1 )
+[ "$(grc)" != "0" ] && ok || bad "'"'"'settled'"'"' with no conclusion passed"
+
+honest_fd; sed -i '' 's/\*\*Status\*\*: settled/**Status**: open/; /^No, for percentages/d' "$fd"
+( cd "$R" && git add -A >/dev/null 2>&1 )
+[ "$(grc)" = "0" ] && ok || bad "an OPEN finding with no conclusion was refused"
+rm -rf "$R/_ops/research"
+( cd "$R" && git add -A >/dev/null 2>&1 )
+
 echo "company-guard: $pass passed, $fail failed"
 exit "$fail"
