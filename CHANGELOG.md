@@ -3,6 +3,57 @@
 Newest first. Each entry leads with what you can now do, not with which files moved. This is
 also the migration map `/multica-ops:upgrade` reads.
 
+## 0.4.16 — 2026-09-10
+
+**Migration — the guard your workspace copies gains two refusals.** `_ops/scripts/preflight.sh` is a
+copy that does not update itself, so **re-copy `templates/company-preflight.sh` over it**: **§15**
+refuses a skill that runs commands without recording what it refused, **§17** refuses a research
+finding with nothing to order it or expire it. Until you re-copy, neither fires and nothing says so.
+
+**A skill records the test instead of being asked for it.** `SKILL-SCAFFOLD.md` gains a required
+`## Tested against` section asking for the two things a reading cannot produce — the defective input
+and **what the command actually printed when it refused** — beside the date. **Where a skill runs
+nothing, `none:` is the whole answer** and the guard leaves it alone: gating doors would teach
+everyone to write the section without meaning it. Ported from the sibling, where the prose form of
+this rule measured **0 of 5** across three rounds, with one run declaring itself tested by reading a
+manual.
+
+**The register can say what pulls against an entry.** Every entry in `sources/SOURCES.md` carries
+**`Reads against`** — the entries it must be read beside and what the tension is, or one of two words
+that are **not the same answer**: `none found` is a claim that someone looked, `not checked` is
+honest ignorance, and an empty field is neither. It is symmetric, so
+`fetch-source.py --verify-reads` refuses a one-way pair, a dangling id and a missing line. **The
+first run here reports 15 of 15 still `not checked`** — a fact about this register, not a defect in
+it, and now visible where it was not.
+
+**Research got the layer it was missing: a finding is not its task.** `templates/FINDING-template.md`
+holds one file per **question**, because a topic never closes and a question does. It opens with
+*what we now believe* in a paragraph, which is read **instead of** the sources under it. **`Decides`
+is what orders them**, so the reading order is the order of the decisions waiting and no second list
+is kept.
+
+**`REFERENCE` is ten CLI releases behind, and that is recorded rather than refreshed.** 0.4.42 is
+current; this file is measured against 0.4.32; **the local install is also 0.4.32**, which is why the
+pin check reads green against the binary and only the outside number shows the gap — the second time
+that exact shape has bitten. **The pin is not moved.** What changed across those ten releases is
+listed as a re-check list, read from release notes and explicitly not verified against a running CLI:
+the command surface gained a named local-environment verb, `/new` and `/clear`, and `issue list`
+filtering; two trigger paths changed behaviour; and the agent inactivity budget moved to 2h.
+`brew upgrade multica`, then re-measure and date what you re-verify.
+
+**The shelf grew by twenty rows**, ported from the sibling and rebuilt for this file's four-column
+shape rather than pasted — so a free tier and a licence caveat sit in their own cells instead of
+trailing the prose.
+
+**What to do:** re-copy the guard. Nothing else is required.
+
+Eval state: **not run.** Nothing here changes what a run is asked to do; the skill-test half carries
+the sibling's `N61` **0 of 5** as its *before*.
+
+**Trio:** `Reads against` and the skill test each ship with their form, their mutation suite and their
+dated measurement; the finding layer ships with its form and its suite. Suites: company-guard **46** ·
+verify-reads **9**, both zero-fail.
+
 ## 0.4.15 — 2026-09-05
 
 - **`--dry-run` printed one file as both moved and left behind.** `leftovers` read the directory
