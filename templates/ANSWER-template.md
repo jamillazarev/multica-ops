@@ -27,7 +27,7 @@ and quote it in the words of what it buys rather than in hours.
 **A research document that does not say how hard anyone looked reads as if someone looked hard**,
 which is the failure this field exists to stop. The owner picks; where they have not, the advisor
 **proposes one with its price and waits**, because how long this takes is a spend and spending is
-owner-confirmed (`permissions.md`).
+owner-confirmed (`SECURITY.md`).
 
 | Depth | What it buys | What it costs | What it does **not** buy |
 |---|---|---|---|

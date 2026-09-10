@@ -186,7 +186,7 @@ while IFS= read -r -d '' sk; do
   [ -f "$sk" ] || continue
   # Does it run anything? A fenced command line, or an inline call to a script. If not, the
   # section is optional in substance and `none:` is the honest answer.
-  runs=$(grep -cE '^[[:space:]]*(bash|sh|python3?|node|npx|make|\./)[[:space:]]' "$sk")
+  runs=$(grep -cE '^([[:space:]]{4,}|[[:space:]]*\$ )([a-zA-Z_][a-zA-Z0-9_.-]*|\./[^[:space:]]+)[[:space:]]+[^[:space:]]' "$sk")
   [ "$runs" -gt 0 ] || continue
 
   sec=$(grep -cE '^#+[[:space:]]+Tested against' "$sk")
@@ -212,7 +212,9 @@ copied, not filled. What did the command reject, and what did it print?"
     continue
   fi
   # "Refused with" is the field a reading cannot fill: you cannot paste output you never produced.
-  if [ "$(printf '%s' "$body" | grep -ciE '(\*\*)?refused with(\*\*)?[[:space:]]*:[[:space:]]*[^[:space:]]')" -eq 0 ]; then
+  refused=$(printf '%s' "$body" | grep -iE '(\*\*)?refused with(\*\*)?[[:space:]]*:' | head -1 \
+            | sed -E 's/.*[Rr]efused with(\*\*)?[[:space:]]*:[[:space:]]*//; s/^\*\*//; s/[[:space:]]*$//')
+  if [ -z "$refused" ]; then
     say_fail "$sk records a test with nothing under \`Refused with\` — a passing case proves \
 nothing, because a checker that reads nothing and one that finds nothing wrong return the \
 identical silence. Paste what it printed when it refused."
@@ -230,9 +232,10 @@ done < <(changed -- '_ops/skills/*.md' '_ops/skills/**/*.md')
 while IFS= read -r -d '' fnd; do
   [ -f "$fnd" ] || continue
   case "$fnd" in */raw/*) continue ;; esac
-  for field in "Decides" "Recheck when" "Depth"; do
-    line=$(grep -iE "\*\*${field}\*\*[[:space:]]*:" "$fnd" | head -1)
-    if [ -z "$line" ]; then
+  for field in "Decides" "Recheck when"; do
+    line=$(grep -iE "(\*\*)?${field}(\*\*)?[[:space:]]*:" "$fnd" | head -1)
+    val=$(printf '%s' "$line" | sed -E "s/.*${field}(\*\*)?[[:space:]]*:[[:space:]]*//; s/^\*\*//; s/[[:space:]]*\$//")
+    if [ -z "$line" ] || [ -z "$val" ]; then
       say_fail "$fnd has no \`${field}\` — a finding without it is either unordered or immortal \
 (templates/FINDING-template.md)."
       continue
@@ -240,18 +243,6 @@ while IFS= read -r -d '' fnd; do
     printf '%s' "$line" | hits '{{' && say_fail "$fnd still carries the template's braces in \
 \`${field}\` — the file was copied, not answered."
   done
-  # Depth is one of three words. Free text here is how a field stops meaning anything, and
-  # `standing` is the rung that PROMISES every source was read against the others — so a finding
-  # claiming it while the register still says `not checked` is claiming work nobody did.
-  dp=$(grep -ioE '\*\*Depth\*\*[[:space:]]*:[[:space:]]*[a-z]+' "$fnd" | head -1 | sed -E 's/.*:[[:space:]]*//' | tr '[:upper:]' '[:lower:]')
-  case "$dp" in
-    orienting|deciding|standing|"") : ;;
-    *) say_fail "$fnd says \`Depth: $dp\`, which is not one of orienting | deciding | standing." ;;
-  esac
-  if [ "$dp" = "standing" ] && [ -f sources/SOURCES.md ]; then
-    nc=$(grep -c 'Reads against:\*\* `not checked`' sources/SOURCES.md)
-    [ "$nc" -eq 0 ] || say_fail "$fnd claims \`Depth: standing\` while $nc register entr(ies) say \`Reads against: not checked\` — that rung promises every source was read against the others."
-  fi
   st=$(grep -ioE '\*\*Status\*\*[[:space:]]*:[[:space:]]*[a-z]+' "$fnd" | head -1 | sed -E 's/.*:[[:space:]]*//' | tr '[:upper:]' '[:lower:]')
   if [ "$st" = "settled" ]; then
     body=$(awk '/^##[[:space:]]+What we now believe/{f=1; next} /^##[[:space:]]/{f=0} f' "$fnd" \

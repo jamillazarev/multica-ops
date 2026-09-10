@@ -360,9 +360,9 @@ honest_fd; sed -i '' 's/a replacement for the grounding study ships/{{a named ev
 ( cd "$R" && git add -A >/dev/null 2>&1 )
 [ "$(grc)" != "0" ] && ok || bad "an unanswered Recheck passed"
 
-honest_fd; sed -i '' 's/\*\*Depth\*\*: deciding/**Depth**: thorough/' "$fd"
-( cd "$R" && git add -A >/dev/null 2>&1 )
-[ "$(grc)" != "0" ] && ok || bad "free text in Depth passed"
+# Depth was a required field with a guard for one day and was demoted to guidance the same day:
+# no measured defect stood behind it, and its standing cross-check read a path no client workspace
+# has. Its assertions came out with the gate.
 
 honest_fd; sed -i '' '/^No, for percentages/d' "$fd"
 ( cd "$R" && git add -A >/dev/null 2>&1 )

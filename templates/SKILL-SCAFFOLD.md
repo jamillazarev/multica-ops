@@ -42,7 +42,7 @@ third; raising the budget is a decision with a stated cost, not a reflex.
 ## The refusal it was tested against — a required section where the skill has commands
 
 **A skill nobody tested is a hypothesis, and this is the line that says whether anyone did.**
-`skills.md` already asks for it in prose — *every command it contains is run before the file is
+`MODULES.md` → *skills* already asks for it in prose — *every command it contains is run before the file is
 saved, against an input it must reject* — and prose measured **0 of 5** on exactly that clause,
 counted from the transcripts of `N61` rather than graded, three rounds across three corpora.
 **One of those runs declared it tested by reading a manual**, which is this corpus's own
