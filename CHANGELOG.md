@@ -21,6 +21,8 @@ real defects a line long each had shipped a release from inside it.
 nested-intro shape must stay silent, and a top-level intro miscounting its own list must still be
 caught — the second is what keeps the first from being a checker that reads nothing.
 
+**One shelf row re-verified by running the tool it describes** (`AGENTS.md` §3). The codebase-orientation row called graphify's zero-credit local build a README claim; it is now a measurement, and the measurement narrows it — **the free half is an index, and the edges that make it a graph need an API key.** Asked the very question this session had got wrong by grepping a word, its query made the identical mistake and matched a bash function of the same name.
+
 **What to do:** nothing. `templates/company-preflight.sh` differs by its version stamp alone, and the
 repaired checker reads this corpus rather than a project's.
 
