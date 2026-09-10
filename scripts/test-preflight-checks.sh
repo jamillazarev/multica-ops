@@ -402,6 +402,34 @@ RPY
     && ok || bad "a group buried in the registry, with a date, was still refused"
   [ "$(_reg '')" -ge 1 ] \
     && ok || bad "a docs mention of a removed CLI group passed with no registry line"
+
+  # A sentence ending in a colon introduces a list — but one written INSIDE a bullet introduces
+  # only what is nested under it, never its own siblings. Counting the siblings produced a
+  # permanent false warning next door, and a permanent false warning is a check that everyone
+  # who reads it has already switched off.
+  _intro(){ # <fixture body> → count of "rules but" warnings
+    ( cd "$T/c" && printf '%s' "$1" > zz-intro-fixture.md )
+    n=$( ( cd "$T/c" && python3 scripts/check-structure.py ) 2>&1 | grep -c "rules but" )
+    ( cd "$T/c" && rm -f zz-intro-fixture.md ); echo "$n"; }
+
+  [ "$(_intro '# A
+
+- **A bullet** that runs long
+  and its sentence ends in two rules:
+  more of the same bullet.
+- sibling one
+- sibling two
+- sibling three
+')" = 0 ] && ok || bad "an intro inside a bullet was charged with the outer list that followed it"
+
+  [ "$(_intro '# A
+
+There are two rules:
+
+- one
+- two
+- three
+')" -ge 1 ] && ok || bad "a top-level intro miscounting its own list went unreported"
   [ "$(_reg '<!-- cli-removed: plugin someday -->')" -ge 1 ] \
     && ok || bad "an undated registry line was accepted — a burial with no date is not a record"
   [ "$(_reg '<!-- cli-removed: skill 2026-08-23 -->')" -ge 1 ] \

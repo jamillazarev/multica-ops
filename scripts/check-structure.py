@@ -82,6 +82,12 @@ for f in DOCS:
         if not want:
             continue
         got, j = 0, i
+        # An intro that is itself inside a list item can only introduce items NESTED under it.
+        # Sibling bullets at the same or a shallower indent belong to the outer list and were
+        # never its count — measured next door 2026-09-10, where a changelog sentence ending
+        # "…and only one carried a measurement:" was charged with the three bullets after it.
+        _intro_indent = len(l) - len(l.lstrip())
+        _intro_is_item = bool(re.match(r"^\s*([-*]|\d+\.) ", l))
         while j < len(lines):
             nl = lines[j]
             # a list belonging to a different section is not this sentence's count —
@@ -89,6 +95,9 @@ for f in DOCS:
             if re.match(r"^#{1,6}\s", nl) or re.match(r"^ {0,3}(-{3,}|\*{3,}|_{3,})\s*$", nl):
                 break
             if re.match(r"^\s*([-*]|\d+\.) ", nl):
+                _d = len(nl) - len(nl.lstrip())
+                if _d < _intro_indent or (_intro_is_item and _d <= _intro_indent):
+                    break
                 got += 1
             elif nl.strip() and not nl.startswith("  ") and got:
                 break

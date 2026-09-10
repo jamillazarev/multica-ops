@@ -3,6 +3,32 @@
 Newest first. Each entry leads with what you can now do, not with which files moved. This is
 also the migration map `/multica-ops:upgrade` reads.
 
+## 0.4.17 — unreleased
+
+**A counted intro is charged only with the list nested under it.** A sentence ending in a colon —
+*"there are three guardrails:"* — is read by `scripts/check-structure.py` as introducing a list, and
+the count that follows must match. **One written inside a bullet was charged with the bullets that
+followed it at the outer level**, which are its peers and were never its list. The count now stops at
+the first item shallower than its intro, and at any peer where the intro is itself an item.
+
+**Ported after it fired next door, not after it fired here** — this corpus happens not to contain the
+shape today, and that is luck rather than immunity: the rule is identical in both files. There the
+warning was permanent, and **a permanent false warning is a check that everyone who reads it has
+already switched off, while it goes on reporting.** It stood tenth in a list of thirteen, and three
+real defects a line long each had shipped a release from inside it.
+
+**Two assertions in `scripts/test-preflight-checks.sh`**, which runs against a clone of HEAD: the
+nested-intro shape must stay silent, and a top-level intro miscounting its own list must still be
+caught — the second is what keeps the first from being a checker that reads nothing.
+
+**What to do:** nothing. `templates/company-preflight.sh` differs by its version stamp alone, and the
+repaired checker reads this corpus rather than a project's.
+
+Eval state: **not run.** Nothing here changes what a run is asked to do.
+
+**Trio:** the repair ships with its mutation pair and its dated origin. **A repair owes no diagram and
+no situation, and this says so rather than manufacturing them.**
+
 ## 0.4.16 — 2026-09-10
 
 **Migration — the guard your workspace copies gains two refusals.** `_ops/scripts/preflight.sh` is a
