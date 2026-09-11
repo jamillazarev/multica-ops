@@ -403,10 +403,8 @@ RPY
   [ "$(_reg '')" -ge 1 ] \
     && ok || bad "a docs mention of a removed CLI group passed with no registry line"
 
-  # A sentence ending in a colon introduces a list — but one written INSIDE a bullet introduces
-  # only what is nested under it, never its own siblings. Counting the siblings produced a
-  # permanent false warning next door, and a permanent false warning is a check that everyone
-  # who reads it has already switched off.
+  # The nested-intro rule in check-structure.py: silent on an intro inside a bullet, still
+  # counting a top-level intro's own list.
   _intro(){ # <fixture body> → count of "rules but" warnings
     ( cd "$T/c" && printf '%s' "$1" > zz-intro-fixture.md )
     n=$( ( cd "$T/c" && python3 scripts/check-structure.py ) 2>&1 | grep -c "rules but" )

@@ -11,21 +11,27 @@ the count that follows must match. **One written inside a bullet was charged wit
 followed it at the outer level**, which are its peers and were never its list. The count now stops at
 the first item shallower than its intro, and at any peer where the intro is itself an item.
 
-**Ported after it fired next door, not after it fired here** — this corpus happens not to contain the
-shape today, and that is luck rather than immunity: the rule is identical in both files. There the
-warning was permanent, and it printed **first** in a list of thirteen — directly above five real
-defects a line long each, all of which had shipped. **That a permanent false warning gets a check
-switched off in the reader's head is the fear this answers, not a measurement**; what was measured
-is that five real ones sat right under it and went out anyway.
+**Ported from the sibling project `opsinist`, where it fired — not because it fired here.** This
+corpus happens not to contain the shape today, and that is luck rather than immunity: the rule is
+identical in both files. In `opsinist` the false warning was permanent and printed first in a list of
+thirteen, with five real one-line defects right beneath it, all of them shipped — so **position is
+not what hid them**: a list known to hold warnings that can never be fixed stops being read at all.
+*That this switches a check off in the reader's head is the fear it answers, not a measurement.*
 
 **Two assertions in `scripts/test-preflight-checks.sh`**, which runs against a clone of HEAD: the
 nested-intro shape must stay silent, and a top-level intro miscounting its own list must still be
 caught — the second is what keeps the first from being a checker that reads nothing.
 
-**One shelf row re-verified by running the tool it describes** (`AGENTS.md` §3). The codebase-orientation row called graphify's zero-credit local build a README claim; it is now a measurement, and the measurement narrows it — **the free half is an index, and the edges that make it a graph need an API key.** Asked the very question this session had got wrong by grepping a word, its query made the identical mistake and matched a bash function of the same name.
+**One shelf row re-verified by running the tool it describes** — `AGENTS.md`, *Changing this
+repository? Read this part*: **"If a sentence explains what a tool does, run the tool."** The
+codebase-orientation row called graphify's zero-credit local build a README claim; it is now a
+measurement, and the measurement narrows it — **the free half is an index, and the edges that make
+it a graph need an API key.** Asked a question `opsinist` had just got wrong by grepping a word, its
+query made the identical mistake and matched a bash function of the same name.
 
-**What to do:** nothing. `templates/company-preflight.sh` differs by its version stamp alone, and the
-repaired checker reads this corpus rather than a project's.
+**What to do:** nothing required. `templates/company-preflight.sh` differs by its version stamp alone,
+so **re-copy it only to silence the guard's own stamp warning**, which otherwise reports a version gap
+with nothing behind it; the repaired checker reads this corpus rather than a project's.
 
 Eval state: **not run.** Nothing here changes what a run is asked to do.
 
