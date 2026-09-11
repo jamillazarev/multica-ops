@@ -5,8 +5,9 @@ also the migration map `/multica-ops:upgrade` reads.
 
 ## 0.4.18 — 2026-09-11
 
-**What to do — nothing breaks, and two things are offered.** Re-copy the guard from
-`templates/company-preflight.sh` to get §18 and §19 below. **If the company repository already has
+**What to do — nothing breaks, and two things are offered.** Re-copy the company guard —
+`cp <skill>/templates/company-preflight.sh scripts/preflight.sh` in the company repository — to get
+its §18 and §19 below. **If the company repository already has
 a `mise.toml`, the first commit that stages it or `_ops/TOOLING.md` asks for a register row per
 entry** — the refusal names each one. If `mise.toml` carries `[bootstrap.packages]`, mise will not
 read it on a runtime's machine until `mise trust` is run there — the owner's to say. And the skill's
@@ -21,9 +22,10 @@ which lives in the workspace where no commit can see it, so its row names the ag
 sweep probes them. **Nothing is installed without the owner's word, mise included** — a runtime is a
 machine with other work on it. The joining audit now carries what a runtime's machine lacks, with
 the dry runs, `mise trust` first: measured on mise 2026.9.5, a `mise.toml` with
-`[bootstrap.packages]` is not read at all until trusted. Ported from `opsinist`, where the same
-section also guards a committed `.mcp.json`. `scripts/test-native-register.sh` **16/16**, run twice —
-the second time on the system `python3`, 3.9 on a Mac without Homebrew, which has no `tomllib` —
+`[bootstrap.packages]` is not read at all until trusted. Ported from `opsinist` — the sibling
+methodology, which keeps a project's work in files — where the same section also guards a committed
+`.mcp.json`. `scripts/test-native-register.sh` **17/17**, run twice —
+the second time on the system `python3` — 3.9 on a Mac without Homebrew, older than `tomllib`, which is 3.11+ —
 with every key read as a path, so `[tools]` then `python`, a bare `tools.python` and
 `[tools.python]` are one declaration.
 
@@ -40,8 +42,9 @@ and are now register entries: `mise-outdated`, `npm-outdated`, `pep-594`.
 
 **`Recheck when` fires by itself on the one event the tree records.** A commit adding a name to a
 source entry's `Reads against` must carry every finding in `_ops/research/` that rests on either end
-re-read — `Answered` re-stamped — or marked `stale`, or §18 refuses it naming the finding.
-`scripts/test-recheck-trigger.sh` **11/11**. Porting it caught a defect in the suite on both sides:
+re-read — `Answered` re-stamped — or marked `stale`, or the company guard's §18 refuses it naming the finding.
+`scripts/test-recheck-trigger.sh` **17/17**, a rename in the same commit included, and a guard
+section that stops before its end now refuses instead of passing what it never read. Porting it caught a defect in the suite on both sides:
 three checks looked for a finding's *filename* anywhere in the output, and this guard's §4b names
 unlinked files — so they now look for the §18 sentence itself, in `opsinist` too.
 
@@ -50,7 +53,7 @@ unlinked files — so they now look for the §18 sentence itself, in `opsinist` 
 another repository's, and linking them would lie. `scripts/link-names.py --write` linked **31**:
 it leaves a companion's name of another companion a name, because §5c keeps references one level
 deep from the core, and it leaves the core alone, since every link there is paid on every run.
-Preflight §4d refuses the next unlinked one. `test-link-names.sh` **28/28** · `test-link-ids.sh`
+This repository's preflight §4d refuses the next unlinked one. `test-link-names.sh` **28/28** · `test-link-ids.sh`
 **21/21**. Seven source citations were re-minted after the rewrite changed their passages by link
 syntax alone; the three that had already drifted before it were left as they were.
 

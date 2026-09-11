@@ -45,7 +45,7 @@
 - `scripts/test-native-register.sh` — §19 of the company guard — `mise.toml` and the register held to each other — shown refusing each
 - `scripts/test-outward-gate.sh` — Mutation tests for hooks/outward-gate.py. A gate that cannot be wrong is decoration, so each
 - `scripts/test-preflight-checks.sh` — Runs against a LOCAL CLONE of HEAD — an uncommitted edit is exercised one commit late,
-- `scripts/test-recheck-trigger.sh` — §18 of the company guard — ported from opsinist's §22 — — a new tension in the source register reaches the findings resting on
+- `scripts/test-recheck-trigger.sh` — §18 of the company guard, ported from opsinist's §22 — a new tension in the source register reaches the findings resting on
 - `scripts/test-rule-home.sh` — Mutation tests for hooks/rule-home.py — it must speak on the trap and stay silent everywhere
 - `scripts/test-verify-reads.sh` — `--verify-reads` shown refusing each mutant and passing its honest twin
 - `scripts/tests/test_issues_helpers.py` — Offline tests for scripts/issues.py helpers — no live CLI, no pytest

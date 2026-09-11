@@ -22,12 +22,15 @@ bash scripts/preflight.sh            # form: is the documentation well-made?
 python3 scripts/verify.py --live     # truth: do the commands and sources still exist?
 ```
 
-**A file named in prose is a link, not a backticked name** — where the one-level rule allows it.
-The link is the edge GitHub, Obsidian's graph and preflight §4 can all see; a name is an edge only a
-reader infers. `scripts/link-names.py --write` makes the links and preflight §4d refuses the drift,
-leaving three kinds of name as names: a companion's name of another companion (§5c keeps references
-one level deep from the core), anything in the always-loaded core itself (every link there is paid
-on every run), and the files a project also carries — `CLAUDE.md`, `LATER.md` and the rest.
+**A file named in prose is a link, not a backticked name.** The link is the edge GitHub, Obsidian's
+graph and preflight §4 can all see; a name is an edge only a reader infers. `scripts/link-names.py
+--write` makes the links and preflight §4d refuses the drift, with three kinds of name left as names.
+**The core** — [`skills/mops/SKILL.md`](skills/mops/SKILL.md), loaded on every run, so a link there is paid every time.
+**A companion's name of another companion** — a companion being any other root `.md` but `README`,
+`CHANGELOG`, `AGENTS` and `CLAUDE` — because references stay one level deep from the core (preflight
+§5c). **And the files a project also carries** — `CLAUDE.md`, `LATER.md` and the rest — which in
+prose usually mean the project's own. A project's `_ops/` has its own twin, `scripts/link-ids.py`
+(BOOTSTRAP → *Docs home*).
 
 ### What the automation cannot check — and what you must therefore read
 

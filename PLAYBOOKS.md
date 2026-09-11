@@ -867,7 +867,8 @@ transcript — the owner's next message is answered while the run is in flight, 
    possible, known expiries.
 4. `daemon status`; open limit windows + resets.
 5. What the project declares: on each runtime's machine, `mise ls --missing` and `mise bootstrap
-   packages status --missing`; for updates, `scripts/deps-report.py` — sorted, never applied.
+   packages status --missing`; for updates, `scripts/deps-report.py` — sorted, never applied
+   (*What the project needs from the machine* · *When something it needs has a newer version*).
 6. Report: component → status → who/what it blocks → fix.
 
 ## Skill upgrade (`/upgrade`)
@@ -1509,7 +1510,7 @@ output — `wanted` inside the range, `latest` beyond it (npm's `outdated` docum
 
 **A decision carries its migration map**: read the release notes between the two versions — the
 report prints the link where the tool publishes one — and summarise what they would touch here,
-exactly as the version check below asks. **The report reads and never writes** — no install, no
+exactly as *Version check* asks. **The report reads and never writes** — no install, no
 upgrade, not even `mise trust` — and exits 0 whatever it found. An accepted update lands at the
 next boundary, never mid-flight (PATTERNS §7). **`--why` answers the other question** — what is
 this for? — offline: every entry of `mise.toml` and the package manifests beside its register row,

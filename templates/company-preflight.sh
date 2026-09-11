@@ -264,13 +264,14 @@ done < <(changed -- '_ops/research/*.md' '_ops/research/**/*.md')
 #      `- **Reads against:**` line, the skeleton `fetch-source.py --resolve` prints — because a
 #      project keeps it wherever it keeps it. Findings cite entries by id, backticks optional,
 #      matched as a whole id: `x-2024` is not `x-2024-b`.
-if [ "$(changed --diff-filter=AM -- '*.md' | tr '\0' '\n' | grep -c .)" -gt 0 ]; then
+if [ "$(changed --diff-filter=AMR -- '*.md' | tr '\0' '\n' | grep -c .)" -gt 0 ]; then
   _rck=$(mktemp "${TMPDIR:-/tmp}/multica-ops-recheck.XXXXXX")
   python3 - > "$_rck" <<'RECHECK'
 import re, subprocess
 
 def git(*args):
-    r = subprocess.run(["git", "-c", "core.quotePath=false"] + list(args), capture_output=True, text=True)
+    r = subprocess.run(["git", "-c", "core.quotePath=false"] + list(args), capture_output=True,
+                       text=True, errors="replace")
     return r.stdout if r.returncode == 0 else None
 
 def tensions(text):
@@ -287,7 +288,13 @@ def field(text, name):
     m = re.search(r"(?:\*\*)?%s(?:\*\*)?\s*:\s*(?:\*\*)?\s*([^\s·*]+)" % name, text or "", re.I)
     return m.group(1).lower() if m else None
 
-staged_now = [p for p in (git("diff", "--cached", "--name-only", "--diff-filter=AM", "-z") or "").split("\0") if p]
+staged_now = [p for p in (git("diff", "--cached", "--name-only", "-M", "--diff-filter=AMR", "-z") or "").split("\0") if p]
+# A file renamed in this commit is compared with the path it had: without this a rename put the
+# register or a finding out of view, and its new tension — or its missing re-read — with it.
+ren, _parts = {}, (git("diff", "--cached", "--name-status", "-M", "--diff-filter=R", "-z") or "").split("\0")
+for _i in range(0, len(_parts) - 2, 3):
+    if _parts[_i].startswith("R"):
+        ren[_parts[_i + 2]] = _parts[_i + 1]
 pairs = []
 for p in staged_now:
     if not p.endswith(".md"):
@@ -295,7 +302,7 @@ for p in staged_now:
     now = git("show", ":" + p) or ""
     if "**Reads against:**" not in now:
         continue
-    before = tensions(git("show", "HEAD:" + p))
+    before = tensions(git("show", "HEAD:" + ren.get(p, p)))
     for eid, named in sorted(tensions(now).items()):
         for other in sorted(named - before.get(eid, set())):
             pairs.append((eid, other))
@@ -316,7 +323,7 @@ if pairs:
         if not hit:
             continue
         if f in staged_now:
-            head = git("show", "HEAD:" + f)
+            head = git("show", "HEAD:" + ren.get(f, f))
             if head is None:
                 continue          # written in this commit, with the tension in view
             if field(text, "Status") == "stale" or field(text, "Answered") != field(head, "Answered"):
@@ -327,6 +334,9 @@ if pairs:
               "a finding is read instead of its sources, so this is the only place the new "
               "disagreement reaches it (templates/FINDING-template.md)" % (f, hit[0], eid, other))
 RECHECK
+  _rrc=$?
+  [ "$_rrc" -eq 0 ] || say_fail "the recheck of findings against a new \`Reads against\` stopped before its \
+end (python3 exited $_rrc; its error is above) — refused, because a check that did not finish has not passed."
   while IFS= read -r _rl; do
     case "$_rl" in FAIL:*) say_fail "${_rl#FAIL:}" ;; WARN:*) say_warn "${_rl#WARN:}" ;; esac
   done < "$_rck"
@@ -717,7 +727,7 @@ if [ "$(changed -- mise.toml .mise.toml _ops/TOOLING.md | tr '\0' '\n' | grep -c
 import json, re, subprocess
 
 def staged(path):
-    r = subprocess.run(["git", "show", ":" + path], capture_output=True, text=True)
+    r = subprocess.run(["git", "show", ":" + path], capture_output=True, text=True, errors="replace")
     return r.stdout if r.returncode == 0 else None
 
 def norm(s):
@@ -837,6 +847,11 @@ for t in sorted(rows["mise.toml"]):
         print("FAIL:_ops/TOOLING.md row `%s` says it is wired by mise.toml, and %s — the row "
               "describes a need nothing installs." % (t, where))
 NATIVE
+  _nrc=$?
+  # A crash here used to fail OPEN: the lines printed before it were read, the rest never existed,
+  # and the commit passed on a check that had not finished (a review lens, 2026-09-11).
+  [ "$_nrc" -eq 0 ] || say_fail "the check of mise.toml and _ops/TOOLING.md stopped before its end (python3 exited \
+$_nrc; its error is above) — refused, because a check that did not finish has not passed."
   while IFS= read -r _nl; do
     case "$_nl" in FAIL:*) say_fail "${_nl#FAIL:}" ;; WARN:*) say_warn "${_nl#WARN:}" ;; esac
   done < "$_nat"

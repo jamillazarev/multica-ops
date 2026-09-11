@@ -91,5 +91,16 @@ if [ -x "$SYS" ] && [ "$("$SYS" -c 'import sys; print(sys.version_info >= (3, 11
   PATH="$T/.shim:$PATH" suite "system $("$SYS" --version 2>&1)"
 fi
 
+# a check that stops before its end refuses — it does not pass the part it never read
+python3 - "_ops/preflight.sh" <<'PY' || bad "MUTATION DID NOT APPLY: the native check made to crash"
+import sys
+p = sys.argv[1]; s = open(p).read(); a = "import json, re, subprocess\n"
+assert s.count(a) == 1, "found %d times" % s.count(a)
+open(p, "w").write(s.replace(a, a + "raise SystemExit(3)\n"))
+PY
+printf '[tools]\npython = "3.12"\n' > mise.toml; reg "$(row python '`mise.toml`')"
+run; [ "$RC" = 1 ] && said 'stopped before its end' && ok || bad "a check that crashed let the commit through — it failed open: $OUT"
+cp "$HERE/templates/company-preflight.sh" _ops/preflight.sh
+
 echo "native-register: $pass passed, $fail failed"
 [ "$fail" -eq 0 ]

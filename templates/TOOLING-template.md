@@ -13,11 +13,10 @@ One row per tool. **Operating detail does not live here** — it lives in
 | {{ffmpeg}} | {{cutting the demo videos}} | {{we had none — clips went out uncut}} | {{none}} | {{`mise.toml`}} | {{2026-07-23}} |
 | {{Vercel}} | {{hosting + preview deploys}} | {{the rsync script on the old box}} | {{owner only — deploys are outward}} | {{CLI on the daemon machine}} | {{2026-07-23}} |
 
-**Where `mise.toml` declares the tool, *Wired how* names that file and the row does not repeat its
-version** — the file is the truth for what and which version, this row for why, and the guard's §19
-holds the two to each other. **The *Tool* cell is the entry's own name in that file** (`ffmpeg` for
-`"brew:ffmpeg"`), so the two can be matched. An MCP server names the agents whose `mcp_config`
-carries it (PLAYBOOKS → *What the project needs from the machine*).
+**Where `mise.toml` declares the tool, *Wired how* names that file, and the *Tool* cell is the
+entry's own name in it** (`ffmpeg` for `"brew:ffmpeg"`), so the company guard's §19 can match the
+two; an MCP server's row names the agents whose `mcp_config` carries it. Why the version lives in
+the file and never here: PLAYBOOKS → *What the project needs from the machine*.
 
 **The `Replaces` column is a gate, not a nicety.** The guard refuses a row that leaves it blank **unless a line in `_ops/DECISIONS.md` names this tool** and says what came before — either place counts, and the guard says so when it refuses.
 It does not judge the answer, only its absence. The guard refuses a commit that adds a row and

@@ -705,8 +705,9 @@ Each item with its default, as walked in `/multica-ops:init` and re-asked in the
    to open as an **Obsidian vault** (plain relative links + Mermaid — readable on
    GitHub and in Obsidian alike; roadmap, team, specs all browsable). **A vault's graph is drawn
    from links alone**, so a file named in passing is an edge only a reader infers: the skill's
-   `scripts/link-ids.py` lists those mentions in `_ops/`, and its `--write` makes them links on
-   the owner's word — never a heading or a `**Task**` row, which are declarations. Options: Notion
+   `scripts/link-ids.py` — the project-side twin of the `link-names.py` this repository runs on
+   itself — lists those mentions in `_ops/`, and its `--write` makes them links on the owner's word,
+   never a heading or a `**Task**` row, which are declarations. Options: Notion
    mirror (via MCP; repo stays the source of truth), Figma (cloud) vs Pen (pen.dev, local)
    for design — or both. As everywhere: the user may name any other tool — research and connect it.
 12. **Assets home** (when the project accumulates media — images, video, 3D):

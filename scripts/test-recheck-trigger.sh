@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# §18 of the company guard — ported from opsinist's §22 — — a new tension in the source register reaches the findings resting on
+# §18 of the company guard, ported from opsinist's §22 — a new tension in the source register reaches the findings resting on
 # either end of it — shown refusing each mutant and passing its honest twin, in a throwaway project.
 #
 # The register sits outside `_ops/research/` on purpose: the guard finds it by its shape, and a
@@ -101,6 +101,20 @@ suite() {   # $1 = label; runs against whatever guard is in _ops/preflight.sh
   finding four.md '`x-2024`, `y-2026` — both, read together'; run
   [ "$RC" = 0 ] && ok || bad "$L a finding new in the tension's own commit was refused: $OUT"
 
+  # a finding renamed in the tension's own commit is the same finding: moving it is not re-reading it
+  reset; tension && { git mv _ops/research/one.md _ops/research/one-renamed.md; run
+    [ "$RC" = 1 ] && said 'one-renamed.md rests on' && ok || bad "$L renaming the finding dodged the re-read: $OUT"; }
+  # the register renamed in the tension's own commit still records the tension
+  reset; tension && { git mv sources/SOURCES.md sources/REGISTER.md; run
+    [ "$RC" = 1 ] && said 'one.md rests on' && ok || bad "$L renaming the register hid the new tension: $OUT"; }
+  # and a rename that records nothing new demands nothing
+  reset; git mv sources/SOURCES.md sources/REGISTER.md; run
+  [ "$RC" = 0 ] && ok || bad "$L renaming the register alone demanded a re-read: $OUT"
+  # a byte that is not UTF-8 is read around, not crashed on
+  reset; tension && { printf 'a stray byte \377 in a distillate\n' >> sources/SOURCES.md; run
+    [ "$RC" = 1 ] && said 'one.md rests on' && ! said 'stopped before its end' && ok \
+      || bad "$L a byte that is not UTF-8 stopped the check: $OUT"; }
+
   # no tension, no demand: an entry arriving with `not checked`, and a tension taken away
   reset; entry z-2026 '`not checked`' >> sources/SOURCES.md; run
   [ "$RC" = 0 ] && ok || bad "$L an entry naming no tension demanded a re-read: $OUT"
@@ -137,6 +151,13 @@ mutant "any edit counted as a re-read" \
   'if field(text, "Status") == "stale" or field(text, "Answered") != field(head, "Answered"):' 'if True:' \
   && { reset; tension && { printf '\nA note added later.\n' >> _ops/research/one.md; run
        [ "$RC" = 0 ] && ok || bad "the suite did not catch the mutant: any edit as a re-read"; }; }
+
+mutant "a renamed finding compared with a path it never had" 'head = git("show", "HEAD:" + ren.get(f, f))' 'head = git("show", "HEAD:" + f)' \
+  && { reset; tension && { git mv _ops/research/one.md _ops/research/one-renamed.md; run
+       [ "$RC" = 0 ] && ok || bad "the suite did not catch the mutant: a renamed finding passing as new"; }; }
+mutant "the recheck made to crash" 'import re, subprocess' 'import re, subprocess; raise SystemExit(3)' \
+  && { reset; tension && { run; [ "$RC" = 1 ] && said 'stopped before its end' && ok \
+         || bad "a recheck that crashed let the commit through — it failed open: $OUT"; }; }
 
 echo "recheck-trigger: $pass passed, $fail failed"
 [ "$fail" -eq 0 ]
