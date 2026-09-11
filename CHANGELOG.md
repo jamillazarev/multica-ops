@@ -3,7 +3,7 @@
 Newest first. Each entry leads with what you can now do, not with which files moved. This is
 also the migration map `/multica-ops:upgrade` reads.
 
-## 0.4.17 — unreleased
+## 0.4.17 — 2026-09-11
 
 **A counted intro is charged only with the list nested under it.** A sentence ending in a colon —
 *"there are three guardrails:"* — is read by `scripts/check-structure.py` as introducing a list, and
