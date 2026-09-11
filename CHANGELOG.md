@@ -13,9 +13,10 @@ the first item shallower than its intro, and at any peer where the intro is itse
 
 **Ported after it fired next door, not after it fired here** — this corpus happens not to contain the
 shape today, and that is luck rather than immunity: the rule is identical in both files. There the
-warning was permanent, and **a permanent false warning is a check that everyone who reads it has
-already switched off, while it goes on reporting.** It stood tenth in a list of thirteen, and three
-real defects a line long each had shipped a release from inside it.
+warning was permanent, and it printed **first** in a list of thirteen — directly above five real
+defects a line long each, all of which had shipped. **That a permanent false warning gets a check
+switched off in the reader's head is the fear this answers, not a measurement**; what was measured
+is that five real ones sat right under it and went out anyway.
 
 **Two assertions in `scripts/test-preflight-checks.sh`**, which runs against a clone of HEAD: the
 nested-intro shape must stay silent, and a top-level intro miscounting its own list must still be
