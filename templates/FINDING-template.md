@@ -23,6 +23,10 @@ down.
 {{A named event, not "further research". *"When a replacement for `park-self-reports` ships"* is a
 trigger; *"periodically"* is an abandonment wearing better clothes.}}
 
+One event is caught without anyone remembering: a source recorded as reading against one under
+*Sources* — the commit that records it re-stamps `Answered` here or marks this `stale`, or the
+company guard's §18 refuses it.
+
 ## Under it
 
 **Sources**: {{`source-id` · `source-id` — by id from the register, never by link. Links rot, ids

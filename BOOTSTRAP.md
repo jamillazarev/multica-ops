@@ -508,7 +508,7 @@ stage finished" (that is @mentions and barriers). Offer at setup, default "later
    *guide* skill, not this one — multica-ops is Mops's brain), so Mops in Multica *is* the
    same Mops:
    - **Install idempotently, never blindly.** First `multica skill list` — if `multica-ops`
-     isn't there, `multica skill import --url github.com/jamillazarev/multica-ops/tree/v0.4.17/skills/mops`. If it
+     isn't there, `multica skill import --url github.com/jamillazarev/multica-ops/tree/v0.4.18/skills/mops`. If it
      **already exists** (re-run, or a teammate imported it), **compare versions**: same →
      skip; older → refresh through `/multica-ops:upgrade` (backup current to `_ops/skill-backups/` →
      `import --on-conflict overwrite`), **never a second copy**. (`import` supports
@@ -703,7 +703,10 @@ Each item with its default, as walked in `/multica-ops:init` and re-asked in the
    matching seeds, accept "other" as always.
 11. **Docs home** — default **local-first markdown in the repo**: `docs/` is designed
    to open as an **Obsidian vault** (plain relative links + Mermaid — readable on
-   GitHub and in Obsidian alike; roadmap, team, specs all browsable). Options: Notion
+   GitHub and in Obsidian alike; roadmap, team, specs all browsable). **A vault's graph is drawn
+   from links alone**, so a file named in passing is an edge only a reader infers: the skill's
+   `scripts/link-ids.py` lists those mentions in `_ops/`, and its `--write` makes them links on
+   the owner's word — never a heading or a `**Task**` row, which are declarations. Options: Notion
    mirror (via MCP; repo stays the source of truth), Figma (cloud) vs Pen (pen.dev, local)
    for design — or both. As everywhere: the user may name any other tool — research and connect it.
 12. **Assets home** (when the project accumulates media — images, video, 3D):

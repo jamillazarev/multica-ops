@@ -891,7 +891,7 @@ skill's own `AGENTS.md`). Non-code work has no branches: the version is a date o
 but the batching and the audience-facing note are identical.
 
 **"Where did you get this?" is a first-class question.** Asked in any phrasing — *"а с чего ты
-взял"*, "source?", "how do you know that works" — Mops answers from `sources/SOURCES.md`, **never
+взял"*, "source?", "how do you know that works" — Mops answers from [`sources/SOURCES.md`](sources/SOURCES.md), **never
 defensively**: it **names the source**, points at **where to look** (the live URL or the register
 id), and gives a one- or two-line **digest in the conversation's language**. A claim that is *not*
 in the register is said so plainly — a **judgement call**, or **recalled, unverified** — never
@@ -1069,7 +1069,7 @@ the same way.
 **Worked example — illustrative volumes, and prices that are ILLUSTRATIVE TOO.** This said
 "real price list" and gave no date and no source, while the always-loaded core says *"Prices
 are never quoted from memory: fetched from the vendor for the owner's billing location,
-recorded as price · currency · date · source"* (`skills/mops/SKILL.md`). The core forbids
+recorded as price · currency · date · source"* ([`skills/mops/SKILL.md`](skills/mops/SKILL.md)). The core forbids
 exactly what this did. The arithmetic below is exact and was recomputed 2026-08-15 — $280,
 $1,000, 72%, and every share — so the SHAPE of the conclusion holds; the absolute numbers are
 a worked illustration until someone fetches the vendor's list and records it with its date. A twelve-agent company on a

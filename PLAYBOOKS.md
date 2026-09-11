@@ -46,6 +46,8 @@ control characters that break `json.loads` — sanitize with
 - [Version check (proactive, at /status or before a major /ship)](#version-check-proactive-at-status-or-before-a-major-ship)
 - [Workspace fingerprint (drift detection)](#workspace-fingerprint-drift-detection)
 - [Economics — what the company actually costs](#economics-what-the-company-actually-costs)
+- [What the project needs from the machine](#what-the-project-needs-from-the-machine)
+- [When something it needs has a newer version](#when-something-it-needs-has-a-newer-version)
 - [Tool knowledge — where it goes (and where it must not)](#tool-knowledge-where-it-goes-and-where-it-must-not)
 - [Launch checklist — what "done" requires, per medium](#launch-checklist-what-done-requires-per-medium)
 
@@ -489,7 +491,7 @@ inventory** — four operations, each with a gate, all recorded in `_ops/TOOLING
 1. Evidence first: name the two occasions. Once is a task, twice is a pattern, and
    "we might need it" is neither.
 2. Draft with **skill-creator**, small and single-purpose — **born modular, per
-   `templates/SKILL-SCAFFOLD.md`**: a budgeted router core + companions loaded on trigger.
+   [`templates/SKILL-SCAFFOLD.md`](templates/SKILL-SCAFFOLD.md)**: a budgeted router core + companions loaded on trigger.
    Modularity is cheap at birth and expensive at 500 lines.
 3. **Test before you trust it**: hand it to a fresh agent that has never seen the routine
    and check it reaches the outcome. A skill nobody tested is a hypothesis.
@@ -623,7 +625,7 @@ already — this is assembly order, not new machinery.
    talent-pool pattern; they read, they don't own). Grades per §7 tiering; `--thinking-level`
    is the second dial.
 5. **Resident Mops** — `public_to workspace`, **`multica-cli` skill attached** (chat alone sees
-   no board), **never workspace admin**, briefed with `templates/SELF-MAINTENANCE-brief.md`.
+   no board), **never workspace admin**, briefed with [`templates/SELF-MAINTENANCE-brief.md`](templates/SELF-MAINTENANCE-brief.md).
 6. **Memory layer**: graphify index over the repo (local, ~zero tokens; the graph is a derived
    cache, never a source).
 7. **Self-adoption loop** — new capability applies to the team as soon as it merges:
@@ -864,7 +866,9 @@ transcript — the owner's next message is answered while the run is in flight, 
 3. Tokens/secrets: presence in `mcp_config`/`custom-env` (`agent env`), read-probe where
    possible, known expiries.
 4. `daemon status`; open limit windows + resets.
-5. Report: component → status → who/what it blocks → fix.
+5. What the project declares: on each runtime's machine, `mise ls --missing` and `mise bootstrap
+   packages status --missing`; for updates, `scripts/deps-report.py` — sorted, never applied.
+6. Report: component → status → who/what it blocks → fix.
 
 ## Skill upgrade (`/upgrade`)
 
@@ -1211,7 +1215,7 @@ conventions its owner never chose.
 
 ## Resident Mops — install / refresh
 
-`multica skill list` → absent: `skill import --url github.com/jamillazarev/multica-ops/tree/v0.4.17/skills/mops`;
+`multica skill list` → absent: `skill import --url github.com/jamillazarev/multica-ops/tree/v0.4.18/skills/mops`;
 present: compare versions — same → skip, older → the Skill-upgrade recipe above. Never a
 second copy. Then `agent create` (name **Mops**) → `agent skills` attach (+ find-skills)
 → `agent avatar` per chosen library (Mops in Multica keeps `assets/mops-avatar.png`) → subtitle "Executive Advisor · resident" → rights
@@ -1348,7 +1352,9 @@ finds agents doing too little, the other finds agents asked to be too much.
 2. Imported skills: compare each against its source (`skill get` vs the origin URL).
 3. **Tooling** from `_ops/TOOLING.md`: for each MCP server / CLI, check its release feed
    for a newer version and for breaking changes; a tool that changed its interface breaks
-   agents silently, exactly like a stale CLI pin.
+   agents silently, exactly like a stale CLI pin. For what `mise.toml` and the lockfiles
+   declare, `scripts/deps-report.py` asks the tools that know and sorts the answer by what it
+   asks (*When something it needs has a newer version*).
 4. Newer? Summarize **what changed and what it would touch** (agents carrying it, guide
    rules, commands) and offer `/multica-ops:upgrade` — never upgrade unasked.
 
@@ -1431,6 +1437,96 @@ Keep a rolling `_ops/ECONOMICS.md`, refreshed monthly (autopilot) and at each `/
 Surface it in `/multica-ops:status` (one line), on the dashboard, and whenever a budget cap is
 approached. A tool crossing its free tier is **spend** — owner-gated, never silent.
 
+
+## What the project needs from the machine
+
+**A team whose work runs on one runtime and fails on the next is a team whose needs were never
+written down**, and it is found on the worst day: the day a second runtime picks the work up. Two
+kinds of need live outside the code, each has one place that is the truth, and `_ops/TOOLING.md`
+says why:
+
+| The need | Where it is declared — the truth | The register row says |
+|---|---|---|
+| an MCP server | the agent's `mcp_config` (REFERENCE.md), set through the CLI — never a file in the repository, since its values are where the credentials live | why · what it replaces · which agents carry it |
+| a runtime, a CLI tool or a system package — python, node, ffmpeg | `mise.toml` at the repository's root: `[tools]`, and `[bootstrap.packages]` with a line per OS | why · what it replaces |
+
+**Never a second list.** A version lives in `mise.toml` and nowhere else, the row's *Wired how*
+names the file, and the company guard's §19 holds the two to each other — every entry a row,
+every row an entry. An MCP row names the agents instead, and the health sweep probes them.
+**opsinist keeps its servers in a committed `.mcp.json` and guards that file too; here the server
+lives on the agent, where no commit can see it.**
+
+**mise isolates by project and leaves the machine alone** (read in mise's documentation,
+2026-09-11): `[tools]` installs each version beside the others and puts it on `PATH` only inside
+the project's directory, and `[bootstrap.packages]` goes through the OS's own manager — `brew`,
+`apt`, `winget` — accepting a version already installed. **Nothing is installed without the
+owner's word, mise included**, and a runtime is somebody's machine with other work on it: a
+project that changes versions by itself breaks theirs. **A `mise.toml` carrying
+`[bootstrap.packages]` is not read at all until it is trusted on that machine** — one with
+`[tools]` alone is (measured on mise 2026.9.5, 2026-09-11) — so `mise trust` heads the line a
+joining audit writes (FLOWS → *Joining an existing setup*), and it is the owner's to say.
+
+**Found undeclared, it is declared** — a binary the scripts call, a runtime version the code
+assumes: an entry pinned at the version the runtime already runs, since that is the one the work
+was last seen succeeding on, and its row.
+
+```mermaid
+flowchart LR
+  N["mise.toml —<br/>what, and which version"] <-->|"company guard §19: every entry<br/>a row, every row an entry"| R["_ops/TOOLING.md —<br/>why, and what it replaces"]
+  A["an agent's mcp_config —<br/>the MCP servers it carries"] -->|"named in its row;<br/>probed by /health"| R
+  N --> J{"a runtime picks the work up:<br/>what is missing there?"}
+  J -->|"nothing"| OK(["works"])
+  J -->|"something"| L["one line on the joining audit:<br/>trust · missing · --dry-run"]
+  L -->|"owner: yes"| I["installed — beside, not over"]
+  L -.->|"installed silently"| X(("another project on<br/>that machine breaks"))
+```
+
+## When something it needs has a newer version
+
+**An update is a fact the tools already know and a decision only the owner can make**, and the two
+fail in opposite directions: an agent that upgrades by itself changes a runtime under every other
+project on it, and one that never looks lets a published vulnerability ride. `scripts/deps-report.py`,
+run from the project's root, asks the tools that know — `mise outdated` for what `mise.toml` pins,
+`npm outdated` where `package-lock.json` is the lockfile, `osv-scanner` over every lockfile — and
+sorts each answer by what it asks:
+
+| What it found | What it asks | Where it goes |
+|---|---|---|
+| **security** — a published vulnerability in something the project ships | act first | an issue, carrying the advisory ids |
+| **outside the pin** — newer than the version the project pinned | a decision, with the release notes as its map | the owner's call: upgrade · pin · ignore with a reason |
+| **inside the pin** — a newer build of what was already chosen | routine | one line for the batch |
+| **missing** — declared, not installed on this machine | the owner's word | the joining audit's line |
+| **not checked** — the tool that would know is absent, offline, or answered in a shape it does not read | nothing, but it is said | the report itself: silence would read as *current* |
+
+**The line between routine and decision is the project's own pin, not the version's numbering.**
+Python 3.12 → 3.13 is a minor number, and 3.13 removed nineteen standard-library modules outright
+(PEP 594, *What's New in Python 3.13*, read 2026-09-11); what the project wrote in `mise.toml` or
+`package.json` is its only statement of what it agreed to, and npm draws the same line in its own
+output — `wanted` inside the range, `latest` beyond it (npm's `outdated` documentation, read
+2026-09-11). **Read in mise's source first**: one field, `latest`, means *inside the pin* without
+`--bump` and *at all* with it, and a lookup that fails is dropped from the JSON with only a warning
+— so the report keeps the two answers apart and says *not checked* for every warning.
+
+**A decision carries its migration map**: read the release notes between the two versions — the
+report prints the link where the tool publishes one — and summarise what they would touch here,
+exactly as the version check below asks. **The report reads and never writes** — no install, no
+upgrade, not even `mise trust` — and exits 0 whatever it found. An accepted update lands at the
+next boundary, never mid-flight (PATTERNS §7). **`--why` answers the other question** — what is
+this for? — offline: every entry of `mise.toml` and the package manifests beside its register row,
+or the `_ops/DECISIONS.md` line that names it (the line §4e asks for when a dependency is added),
+or *no why recorded*. A view, never a second list.
+
+```mermaid
+flowchart LR
+  F["mise.toml · package.json ·<br/>lockfiles"] --> A["deps-report asks<br/>mise · npm · osv-scanner"]
+  A --> S["security"] --> Q1["an issue —<br/>act first"]
+  A --> O["outside the pin"] --> M["release notes read<br/>as a migration map"] --> Q2["the owner: upgrade ·<br/>pin · ignore with a reason"]
+  A --> I["inside the pin"] --> T["one line<br/>for the batch"]
+  A --> N["not checked"] --> L["said in the report —<br/>never read as current"]
+  Q1 -->|"owner: yes"| B(["at the next boundary"])
+  Q2 -->|"owner: yes"| B
+  T -->|"owner: yes"| B
+```
 
 ## Tool knowledge — where it goes (and where it must not)
 

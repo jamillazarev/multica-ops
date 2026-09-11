@@ -41,7 +41,7 @@ around it — generate it or search for it.
 
 **3 · Check-date, not a tick.** Every recorded fact that can change carries **when it was
 verified**; past its recheck it is **unknown, not fine**.
-*Applies to:* `_ops/TOOLING.md` rows · STACKS entries · `sources/SOURCES.md` · prices ·
+*Applies to:* `_ops/TOOLING.md` rows · STACKS entries · [`sources/SOURCES.md`](sources/SOURCES.md) · prices ·
 platform caps quoted in these files.
 
 **4 · Provenance is mandatory.** Origin · when · who · what version. Without it `/multica-ops:upgrade` cannot tell what it is updating and `/multica-ops:audit` cannot tell what is old.

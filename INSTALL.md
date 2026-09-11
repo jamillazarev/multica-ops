@@ -38,7 +38,7 @@ claude plugin marketplace add jamillazarev/multica-ops
 claude plugin install multica-ops@multica-ops
 
 # into a Multica workspace, as an agent skill
-multica skill import --url github.com/jamillazarev/multica-ops/tree/v0.4.17/skills/mops
+multica skill import --url github.com/jamillazarev/multica-ops/tree/v0.4.18/skills/mops
 ```
 
 **All three routes were run end to end — measured, not assumed** (the first two on 2026-07-31,
@@ -158,7 +158,7 @@ questions about how to run work.
 
 | Runtime | The surface | 
 |---|---|
-| Antigravity | `rules/multica-ops.md`, shipped here and always on |
+| Antigravity | [`rules/multica-ops.md`](rules/multica-ops.md), shipped here and always on |
 | Gemini CLI | `GEMINI.md`, shipped here |
 | Claude Code / Codex in a repo | that repo's `CLAUDE.md` or `AGENTS.md` |
 | **the Multica workspace itself** | **the shared guide and the Mops agent's instructions** — there is no `AGENTS.md` in a workspace; the workspace is the company, not a git checkout |

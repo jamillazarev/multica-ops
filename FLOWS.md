@@ -69,7 +69,7 @@ owner hands over on an issue — each is **filed by one flow and scoped to none*
 review cites is the shelf a build opens and the shelf a consultation answers from, and a
 pointer that arrived through one door is read wherever it is relevant rather than asked for
 again. **And the point of a shelf is a shorter search, which puts it at the search's head**:
-the register first — `_ops/TOOLING.md`, `sources/SOURCES.md`, STACKS — the live web where the
+the register first — `_ops/TOOLING.md`, [`sources/SOURCES.md`](sources/SOURCES.md), STACKS — the live web where the
 register runs out, and **a find worth keeping lands back in the register with its why**. That
 is the same order every tool choice above already runs; saying it once is what stops it being
 re-derived per flow. **Called a shelf and never a "resource"**: on Multica a **project
@@ -236,7 +236,7 @@ an excuse.**
 re-run one tier up moved `0/5 → 3/5` and `0/5 → 4/5` **against its own text, unchanged** — and
 the scenario asking a run to *volunteer* something did not move, because a stronger model does
 the work better without becoming more willing. **This project's equivalents are unmeasured**:
-`evals/README.md` has the scenarios, `evals/runs/` has no round for them.
+[`evals/README.md`](evals/README.md) has the scenarios, `evals/runs/` has no round for them.
 
 ---
 
@@ -304,7 +304,7 @@ the project's `docs/` where a workspace exists, else a **single named file in th
 is deliberate and placed; everything else stays **zero-footprint**, and the rule ends there for that
 one artifact only — no scratch files spun up unasked along the way.
 
-**Open `templates/ANSWER-template.md` before answering.** It holds the three shapes a question
+**Open [`templates/ANSWER-template.md`](templates/ANSWER-template.md) before answering.** It holds the three shapes a question
 without a thing to build actually arrives in — **choose between named options · find me
 something · how long, how much** — and a slot left empty there is a visible hole rather than a
 silent one. **Measured in `opsinist` 2026-07-31:** six consultation scenarios failed 5 of 5 by
@@ -454,6 +454,14 @@ issues. **Carried from `opsinist` with its measurement rather than as a proven m
 scenario for this scores **0 of 2 and 0 of 5 across two rounds** there — runs audit, and then
 fix something before the owner has seen the list, or hand over a list with no verdict on any
 row. Treat it as a rule that needs structure, not as one that works.
+
+**What a runtime's machine lacks of what the project declares is a line of its own.** The agents
+run on the owner's runtimes, so each runtime's machine is where `mise.toml`'s entries must be: the
+line carries what `mise ls --missing` and `mise bootstrap packages status --missing` report there,
+and what `mise install --dry-run` and `mise bootstrap packages apply --dry-run` would change — and
+**installing, `mise trust` first, is the owner's word** (PLAYBOOKS → *What the project needs from
+the machine*). **What the project needs and never declared is usually deferrable** — survivable
+on the machine it grew up on — with the trigger *"before a second runtime takes this work"*.
 
 ---
 

@@ -61,7 +61,7 @@ such folder** — a container, CI, a bare shell — it goes where the owner name
 is announced rather than chosen silently**.
 
 **This flow needs a local filesystem, so it belongs to the console seat, not the board.** The
-resident Mops inside Multica imports `skills/mops/SKILL.md` only and has no disk: asked there, it
+resident Mops inside Multica imports [`skills/mops/SKILL.md`](skills/mops/SKILL.md) only and has no disk: asked there, it
 **collects the evidence and hands it over** for the console to write out, and says so.
 
 **Then the routes are named, because *"there is no channel"* is the sentence that ends in
@@ -78,7 +78,7 @@ file, say where it is, and name the ways.
 
 ## What this is, mechanically
 
-**Plain markdown, no executable payload, no dependency tree.** The corpus is `skills/mops/SKILL.md`
+**Plain markdown, no executable payload, no dependency tree.** The corpus is [`skills/mops/SKILL.md`](skills/mops/SKILL.md)
 plus companion documents; `scripts/` holds ops helpers the *owner* runs by hand. **There is no
 install hook, no post-install script and nothing that executes at session start** — verifiable in
 one line: the repository has never contained a `hooks/` directory or an alias installer at any
@@ -214,7 +214,7 @@ the manifest with it (`INSTALL.md` → *Installing from skills.sh*). Verified ag
 
 | Finding | Answer |
 |---|---|
-| Socket · `commands/skill.md` — *"a wrapper that delegates to an unseen external skill"* | **the path has never existed here** — zero commits touch it, at any ref. There is no `commands/` directory; the package ships `skills/mops/SKILL.md` and its companions |
+| Socket · `commands/skill.md` — *"a wrapper that delegates to an unseen external skill"* | **the path has never existed here** — zero commits touch it, at any ref. There is no `commands/` directory; the package ships [`skills/mops/SKILL.md`](skills/mops/SKILL.md) and its companions |
 | Socket · `hooks/hooks.json` — *"a sensitive OS-command execution sink at session start … verify `${CLAUDE_PLUGIN_ROOT}/scripts/install-alias.sh`"* | **the file exists; the script it names never did** — `scripts/install-alias.sh` has zero commits at any ref. But the *class* of the finding is live and is answered below rather than dismissed |
 | Snyk · **W012** — a runtime URL that controls the agent | the quoted form, `--url github.com/jamillazarev/multica-ops`, is **a command that cannot run** — measured, not asserted, see below. The line the install instructions actually carry **pins a tag**, for exactly W012's reason, and **preflight fails the release if the pin drifts** — see *Supply chain* above |
 | Snyk · **W011** — third-party content exposure | accurate, and Snyk's own note records the mitigation: external text is treated as **data, never instructions**. That rule is this page |

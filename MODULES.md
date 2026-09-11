@@ -89,7 +89,7 @@ truth. **Curator = the Design squad lead** (or the sole designer).
 - **One component standard, fixed at enablement.** Turning the module on, the curator
   seeds `_ops/design-system/CONVENTIONS.md`: naming, **one props convention** (borrowed
   from the chosen stack's idioms — e.g. shadcn/Radix patterns for web), state names, and
-  a **single documentation shape** per component (`templates/COMPONENT-template.md`:
+  a **single documentation shape** per component ([`templates/COMPONENT-template.md`](templates/COMPONENT-template.md):
   anatomy · props table · variants · states · tokens used · do/don't). Every component —
   agent- or human-made — is documented to that shape; mixed conventions (one component
   hook-style, another ad-hoc) are exactly what this kills. Useful skills (find via
@@ -112,7 +112,7 @@ truth. **Curator = the Design squad lead** (or the sole designer).
 
 A company that faces the world needs a **brand**, and Mops treats it as a first-class,
 systematized artifact — not a folder of moodboards. Home: `_ops/brand/` (the brand book,
-`templates/BRAND-template.md`); its **formal elements flow into the design system**
+[`templates/BRAND-template.md`](templates/BRAND-template.md)); its **formal elements flow into the design system**
 (palette/type → tokens, formats → templates) and its **verbal rules into the guide**
 (every agent writes in the brand voice).
 
@@ -327,7 +327,7 @@ persona**, and **re-verify before a decision leans on it** (a stale score is `un
 
 **A twin of a real person needs consent machinery** — an **audit log, revocable permission and
 data rights**, delivered concretely rather than gestured at (Stanford's proposal). Any persona
-built from a real person's data carries, per `templates/PERSONA-template.md`:
+built from a real person's data carries, per [`templates/PERSONA-template.md`](templates/PERSONA-template.md):
 
 - **Raw identifiable material never enters git.** Interview audio and full transcripts of real
   people live in a **private external store**; the repo keeps only a **pointer + checksum +

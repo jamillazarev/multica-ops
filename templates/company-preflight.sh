@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# guard-version: 0.4.17   <!-- stamped from the skill at ship time; read by the check below -->
+# guard-version: 0.4.18   <!-- stamped from the skill at ship time; read by the check below -->
 # Docs guard for a company Mops built — install it into the company's own repo, not ours.
 #
 #   cp templates/company-preflight.sh <repo>/scripts/preflight.sh
@@ -251,6 +251,87 @@ while IFS= read -r -d '' fnd; do
 believe\` — a title is not a conclusion, and this section is the one read instead of the sources."
   fi
 done < <(changed -- '_ops/research/*.md' '_ops/research/**/*.md')
+
+# 18 · `Recheck when` fires on the one event a commit can see: a source arriving that pulls against
+#      one a finding rests on. A finding is read INSTEAD of its sources (§17), so the commit that
+#      records a new tension — a name added to an entry's `Reads against` — is the only moment the
+#      disagreement can reach the findings built on either end of it. That commit carries each of
+#      them re-read: `Answered` re-stamped, or `Status: stale`. Touching the file is not re-reading
+#      it, so any other edit leaves the refusal standing; a finding written in the same commit was
+#      written with the tension in view. Every other event a `Recheck when` names is still a
+#      person's to notice — this is the one the tree records.
+#      The register is found by its SHAPE, not its path — `### id · …` entries with a
+#      `- **Reads against:**` line, the skeleton `fetch-source.py --resolve` prints — because a
+#      project keeps it wherever it keeps it. Findings cite entries by id, backticks optional,
+#      matched as a whole id: `x-2024` is not `x-2024-b`.
+if [ "$(changed --diff-filter=AM -- '*.md' | tr '\0' '\n' | grep -c .)" -gt 0 ]; then
+  _rck=$(mktemp "${TMPDIR:-/tmp}/multica-ops-recheck.XXXXXX")
+  python3 - > "$_rck" <<'RECHECK'
+import re, subprocess
+
+def git(*args):
+    r = subprocess.run(["git", "-c", "core.quotePath=false"] + list(args), capture_output=True, text=True)
+    return r.stdout if r.returncode == 0 else None
+
+def tensions(text):
+    """entry id → the ids its `Reads against` names; `none found` and `not checked` name nothing."""
+    out = {}
+    for block in re.split(r"^### ", text or "", flags=re.M)[1:]:
+        eid = block.split(" ·")[0].split("\n")[0].strip()
+        m = re.search(r"^- \*\*Reads against:\*\*(.*)$", block, re.M)
+        if m:
+            out[eid] = set(re.findall(r"`([a-z0-9][a-z0-9-]*)`", m.group(1))) - {"none", "not"}
+    return out
+
+def field(text, name):
+    m = re.search(r"(?:\*\*)?%s(?:\*\*)?\s*:\s*(?:\*\*)?\s*([^\s·*]+)" % name, text or "", re.I)
+    return m.group(1).lower() if m else None
+
+staged_now = [p for p in (git("diff", "--cached", "--name-only", "--diff-filter=AM", "-z") or "").split("\0") if p]
+pairs = []
+for p in staged_now:
+    if not p.endswith(".md"):
+        continue
+    now = git("show", ":" + p) or ""
+    if "**Reads against:**" not in now:
+        continue
+    before = tensions(git("show", "HEAD:" + p))
+    for eid, named in sorted(tensions(now).items()):
+        for other in sorted(named - before.get(eid, set())):
+            pairs.append((eid, other))
+if pairs:
+    contested = {}
+    for eid, other in pairs:
+        contested.setdefault(eid, (eid, other))
+        contested.setdefault(other, (eid, other))
+    for f in (git("ls-files", "-z", "--", "_ops/research") or "").split("\0"):
+        if not f.endswith(".md") or "/raw/" in f:
+            continue
+        text = git("show", ":" + f) or ""
+        m = re.search(r"(?:\*\*)?Sources(?:\*\*)?\s*:(.*?)(?=\n\s*\n|\n(?:\*\*)?[A-Z][^:\n]{0,40}(?:\*\*)?\s*:|\Z)", text, re.S)
+        if not m:
+            continue
+        hit = sorted(i for i in contested
+                     if re.search(r"(?<![A-Za-z0-9-])%s(?![A-Za-z0-9-])" % re.escape(i), m.group(1)))
+        if not hit:
+            continue
+        if f in staged_now:
+            head = git("show", "HEAD:" + f)
+            if head is None:
+                continue          # written in this commit, with the tension in view
+            if field(text, "Status") == "stale" or field(text, "Answered") != field(head, "Answered"):
+                continue          # re-read and re-stamped, or marked stale
+        eid, other = contested[hit[0]]
+        print("FAIL:%s rests on `%s`, and this commit records that `%s` now reads against `%s` — "
+              "re-read it and re-stamp `Answered`, or mark it `Status: stale`, in this same commit: "
+              "a finding is read instead of its sources, so this is the only place the new "
+              "disagreement reaches it (templates/FINDING-template.md)" % (f, hit[0], eid, other))
+RECHECK
+  while IFS= read -r _rl; do
+    case "$_rl" in FAIL:*) say_fail "${_rl#FAIL:}" ;; WARN:*) say_warn "${_rl#WARN:}" ;; esac
+  done < "$_rck"
+  rm -f "$_rck"
+fi
 
 # 5 · a cheap last line on credentials. NOT a secret scanner — gitleaks/trufflehog are,
 #     and they belong in CI. This catches the obvious paste before it reaches history,
@@ -615,6 +696,100 @@ complete answer and often the true one outside software — write it in the cell
 A tool arrives in a minute and is maintained for a year, which is why the rung is asked at all"
 fi
 
+
+# 19 · a runtime, a CLI tool or a system package the project needs lives in `mise.toml` —
+#      `[tools]` and `[bootstrap.packages]` — and nowhere else holds its version. Every entry has a
+#      row in `_ops/TOOLING.md` whose *Wired how* names `mise.toml`, and every such row names an
+#      entry the file declares: the file is the truth for what and which version, the row for why,
+#      and a need with only one of the two is met on the day the project moves to another machine —
+#      here, a runtime's (PLAYBOOKS.md → *What the project needs from the machine*).
+#      **An MCP server is not in this file's scope**: here it is carried by an agent's `mcp_config`
+#      (REFERENCE.md), which lives in the workspace and not in the repository, so no commit can see
+#      it. opsinist, where servers live in a committed `.mcp.json`, guards that file as well.
+#      Read from the INDEX and parsed without `tomllib`, which is Python 3.11+ while the `python3` of
+#      a Mac with no Homebrew is 3.9; and the Python is written to a file and read back, never run
+#      inside `<( … )`, because bash 3.2 — every Mac's `/bin/bash` — mis-reads a backtick inside a
+#      heredoc inside a substitution and stops parsing the whole guard. Both measured 2026-09-11, in
+#      opsinist's copy of this section, before it shipped.
+if [ "$(changed -- mise.toml .mise.toml _ops/TOOLING.md | tr '\0' '\n' | grep -c .)" -gt 0 ]; then
+  _nat=$(mktemp "${TMPDIR:-/tmp}/multica-ops-native.XXXXXX")
+  python3 - > "$_nat" <<'NATIVE'
+import json, re, subprocess
+
+def staged(path):
+    r = subprocess.run(["git", "show", ":" + path], capture_output=True, text=True)
+    return r.stdout if r.returncode == 0 else None
+
+def norm(s):
+    return re.sub(r"[`*\s]", "", s or "").lower()
+
+# the register: rows whose *Wired how* names a native file, keyed by that file
+reg = staged("_ops/TOOLING.md") or ""
+rows = {"mise.toml": set()}
+col = None
+for line in reg.splitlines():
+    if not line.lstrip().startswith("|"):
+        col = None
+        continue
+    cells = [c.strip() for c in line.strip().strip("|").split("|")]
+    if col is None:
+        heads = [norm(c) for c in cells]
+        col = heads.index("wiredhow") if "wiredhow" in heads else -1
+        continue
+    if col < 0 or col >= len(cells) or set(line.replace("|", "").strip()) <= set("-: "):
+        continue
+    if "{{" in line:
+        continue                                   # the template's own example rows
+    tool, wired = norm(cells[0]), cells[col].lower()
+    if "mise.toml" in wired:
+        rows["mise.toml"].add(tool)
+
+# mise.toml — [tools] and [bootstrap.packages], read line by line
+text, fname = staged("mise.toml"), "mise.toml"
+if text is None:
+    text, fname = staged(".mise.toml"), ".mise.toml"
+entries = []                                        # (section, key)
+if text is not None:
+    section = None
+    for rawl in text.splitlines():
+        line = rawl.split("#", 1)[0].strip()
+        if not line:
+            continue
+        m = re.match(r"^\[\s*([^\]]+?)\s*\]$", line)
+        if m:
+            section = m.group(1).replace('"', "").replace("'", "")
+            sub = re.match(r"^(tools|bootstrap\.packages)\.(.+)$", section)
+            if sub:                                  # [tools.python] — the table IS the entry
+                entries.append((sub.group(1), sub.group(2)))
+                section = "__subtable__"
+            continue
+        if section in ("tools", "bootstrap.packages"):
+            k = re.match(r"""^(?:"([^"]+)"|'([^']+)'|([A-Za-z0-9_.@/:+-]+))\s*=""", line)
+            if k:
+                entries.append((section, k.group(1) or k.group(2) or k.group(3)))
+
+def names(key):
+    bare = key.split(":", 1)[1] if ":" in key else key
+    parts = {bare.lower()}
+    parts.update(p.lower() for p in re.split(r"[/.]", bare) if p)
+    return parts
+
+declared = [(s, k, names(k)) for s, k in entries]
+for s, k, n in declared:
+    if not (n & rows["mise.toml"]):
+        print("FAIL:%s declares `%s` under [%s] and _ops/TOOLING.md has no row for it whose "
+              "*Wired how* names mise.toml — say why the project needs it." % (fname, k, s))
+for t in sorted(rows["mise.toml"]):
+    if not any(t in n for _, _, n in declared):
+        where = "there is no mise.toml" if text is None else "%s declares nothing of that name" % fname
+        print("FAIL:_ops/TOOLING.md row `%s` says it is wired by mise.toml, and %s — the row "
+              "describes a need nothing installs." % (t, where))
+NATIVE
+  while IFS= read -r _nl; do
+    case "$_nl" in FAIL:*) say_fail "${_nl#FAIL:}" ;; WARN:*) say_warn "${_nl#WARN:}" ;; esac
+  done < "$_nat"
+  rm -f "$_nat"
+fi
 
 [ "$fail" = 0 ] && { [ "$warn" = 0 ] && echo "  ✓ clean" || echo "  ✓ passed with warnings"; }
 exit "$fail"

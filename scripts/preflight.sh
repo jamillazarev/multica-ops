@@ -423,6 +423,20 @@ PYEOF
 )
 [ -n "$link_bad" ] && while IFS= read -r l; do say_fail "$l"; done <<< "$link_bad"
 
+# 4d · a name is an edge only when it is a link — the check above reads links, so a backticked
+#      name was an edge nothing could see or check. Measured 2026-09-11: 53 links against 419
+#      backticked `.md` names, of which 42 named a file in this tree; `link-names.py --write`
+#      linked those it may — 31, since §5c keeps a companion's name of a companion a name and the
+#      always-loaded core keeps its own, every link there being paid by every run — and
+#      this keeps the next one from starting the drift again. The fix is mechanical, so the
+#      refusal says the one command that makes it.
+if [ -f scripts/link-names.py ]; then
+  _ln=$(python3 scripts/link-names.py 2>&1); _lnc=$?
+  if [ "$_lnc" -ne 0 ]; then
+    say_fail "$(printf '%s\n' "$_ln" | tail -1) — first: $(printf '%s\n' "$_ln" | head -1)"
+  fi
+fi
+
 # 4b · an external URL carrying a literal `(` is stored percent-encoded, or the link checker
 # reads it truncated and reports a live page as rot. Measured next door as issue #1: four
 # "dead" links that all answered 200, one of them a URL cut at its own parenthesis. The

@@ -12,10 +12,13 @@
 
 - `scripts/check-structure.py` — Structural integrity of the docs. Every check here exists because the defect it
 - `scripts/coverage-map.py` — Regenerate the coverage map: what holds each rule, and what exercises each holder
+- `scripts/deps-report.py` — What the project depends on, why, and how much each available update matters
 - `scripts/eval-fixture.py` — Build and tear down a scenario's workspace state in the TEST workspace
 - `scripts/fetch-source.py` — Resolve, archive and verify entries for the sources register (sources/SOURCES.md)
 - `scripts/import-issues.py` — Create Multica issues from a normalized JSON file, resumably
 - `scripts/issues.py` — Paginated, corruption-tolerant issue listing for Multica
+- `scripts/link-ids.py` — In a project, an id or a path named in passing becomes a link — so Obsidian's graph, GitHub and
+- `scripts/link-names.py` — A backticked name of a file in this tree becomes a link, so GitHub, Obsidian's graph and
 - `scripts/map-blocks.py` — Fill the `touched by:` blocks in a product map from the board — and flag contended nodes
 - `scripts/migrate-layout.py` — Move a pre-0.4.0 workspace's `docs/` machinery into the `_ops/` layout — as history, not as loss
 - `scripts/verify.py` — Verify the skill against the world outside it
@@ -29,14 +32,22 @@
 
 ## Tests that exercise the holders
 
+- `scripts/test-check-releases.sh` — `check-releases.sh` exercised on its mutants and its honest twins
 - `scripts/test-company-guard.sh` — The company docs guard — `templates/company-preflight.sh` — exercised on its mutants and twins
+- `scripts/test-deps-report.sh` — deps-report.py — the updates sorted by what they ask of the owner, and the why of each thing the
 - `scripts/test-dispatch-nudge.sh` — Mutation tests for hooks/dispatch-nudge.py. Four behaviours, each shown and each shown absent:
+- `scripts/test-find-installs.sh` — `find-installs.sh` exercised on its mutants and its honest twins
+- `scripts/test-link-ids.sh` — link-ids.py — ported from opsinist with its suite — an id or a path named in passing becomes a link — shown on a throwaway project that
+- `scripts/test-link-names.sh` — link-names.py — ported from opsinist, with this repository's one-level rule — a backticked name of a file in this tree becomes a link — shown on a throwaway
 - `scripts/test-map-blocks.sh` — Tests for scripts/map-blocks.py. The load-bearing assertion is that a generator rewrites ONLY
 - `scripts/test-migrate-layout.sh` — Mutation tests for scripts/migrate-layout.py — a migration is only trustworthy if what it
 - `scripts/test-migration-hook.sh` — Mutation tests for hooks/migration-state.py — each rule shown speaking on the mutant and
+- `scripts/test-native-register.sh` — §19 of the company guard — `mise.toml` and the register held to each other — shown refusing each
 - `scripts/test-outward-gate.sh` — Mutation tests for hooks/outward-gate.py. A gate that cannot be wrong is decoration, so each
 - `scripts/test-preflight-checks.sh` — Runs against a LOCAL CLONE of HEAD — an uncommitted edit is exercised one commit late,
+- `scripts/test-recheck-trigger.sh` — §18 of the company guard — ported from opsinist's §22 — — a new tension in the source register reaches the findings resting on
 - `scripts/test-rule-home.sh` — Mutation tests for hooks/rule-home.py — it must speak on the trap and stay silent everywhere
+- `scripts/test-verify-reads.sh` — `--verify-reads` shown refusing each mutant and passing its honest twin
 - `scripts/tests/test_issues_helpers.py` — Offline tests for scripts/issues.py helpers — no live CLI, no pytest
 
 ## Fixtures — what a scenario can be run against

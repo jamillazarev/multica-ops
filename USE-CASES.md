@@ -56,6 +56,8 @@ are shortcuts for when you already know the name. Both columns do the same thing
 | "A user complained" | *"a customer says export is confusing"* | `/multica-ops:mops feedback …` |
 | "Ship it" | *"release this"* / *"publish the episode"* | `/multica-ops:ship` |
 | "Did it actually work?" | *"did the new onboarding move the metric?"* | `/multica-ops:mops measure` |
+| "Is anything we use out of date — and does it matter?" | *"check our dependencies"* | `scripts/deps-report.py` — mise, npm and osv-scanner asked and sorted: **a vulnerability first, a move outside the pin as a decision with its release notes, one inside it as a routine line**; what could not be asked is said, and nothing is installed (PLAYBOOKS → *When something it needs has a newer version*) |
+| "What is this package even for?" | *"why do we have lodash?"* | `scripts/deps-report.py --why` — its register row, or the decision that named it, or *no why recorded*: a view, not a second list to keep |
 
 ## Research, brand and audience
 
@@ -66,6 +68,8 @@ are shortcuts for when you already know the name. Both columns do the same thing
 | "Being wrong here is expensive — don't just agree with me" | *"council this"* · *"прогони через совет"* | four angles answer independently, cross-review anonymized, and the synthesis leads with **the strongest dissent**. You hear the price first — **nine runs** — and the answer says `provider: one` when every voice was the same model |
 | "We need a brand / ours feels dated" | *"we need an identity"* · *"our brand looks old"* | `/multica-ops:mops brand` |
 | "Would experts tear this apart?" | *"have the experts review this spec"* | `/multica-ops:mops validate …` |
+| "A new study says the opposite of one we rely on" | *"add this paper to the sources"* | the entry records what it **reads against**, and the company guard refuses the commit until every finding resting on the contested source is re-read — `Answered` re-stamped — or marked `stale` |
+| "I know we wrote it down — search can't find it" | *"find where we said the test keeps flipping"* | grep first; where the words differ and it keeps missing, **ck** is the opt-in — declared in `mise.toml` with its row, installed only on your word, never run in a repository that is not yours (STACKS → *Finding a thing in the project's notes*) |
 | "Where does that video say it?" | *"get me the transcript"* | the caption track first, the audio transcribed only when there is none — nobody pays GPU time for words already written down |
 | "Turn this into a deck" | *"make the slides"* | markdown in the repo, so the deck diffs and reviews like everything else; a `.pptx` only when a person outside the repo must edit it |
 
@@ -88,6 +92,7 @@ are shortcuts for when you already know the name. Both columns do the same thing
 | "The import died halfway" | `/multica-ops:import` again | it skips what's already there and continues |
 | "These imported tickets are one-liners nobody can act on" | *"bring them up to our standard"* | the quality pass: per issue, what's missing (why · success · DoD · dates) → rewrite/extend/leave/drop, in batches you approve |
 | "Our client keeps filing in Linear and always will" | `/multica-ops:mops module` | the tracker bridge as a standing sync, with the direction of truth written down per field |
+| "A second runtime is taking this work" | *"what does its machine need?"* | the joining audit's machine line: each `mise.toml` entry missing there, what the dry runs would change, and **`mise trust` first — all on your word**, since a runtime is a machine with other projects on it (PLAYBOOKS → *What the project needs from the machine*) |
 | "We run Multica on our own server" | *"we're self-hosted at …"* | `multica setup self-host` — the method is unchanged, but backups and server upgrades become yours |
 
 ## The team

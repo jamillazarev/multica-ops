@@ -168,7 +168,7 @@ does the same for Gemini CLI, and **[CLAUDE.md](CLAUDE.md)** carries the session
 *developing* the skill rather than using it. Slash commands are a Claude Code plugin bonus
 (namespaced `/multica-ops:…`); everywhere else plain language reaches the same flows.
 
-> **Layout note:** the corpus is at **`skills/mops/SKILL.md`**, one folder per verb beside it —
+> **Layout note:** the corpus is at **[`skills/mops/SKILL.md`](skills/mops/SKILL.md)**, one folder per verb beside it —
 > the plugin layout where **the folder name becomes the command** (`skills/init/` →
 > `/multica-ops:init`). A single `SKILL.md` at the repository root is the *one-skill* form and
 > silently suppresses every other command, which is the defect this layout fixes (measured
@@ -209,7 +209,7 @@ does ask for is named in **[SECURITY.md](SECURITY.md)**.
 | [evals/](evals/) | the 30 scenarios, plus `runs/` — the recorded verdicts per release |
 | [templates/](templates/) · [scripts/](scripts/) | guide · roadmap · brand · component docs · decisions · architecture · tooling · team · **a docs guard for the companies Mops builds** · ops helpers · resumable backlog import |
 
-Everything but `skills/mops/SKILL.md` loads **only when its trigger fires**.
+Everything but [`skills/mops/SKILL.md`](skills/mops/SKILL.md) loads **only when its trigger fires**.
 
 **Contributing?** Run **`bash scripts/preflight.sh --install`** once — the pre-commit hook holds
 the invariants this repo has actually broken before, and **[AGENTS.md](AGENTS.md)** is the

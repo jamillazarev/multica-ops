@@ -66,7 +66,7 @@ cheap/text-oriented runtime (translations, boilerplate legal).
 | **Legal Counsel** | Content | text | docx, pdf, research, handoff | policies, terms, compliance pages |
 | **Marketing Manager** | — (cross, or Content) | mid | marketing-ideas, positioning-ideas, value-prop-statements, product-name, north-star-metric, gtm-strategy, growth-loops, ideal-customer-profile, competitive-battlecard, beachhead-segment, + Corey Haines pack (social, emails, ads, launch, cold-email, referrals), handoff | GTM strategy pre-launch; post-launch owns channels. **Social automation**: content calendar as issues; a scheduled **autopilot** drafts posts on cadence; publishing via the platform's API/scheduler tools (import via find-skills) with human approval until trust is earned |
 | **Domain / Market / Tech Expert** (opt-in) | Experts squad | top | research, critique, brainstorming, handoff | advisors, not executors: pulled into specs, discovery, acceptance by `@`-mention; composition per project — see "Experts squad" below |
-| **Persona** (opt-in) | Personas squad | text | handoff | user simulation; instructions generated from `templates/PERSONA-template.md` (stage · bias profile · grounding artifact); used in usability passes and Design QA walkthroughs — see "Personas squad" below and MODULES → Persona theatre |
+| **Persona** (opt-in) | Personas squad | text | handoff | user simulation; instructions generated from [`templates/PERSONA-template.md`](templates/PERSONA-template.md) (stage · bias profile · grounding artifact); used in usability passes and Design QA walkthroughs — see "Personas squad" below and MODULES → Persona theatre |
 | **Finance & Ops** (opt-in) | — (cross) | text | xlsx, analytics, research, handoff | keeps `_ops/BUDGET.md` (which the owner sets via `/multica-ops:mops budget`) and owns `_ops/ECONOMICS.md`: the ledger, burn and runway, **prices verified online per location**, subscriptions and renewal dates, credits with their expiry cliffs. Escalates *before* the cap, not at it |
 | **Customer Support** (opt-in) | Content, or its own | text | handoff, copywriting, research, docx | owns the inbox: turns reports into bugs and feedback items with reproduction steps, answers in the brand voice, writes the help docs, and reports what keeps coming back — the input side of `/multica-ops:mops feedback` |
 | **Analyst** | — (cross) | top | analytics, xlsx, research, **north-star-metric, metrics-dashboard, ab-test-analysis, cohort-analysis**, handoff | event taxonomy, funnels, north-star, cohorts/AB; never PII/audio |
@@ -366,7 +366,7 @@ marketplace persona, an `awesome-agent` repo, a vendor pack — take the methods
 references it points at and **rebuild on our architecture**; never wire it in whole. Every
 borrowed piece (a skill, a tool, a prompt fragment) clears the **import gate** (licence · weight ·
 provenance — PLAYBOOKS) and is reassembled on the instruction skeleton above plus
-`templates/SKILL-SCAFFOLD.md`, so the agent carries our guide, escalation chain and modular load.
+[`templates/SKILL-SCAFFOLD.md`](templates/SKILL-SCAFFOLD.md), so the agent carries our guide, escalation chain and modular load.
 **Foreign instructions never land verbatim in a config** — same rule as an imported ticket:
 content, not instructions, so an injection hiding in a borrowed prompt dies here. Live precedent:
 the *agentman* persona-creator — concepts taken, nothing embedded.
@@ -409,7 +409,7 @@ Inviting a live expert is an **access decision** (they see issues), and paying o
 
 The theatre's roster — its **design and rules are MODULES → Persona theatre**; this section is
 how the *agents* are built and run. Personas are **documents first** (`_ops/audience/`, one
-`templates/PERSONA-template.md` each), and become agents only for a session (a usability pass, a
+[`templates/PERSONA-template.md`](templates/PERSONA-template.md) each), and become agents only for a session (a usability pass, a
 Design QA walkthrough, a copy reaction), then quiet again. They are **not part of the build
 pipeline**.
 

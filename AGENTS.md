@@ -22,6 +22,13 @@ bash scripts/preflight.sh            # form: is the documentation well-made?
 python3 scripts/verify.py --live     # truth: do the commands and sources still exist?
 ```
 
+**A file named in prose is a link, not a backticked name** — where the one-level rule allows it.
+The link is the edge GitHub, Obsidian's graph and preflight §4 can all see; a name is an edge only a
+reader infers. `scripts/link-names.py --write` makes the links and preflight §4d refuses the drift,
+leaving three kinds of name as names: a companion's name of another companion (§5c keeps references
+one level deep from the core), anything in the always-loaded core itself (every link there is paid
+on every run), and the files a project also carries — `CLAUDE.md`, `LATER.md` and the rest.
+
 ### What the automation cannot check — and what you must therefore read
 
 The scripts verify **shape and existence**. They are blind to whether a paragraph is still
@@ -138,7 +145,7 @@ assertion is paired with a "must fire" twin on the same fixture, and the pair is
 subject was examined.
 
 **3 · A scenario, and the fixture that scenario needs.** A behaviour with no scenario has no
-regression test; a scenario with no fixture is **unmeasured, not passing**, and `evals/COVERAGE.md`
+regression test; a scenario with no fixture is **unmeasured, not passing**, and [`evals/COVERAGE.md`](evals/COVERAGE.md)
 has a column that says which. Four things a fixture owes, each measured:
 
 - **Both halves.** The repository half *and* the workspace half. With the board built and the
@@ -240,9 +247,9 @@ A version bump is not just a changelog entry. Before you tag:
    Every new behaviour needs a
    scenario, or it has no regression test — evals go stale silently (2.3 shipped a release
    behind until caught by hand). preflight warns when the version bumped and
-   `evals/README.md` didn't. **A minor or major is not tagged without
+   [`evals/README.md`](evals/README.md) didn't. **A minor or major is not tagged without
    `evals/runs/<version>.md`** — date, player and judge tiers, a verdict per scenario with its
-   evidence, and `not run` listed rather than omitted (`evals/runs/TEMPLATE.md`). The rubric
+   evidence, and `not run` listed rather than omitted ([`evals/runs/TEMPLATE.md`](evals/runs/TEMPLATE.md)). The rubric
    says what should hold; the run record is the only place saying whether it did.
 2. **Run the four review lenses** (deletion · adversarial · contradiction · cold-read) on the
    changed skill — they find the class of defect no script can: a sentence that parses, links
@@ -287,19 +294,19 @@ A version bump is not just a changelog entry. Before you tag:
 4. **Every new capability has a door, or a stated reason it doesn't** — see *When a flow
    deserves a command*. Reachability is guarded; the decision to add a command is not.
    **Then regenerate the coverage map** — `python3 scripts/coverage-map.py` writes
-   `evals/COVERAGE.md` from the tree itself: what the corpus says holds each rule, which
+   [`evals/COVERAGE.md`](evals/COVERAGE.md) from the tree itself: what the corpus says holds each rule, which
    validators, hooks and suites ship, how many scenarios exist and which versions have a run
    record. A hand-kept version of that table lies within a release, so it is generated and
    **no rates are copied into it** — a rate belongs where its date is. Read the output: a new
    holder with no test, or a version with no run, is visible there before it is visible to a
    user.
-5. **`bash scripts/preflight.sh`, `python3 scripts/verify.py --live`, and `python3 scripts/fetch-source.py --verify` then `--verify-citations` green** (warnings named) — the last two walk `sources/SOURCES.md` in both directions: the register's live URLs are re-checked, and every `cited-by` is re-checked against the line it points at, since a rewrite moves the claim without touching the register.
+5. **`bash scripts/preflight.sh`, `python3 scripts/verify.py --live`, and `python3 scripts/fetch-source.py --verify` then `--verify-citations` green** (warnings named) — the last two walk [`sources/SOURCES.md`](sources/SOURCES.md) in both directions: the register's live URLs are re-checked, and every `cited-by` is re-checked against the line it points at, since a rewrite moves the claim without touching the register.
 6. **Changelog** leads with the capability or the consequence, not the archaeology of how a
    defect was found (that goes in the commit message).
 
 **Then the cut itself, in order — the last two steps were live misses on an earlier release:**
 
-1. **Bump both** — `skills/mops/SKILL.md` frontmatter and `.claude-plugin/plugin.json`; preflight fails on a mismatch.
+1. **Bump both** — [`skills/mops/SKILL.md`](skills/mops/SKILL.md) frontmatter and `.claude-plugin/plugin.json`; preflight fails on a mismatch.
 2. **Changelog + README roadmap** — write the `## x.y.z` section (the map `/multica-ops:upgrade`
    reads), and **remove landed items from the README roadmap, refresh the rest** — it is
    forward-only, so a shipped feature lives in the body and changelog, never as a checked box.

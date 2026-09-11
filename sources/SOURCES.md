@@ -23,8 +23,8 @@ words that are not the same answer: **`none found`** — looked, nothing here pu
 **`not checked`**, honest ignorance. An empty field is a defect; the two words are not. **It is
 symmetric**, and `python3 scripts/fetch-source.py --verify-reads` refuses the pair that only points
 one way. **Ported from the sibling 2026-09-10, where it caught two one-way pairs on its first run**;
-here it reports **15 of 15 still `not checked`**, which is a fact about this register rather than a
-defect in it..
+here it reported **15 of 15 still `not checked`** on arrival, which was a fact about this register
+rather than a defect in it. The first pair to name each other is the tool-format pair at the end.
 
 **A back-pointer names a section and proves what it said** — `file.md#anchor (sha:…, checked …)`
 — minted by `scripts/fetch-source.py --cite <file.md>#<anchor>`. A line number names a *position*,
@@ -59,7 +59,7 @@ reminded of is a deletion). Both run each release (AGENTS.md → Cutting a relea
 - **Distillate:** Agents built from a person's **own self-reports** reproduce that person's survey answers at **83%** (interview-grounded) / **82%** (survey-grounded) / **86%** (both) of the person's two-week test-retest ceiling, versus **74%** for demographics-only; a free-text "persona paragraph" scores **0.71**, below even the demographics baseline (0.74). Self-report grounding also **reduces accuracy disparities** across racial and ideological groups. The takeaway the skill leans on: the grounding artifact — the interview transcript — *is* the product, not a written bio.
 - **Check-date:** 2026-07-27
 - **Reads against:** `not checked`
-- **Cited-by:** MODULES.md#persona-theatre-synthetic-and-live-audiences (sha:dbfc6761, checked 2026-08-07), MODULES.md#staging-proto-persona-validated-persona (sha:f8ca5f73, checked 2026-08-07), templates/PERSONA-template.md#bias-profile-24-named-biases-each-with-its-source (sha:80d2a6dd, checked 2026-08-07)
+- **Cited-by:** MODULES.md#persona-theatre-synthetic-and-live-audiences (sha:070ca2bf, checked 2026-09-11), MODULES.md#staging-proto-persona-validated-persona (sha:f8ca5f73, checked 2026-08-07), templates/PERSONA-template.md#bias-profile-24-named-biases-each-with-its-source (sha:80d2a6dd, checked 2026-08-07)
 
 ### park-hai-brief · Park et al., Stanford HAI policy brief
 - **Citation:** Park, J.S., et al. "Simulating Human Behavior with AI Agents." Stanford HAI Policy Brief (May 20, 2025).
@@ -70,7 +70,7 @@ reminded of is a deletion). Both run each release (AGENTS.md → Cutting a relea
 - **Distillate:** The policy brief frames the **consent machinery** for simulating individuals and legitimizes the **AI-conducted interview** as the grounding step. It matches the v1 ("1,000 People") framing and carries the stronger **"demographic personas amplify stereotype bias"** phrasing that the current peer-reviewed version later softened to "reduces accuracy disparities" — which is why the skill attributes the sharper claim to the brief, not the paper.
 - **Check-date:** 2026-07-27
 - **Reads against:** `not checked`
-- **Cited-by:** MODULES.md#persona-theatre-synthetic-and-live-audiences (sha:dbfc6761, checked 2026-08-07), templates/PERSONA-template.md#bias-profile-24-named-biases-each-with-its-source (sha:80d2a6dd, checked 2026-08-07)
+- **Cited-by:** MODULES.md#persona-theatre-synthetic-and-live-audiences (sha:070ca2bf, checked 2026-09-11), templates/PERSONA-template.md#bias-profile-24-named-biases-each-with-its-source (sha:80d2a6dd, checked 2026-08-07)
 
 ### ashokkumar-nature · Ashokkumar et al., direction not magnitude
 - **Citation:** Ashokkumar, A., Hewitt, L., Ghezae, I., Willer, R. Nature (advance online publication, 2026-07-08). doi:10.1038/s41586-026-10742-x.
@@ -80,7 +80,7 @@ reminded of is a deletion). Both run each release (AGENTS.md → Cutting a relea
 - **Distillate:** Across a large replication set, LLM simulations track the **direction** of experimental effects at about **r≈0.85** while **systematically overestimating their magnitude**. This is the evidence for the theatre's hardest rule: a synthetic verdict may state direction, **never a magnitude** (no "23% would churn").
 - **Check-date:** 2026-07-27
 - **Reads against:** `not checked`
-- **Cited-by:** MODULES.md#persona-theatre-synthetic-and-live-audiences (sha:dbfc6761, checked 2026-08-07)
+- **Cited-by:** MODULES.md#persona-theatre-synthetic-and-live-audiences (sha:070ca2bf, checked 2026-09-11)
 
 ### ls-types · Lewis & Sauro, a taxonomy of synthetic users
 - **Citation:** Lewis, J., Sauro, J. "What Are the Different Types of Synthetic Users?" MeasuringU (2026-06-23).
@@ -90,7 +90,7 @@ reminded of is a deletion). Both run each release (AGENTS.md → Cutting a relea
 - **Distillate:** Names five types of synthetic user — AI proto-persona, demographic-based, persona-based, research-grounded, and digital twin — ordered by the **strength of their tie to real human data**. This is the stage vocabulary the theatre uses (proto vs validated vs twin).
 - **Check-date:** 2026-07-27
 - **Reads against:** `not checked`
-- **Cited-by:** MODULES.md#persona-theatre-synthetic-and-live-audiences (sha:dbfc6761, checked 2026-08-07)
+- **Cited-by:** MODULES.md#persona-theatre-synthetic-and-live-audiences (sha:070ca2bf, checked 2026-09-11)
 
 ### ls-review · Lewis & Sauro, a review of synthetic-user experiments
 - **Citation:** Lewis, J., Sauro, J. "A Review of Experiments with Synthetic Users." MeasuringU (2026-04-14).
@@ -100,7 +100,7 @@ reminded of is a deletion). Both run each release (AGENTS.md → Cutting a relea
 - **Distillate:** Reviews ~12 recent experiments with synthetic users and finds mixed results, with synthetic responses showing **artificially low variability** and **distorted magnitudes** relative to real respondents — so they can indicate direction but not the size of an effect. (Their framing — low variability and distortion — is what the skill states, *not* "clustering toward neutral.")
 - **Check-date:** 2026-07-27
 - **Reads against:** `not checked`
-- **Cited-by:** MODULES.md#persona-theatre-synthetic-and-live-audiences (sha:dbfc6761, checked 2026-08-07), MODULES.md#accuracy-score-and-consent-for-twins-of-real-people (sha:2deafaa5, checked 2026-08-07)
+- **Cited-by:** MODULES.md#persona-theatre-synthetic-and-live-audiences (sha:070ca2bf, checked 2026-09-11), MODULES.md#accuracy-score-and-consent-for-twins-of-real-people (sha:59e1ec81, checked 2026-09-11)
 
 <!-- Mahajan restore point: MODULES.md previously credited a "Mahajan synthetic-users taxonomy"
      cited by name only. Research (2026-07-27) could not locate any such work in the checked
@@ -203,7 +203,7 @@ reminded of is a deletion). Both run each release (AGENTS.md → Cutting a relea
 - **Distillate:** Method lineage, not evidence. cookiy's MIT skill supplied the **shape** of the qualitative-research flows (its `qualitative-research-planner` → our persona-interview flow, its `synthesize-research-report` → our QDA step), adapted through the import gate. agentman supplied the **calibration and cohort concepts** behind the persona response-calibration layer. Recorded so every adaptation is auditable and no vendor wrapper is smuggled in.
 - **Check-date:** 2026-07-27
 - **Reads against:** `not checked`
-- **Cited-by:** MODULES.md#staging-proto-persona-validated-persona (sha:f8ca5f73, checked 2026-08-07), MODULES.md#bias-profiles-every-persona-carries-24-each-with-its-source (sha:a01bd41f, checked 2026-08-07), MODULES.md#mixed-live-synthetic-hypothesis-beside-fact (sha:5f160353, checked 2026-08-07), ROLES.md#any-role-from-conversation-the-role-builder (sha:f3c1b1e6, checked 2026-08-07)
+- **Cited-by:** MODULES.md#staging-proto-persona-validated-persona (sha:f8ca5f73, checked 2026-08-07), MODULES.md#bias-profiles-every-persona-carries-24-each-with-its-source (sha:a01bd41f, checked 2026-08-07), MODULES.md#mixed-live-synthetic-hypothesis-beside-fact (sha:5f160353, checked 2026-08-07), ROLES.md#any-role-from-conversation-the-role-builder (sha:76e2813c, checked 2026-09-11)
 
 ### standards-cluster · named review standards
 - **Citation:** Nielsen, J. "10 Usability Heuristics for User Interface Design" (NN/g). W3C, "Web Content Accessibility Guidelines (WCAG)." Wharton, Rieman, Lewis & Polson, "The Cognitive Walkthrough Method" (1994).
@@ -214,3 +214,37 @@ reminded of is a deletion). Both run each release (AGENTS.md → Cutting a relea
 - **Check-date:** 2026-07-27
 - **Reads against:** `not checked`
 - **Cited-by:** REFERENCE.md#1-objects (sha:1711aabc, checked 2026-08-07)
+
+---
+
+## What the tools print — read in their own sources
+
+### mise-outdated · mise, `outdated` — what its JSON means, and what makes it refuse a file
+- **Citation:** jdx/mise, `src/toolset/outdated_info.rs` (main branch, read 2026-09-11), and the `mise outdated`, `mise ls` and `mise bootstrap` help of mise 2026.9.5.
+- **Live:** https://github.com/jdx/mise/blob/main/src/toolset/outdated_info.rs
+- **Archive:** archive: pending  (run: fetch-source.py --archive https://github.com/jdx/mise/blob/main/src/toolset/outdated_info.rs)
+- **Licence:** MIT — a copy may be carried; only our distillate is held
+- **Distillate:** `mise outdated --json` is an object keyed by tool — `requested`, `current` (null when not installed), `bump`, `latest`, and `release_url` (omitted when the backend publishes none). **`latest` means the newest version inside the pin without `--bump`, and the newest at all with it**; `bump` is the new pin at the old pin's precision (`22` becomes `24`). **A tool whose lookup fails is dropped from the JSON with only a warning on stderr**, so an offline run and a current one both print `{}`. The short `-l` is deprecated and becomes `--local` in 2027.8.5. Measured on 2026.9.5: a `mise.toml` with `[tools]` alone is read on any machine, while one carrying `[bootstrap.packages]` is refused by every command until `mise trust`.
+- **Check-date:** 2026-09-11
+- **Reads against:** `npm-outdated` — they agree, and that is the finding: npm's *wanted* is mise's *latest* without --bump, npm's *latest* is mise's with it, so one report can sort both by the same line
+- **Cited-by:** PLAYBOOKS.md#when-something-it-needs-has-a-newer-version (sha:e94db945, checked 2026-09-11), PLAYBOOKS.md#what-the-project-needs-from-the-machine (sha:91f89498, checked 2026-09-11)
+
+### npm-outdated · npm, `npm outdated` — an update inside the range, and a move beyond it
+- **Citation:** npm CLI documentation, *npm-outdated*, and `lib/commands/outdated.js`, npm/cli `latest` branch, read 2026-09-11.
+- **Live:** https://docs.npmjs.com/cli/commands/npm-outdated
+- **Archive:** archive: pending  (run: fetch-source.py --archive https://docs.npmjs.com/cli/commands/npm-outdated)
+- **Licence:** copyrighted (npm, a GitHub company) — cite + our distillate
+- **Distillate:** `wanted` is the newest version that satisfies the range in `package.json`; `latest` is the version tagged latest in the registry, and npm's own output colours the first *update now* and the second *proceed with caution*. With `--json` the answer is an object keyed by package name whose value becomes an **array** when one name is outdated in two places; `current` is absent when the package is not installed; the command exits 1 whenever anything is outdated, so its exit code says nothing about whether it answered.
+- **Check-date:** 2026-09-11
+- **Reads against:** `mise-outdated` — the same line drawn for runtimes and tools: they agree, which is what lets the pin, not the numbering, decide what is routine
+- **Cited-by:** PLAYBOOKS.md#when-something-it-needs-has-a-newer-version (sha:e94db945, checked 2026-09-11)
+
+### pep-594 · Python 3.13 removed nineteen standard-library modules
+- **Citation:** Python Software Foundation, *What's New In Python 3.13*, "Important removals"; PEP 594, "Removing dead batteries from the standard library".
+- **Live:** https://docs.python.org/3/whatsnew/3.13.html
+- **Archive:** archive: pending  (run: fetch-source.py --archive https://docs.python.org/3/whatsnew/3.13.html)
+- **Licence:** copyrighted (© Python Software Foundation) — cite + our distillate
+- **Distillate:** 3.13 removed the nineteen "dead batteries" deprecated in 3.11 — aifc, audioop, cgi, cgitb, chunk, crypt, imghdr, mailcap, msilib, nis, nntplib, ossaudiodev, pipes, sndhdr, spwd, sunau, telnetlib, uu and xdrlib — and the 2to3 tool with lib2to3. A minor version number that breaks any code importing one of them: the reason the line between a routine update and a decision is the project's own pin, not the version's numbering.
+- **Check-date:** 2026-09-11
+- **Reads against:** `none found`
+- **Cited-by:** PLAYBOOKS.md#when-something-it-needs-has-a-newer-version (sha:e94db945, checked 2026-09-11)

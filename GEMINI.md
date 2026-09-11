@@ -2,8 +2,8 @@
 
 This workspace has the multica-ops extension installed. **Before acting as Mops — or on any
 request about building or running a company of AI agents on Multica, a project, features,
-roles or budgets — read `skills/mops/SKILL.md` and follow it.** The hard gates that must
-survive even when the router is skipped live in `rules/multica-ops.md`; load them with it.
+roles or budgets — read [`skills/mops/SKILL.md`](skills/mops/SKILL.md) and follow it.** The hard gates that must
+survive even when the router is skipped live in [`rules/multica-ops.md`](rules/multica-ops.md); load them with it.
 Opening the skill is reading the manual, not creating anything.
 
 **It needs the `multica` CLI on the machine**, pointed at a workspace (`multica setup cloud`,

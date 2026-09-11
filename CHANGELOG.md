@@ -3,6 +3,70 @@
 Newest first. Each entry leads with what you can now do, not with which files moved. This is
 also the migration map `/multica-ops:upgrade` reads.
 
+## 0.4.18 — 2026-09-11
+
+**What to do — nothing breaks, and two things are offered.** Re-copy the guard from
+`templates/company-preflight.sh` to get §18 and §19 below. **If the company repository already has
+a `mise.toml`, the first commit that stages it or `_ops/TOOLING.md` asks for a register row per
+entry** — the refusal names each one. If `mise.toml` carries `[bootstrap.packages]`, mise will not
+read it on a runtime's machine until `mise trust` is run there — the owner's to say. And the skill's
+`scripts/link-ids.py`, run bare, lists the `_ops/` files your notes name in passing; `--write` turns
+them into links, only on the owner's word.
+
+**What the project needs from a runtime's machine now has a place, and the guard holds it there.**
+A runtime, a CLI tool or a system package lives in `mise.toml`; `_ops/TOOLING.md` says why, and §19
+refuses an entry without a row and a row without an entry (PLAYBOOKS → *What the project needs from
+the machine*). **An MCP server is not in that file**: here it is carried by an agent's `mcp_config`,
+which lives in the workspace where no commit can see it, so its row names the agents and the health
+sweep probes them. **Nothing is installed without the owner's word, mise included** — a runtime is a
+machine with other work on it. The joining audit now carries what a runtime's machine lacks, with
+the dry runs, `mise trust` first: measured on mise 2026.9.5, a `mise.toml` with
+`[bootstrap.packages]` is not read at all until trusted. Ported from `opsinist`, where the same
+section also guards a committed `.mcp.json`. `scripts/test-native-register.sh` **12/12**, run twice —
+the second time on the system `python3`, 3.9 on a Mac without Homebrew, which has no `tomllib`.
+
+**An available update now says what it asks of the owner.** `scripts/deps-report.py` asks `mise
+outdated`, `npm outdated` and `osv-scanner` and sorts every answer — **a published vulnerability
+first · a move outside the project's pin as a decision, its release notes the migration map · a
+move inside it as a routine line · what is declared and missing · and what could not be asked, said
+as *not checked*** (PLAYBOOKS → *When something it needs has a newer version*, and step 3 of the
+version check). The line is the project's pin, not the numbering: Python 3.12 → 3.13 is a minor
+number that removed nineteen standard-library modules. **It reads and never writes.** `--why` shows
+what each declared thing is for, offline, from its register row or the decision naming it.
+`scripts/test-deps-report.sh` **83/83**. The formats it reads were taken from the tools' own sources
+and are now register entries: `mise-outdated`, `npm-outdated`, `pep-594`.
+
+**`Recheck when` fires by itself on the one event the tree records.** A commit adding a name to a
+source entry's `Reads against` must carry every finding in `_ops/research/` that rests on either end
+re-read — `Answered` re-stamped — or marked `stale`, or §18 refuses it naming the finding.
+`scripts/test-recheck-trigger.sh` **11/11**. Porting it caught a defect in the suite on both sides:
+three checks looked for a finding's *filename* anywhere in the output, and this guard's §4b names
+unlinked files — so they now look for the §18 sentence itself, in `opsinist` too.
+
+**Names became links where this repository's rules allow it.** 53 links against 419 backticked
+`.md` names — but only 42 of those name a file in this tree; the rest name a project's files or
+another repository's, and linking them would lie. `scripts/link-names.py --write` linked **31**:
+it leaves a companion's name of another companion a name, because §5c keeps references one level
+deep from the core, and it leaves the core alone, since every link there is paid on every run.
+Preflight §4d refuses the next unlinked one. `test-link-names.sh` **28/28** · `test-link-ids.sh`
+**21/21**. Seven source citations were re-minted after the rewrite changed their passages by link
+syntax alone; the three that had already drifted before it were left as they were.
+
+**The shelf rows added after 0.4.17** — agent sandboxing, pinned runtimes per project, search by
+meaning (ck, qmd), Podman, Open Notebook — now point at this repository's own sections, and the
+search row's line about a stale index was wrong for ck, which refreshes its index before every
+search.
+
+**What the capability bar is still owed, said rather than left silent:** no scenario covers any of
+this — whether a joining audit *offers* the machine line, or a run re-stamps a finding without being
+refused, is behaviour, and it has no fixture yet. Each mechanism has its form and its mutation suite,
+and each is reachable from PLAYBOOKS, FLOWS, BOOTSTRAP or USE-CASES.
+
+Eval state: **not run.** A patch; the suites measure the forms, not a run's behaviour.
+
+**Trio:** two diagrams (PLAYBOOKS), five situations in USE-CASES, and three register entries for
+the claims about the outside world.
+
 ## 0.4.17 — 2026-09-11
 
 **A counted intro is charged only with the list nested under it.** A sentence ending in a colon —

@@ -46,6 +46,16 @@ jobs:
 
       - name: the company guard — the file that ships into other people's repos
         run: bash scripts/test-company-guard.sh
+      - name: the company guard's mise.toml section — every entry a row, every row an entry
+        run: bash scripts/test-native-register.sh
+      - name: the company guard's recheck — a new tension reaches the findings resting on it
+        run: bash scripts/test-recheck-trigger.sh
+      - name: the dependency report — each update sorted by what it asks, and the why of each
+        run: bash scripts/test-deps-report.sh
+      - name: names become links — and never where they must not
+        run: bash scripts/test-link-names.sh
+      - name: a project's mentions become links — never its declarations
+        run: bash scripts/test-link-ids.sh
 
       # `find-installs.sh` decides whether an install's documented update route can actually be
       # walked, and it shipped with no test — under a commit titled "a route nobody verifies is a

@@ -2,7 +2,7 @@
 description: Something went wrong or made the work harder — recorded where it belongs, and if it is the skill's own defect, packaged into a file you can send.
 ---
 
-Load and follow the **multica-ops** skill (`../mops/SKILL.md`), executing its `/multica-ops:report` flow — the procedure is in `SECURITY.md` → *Reporting a defect in this skill*.
+Load and follow the **multica-ops** skill (`../mops/SKILL.md`), executing its `/multica-ops:report` flow — the procedure is in [`SECURITY.md`](../../SECURITY.md) → *Reporting a defect in this skill*.
 
 Something went wrong, or made the work harder than it needed to be. **You do not have to know whose defect it is** — that is the first thing this decides, and it decides it from the evidence rather than asking you to classify your own frustration.
 

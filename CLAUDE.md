@@ -35,11 +35,13 @@ workspace under migration, so there is no `UPGRADES.md` and none is owed.
    `python3 scripts/tests/test_issues_helpers.py` · and **every shipped guard's mutation
    suite** — `test-migration-hook.sh` · `test-migrate-layout.sh` · `test-outward-gate.sh` ·
    `test-rule-home.sh` · `test-map-blocks.sh` · `test-dispatch-nudge.sh` ·
-   `test-preflight-checks.sh`. Each one's load-bearing assertion is about what
+   `test-preflight-checks.sh` · `test-native-register.sh` · `test-recheck-trigger.sh` ·
+   `test-link-names.sh` · `test-link-ids.sh` · `test-deps-report.sh` · `test-check-releases.sh` ·
+   `test-verify-reads.sh`. Each one's load-bearing assertion is about what
    its holder *refuses*, so a suite left out of this list is a guard nobody re-checks.
    Green is evidence about the corpus, never about behaviour — behaviour is the eval suite's
    job, and **a minor or major is not tagged without `evals/runs/<version>.md`**. Then
-   `python3 scripts/coverage-map.py` and *read* `evals/COVERAGE.md`: a holder with no test and
+   `python3 scripts/coverage-map.py` and *read* [`evals/COVERAGE.md`](evals/COVERAGE.md): a holder with no test and
    a version with no run record both show up there first.
 5. **Changelog entry** (capability first — it is the migration map `/multica-ops:upgrade`
    reads) → bump every manifest (**the sweep runs inside preflight**, so a straggler fails
