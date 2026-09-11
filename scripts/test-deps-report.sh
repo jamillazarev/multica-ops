@@ -50,7 +50,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-docs = ["mkdocs>=1.5"]
+docs = ["mkdocs>=1.5"]   # "requirements.txt" is the old list — a quote in a comment is not a dependency
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8"
@@ -240,6 +240,16 @@ suite() {   # $1 = a label, $2 = the python3 to run on
   done
   has '15 declared · 5 with a why (3 in the register, 2 in the decisions) · 10 without.' && ok \
     || bad "$L the why view's count is wrong: $(printf '%s\n' "$OUT" | grep declared)"
+  [ "$(printf '%s\n' "$OUT" | grep -c 'requirements.txt')" = 0 ] && ok || bad "$L a quoted word in a comment became a dependency"
+
+  # a key is a path: the same kind of declarations with no table header at all, a quote in a comment
+  cp "$T/p/mise.toml" "$T/mise.bak"
+  printf 'tools.python = "3.12"\ntools."github:BeaconBay/ck" = "latest"\nbootstrap.packages."brew:ffmpeg" = "latest"   # "quoted" is not a key\n' > "$T/p/mise.toml"
+  report "$WITH" "$S" --why
+  has 'python the backend runtime' && has 'github:BeaconBay/ck finding notes phrased differently' \
+    && has 'brew:ffmpeg — no why recorded' && [ "$(printf '%s\n' "$OUT" | grep -c 'quoted')" = 0 ] && ok \
+    || bad "$L a mise.toml written in dotted keys was not read as the same declarations"
+  cp "$T/mise.bak" "$T/p/mise.toml"
 }
 
 mutant() {   # $1 = what it breaks, $2 = the text to replace, $3 = its mutant, $4 = mode env, $5 = the line that must go missing, $6 = args
@@ -268,7 +278,7 @@ mutant "the two mise answers merged into one" \
 mutant "mise's failed-lookup warning ignored" \
   'for ([^:\s]+)", (e1 or "") + (e2 or "")' 'for ([^:\s]+)", ""' 'MISE_MODE=offline' 'not checked  node — mise could not look up'
 mutant "a bracket inside a quoted requirement ends the array" \
-  'if "]" in bare:' 'if "]" in line:' 'MISE_MODE=normal' 'rich                               — no why recorded' --why
+  'if "]" in unquoted(line):' 'if "]" in line:' 'MISE_MODE=normal' 'rich                               — no why recorded' --why
 
 echo "deps-report: $pass passed, $fail failed"
 [ "$fail" -eq 0 ]

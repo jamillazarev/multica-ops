@@ -748,25 +748,77 @@ for line in reg.splitlines():
 text, fname = staged("mise.toml"), "mise.toml"
 if text is None:
     text, fname = staged(".mise.toml"), ".mise.toml"
+# **A key is a path, not a word**: `[tools]` then `python = …`, a top-level `tools.python = …` and
+# `[tools.python]` then `version = …` are one declaration in three spellings, and a reader that knew
+# only the first let the other two in without a row (a review lens, 2026-09-11). And a `#` is a
+# comment only outside a string.
+def strip_comment(line):
+    q, i = None, 0
+    while i < len(line):
+        c = line[i]
+        if q:
+            if c == "\\" and q == '"':
+                i += 2
+                continue
+            if c == q:
+                q = None
+        elif c in "\"'":
+            q = c
+        elif c == "#":
+            return line[:i]
+        i += 1
+    return line
+
+def split_assignment(line):
+    q = None
+    for i, c in enumerate(line):
+        if q:
+            if c == q:
+                q = None
+        elif c in "\"'":
+            q = c
+        elif c == "=":
+            return line[:i].strip() or None
+    return None
+
+def key_path(text):
+    segs, cur, q = [], "", None
+    for c in text.strip():
+        if q:
+            if c == q:
+                q = None
+            else:
+                cur += c
+        elif c in "\"'":
+            q = c
+        elif c == ".":
+            segs.append(cur.strip())
+            cur = ""
+        else:
+            cur += c
+    segs.append(cur.strip())
+    return [x for x in segs if x]
+
 entries = []                                        # (section, key)
 if text is not None:
-    section = None
+    table = []
     for rawl in text.splitlines():
-        line = rawl.split("#", 1)[0].strip()
+        line = strip_comment(rawl).strip()
         if not line:
             continue
-        m = re.match(r"^\[\s*([^\]]+?)\s*\]$", line)
-        if m:
-            section = m.group(1).replace('"', "").replace("'", "")
-            sub = re.match(r"^(tools|bootstrap\.packages)\.(.+)$", section)
-            if sub:                                  # [tools.python] — the table IS the entry
-                entries.append((sub.group(1), sub.group(2)))
-                section = "__subtable__"
-            continue
-        if section in ("tools", "bootstrap.packages"):
-            k = re.match(r"""^(?:"([^"]+)"|'([^']+)'|([A-Za-z0-9_.@/:+-]+))\s*=""", line)
-            if k:
-                entries.append((section, k.group(1) or k.group(2) or k.group(3)))
+        m = re.match(r"^\[\[?\s*(.+?)\s*\]\]?$", line)
+        if m and split_assignment(m.group(1)) is None:
+            full = table = key_path(m.group(1))       # [tools.python] — the table IS the entry
+        else:
+            k = split_assignment(line)
+            if k is None:
+                continue
+            full = table + key_path(k)
+        if len(full) >= 2 and full[0] == "tools":
+            entries.append(("tools", full[1]))
+        elif len(full) >= 3 and full[:2] == ["bootstrap", "packages"]:
+            entries.append(("bootstrap.packages", full[2]))
+    entries = list(dict.fromkeys(entries))
 
 def names(key):
     bare = key.split(":", 1)[1] if ":" in key else key

@@ -314,39 +314,110 @@ class Why:
 
 
 def toml_entries(path, want):
-    """(name, table) for the wanted keys, from TOML read by hand — no `tomllib`, which is 3.11+ and
-    absent from the system python a Mac without Homebrew has. The guard's §19 reads mise.toml the
-    same way, for the same reason. `want(table, key)` returns a name, "[]" for an array of
-    requirement strings, or None; with key None it is asked about a table header itself."""
-    out, table, arr = [], "", None
+    """(name, kind) for every entry `want` claims, from TOML read by hand — no `tomllib`, which is
+    3.11+ and absent from the system python a Mac without Homebrew has. The guard's §19 reads
+    mise.toml the same way, for the same reason.
+
+    **A key is a path, not a word.** `[tools]` then `python = …`, a top-level `tools.python = …`, and
+    `[tools.python]` then `version = …` are one declaration in three spellings, and a reader that
+    knew only the first saw nothing in the other two (a review lens, 2026-09-11). So every key is
+    joined to its table's path, and `want(path)` is asked about the whole of it: it returns
+    `("entry", name, kind)`, `("array", kind)` for an array of requirement strings, or None.
+    **And a `#` is a comment only outside a string** — a comment holding a quote once put a phantom
+    dependency in the report."""
+    out, table, arr = [], [], None
     for raw in open(path, encoding="utf-8"):
-        line = "" if raw.lstrip().startswith("#") else re.sub(r"\s+#[^\"']*$", "", raw.rstrip("\n"))
-        bare = re.sub(r'"[^"]*"|\'[^\']*\'', "", line)      # brackets inside strings are not syntax
+        line = strip_comment(raw.rstrip("\n"))
         if arr is not None:
             arr[1].append(line)
-            if "]" in bare:
+            if "]" in unquoted(line):
                 out += [(n, arr[0]) for n in requirement_names(" ".join(arr[1]))]
                 arr = None
             continue
-        m = re.match(r"^\s*\[\[?\s*([^\]]+?)\s*\]\]?\s*$", line)
-        if m:
-            table = m.group(1).replace('"', "").replace("'", "")
-            name = want(table, None)
-            if name:
-                out.append((name, table))
+        m = re.match(r"^\s*\[\[?\s*(.+?)\s*\]\]?\s*$", line)
+        if m and "=" not in unquoted(m.group(1)):
+            table = key_path(m.group(1))
+            got = want(table)
+            if got and got[0] == "entry":
+                out.append((got[1], got[2]))
             continue
-        m = re.match(r'^\s*(?:"([^"]+)"|\'([^\']+)\'|([A-Za-z0-9_.@:/+-]+))\s*=\s*(.*)$', line)
-        if not m:
+        k, v = split_assignment(line)
+        if k is None:
             continue
-        got = want(table, m.group(1) or m.group(2) or m.group(3))
-        if got == "[]":
-            if "]" in re.sub(r'"[^"]*"|\'[^\']*\'', "", m.group(4)):
-                out += [(n, table) for n in requirement_names(m.group(4))]
+        got = want(table + key_path(k))
+        if not got:
+            continue
+        if got[0] == "entry":
+            out.append((got[1], got[2]))
+        elif "]" in unquoted(v):
+            out += [(n, got[1]) for n in requirement_names(v)]
+        elif v.lstrip().startswith("["):
+            arr = (got[1], [v])
+    seen, uniq = set(), []
+    for name, kind in out:
+        if name and name not in seen:
+            seen.add(name)
+            uniq.append((name, kind))
+    return uniq
+
+
+def strip_comment(line):
+    """The line without its comment — a `#` inside a quoted string is not one."""
+    q, i = None, 0
+    while i < len(line):
+        c = line[i]
+        if q:
+            if c == "\\" and q == '"':
+                i += 2
+                continue
+            if c == q:
+                q = None
+        elif c in "\"'":
+            q = c
+        elif c == "#":
+            return line[:i].rstrip()
+        i += 1
+    return line.rstrip()
+
+
+def unquoted(text):
+    """The text with its quoted strings removed — brackets and `=` inside strings are not syntax."""
+    return re.sub(r'"(?:\\.|[^"\\])*"|\'[^\']*\'', "", text)
+
+
+def split_assignment(line):
+    """(key, value) at the first `=` outside quotes, or (None, None)."""
+    q = None
+    for i, c in enumerate(line):
+        if q:
+            if c == q:
+                q = None
+        elif c in "\"'":
+            q = c
+        elif c == "=":
+            key = line[:i].strip()
+            return (key, line[i + 1:]) if key else (None, None)
+    return None, None
+
+
+def key_path(text):
+    """`bootstrap.packages."brew:jq"` → ['bootstrap', 'packages', 'brew:jq']."""
+    segs, cur, q = [], "", None
+    for c in text.strip():
+        if q:
+            if c == q:
+                q = None
             else:
-                arr = (table, [m.group(4)])
-        elif got:
-            out.append((got, table))
-    return out
+                cur += c
+        elif c in "\"'":
+            q = c
+        elif c == ".":
+            segs.append(cur.strip())
+            cur = ""
+        else:
+            cur += c
+    segs.append(cur.strip())
+    return [x for x in segs if x]
 
 
 def requirement_names(buf):
@@ -355,38 +426,37 @@ def requirement_names(buf):
             for a, b in re.findall(r'"([^"]+)"|\'([^\']+)\'', buf) if (a or b)]
 
 
-def mise_want(table, key):
-    if key is None:
-        m = re.match(r"^tools\.(.+)$", table)
-        return m.group(1) if m else None
-    return key if table in ("tools", "bootstrap.packages") else None
-
-
-def pyproject_want(table, key):
-    if key is None:
-        return None
-    if (table == "project" and key == "dependencies") or table in ("project.optional-dependencies",
-                                                                    "dependency-groups"):
-        return "[]"
-    if re.match(r"^tool\.poetry\.(dev-dependencies|dependencies|group\.[^.]+\.dependencies)$", table):
-        return None if key == "python" else key
+def mise_want(path):
+    if len(path) >= 2 and path[0] == "tools":
+        return ("entry", path[1], "")
+    if len(path) >= 3 and path[:2] == ["bootstrap", "packages"]:
+        return ("entry", path[2], "")
     return None
 
 
-CARGO = r"^(?:target\..+\.|workspace\.)?(?:dev-|build-)?dependencies"
+def pyproject_want(path):
+    if path == ["project", "dependencies"]:
+        return ("array", "")
+    if len(path) == 3 and path[:2] == ["project", "optional-dependencies"]:
+        return ("array", "optional")
+    if len(path) == 2 and path[0] == "dependency-groups":
+        return ("array", "dev" if "dev" in path[1] else "group")
+    if len(path) >= 4 and path[:2] == ["tool", "poetry"]:
+        rest = path[2:]
+        if rest[0] in ("dependencies", "dev-dependencies") and rest[1] != "python":
+            return ("entry", rest[1], "dev" if rest[0] == "dev-dependencies" else "")
+        if len(rest) >= 4 and rest[0] == "group" and rest[2] == "dependencies" and rest[3] != "python":
+            return ("entry", rest[3], "dev" if rest[1] == "dev" else "group")
+    return None
 
 
-def cargo_want(table, key):
-    if key is None:
-        m = re.match(CARGO + r"\.(.+)$", table)
-        return m.group(1) if m else None
-    return key if re.match(CARGO + "$", table) else None
-
-
-def kind_of(table):
-    if "dev" in table:
-        return "dev"
-    return {"project.optional-dependencies": "optional", "dependency-groups": "group"}.get(table, "")
+def cargo_want(path):
+    for i, seg in enumerate(path):
+        if seg in ("dependencies", "dev-dependencies", "build-dependencies") and len(path) > i + 1:
+            head = path[:i]
+            if head in ([], ["workspace"]) or (len(head) == 2 and head[0] == "target"):
+                return ("entry", path[i + 1], "dev" if seg == "dev-dependencies" else "")
+    return None
 
 
 def is_manifest(b):
@@ -410,9 +480,9 @@ def manifest_deps(path):
             return [(re.split(r"[\s\[<>=!~;@]", l.strip(), maxsplit=1)[0], "") for l in text.splitlines()
                     if l.strip() and not l.strip().startswith(("#", "-"))]
         if base == "pyproject.toml":
-            return [(n, kind_of(t)) for n, t in toml_entries(path, pyproject_want)]
+            return toml_entries(path, pyproject_want)
         if base == "Cargo.toml":
-            return [(n, kind_of(t)) for n, t in toml_entries(path, cargo_want)]
+            return toml_entries(path, cargo_want)
         if base == "go.mod":
             names, block = [], False
             for l in text.splitlines():
@@ -438,7 +508,7 @@ def why_view():
     groups = []
     conf = next((f for f in ("mise.toml", ".mise.toml") if os.path.exists(f)), None)
     if conf:
-        groups.append(("the machine — %s" % conf, [(n, "") for n, _ in toml_entries(conf, mise_want)]))
+        groups.append(("the machine — %s" % conf, toml_entries(conf, mise_want)))
     if os.path.exists(".mcp.json"):
         try:
             servers = json.load(open(".mcp.json", encoding="utf-8")).get("mcpServers") or {}

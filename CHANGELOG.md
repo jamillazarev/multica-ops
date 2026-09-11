@@ -22,8 +22,10 @@ sweep probes them. **Nothing is installed without the owner's word, mise include
 machine with other work on it. The joining audit now carries what a runtime's machine lacks, with
 the dry runs, `mise trust` first: measured on mise 2026.9.5, a `mise.toml` with
 `[bootstrap.packages]` is not read at all until trusted. Ported from `opsinist`, where the same
-section also guards a committed `.mcp.json`. `scripts/test-native-register.sh` **12/12**, run twice —
-the second time on the system `python3`, 3.9 on a Mac without Homebrew, which has no `tomllib`.
+section also guards a committed `.mcp.json`. `scripts/test-native-register.sh` **16/16**, run twice —
+the second time on the system `python3`, 3.9 on a Mac without Homebrew, which has no `tomllib` —
+with every key read as a path, so `[tools]` then `python`, a bare `tools.python` and
+`[tools.python]` are one declaration.
 
 **An available update now says what it asks of the owner.** `scripts/deps-report.py` asks `mise
 outdated`, `npm outdated` and `osv-scanner` and sorts every answer — **a published vulnerability
@@ -33,7 +35,7 @@ as *not checked*** (PLAYBOOKS → *When something it needs has a newer version*,
 version check). The line is the project's pin, not the numbering: Python 3.12 → 3.13 is a minor
 number that removed nineteen standard-library modules. **It reads and never writes.** `--why` shows
 what each declared thing is for, offline, from its register row or the decision naming it.
-`scripts/test-deps-report.sh` **83/83**. The formats it reads were taken from the tools' own sources
+`scripts/test-deps-report.sh` **87/87**. The formats it reads were taken from the tools' own sources
 and are now register entries: `mise-outdated`, `npm-outdated`, `pep-594`.
 
 **`Recheck when` fires by itself on the one event the tree records.** A commit adding a name to a

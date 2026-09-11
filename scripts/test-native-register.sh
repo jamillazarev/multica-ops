@@ -63,7 +63,16 @@ suite() {
   # a `#` comment and a subtable are not entries — the twin must still be clean after the edits
   run; [ "$RC" = 0 ] && ok || bad "[$1] the restored mise twin was refused: $OUT"
 
+  # a key is a path: the same entries in dotted keys, and a quoted word in a comment is not an entry
+  reg "$(row python '`mise.toml`')" "$(row ck '`mise.toml`')" "$(row ffmpeg '`mise.toml`')"
+  printf 'tools.python = "3.12"\ntools."github:BeaconBay/ck" = "latest"   # "quoted" words in a comment\n' > mise.toml
+  printf 'bootstrap.packages."brew:ffmpeg" = "latest"\n' >> mise.toml
+  run; [ "$RC" = 0 ] && ok || bad "[$1] a mise.toml in dotted keys, each entry with its row, was refused: $OUT"
+  printf 'tools.jq = "1.7"\n' >> mise.toml
+  run; [ "$RC" = 1 ] && said '`jq`' && ok || bad "[$1] a tool declared as a dotted key, with no row, passed"
+
   # an MCP row wired by an agent's mcp_config is not this section's business
+  printf 'tools.python = "3.12"\ntools.node = "22"\ntools."github:BeaconBay/ck" = "latest"\nbootstrap.packages."brew:ffmpeg" = "latest"\n' > mise.toml
   reg "$(row python '`mise.toml`')" "$(row node '`mise.toml`')" "$(row ck '`mise.toml`')" "$(row ffmpeg '`mise.toml`')" \
       "$(row sentry '`mcp_config` on the web agent')"
   run; [ "$RC" = 0 ] && ok || bad "[$1] a row wired by an agent's mcp_config was refused: $OUT"
