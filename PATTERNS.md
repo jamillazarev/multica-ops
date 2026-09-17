@@ -142,6 +142,18 @@ invoked. A stated gap reads as a fact; an omission reads as a negative.
 *Applies to:* the ledger · review verdicts · `/multica-ops:mops validate` output · status digests ·
 DECISIONS entries.
 
+**17-bis · A ranked answer declares its floor, and its empty state is a real answer.** Anything
+that selects — the top findings, the candidates, a squad's themes, *what is stuck* — names an
+**absolute** bar rather than a relative one, and says **nothing cleared it** when nothing did,
+with the closest thing that missed and by how much. **A relative bar degrades with the pool**,
+which is the failure it exists to prevent: asked for the best of five bad options, a system with no
+floor returns the least bad one and the reader cannot tell the difference.
+*Applies to:* findings · candidate tools · audience themes · a status answer · anything a model
+ranks.
+*Why:* the honest empty state is the whole value and the first thing dropped — measured in the wild
+on a research engine that makes *"nothing solid"* a first-class result with a named sub-floor
+runner-up (2026-09-17).
+
 **18 · Three-way compare on drift.** Theirs changed · ours changed · both — surfaced with
 options, never silently merged; hashes over content, never modification time.
 *Applies to:* the workspace fingerprint (attribute before asking) · the tracker bridge

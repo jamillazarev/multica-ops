@@ -110,6 +110,31 @@ suite() {   # $1 label · $2 the script
 
 suite "as shipped" "$HERE/link-ids.py"
 
+# ── a person named in a field that names one becomes a link ────────────────────────────────────
+# **The edge a project misses most.** Measured 2026-09-16: nine tasks naming an assignee and one
+# link in the whole of `_ops/`, so *who is this and where do I read about them* was a search every
+# time and the graph drew a roster with no edges to the work. Every reader of that field un-links
+# before it reads — the door, the board and the guard's self-review check — so making the edge is
+# free; the assertion below is the guard running over the rewritten tree, not the text alone.
+fixture
+mkdir -p _ops/roles
+printf '# Web Engineer\n\n**Type**: worker · **Grade**: mid\n' > _ops/roles/web_engineer.md
+printf '# Architect\n\n**Type**: expert · **Grade**: senior\n' > _ops/roles/architect.md
+printf '# T-PPPPPP — a thing\n\n**Type**: feature · **Status**: review\n**Assignee**: Web Engineer\n\n## History\n\n- 2026-09-17 — reviewed by architect\n' > _ops/tasks/T-PPPPPP-thing.md
+printf '# T-QQQQQQ — another\n\n**Type**: feature · **Status**: review\n**Assignee**: Nobody Here\n\n## History\n' > _ops/tasks/T-QQQQQQ-other.md
+python3 "$HERE/link-ids.py" . --write > /dev/null 2>&1
+has _ops/tasks/T-PPPPPP-thing.md '**Assignee**: [Web Engineer](../roles/web_engineer.md)' \
+  && ok || bad "an assignee that names a role file did not become a link"
+has _ops/tasks/T-QQQQQQ-other.md '**Assignee**: Nobody Here' \
+  && ok || bad "a name that resolves to nothing was linked anyway, or rewritten"
+python3 "$HERE/link-ids.py" . --write > /dev/null 2>&1
+[ "$(grep -cF '](../roles/web_engineer.md)' _ops/tasks/T-PPPPPP-thing.md)" = 1 ] \
+  && ok || bad "a second run linked the link again"
+
+# **No door case here**: stage changes are Multica's own primitive, so there is no local reader of
+# this field to break. What the sibling measured — a linked declaration handing back its slug — is
+# why the rule still says every reader un-links first, and why `link-ids.py` stops at declarations.
+
 mutant() {   # $1 what it breaks · $2 text · $3 its mutant · $4 file · $5 the text that must appear
   cp "$HERE/link-ids.py" "$T/mut.py"
   M_FROM="$2" M_TO="$3" python3 - "$T/mut.py" <<'PY' || { bad "MUTATION DID NOT APPLY: $1"; return; }

@@ -15,6 +15,7 @@
 - `scripts/deps-report.py` — What the project depends on, why, and how much each available update matters
 - `scripts/eval-fixture.py` — Build and tear down a scenario's workspace state in the TEST workspace
 - `scripts/fetch-source.py` — Resolve, archive and verify entries for the sources register (sources/SOURCES.md)
+- `scripts/graph-check.py` — Does this project's graph actually work? — every internal link resolved, both ways
 - `scripts/import-issues.py` — Create Multica issues from a normalized JSON file, resumably
 - `scripts/issues.py` — Paginated, corruption-tolerant issue listing for Multica
 - `scripts/link-ids.py` — In a project, an id or a path named in passing becomes a link — so Obsidian's graph, GitHub and

@@ -592,6 +592,22 @@ labels, so the fingerprint written before it is stale by definition: recompute
 
 ## Health, upgrades & runtime changes
 
+
+**A threshold with no named command that produces its verdict is an aspiration, not a constraint.**
+*"Coverage above 80%"*, *"the page loads fast"*, *"the copy is on brand"* — each is a number
+somebody will argue about, and the argument is the tell: a bar is a bar only when the sentence
+beside it says what to run and what exit code means no. **And the two directions are not
+symmetric**: tightening a bar may happen quietly, because nothing breaks when the work has to be
+better — **loosening one is loud**, announced with what it was, what it is now, and the evidence
+that the old number was wrong. (Ported 2026-09-18, read off a maintained checklist pack that prints
+the command beside every number.)
+
+**Somebody else's checklist may become a work type's bar, under three conditions**: every item names
+the command or observation that produces its verdict · the bar is for work this project actually
+ships · and the copy is **dated and attributed at its licence**. Three things it must not become —
+it is not the project's evidence (passing a borrowed list is `cited`, never `measured`), not the
+sole gate for work whose failure mode its author never met, and never edited down to pass. **An
+imported number without its rationale is judgement wearing a table's clothes.**
 All three are **preview-first** (blast radius reported before anything changes), backed
 up and reversible where they can break things. Recipes: **PLAYBOOKS**.
 

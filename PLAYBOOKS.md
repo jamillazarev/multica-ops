@@ -12,6 +12,7 @@ control characters that break `json.loads` — sanitize with
 - [Start a feature (the human's one move)](#start-a-feature-the-humans-one-move)
 - [See what's going on](#see-whats-going-on)
 - [Recover after a session limit](#recover-after-a-session-limit)
+- [Three rules about records that a platform does not give you](#three-rules-about-records-that-a-platform-does-not-give-you)
 - [Talk to an agent on a task](#talk-to-an-agent-on-a-task)
 - [Add an agent mid-project](#add-an-agent-mid-project)
 - [Give an agent a capability (skill)](#give-an-agent-a-capability-skill)
@@ -186,6 +187,34 @@ Three measured constraints shape that (2026-08-01):
 - **`next_run_at` does not mean it will fire.** A disabled trigger and a paused autopilot both
   keep reporting one (BOOTSTRAP §13), so check `enabled` and `status` before telling the owner
   their team comes back at 07:20.
+
+## Three rules about records that a platform does not give you
+
+**Ported 2026-09-18, read out of working harnesses rather than invented.** The platform owns task
+execution, retries and logs; these are about anything *this skill* writes beside them.
+
+**A move that destroys its own evidence writes itself down first.** Archiving, tearing down a
+worktree, closing something whose record is derived from a directory about to be deleted — the act
+and the proof of the act are the same object, and a crash between them leaves a repository that
+cannot tell which side of the line it is on. **Write the intention, perform the move, remove the
+note** — and the next session's first act is to replay whatever note is still lying there. One
+process owns both halves; **a printed reminder is never load-bearing**, because the session that
+would have read it is the session that died.
+
+**A record the door cannot parse is set aside, never retried and never deleted.** Renamed with a
+marked name, in place, readable by a person: one malformed file must not stall the queue behind it,
+and silently dropping it turns a defect into a disappearance.
+
+**And the one test for anything kept outside the repository**: delete it, rebuild from the committed
+files, and ask whether anything factual disappeared. No — it was a cache and may live anywhere.
+Yes — **it is a second source of truth wearing a cache's name**, and the failure it produces is the
+worst kind: the repository looks complete, clones cleanly, and is missing the decisions. Measured on
+three real systems the same day: one keeping its briefs, backlog and decisions in a gitignored
+directory (no history, no diff, no review), one keeping events and commands in SQLite beside the
+work, and one whose derived index is honestly declared rebuildable while its raw transcript
+directory is not reconstructible from anything.
+
+---
 
 ## Talk to an agent on a task
 

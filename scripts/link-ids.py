@@ -14,6 +14,11 @@ Ported from opsinist, where it was measured on a live project on 2026-09-11: 298
 `_ops/`, and 273 mentions in 171 files that could have been.
 
 What becomes a link:
+  - **a person, role, team or panel named in a field that names one** — `**Assignee**: Web
+    Engineer` becomes a link to the file that is that role, which is the edge between a roster and
+    the work that a repository otherwise has no way to walk. **Here the roster is mostly the
+    platform's**, so this fires on whatever file layer a project does keep — and every reader of
+    such a field un-links before it reads, because a linked declaration hands back its text;
   - an id — `T-04SMFZ`, `R-…` — whose entity file exists: exactly one `<ID>-<slug>.md` or `<ID>.md`
     anywhere in the tree, bare or in backticks;
   - a backticked path of a markdown file in the project — `_ops/DECISIONS.md` — linked relative to
@@ -59,6 +64,54 @@ def entity_files(paths):
     return {i: ps[0] for i, ps in seen.items() if len(ps) == 1}
 
 
+PERSON = re.compile(r"^(?![ ]{4}|\t)(\s*[-*]?\s*[*`_]*(?:Assignee|Role|Owner|Reviewer|Worker)"
+                    r"[*`_]*\s*:\s*)([^·|\n]+?)(\s*)$", re.I)
+
+
+def norm(name):
+    """`Web Engineer` · `web_engineer` · `**web-engineer**` are one name — the guard's §25 rule,
+    letters and digits kept in every alphabet so a roster written in the project's own language
+    resolves rather than normalising to nothing."""
+    name = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", name)
+    return " ".join("".join(c if c.isalnum() else " " for c in name.lower()).split())
+
+
+def people_files(paths):
+    """normalised name → the one file that is that person, role, team or panel.
+
+    **This is the edge a project misses most.** Measured on a live project 2026-09-16: nine tasks
+    naming an assignee, `_ops/` holding one link in total — so *who is this and where do I read
+    about them* was a search every time, and Obsidian's graph drew a roster with no edges to the
+    work. A name that resolves to exactly one file becomes a link; a name matching two resolves to
+    neither, because guessing which colleague was meant is worse than leaving the text alone."""
+    seen = {}
+    for p in paths:
+        d = os.path.dirname(p)
+        if d in ("_ops/roles", "_ops/teams", "_ops/panels") and p.endswith(".md"):
+            seen.setdefault(norm(os.path.basename(p)[:-3]), []).append(p)
+    return {n: ps[0] for n, ps in seen.items() if len(ps) == 1}
+
+
+def rewrite_person(line, here, people):
+    """`**Assignee**: Web Engineer` → `**Assignee**: [Web Engineer](../roles/web_engineer.md)`.
+
+    **Every reader of this field un-links before it reads** — the door, the board and the guard's
+    self-review check all do (`transition.py`'s `unlink`), because a declaration that becomes a
+    link stops being parseable otherwise: measured on a run's `**Task**` cell, where a linked id
+    came back as the slug."""
+    m = PERSON.match(line)
+    if not m:
+        return line, None
+    value = m.group(2).strip()
+    if not value or "[" in value or "{{" in value:
+        return line, None
+    target = people.get(norm(value))
+    if not target:
+        return line, None
+    rel = os.path.relpath(target, os.path.dirname(here) or ".").replace(os.sep, "/")
+    return "%s[%s](%s)%s" % (m.group(1), value, rel, m.group(3)), value
+
+
 def rewrite_line(line, here, ents, mds, own):
     masked = MASK.sub(lambda m: "\0" * len(m.group(0)), line)
     out, last, found = [], 0, []
@@ -82,7 +135,7 @@ def rewrite_line(line, here, ents, mds, own):
     return "".join(out), found
 
 
-def process(root, path, ents, mds, write):
+def process(root, path, ents, mds, people, write):
     lines = open(os.path.join(root, path), encoding="utf-8").read().split("\n")
     own = re.match(r"^(%s)" % ID, os.path.basename(path))
     own = own.group(1) if own else None
@@ -107,6 +160,10 @@ def process(root, path, ents, mds, write):
             continue
         if fenced or history or DECLARATION.search(line):
             continue
+        line, who = rewrite_person(line, path, people)
+        if who:
+            hits.append("%s:%d: %s" % (path, i + 1, who))
+            lines[i] = line
         new, found = rewrite_line(line, path, ents, mds, own)
         if found:
             hits += ["%s:%d: %s" % (path, i + 1, f) for f in found]
@@ -123,10 +180,11 @@ def main(argv):
     paths = tree(root)
     ents = entity_files(paths)
     mds = set(p for p in paths if p.endswith(".md"))
+    people = people_files(paths)
     hits = []
     for p in paths:
         if p.endswith(".md") and p.startswith("_ops/") and not p.startswith(SKIP):
-            hits += process(root, p, ents, mds, write)
+            hits += process(root, p, ents, mds, people, write)
     files = len({h.split(":")[0] for h in hits})
     if write:
         print("linked %d mention%s in %d file%s" % (len(hits), "" if len(hits) == 1 else "s",

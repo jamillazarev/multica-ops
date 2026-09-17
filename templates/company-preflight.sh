@@ -343,6 +343,140 @@ end (python3 exited $_rrc; its error is above) — refused, because a check that
   rm -f "$_rck"
 fi
 
+# 20 · **a mention of something inside this project is a link, or the commit is refused** — and
+#      every link resolves to a file that is there. Measured on a live project 2026-09-16: **one
+#      link in the whole of `_ops/` against twenty-two bare ids**, nine tasks naming an assignee
+#      with no way to reach the role, and a graph in which the roster and the work were separate
+#      islands of identical strings. A bare id is a string: Obsidian draws nothing, the link
+#      checker validates nothing, and a reader searches. **The door is the skill's
+#      `scripts/link-ids.py --write`**, which rewrites them; this is the gate, and the two carry
+#      the same skip list on purpose — a declaration a reader parses (`**Task**`, `task:`), a
+#      `## History` line, a heading, a fence, `_ops/runs/`, `_ops/research/raw/` and a file's own
+#      id are mentions that must stay text.
+#      **Only added lines in files this commit touches** — history is not retro-linked — and the
+#      second half is the one that keeps the graph honest: a link whose target is absent, or whose
+#      shape Obsidian cannot follow (an absolute path, an unencoded space, a `file://`), is a
+#      refusal rather than a dead edge nobody notices.
+if [ "$(changed --diff-filter=AM -- '_ops/*.md' '_ops/**/*.md' | tr '\0' '\n' | grep -c .)" -gt 0 ]; then
+  _lnk=$(mktemp "${TMPDIR:-/tmp}/opsinist-links.XXXXXX")
+  python3 - > "$_lnk" <<'LINKS'
+import os, re, subprocess
+
+def git(*args):
+    r = subprocess.run(["git", "-c", "core.quotePath=false"] + list(args), capture_output=True,
+                       text=True, errors="replace")
+    return r.stdout if r.returncode == 0 else None
+
+ALPHABET = "0123456789ABCDEFGHJKMNPQRSTVWXYZ"
+ID = r"[A-Z]{1,2}-[%s]{6}" % ALPHABET
+MASK = re.compile(r"!?\[(?:[^\[\]]|\[[^\]]*\])*\]\([^)]*\)|<https?://[^>]+>|<!--.*?-->|`[^`]*\.(?:py|sh|json|toml|ya?ml)`")
+DECLARATION = re.compile(r"\*\*task\*\*|^\s*task\s*:", re.I)
+PERSON = re.compile(r"^(?![ ]{4}|\t)\s*[-*]?\s*[*`_]*(?:Assignee|Role|Owner|Reviewer|Worker)"
+                    r"[*`_]*\s*:\s*([^·|\n]+?)\s*$", re.I)
+OPEN = {"none", "unassigned", "nobody", "tbd", "unknown", "", "-", "—"}
+SKIP = ("_ops/runs/", "_ops/research/raw/", "_ops/scripts/", "_ops/templates/")
+
+def norm(name):
+    name = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", name)
+    return " ".join("".join(c if c.isalnum() else " " for c in name.lower()).split())
+
+tracked = [p for p in (git("ls-files", "-z", "--cached", "--others", "--exclude-standard") or "").split("\0") if p]
+ents, people, mds = {}, {}, set(p for p in tracked if p.endswith(".md"))
+for p in tracked:
+    m = re.match(r"^(%s)(?:-[^/]*)?\.md$" % ID, os.path.basename(p))
+    if m:
+        ents.setdefault(m.group(1), []).append(p)
+    if os.path.dirname(p) in ("_ops/roles", "_ops/teams", "_ops/panels") and p.endswith(".md"):
+        people.setdefault(norm(os.path.basename(p)[:-3]), []).append(p)
+ents = {k: v[0] for k, v in ents.items() if len(v) == 1}
+people = {k: v[0] for k, v in people.items() if len(v) == 1}
+
+staged = [p for p in (git("diff", "--cached", "--name-only", "--diff-filter=AM", "-z") or "").split("\0")
+          if p.startswith("_ops/") and p.endswith(".md") and not p.startswith(SKIP)]
+for path in staged:
+    own = re.match(r"^(%s)" % ID, os.path.basename(path))
+    own = own.group(1) if own else None
+    diff = git("diff", "--cached", "-U0", "--", path) or ""
+    added = [l[1:] for l in diff.split("\n")
+             if l.startswith("+") and not l.startswith("+++")]
+    unlinked, paths_named, dead, unwalkable = [], [], [], []
+    fenced = False
+    for line in added:
+        st = line.strip()
+        if st.startswith("```") or st.startswith("~~~"):
+            fenced = not fenced
+            continue
+        # **Every link on an added line is resolved, fenced or not** — a dead target inside an
+        # example is still a dead target the moment someone copies the example out of it.
+        for target in re.findall(r"\]\(([^)]+)\)", line):
+            if target.startswith(("http://", "https://", "mailto:", "#")) or "{{" in target \
+                    or "XXXXXX" in target:
+                continue
+            if target.startswith("/") or target.startswith("file:"):
+                unwalkable.append(target + " — an absolute path; a vault resolves links relative to the file")
+                continue
+            if " " in target.split("#")[0]:
+                unwalkable.append(target + " — an unencoded space; write `%20` or rename the file")
+                continue
+            if not os.path.exists(os.path.join(os.path.dirname(path), target.split("#")[0])):
+                # **opsinist's §1g owns that case there; here there is no task file, so this half covers everything**, in its own words. Two refusals
+                # for one defect is the failure `facts.md` 261 measured — a list known to contain
+                # duplicates stops being read — so this half covers everything §1g does not.
+                dead.append(target)
+        if fenced or st.startswith("#") or DECLARATION.search(line):
+            continue
+        masked = MASK.sub(lambda m: "\0" * len(m.group(0)), line)
+        for m in re.finditer(r"`(%s)`|(?<![A-Za-z0-9/\[_-])(%s)(?![A-Za-z0-9_-])" % (ID, ID), masked):
+            ident = m.group(1) or m.group(2)
+            if ident != own and ident in ents:
+                unlinked.append(ident)
+        for m in re.finditer(r"`([A-Za-z0-9_][A-Za-z0-9_./-]*\.md)`", masked):
+            rel = m.group(1)[2:] if m.group(1).startswith("./") else m.group(1)
+            if rel in mds:
+                paths_named.append(rel)
+        pm = PERSON.match(masked)
+        if pm and norm(pm.group(1)) not in OPEN and norm(pm.group(1)) in people:
+            unlinked.append(pm.group(1).strip())
+    if unlinked:
+        print("FAIL:%s names %s and does not link %s — **a mention of something inside this "
+              "project is a link**: a bare name is an edge only a reader infers, so the graph draws "
+              "nothing, the link checker validates nothing and the next person searches. The door "
+              "rewrites them: `scripts/link-ids.py --write`. A declaration a reader "
+              "parses, a `## History` line and a heading are exempt and stay as written."
+              % (path, ", ".join("`%s`" % u for u in sorted(set(unlinked))[:6]),
+                 "it" if len(set(unlinked)) == 1 else "them"))
+    # **A path is a WARNING and a name is a REFUSAL, and the asymmetry is measured.** A shipped
+    # template's prose legitimately names a project file — `_ops/TOOLING.md`'s own header points at
+    # the decision record — and that template cannot carry a project-relative link without breaking
+    # the skill's own link checker, where the path does not exist. Refusing it would make the
+    # documented stand-up act refuse itself, which this repository has already done once (§4d,
+    # 2026-08-23) and has a standing suite assertion against. An id and a person's name have no
+    # such double life: nothing ships them as prose, and they are the edges the graph was missing.
+    if paths_named:
+        say = ", ".join("`%s`" % u for u in sorted(set(paths_named))[:6])
+        print("WARN:%s names %s in backticks where a link would be an edge — the skill's "
+              "`scripts/link-ids.py --write` rewrites them. Warned rather than refused: a copied "
+              "template's prose names project files on purpose." % (path, say))
+    if dead:
+        print("FAIL:%s links to %s, which is not there — a link that resolves to nothing is worse "
+              "than a bare name, because it reads as navigable and a graph draws an edge into empty "
+              "space. Fix the path, or say it in plain text."
+              % (path, ", ".join("`%s`" % d for d in sorted(set(dead))[:6])))
+    if unwalkable:
+        print("FAIL:%s carries a link no vault can follow — %s. Obsidian, GitHub and the link "
+              "checker all resolve a relative path from the file it is written in, and all three "
+              "fail the same way on these." % (path, "; ".join(sorted(set(unwalkable))[:4])))
+LINKS
+  _lrc=$?
+  [ "$_lrc" -eq 0 ] || say_fail "the check of this commit's links stopped before its end \
+(python3 exited $_lrc; its error is above) — refused, because a check that did not finish has not passed."
+  while IFS= read -r _ll; do
+    case "$_ll" in FAIL:*) say_fail "${_ll#FAIL:}" ;; WARN:*) say_warn "${_ll#WARN:}" ;; esac
+  done < "$_lnk"
+  rm -f "$_lnk"
+fi
+
+
 # 5 · a cheap last line on credentials. NOT a secret scanner — gitleaks/trufflehog are,
 #     and they belong in CI. This catches the obvious paste before it reaches history,
 #     where removing it means rewriting history and rotating the key anyway.

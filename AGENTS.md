@@ -266,6 +266,21 @@ A version bump is not just a changelog entry. Before you tag:
    lens that exhausts its turn budget reported nothing and is recorded as **not completed** —
    it is indistinguishable from one nobody ran, and the run record says so rather than quietly
    dropping it.
+   **Four rules about the reading itself, ported from the sibling 2026-09-18 and read out of
+   working tools rather than invented.** (a) **The reader gets the artefact, not the author's case
+   for it** — no plan, no reasoning, no summary of intent, because those are exactly what make a
+   reader agree; self-review confirms assumptions, it does not test them, and a reader handed the
+   author's assumptions is doing self-review with an extra step. (b) **An objection quotes the line
+   it is about**, as written — a paraphrase is where a lens's own reading hides, and the author then
+   answers the paraphrase while the line stands. (c) **A finding cites a verbatim excerpt and its
+   line is derived from that**: a quote matching nowhere, or matching twice, leaves the finding
+   *unlocated* rather than placed, which is what makes a mislocated finding impossible instead of
+   rare. (d) **A verdict is a shape, and demoting one takes its fields away** — a rejected finding
+   still carrying a severity and a remediation reads, three weeks later, exactly like a real one
+   somebody forgot to act on. **And the re-round reads the repair**, with the range reachable for
+   context: nine round attempts across two releases, five lost whole to the session limit, and the
+   sharpest finding of each re-round sat in the latest repair commit.
+
 3. **Keep the guards current — they rot too.** **The shipped hooks are tested by mutation** —
    `bash scripts/test-migration-hook.sh` — each rule shown speaking on the mutant and silent on
    its honest twin, because a hook that cannot be wrong is decoration and this one only ever

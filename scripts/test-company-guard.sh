@@ -332,7 +332,13 @@ rm -rf "$R/_ops/skills"
 ( cd "$R" && git add -A >/dev/null 2>&1 )
 
 # ── §17 · a finding carries what orders it and what expires it ─────────────────────────────
-mkdir -p "$R/_ops/research/raw"
+mkdir -p "$R/_ops/research/raw" "$R/_ops/tasks"
+# **The task this finding decides must exist**, or §20 refuses the commit for a dead link and every
+# assertion below measures that instead of §17 — a fixture whose links point nowhere is a fixture in
+# a state no project should be in.
+printf '# T-AB12CD — panels\n\nThe task a finding decides.\n' > "$R/_ops/tasks/T-AB12CD-panels.md"
+git -C "$R" add -A >/dev/null 2>&1
+git -C "$R" -c user.email=t@t -c user.name=t commit -qm "the task a finding decides" >/dev/null 2>&1
 fd="$R/_ops/research/panels.md"
 honest_fd() { cat > "$fd" <<'FD'
 # Should we pay for synthetic panels
@@ -373,6 +379,57 @@ honest_fd; sed -i '' 's/\*\*Status\*\*: settled/**Status**: open/; /^No, for per
 [ "$(grc)" = "0" ] && ok || bad "an OPEN finding with no conclusion was refused"
 rm -rf "$R/_ops/research"
 ( cd "$R" && git add -A >/dev/null 2>&1 )
+
+
+# ── §20 · a mention of something inside this project is a link ─────────────────────────────
+# **Ported from opsinist's §27, 2026-09-18**, with its measurement: one link in a live project's
+# whole `_ops/` against twenty-two bare ids, and a graph of identical strings on separate islands.
+# Here the tasks live in Multica, so this reads whatever file layer a project keeps — an id is a
+# link only where a file carries it, and the rule does not change with the storage.
+reset
+printf '# A note\n\nSee `_ops/ROADMAP.md`.\n' > "$R/_ops/NOTE.md"
+git -C "$R" add -A
+case "$(g)" in *"where a link would be an edge"*) ok;; *) bad "§20 said nothing about a backticked internal path";; esac
+[ "$(grc)" = 0 ] && ok || bad "§20 refused a backticked path where it should warn — a shipped template's prose names project files on purpose"
+
+reset
+printf '# A note\n\nSee [the gone one](GONE.md).\n' > "$R/_ops/NOTE.md"
+git -C "$R" add -A
+case "$(g)" in *"is not there"*) ok;; *) bad "§20 accepted a link that resolves to nothing";; esac
+[ "$(grc)" = 1 ] && ok || bad "a dead link did not refuse the commit"
+
+reset
+printf '# A note\n\nSee [it](/Users/somebody/_ops/ROADMAP.md).\n' > "$R/_ops/NOTE.md"
+git -C "$R" add -A
+case "$(g)" in *"no vault can follow"*) ok;; *) bad "§20 accepted an absolute path as a link";; esac
+
+reset
+printf '# A note\n\nSee [it](my file.md).\n' > "$R/_ops/NOTE.md"
+git -C "$R" add -A
+case "$(g)" in *"unencoded space"*) ok;; *) bad "§20 accepted an unencoded space in a destination";; esac
+
+reset
+printf '# A note\n\nSee [the roadmap](ROADMAP.md) and https://example.com/a%%20b.md which is not ours.\n' > "$R/_ops/NOTE.md"
+git -C "$R" add -A
+[ "$(grc)" = 0 ] && ok || bad "§20 refused a resolving link, or judged an outside URL"
+
+# its mutant: the dead-link half switched off, which is what a phantom node looks like from here
+_m="$T/mut-20.sh"
+python3 - "$HERE/templates/company-preflight.sh" > "$_m" <<'MUT'
+import sys
+s = open(sys.argv[1]).read()
+a = "                dead.append(target)"
+assert s.count(a) == 1, "MUTATION ANCHOR: found %d" % s.count(a)
+sys.stdout.write(s.replace(a, "                pass"))
+MUT
+[ -s "$_m" ] || bad "MUTATION DID NOT APPLY: the dead-link half switched off"
+reset
+cp "$_m" "$R/_ops/preflight.sh"
+printf '# A note\n\nSee [the gone one](GONE.md).\n' > "$R/_ops/NOTE.md"
+git -C "$R" add -A
+[ "$(grc)" = 0 ] && ok || bad "the suite did not catch the mutant: dead links accepted"
+cp "$HERE/templates/company-preflight.sh" "$R/_ops/preflight.sh"
+reset; rm -f "$R/_ops/NOTE.md"; git -C "$R" add -A >/dev/null 2>&1
 
 echo "company-guard: $pass passed, $fail failed"
 exit "$fail"

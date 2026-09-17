@@ -5,9 +5,14 @@ also the migration map `/multica-ops:upgrade` reads.
 
 ## 0.4.18 — 2026-09-11
 
-**What to do — nothing breaks, and two things are offered.** Re-copy the company guard —
+**What to do — nothing breaks, and three things are offered.** Re-copy the company guard —
 `cp <skill>/templates/company-preflight.sh scripts/preflight.sh` in the company repository — to get
-its §18 and §19 below. **If the company repository already has
+its §18, §19 and §20 below. **§20 judges only what a commit WRITES**, so nothing already in the
+repository turns into a refusal; the first commit that adds a mention under a docs path is where you
+meet it, and `scripts/link-ids.py --write` is the one command that fixes it in advance.
+**`scripts/graph-check.py` is new and reads only** — run it once to see whether the repository is
+actually a graph: notes, edges, orphans, phantom targets and how many mentions are edges waiting to
+happen. **If the company repository already has
 a `mise.toml`, the first commit that stages it or `_ops/TOOLING.md` asks for a register row per
 entry** — the refusal names each one. If `mise.toml` carries `[bootstrap.packages]`, mise will not
 read it on a runtime's machine until `mise trust` is run there — the owner's to say. And the skill's
@@ -71,6 +76,66 @@ Eval state: **not run.** A patch; the suites measure the forms, not a run's beha
 
 **Trio:** two diagrams (PLAYBOOKS), five situations in USE-CASES, and three register entries for
 the claims about the outside world.
+**A mention of something inside this project is a link — §20, ported with its measurement.** In the
+sibling's field audit, 2026-09-16: **one link in a live project's whole `_ops/` against twenty-two
+bare ids**, and a graph in which the record and the work were separate islands of identical strings.
+So on the lines a commit ADDS, an id whose file exists and a person-field naming a role, team or
+panel must be written as links; **a backticked path is a warning instead**, because a shipped
+template's prose names project files on purpose and cannot carry a project-relative link without
+breaking the skill's own checker. What stays as written: a `## History` line, a heading, a fence,
+`_ops/runs/`, `_ops/research/raw/` and the declarations a reader parses. **And the same section keeps
+the graph honest**: a link whose target is absent, an absolute path, or an unencoded space is
+refused. Here the tasks live in Multica, so this reads whatever file layer a project keeps — **an id
+becomes a link only where a file carries it**, and the rule does not change with the storage.
+`scripts/link-ids.py` also links a person-field now; `test-company-guard.sh` **54/54**,
+`test-link-ids.sh` **24/24**.
+
+**Whether the graph works is a measurement rather than a promise.** `scripts/graph-check.py` reports
+notes · note-to-note edges · orphans · attachments · how many links resolve **both** ways, only
+relative to their own file, or only from the vault root · every phantom, unencoded space and path
+climbing out of the repository · and how many mentions are edges waiting to happen. Three facts from
+Obsidian's own help decide those tests (read 2026-09-18): Markdown links are resolved, a destination
+**must be URL-encoded**, and **a link to a file that does not exist still becomes a node** — its
+*Existing files only* filter exists for exactly that reason. **What the help does not document is how
+a relative destination resolves**, so the script tries both readings and says which links survive
+each. Run on this corpus: **171 notes, 66 edges, the relative form throughout, nothing
+vault-absolute-only.**
+
+**Eleven rules read out of other people's working tools, and four of them are about reading our own
+work.** The lens instructions now say: the reader gets **the artefact, not the author's case for
+it** · an objection **quotes the line** as written, never paraphrased · **a finding cites a verbatim
+excerpt and its line is derived from that**, so a quote matching nowhere or twice leaves it
+*unlocated* rather than placed · **a verdict is a shape, and demoting one takes its fields away** ·
+and **the re-round reads the repair**, with the range reachable for context. On bars: **a threshold
+with no named command that produces its verdict is an aspiration**, **tightening is silent and
+loosening is loud**, and **somebody else's checklist may be a work type's bar under three
+conditions** — passing it is `cited`, never `measured`. On records: **a move that destroys its own
+evidence writes itself down first** · **an unparseable record is set aside with a marked name, never
+retried and never deleted** · and **one test for anything kept outside the repository**: delete it,
+rebuild from the committed files, and ask whether anything factual disappeared. `PATTERNS.md` gains
+**§17-bis**: a ranked answer declares an absolute floor and an honest empty state.
+
+**The shelf took the sibling's reading.** Fourteen rows: the pattern for one surface
+(Pencil & Paper) · landing pages and dark mode as a token decision · top-grossing mobile with its
+revenue context · **named styles as a vocabulary with four rules** — a look ships its own falsifier,
+the name resolves to tokens and the tokens still face the contrast gate, a style read names what it
+rejected, and a style rule is a count with a threshold and one named override · the DTCG token
+format, whose `$extensions` clause is where style provenance rides · Aceternity for landing blocks
+(**no licence text on its pricing page**) · Scrapegraph-ai, with scraping named as the outward act it
+is · markitdown · a self-hosted pass over a pull request, whose model **never emits a line number** ·
+a security audit whose verification is a fresh reader told *"you did not write this candidate"* ·
+Formbricks, **three licences in one repository** · OpenReplay, where **privacy is declared at capture
+time** · Lago, whose **totals are computed by replay and never incremented in place** · and
+`claude-for-legal`, whose integrations table **declares a fallback per row**.
+
+**What did not port, and why.** The sibling's release also carries a task-shape gate, an
+assignee-resolves gate, a role-wiring gate, a review gate on the terminal edge of a ladder, a task
+door and a board page. **None of those crosses the boundary**: Multica owns issues, assignment,
+agents and squads, stage barriers and task execution, so there is no task file to shape, no roster
+file to resolve against, no `.claude/agents/` to wire, no local ladder to gate — and the board is in
+the product's own interface. **A gate over a primitive somebody else owns is a second source of
+truth**, which is the rule this skill is built on rather than an exception to it.
+
 
 ## 0.4.17 — 2026-09-11
 
