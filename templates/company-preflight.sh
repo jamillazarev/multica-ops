@@ -361,6 +361,7 @@ if [ "$(changed --diff-filter=AM -- '_ops/*.md' '_ops/**/*.md' | tr '\0' '\n' | 
   _lnk=$(mktemp "${TMPDIR:-/tmp}/opsinist-links.XXXXXX")
   python3 - > "$_lnk" <<'LINKS'
 import os, re, subprocess
+from urllib.parse import unquote
 
 def git(*args):
     r = subprocess.run(["git", "-c", "core.quotePath=false"] + list(args), capture_output=True,
@@ -373,7 +374,7 @@ MASK = re.compile(r"!?\[(?:[^\[\]]|\[[^\]]*\])*\]\([^)]*\)|<https?://[^>]+>|<!--
 DECLARATION = re.compile(r"\*\*task\*\*|^\s*task\s*:", re.I)
 PERSON = re.compile(r"^(?![ ]{4}|\t)\s*[-*]?\s*[*`_]*(?:Assignee|Role|Owner|Reviewer|Worker)"
                     r"[*`_]*\s*:\s*([^·|\n]+?)\s*$", re.I)
-OPEN = {"none", "unassigned", "nobody", "tbd", "unknown", "", "-", "—"}
+OPEN = {"none", "unassigned", "nobody", "tbd", "unknown", ""}
 SKIP = ("_ops/runs/", "_ops/research/raw/", "_ops/scripts/", "_ops/templates/")
 
 def norm(name):
@@ -396,21 +397,47 @@ staged = [p for p in (git("diff", "--cached", "--name-only", "--diff-filter=AM",
 for path in staged:
     own = re.match(r"^(%s)" % ID, os.path.basename(path))
     own = own.group(1) if own else None
+    # **The fence state belongs to the FILE, not to the added lines.** Computed over the diff
+    # alone, one line added inside a pre-existing fence read as prose and was refused for the
+    # mention in it — and the door could not fix it, because `link-ids.py` tracks fences over the
+    # whole file and so saw nothing to rewrite. Found by an adversarial lens, 2026-09-18. So: read
+    # the staged file, mark which of its lines are fenced, and judge only the added ones.
+    whole = (git("show", ":" + path) or "").split("\n")
+    fenced_at, _f = [], False
+    for ln in whole:
+        if ln.strip().startswith(("```", "~~~")):
+            _f = not _f
+            fenced_at.append(True)          # the fence line itself is never judged
+            continue
+        fenced_at.append(_f)
     diff = git("diff", "--cached", "-U0", "--", path) or ""
-    added = [l[1:] for l in diff.split("\n")
-             if l.startswith("+") and not l.startswith("+++")]
+    added, lineno = [], 0
+    for l in diff.split("\n"):
+        m_h = re.match(r"^@@ -\d+(?:,\d+)? \+(\d+)", l)
+        if m_h:
+            lineno = int(m_h.group(1))
+            continue
+        if l.startswith("+") and not l.startswith("+++"):
+            added.append((lineno, l[1:]))
+            lineno += 1
+        elif not l.startswith("-") and not l.startswith("\\"):
+            lineno += 1
     unlinked, paths_named, dead, unwalkable = [], [], [], []
-    fenced = False
-    for line in added:
+    for n, line in added:
         st = line.strip()
+        fenced = fenced_at[n - 1] if 0 < n <= len(fenced_at) else False
         if st.startswith("```") or st.startswith("~~~"):
-            fenced = not fenced
             continue
         # **Every link on an added line is resolved, fenced or not** — a dead target inside an
         # example is still a dead target the moment someone copies the example out of it.
-        for target in re.findall(r"\]\(([^)]+)\)", line):
+        for raw_t in re.findall(r"\]\(([^)]+)\)", line):
+            # **a markdown destination may carry a title and may be percent-encoded**, and this
+            # read neither: `[x](../a.md "the ladder")` was refused for the space in the title, and
+            # the prescribed `%20` was then refused as a dead path. `graph-check.py` had both right
+            # and the gate disagreed with the reporter — found by an adversarial lens, 2026-09-18.
+            target = re.sub(r"\s+\"[^\"]*\"\s*$|\s+'[^']*'\s*$", "", raw_t).strip()
             if target.startswith(("http://", "https://", "mailto:", "#")) or "{{" in target \
-                    or "XXXXXX" in target:
+                    or "XXXXXX" in target or "…" in target:
                 continue
             if target.startswith("/") or target.startswith("file:"):
                 unwalkable.append(target + " — an absolute path; a vault resolves links relative to the file")
@@ -418,10 +445,11 @@ for path in staged:
             if " " in target.split("#")[0]:
                 unwalkable.append(target + " — an unencoded space; write `%20` or rename the file")
                 continue
-            if not os.path.exists(os.path.join(os.path.dirname(path), target.split("#")[0])):
-                # **opsinist's §1g owns that case there; here there is no task file, so this half covers everything**, in its own words. Two refusals
-                # for one defect is the failure `facts.md` 261 measured — a list known to contain
-                # duplicates stops being read — so this half covers everything §1g does not.
+            _t = unquote(target.split("#")[0])
+            if not os.path.exists(os.path.join(os.path.dirname(path), _t)) \
+                    and not os.path.isdir(os.path.join(os.path.dirname(path), _t)):
+                # opsinist's §1g owns the dead `.md` link inside a task file; here there is no task
+                # file, so this half covers every case.
                 dead.append(target)
         if fenced or st.startswith("#") or DECLARATION.search(line):
             continue

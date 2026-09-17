@@ -413,6 +413,39 @@ printf '# A note\n\nSee [the roadmap](ROADMAP.md) and https://example.com/a%%20b
 git -C "$R" add -A
 [ "$(grc)" = 0 ] && ok || bad "§20 refused a resolving link, or judged an outside URL"
 
+# the three false refusals the sibling's first copy of this section carried — a markdown title read
+# as an unencoded space, the prescribed `%20` then read as a dead path, and a line added inside a
+# pre-existing fence judged as prose. Found by an adversarial lens on the source, 2026-09-18.
+reset
+printf '# A note\n\nSee [the roadmap](ROADMAP.md "the sequence of intents").\n' > "$R/_ops/NOTE.md"
+git -C "$R" add -A
+[ "$(grc)" = 0 ] && ok || bad "a link carrying a markdown title was refused"
+
+reset
+printf '# A note\n\nSee [it](my%%20file.md).\n' > "$R/_ops/NOTE.md"
+: > "$R/_ops/my file.md"
+git -C "$R" add -A
+[ "$(grc)" = 0 ] && ok || bad "a percent-encoded destination that exists was refused"
+rm -f "$R/_ops/my file.md"
+
+reset
+printf '# A note\n\n```\nan example naming T-AB12CD\n```\n' > "$R/_ops/NOTE.md"
+git -C "$R" add -A
+git -C "$R" -c user.email=t@t -c user.name=t commit -qm "a fence" >/dev/null 2>&1
+python3 - "$R/_ops/NOTE.md" <<'PY2'
+import sys
+p = sys.argv[1]
+out = []
+for l in open(p, encoding="utf-8").read().split("\n"):
+    out.append(l)
+    if l.startswith("an example naming"):
+        out.append("and another line naming T-AB12CD")
+open(p, "w", encoding="utf-8").write("\n".join(out))
+PY2
+git -C "$R" add -A
+[ "$(grc)" = 0 ] && ok || bad "a line added inside a pre-existing fence was judged as prose"
+reset; rm -f "$R/_ops/NOTE.md"; git -C "$R" add -A >/dev/null 2>&1
+
 # its mutant: the dead-link half switched off, which is what a phantom node looks like from here
 _m="$T/mut-20.sh"
 python3 - "$HERE/templates/company-preflight.sh" > "$_m" <<'MUT'

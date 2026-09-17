@@ -72,10 +72,6 @@ this — whether a joining audit *offers* the machine line, or a run re-stamps a
 refused, is behaviour, and it has no fixture yet. Each mechanism has its form and its mutation suite,
 and each is reachable from PLAYBOOKS, FLOWS, BOOTSTRAP or USE-CASES.
 
-Eval state: **not run.** A patch; the suites measure the forms, not a run's behaviour.
-
-**Trio:** two diagrams (PLAYBOOKS), five situations in USE-CASES, and three register entries for
-the claims about the outside world.
 **A mention of something inside this project is a link — §20, ported with its measurement.** In the
 sibling's field audit, 2026-09-16: **one link in a live project's whole `_ops/` against twenty-two
 bare ids**, and a graph in which the record and the work were separate islands of identical strings.
@@ -87,8 +83,16 @@ breaking the skill's own checker. What stays as written: a `## History` line, a 
 the graph honest**: a link whose target is absent, an absolute path, or an unencoded space is
 refused. Here the tasks live in Multica, so this reads whatever file layer a project keeps — **an id
 becomes a link only where a file carries it**, and the rule does not change with the storage.
-`scripts/link-ids.py` also links a person-field now; `test-company-guard.sh` **54/54**,
+`scripts/link-ids.py` also links a person-field now; `test-company-guard.sh` **57/57**,
 `test-link-ids.sh` **24/24**.
+
+**And the section arrived with its repairs, not ahead of them.** The sibling's own lens round found
+three false refusals in this rule before either repository tagged: a markdown link carrying a title
+read as an unencoded space, the `%20` it then prescribed read as a dead path, and **a line added
+inside a pre-existing fence judged as prose** — that last one unfixable by the prescribed door,
+because the door tracks fences over the whole file while the gate tracked them over the diff. All
+three are repaired here and each has its own case (`company-guard` **57/57**): the fence state is
+read from the staged file and added lines are mapped to it by their hunk headers.
 
 **Whether the graph works is a measurement rather than a promise.** `scripts/graph-check.py` reports
 notes · note-to-note edges · orphans · attachments · how many links resolve **both** ways, only
@@ -136,6 +140,18 @@ file to resolve against, no `.claude/agents/` to wire, no local ladder to gate �
 the product's own interface. **A gate over a primitive somebody else owns is a second source of
 truth**, which is the rule this skill is built on rather than an exception to it.
 
+Eval state: **not run.** The ported forms are measured by the suites — company-guard **57**,
+link-ids **24** — and **a suite measures a form while an eval measures a run.** Three behaviours
+this entry adds that no scenario covers: whether a session links a mention *before* being refused
+for one, whether it reaches for the graph check when asked *is this even a graph*, and whether the
+four reading rules change what a lens actually reports. Named here rather than left to a reader's
+assumption.
+
+**Trio:** two diagrams (PLAYBOOKS), five situations in USE-CASES, and three register entries for
+the claims about the outside world. **The ported half owes no new diagram** and says so: §20 is
+the sibling's §27 carried over with its measurement, `graph-check.py` is its script, and the eleven
+rules are rules — each naming where it was read and on what date, which is what a port owes instead
+of a picture.
 
 ## 0.4.17 — 2026-09-11
 
