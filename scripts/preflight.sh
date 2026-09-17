@@ -308,7 +308,10 @@ while IFS= read -r m; do
   swept=$((swept+1))
   [ "$mv_" = "$sv" ] || say_fail "version straggler: $m=$mv_ but skills/mops/SKILL.md=$sv"
 done <<< "$(git ls-files '*.json' | grep -v '^company/')"
-[ "$swept" -ge 3 ] || say_warn "manifest sweep saw only $swept versioned manifest(s) — expected at least 3 (Claude Code, Codex, Gemini); has one stopped declaring a version?"
+# **Two, not three, since Gemini CLI was retired** (2026-06-18) and its manifest was deleted with
+# it. Antigravity reads the ROOT `plugin.json`, which declares no version, so it cannot be swept
+# here — `agy plugin validate .` is what says whether it still loads.
+[ "$swept" -ge 2 ] || say_warn "manifest sweep saw only $swept versioned manifest(s) — expected at least 2 (Claude Code, Codex); has one stopped declaring a version?"
 # **The guard's own stamp is a version site the sweep could not see, because it is not JSON.**
 # `templates/company-preflight.sh` carries `# guard-version:` on line 2, and the guard compares it
 # against the company's guide to say *this copy is older than the skill running it*. So it must

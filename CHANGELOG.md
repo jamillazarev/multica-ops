@@ -5,6 +5,17 @@ also the migration map `/multica-ops:upgrade` reads.
 
 ## 0.4.18 — 2026-09-11
 
+**Gemini CLI is gone, and so are the two files that existed for it.** That runtime was retired
+**2026-06-18** and replaced by **Antigravity CLI** — `agy`, a different binary. This repository was
+still shipping `gemini-extension.json` and `GEMINI.md`, sweeping the first for version parity and
+naming the old install route in `INSTALL.md`, `README.md` and `find-installs.sh`. Both files are
+**deleted**, and the successor was measured rather than cited: `agy plugin validate .` on 1.2.5
+answers **ok, 19 skills processed** without them, and `hooks: skipped (not found)` — so under that
+runtime the skills are the whole delivery and the hooks enforce nothing. `AGENTS.md` is the router
+there, a name `agy` reads beside the one that was deleted. **A dead runtime's install does not
+clean itself up**: `find-installs.sh` found one still sitting in `~/.gemini/extensions/`, so that
+row now prints *remove it* and names `agy plugin import gemini` for one worth keeping.
+
 **What to do — nothing breaks, and three things are offered.** Re-copy the company guard —
 `cp <skill>/templates/company-preflight.sh scripts/preflight.sh` in the company repository — to get
 its §18, §19 and §20 below. **§20 judges only what a commit WRITES**, so nothing already in the

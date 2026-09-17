@@ -19,7 +19,7 @@ nothing git ignores — the eval workspaces beside the corpus hold whole project
 
 **Which names**: a backticked span that is exactly the path of a markdown file in this tree. Never
 these bare names, which lead double lives — a project carries its own, and a prose mention usually
-means that one: CLAUDE.md, LATER.md, README.md, AGENTS.md, GEMINI.md, CHANGELOG.md, SKILL.md — the
+means that one: CLAUDE.md, LATER.md, README.md, AGENTS.md, CHANGELOG.md, SKILL.md — the
 list opsinist's site generator reached the hard way. **And never a companion's name inside another
 companion**: references stay one level deep from `skills/mops/SKILL.md`, which is this repository's
 own rule (preflight §5c, which warns on exactly that link) — so here a root chapter naming a root
@@ -29,7 +29,7 @@ written, so a reader sees exactly what they saw before.
 """
 import os, re, subprocess, sys
 
-DOUBLE_LIVES = {"CLAUDE.md", "LATER.md", "README.md", "AGENTS.md", "GEMINI.md", "CHANGELOG.md",
+DOUBLE_LIVES = {"CLAUDE.md", "LATER.md", "README.md", "AGENTS.md", "CHANGELOG.md",
                 "SKILL.md"}
 # preflight §5c's exemptions: the files that may link a companion, because they are not companions
 ONE_LEVEL_EXEMPT = {"SKILL.md", "README.md", "CHANGELOG.md", "AGENTS.md", "CLAUDE.md"}

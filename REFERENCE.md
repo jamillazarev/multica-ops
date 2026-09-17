@@ -815,7 +815,7 @@ don't restate them in instructions.
 - **Manual rerun ≠ auto-retry:** a rerun **resets the attempt counter and has no ceiling**;
   a per-row retry **reuses the working directory and resumes the session**, while a CLI rerun
   **starts fresh**. Pick deliberately: fresh is safer after a corrupt state, resume is cheaper.
-- **Session resumption is provider-specific** — most tools resume, some do not (Gemini). On a
+- **Session resumption is provider-specific** — most tools resume, some do not. On a
   non-resuming runtime every rerun pays full context again; that is a model-tiering input.
 - **Session limit = run `failed`, reason `agent_error`** (not `cancelled`),
   non-retryable, with a "resets HH:MM" comment; recovery = `issue rerun`; retrying

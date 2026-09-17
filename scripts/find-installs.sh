@@ -40,7 +40,7 @@ read_version() {
   # symlink into the middle of a repo copy has the copy's manifests above it.
   local d="$1" m up
   for up in "" "/.." "/../.."; do
-    for m in ".claude-plugin/plugin.json" "plugin.json" "gemini-extension.json" "package.json"; do
+    for m in ".claude-plugin/plugin.json" "plugin.json" "package.json"; do
       if [ -f "$d$up/$m" ]; then
         /usr/bin/python3 -c 'import json,sys
 try: print(json.load(open(sys.argv[1])).get("version","no version field"))
@@ -198,11 +198,13 @@ if [ -f "$HOME_DIR/.codex/config.toml" ] && grep -q "\"$NAME@" "$HOME_DIR/.codex
   fi
 fi
 
-# Gemini CLI extension.
+# **A retired runtime's install is still an install.** Gemini CLI was retired 2026-06-18 and
+# replaced by Antigravity CLI (`agy`); its extension directory outlives it, and this machine had
+# one on 2026-09-18. The row stays, as a row saying REMOVE.
 gdir="$HOME_DIR/.gemini/extensions/$NAME"
 if [ -e "$gdir" ]; then
   v=$(read_version "$gdir")
-  add "$gdir" "extension, Gemini CLI" "uninstall then gemini extensions install <url> --consent — update follows RELEASES, not tags, and \`extensions update\` hangs (2026-08-01: killed at 120s and again at 240s; uninstall+install took seconds)" "" "$v"
+  add "$gdir" "extension, Gemini CLI — RETIRED" "remove it: the runtime was retired 2026-06-18 and replaced by Antigravity CLI (agy). The live install is the Antigravity plugin row below; 'agy plugin import gemini' migrates one that still matters" "" "$v"
 fi
 
 # Antigravity, global location.

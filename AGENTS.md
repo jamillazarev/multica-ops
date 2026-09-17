@@ -3,7 +3,7 @@
 This repository ships one skill: **multica-ops** — a Mops (Executive Advisor) that builds and
 runs an autonomous company of AI agents on [Multica](https://multica.ai).
 
-**Using the skill?** Whatever harness you are (Claude Code, Codex, Cursor, Windsurf, Gemini
+**Using the skill?** Whatever harness you are (Claude Code, Codex, Cursor, Windsurf, Antigravity
 CLI, …): read **[SKILL.md](skills/mops/SKILL.md)** and follow it. Slash commands are a Claude Code plugin
 convenience; every flow works from natural language in any agent — "set up my team", "join
 this project", "status", "add a feature: …".

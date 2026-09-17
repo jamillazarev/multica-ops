@@ -15,7 +15,7 @@ to.
 
 ## What you need
 
-- **An agent CLI** you already talk to — Claude Code, Cursor, Codex, Windsurf, Gemini CLI. Mops
+- **An agent CLI** you already talk to — Claude Code, Cursor, Codex, Windsurf, Antigravity. Mops
   runs inside it.
 - **The `multica` CLI** — the small binary that connects your machine to a Multica workspace.
   **You install this one** (cloud, self-hosted and the desktop app are different choices, so Mops
@@ -159,7 +159,7 @@ questions about how to run work.
 | Runtime | The surface | 
 |---|---|
 | Antigravity | [`rules/multica-ops.md`](rules/multica-ops.md), shipped here and always on |
-| Gemini CLI | `GEMINI.md`, shipped here |
+| Antigravity CLI (`agy`) | the root `plugin.json` and `skills/`, with [`rules/multica-ops.md`](rules/multica-ops.md) as the always-on anchor — **measured 2026-09-18** on `agy` 1.2.5: `agy plugin validate .` → *ok, 19 skills processed*, and `hooks: skipped (not found)`, so the hooks do not enforce here. **It replaced Gemini CLI, retired 2026-06-18**; `agy plugin import gemini` carries over an old install, and `gemini-extension.json` / `GEMINI.md` were deleted this release |
 | Claude Code / Codex in a repo | that repo's `CLAUDE.md` or `AGENTS.md` |
 | **the Multica workspace itself** | **the shared guide and the Mops agent's instructions** — there is no `AGENTS.md` in a workspace; the workspace is the company, not a git checkout |
 

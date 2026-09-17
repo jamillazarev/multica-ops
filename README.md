@@ -51,7 +51,7 @@ with the fixes, and takes the right entrance:
 actually expert in. Everything else has a default good enough to leave alone, and **"defaults"**
 takes all of them at once.
 
-Every other install route — skills.sh for any harness, Gemini CLI, Codex, Antigravity, and
+Every other install route — skills.sh for any harness, Codex, Antigravity (`agy`), and
 importing the skill into a Multica workspace — is in **[INSTALL.md](INSTALL.md)**, each measured
 end to end rather than assumed.
 
@@ -162,10 +162,10 @@ repo + workspace alone.
 ## Works beyond Claude Code
 
 Plain **SKILL.md + markdown** — the Agent Skills convention. [skills.sh](https://skills.sh)
-installs it into Claude Code, Cursor, Codex, Windsurf, Gemini CLI, Copilot and the rest;
-**[AGENTS.md](AGENTS.md)** routes any agent that lands in the repo, **[GEMINI.md](GEMINI.md)**
-does the same for Gemini CLI, and **[CLAUDE.md](CLAUDE.md)** carries the session loop for anyone
-*developing* the skill rather than using it. Slash commands are a Claude Code plugin bonus
+installs it into Claude Code, Cursor, Codex, Windsurf, Antigravity, Copilot and the rest;
+**[AGENTS.md](AGENTS.md)** routes any agent that lands in the repo — the name Antigravity CLI
+reads too — and **[CLAUDE.md](CLAUDE.md)** carries the session loop for anyone *developing* the
+skill rather than using it. Slash commands are a Claude Code plugin bonus
 (namespaced `/multica-ops:…`); everywhere else plain language reaches the same flows.
 
 > **Layout note:** the corpus is at **[`skills/mops/SKILL.md`](skills/mops/SKILL.md)**, one folder per verb beside it —
