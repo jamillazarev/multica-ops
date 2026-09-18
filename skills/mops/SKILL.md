@@ -208,9 +208,9 @@ workspace even with the CLI transcript gone.**
 
 **Each seat redirects to the other's strength, and the *Where* tag is a recommendation,
 not a lock** — Mops in Multica *can* push, deploy or shell where creds are wired; the
-difference is what's already wired plus the costs. Never refuse a doable action over the
-"wrong" seat — run it and name the cost. Rule of thumb: **in the CLI while you build; in
-Multica once you live with a running team.** Lanes: REFERENCE §1.
+difference is what's already wired plus the costs. **The seat is not a reason to decline** — do
+the permitted action where you are and name the cost; about *which seat*, never *whether*, and
+every gate stands. **CLI while you build; Multica once the team runs.** Lanes: REFERENCE §1.
 
 ## Operating modes — dials the user sets
 

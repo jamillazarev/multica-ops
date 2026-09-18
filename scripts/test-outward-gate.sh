@@ -68,6 +68,43 @@ speaks "inside a subshell"      "s-b14" "(cd repo && git push)"
 speaks "on its own line"        "s-b15" "cd repo
 git push origin main"
 
+# ── eleven ways past it, every one reproduced by an adversarial lens ─────────────
+# A wrapper word is not a delimiter, so nothing anchored before the verb; a line continuation is
+# one command to the shell and two lines to a regex; a redirect needs no space; the runner's quote
+# can sit further than forty characters away, or not exist at all. **This is the costly direction**
+# — a miss lets a publish through — so each shape is a case rather than a note.
+speaks "env prefix"              "s-i1" "env VAR=x git push origin main"
+speaks "sudo prefix"             "s-i2" "sudo git push origin main"
+speaks "nohup and background"    "s-i3" "nohup git push origin main &"
+speaks "time prefix"             "s-i4" "time git push origin main"
+speaks "nice -n prefix"          "s-i5" "nice -n 10 git push origin main"
+speaks "a line continuation"     "s-i6" "git \\
+push origin main"
+speaks "a redirect right after"  "s-i7" "git push>/dev/null 2>&1"
+speaks "xargs, quote far away"   "s-i8" "xargs -I{} --a-very-long-placeholder-flag 'git push origin main'"
+speaks "eval with no quote"      "s-i9" "eval git push origin main"
+speaks "a brace group"           "s-i10" "{ git push origin main; }"
+speaks "env before a deploy"     "s-i11" "env CI=1 vercel deploy --prod"
+
+# ── and a heredoc body is data being fed to another program ──────────────────────
+# Writing a document that carries the verb at the start of a line was refused as a publish — the
+# same *prose is not an act* defect, arriving back through the newline anchor that repaired it.
+silent "a heredoc body"          "s-i12" "cat > docs/how.md <<'EOF'
+git push origin main
+EOF"
+# …while a backticked command inside a double-quoted message is NOT prose: the shell substitutes
+# it. Kept as a case so nobody ever "fixes" a true positive.
+speaks "backticks in a message"  "s-i13" "git commit -m \"how \`git push origin main\` works\""
+silent "a plain message"         "s-i14" "git commit -m \"describe how to git push later\""
+
+# ── the verbs the other copy had and this one did not ────────────────────────────
+# Two copies of one rule with three different verb lists, and nothing saying why. Aligned after a
+# contradiction lens ran them side by side, 2026-09-18.
+speaks "flyctl deploy"    "s-j1" "flyctl deploy"
+speaks "kamal deploy"     "s-j2" "kamal deploy"
+speaks "make deploy"      "s-j3" "make deploy"
+speaks "npm run deploy"   "s-j4" "npm run build && npm run deploy"
+
 # ── a dry run is a read: nothing leaves ──────────────────────────────────────────
 silent "git push --dry-run" "s-c1" "git push --dry-run origin main"
 

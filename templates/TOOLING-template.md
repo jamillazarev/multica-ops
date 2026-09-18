@@ -6,12 +6,13 @@ rotates, and whose breaking change surprises the team.
 
 One row per tool. **Operating detail does not live here** — it lives in
 `_ops/runbooks/<tool>.md`, so this stays scannable and the runbook stays deep.
+**Two columns answer questions nobody asks unprompted.** *Wired how* names **what the service ships and which of it you took** — an MCP server, a CLI, an SDK, an agent skill — because each is work you do not have to write, and the question only gets asked where there is a cell to answer it. **`checked <date> · none found` is a complete answer**; an empty cell is not, because it cannot be told apart from nobody having looked. *Gone when* is the condition that retires the row: **a dependency with no removal condition never leaves.** Write the observable one — *when the platform ships it*, *when the free tier stops covering us*, *when the feature it serves is cut* — never *when we don't need it*.
 
-| Tool | What it's for | **Replaces** | Access & where the secret lives | Wired how | Checked |
-|---|---|---|---|---|---|
-| {{Sentry}} | {{error tracking for the web app}} | {{we had none — errors went unseen}} | {{conductor + web engineer · token in `mcp_config`}} | {{MCP server — `mcp_config` on the conductor and the web engineer}} | {{2026-07-23}} |
-| {{ffmpeg}} | {{cutting the demo videos}} | {{we had none — clips went out uncut}} | {{none}} | {{`mise.toml`}} | {{2026-07-23}} |
-| {{Vercel}} | {{hosting + preview deploys}} | {{the rsync script on the old box}} | {{owner only — deploys are outward}} | {{CLI on the daemon machine}} | {{2026-07-23}} |
+| Tool | What it's for | **Replaces** | Access & where the secret lives | Wired how · **what it ships** | **Gone when** | Checked |
+|---|---|---|---|---|---|---|
+| {{Sentry}} | {{error tracking for the web app}} | {{we had none — errors went unseen}} | {{conductor + web engineer · token in `mcp_config`}} | {{MCP server — `mcp_config` on the conductor and the web engineer · ships MCP (taken) · CLI · SDK — checked 2026-07-23}} · ships MCP (taken) · CLI · SDK — checked 2026-07-23| {{the runtime reports errors itself, or the app stops having users}} | {{2026-07-23}} |
+| {{ffmpeg}} | {{cutting the demo videos}} | {{we had none — clips went out uncut}} | {{none}} | {{`mise.toml` · CLI only — checked 2026-07-23, no MCP and no SDK we need}} | {{we stop shipping video}} | {{2026-07-23}} |
+| {{Vercel}} | {{hosting + preview deploys}} | {{the rsync script on the old box}} | {{owner only — deploys are outward}} | {{CLI on the daemon machine · ships CLI (taken) · API · MCP — checked 2026-07-23}} | {{the non-commercial plan stops applying to us}} | {{2026-07-23}} |
 
 **Where `mise.toml` declares the tool, *Wired how* names that file, and the *Tool* cell is the
 entry's own name in it** (`ffmpeg` for `"brew:ffmpeg"`), so the company guard's §19 can match the

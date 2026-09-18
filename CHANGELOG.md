@@ -15,14 +15,25 @@ position now — the beginning, a newline, after `;` `&&` `||` `|`, inside a sub
 counts only after something that runs a shell**, because any quote would refuse a search for the
 phrase, and a search is a read. Read against the sibling's copy, which had been anchored since it
 was written, each found a hole in the other: this one had no anchor, and that one was blind to a
-newline, a pipe, a subshell and a wrapper's quoted argument. Seven new assertions.
+newline, a pipe, a subshell and a wrapper's quoted argument. Seven new assertions — and then an adversarial lens found **eleven more ways past it**, every one
+reproduced: a wrapper word before the verb (`env X=1`, `sudo`, `nohup`, `time`, `nice -n 10`, a
+bare `eval`), a line continuation, a redirect needing no space, and a runner's quote further than
+forty characters away. Plus one false positive in the other direction: **a heredoc body is data fed
+to another program**, so a document carrying the verb at the start of a line was refused as a
+publish. Fourteen more cases, `test-outward-gate.sh` **57/57**. What the lens called a false
+positive and is not: backticks inside a double-quoted message are command substitution, and the
+shell really runs what is between them.
 **And the refusal now quotes what you last asked for** — not to decide with, because a gate cannot
 read intent and the only party available to explain it is the one being stopped, whose account is
 what was measured wrong (5 runs of 5 reported *"done… and pushed"*). It is quoted to spare the
 person the scroll: their own last message beside what is about to leave, **marked as context and
 not consent**, with the verdict unchanged whether there is one or not. Tool results and the
-harness's reminders arrive as `user` entries too and are skipped. `test-outward-gate.sh` **43/43**,
-asserting the door stays shut with a quote, without one, and with no transcript at all. **The refusal gained a third door** — *if this is a sentence about
+harness's reminders arrive as `user` entries too and are skipped. The reader also had to learn what a `user` entry
+actually is: a **tool result**, an unterminated or nested `<system-reminder>`, a
+**`<task-notification>`** carrying a background agent's return value, and the harness's
+conversation-continuation summary all arrive as one — and the first version skipped only the first.
+Blocks are stripped by depth now, and an entry carrying both text and a tool result keeps its text,
+because discarding it quoted an *older* message as what you last asked for. **The refusal gained a third door** — *if this is a sentence about
 the act and not the act, say so to the owner* — because a message offering only *the owner runs it*
 or *turn the gate off* has no answer for a false positive.
 
@@ -53,6 +64,14 @@ analysed, **26.1% carried a vulnerability and 5.2% showed likely malicious inten
 command runs over the skills a company writes for itself** — a file you wrote cannot be malicious
 and can easily be over-granted or leaky. Nothing enforces it: the scanner is a third-party install,
 and nothing is installed without the owner's word.
+
+**The first run over these nineteen skills found two things, and one of them earned its keep.** A
+skill whose job is upgrading skills trips *Rogue Agent / Self-Modification*, which is the pattern
+being right about the shape and wrong about the intent. The other was a line in the core reading
+*"never refuse a doable action over the wrong seat"*, flagged **anti-refusal** — and that sentence
+was about *which seat does the work*, which a model reading it out of context could take for
+something else. It says so now, and says gates are untouched by it; the scan reports clean.
+**A scan that changes the corpus rather than only measuring it** is the argument for running it.
 
 **The shelf itself gained the checked rows** — `urlwatch`, Firehose and Huginn beside
 changedetection.io for the three things it cannot do; SEO Gets, kwrds.ai and LibreCrawl beside

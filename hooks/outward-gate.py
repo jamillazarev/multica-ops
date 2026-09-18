@@ -39,6 +39,10 @@ import sys
 # Outward: it leaves this machine and someone else can see it. The measured case is the one every
 # run reached for; the rest are the same act wearing other clothes. Kept deliberately short — a
 # long list is a list nobody audits, and a miss here is a rule that was already prose-only anyway.
+# **The two copies had three different verb lists and nobody had written down why** — this one
+# missed `flyctl`, `kamal`, `cap`, `make deploy` and `npm run deploy`; the other missed
+# `gh pr create`. Aligned 2026-09-18 after a contradiction lens ran them side by side: **a
+# divergence that is not deliberate and written down is just a divergence.**
 #
 # **A command starts a command; a word after another word is prose.** This matched the verb
 # anywhere in the string, so writing a SENTENCE about publishing into a file was refused as if it
@@ -55,15 +59,38 @@ import sys
 # never outward, refused by the gate that exists for publishing (caught by this suite the moment
 # the case was written). So the second alternative is explicit: a shell-runner, then its quoted
 # argument. The wrapper built by substitution still passes, and that is named rather than chased.
+#
+# **Then an adversarial lens walked in with eleven ways past it, all reproduced** (2026-09-18), and
+# each is handled here rather than argued with: **a wrapper word** before the verb (`env X=1`,
+# `sudo`, `nohup`, `time`, `nice -n 10`, `command`, `exec`, and a bare `eval` with no quote at all)
+# is neither a delimiter nor a runner, so nothing anchored · **a line continuation** is one command
+# to the shell and two lines to a regex · **a redirect** needs no space before it, and the lookahead
+# did not count `>` as a terminator · **the runner's quote** can sit further than forty characters
+# away, so the cap is gone. A **heredoc body** is blanked before matching: it is data being fed to
+# another program, and a document that carries the verb at the start of a line is not a publish —
+# the same *prose is not an act* defect, arriving back through the newline anchor that repaired it.
 CMD_START = (r"(?:(?:^|[\n;&|(){}`]|\$\()\s*"
-             r"|\b(?:bash|sh|zsh|dash|eval|xargs)\b[^\n]{0,40}?[\"']\s*)")
+             r"|\b(?:bash|sh|zsh|dash|eval|xargs)\b[^\n]*?[\"']\s*)")
+WRAP = (r"(?:(?:env\s+\w+=\S*|sudo|nohup|time|command|exec|eval"
+        r"|nice(?:\s+-n\s*-?\d+)?)\s+)*")
 OUTWARD = re.compile(
-    CMD_START + r"(git\s+push"
+    CMD_START + WRAP + r"(git\s+push"
     r"|gh\s+(?:release\s+create|pr\s+create)"
     r"|npm\s+publish"
-    r"|(?:vercel|netlify|fly|wrangler)\s+deploy"
-    r"|docker\s+push)\b",
+    r"|(?:flyctl|fly|vercel|netlify|wrangler|kamal|cap)\s+deploy"
+    r"|(?:npm|yarn|pnpm)\s+run\s+deploy|(?:make|just)\s+deploy"
+    r"|docker\s+push)(?=[\s;&|)<>\"'`]|$)",
     re.I)
+
+
+def shell_only(cmd):
+    """The command with its line continuations folded and its heredoc bodies blanked."""
+    c = re.sub(r"\\\n", " ", cmd)
+    for m in re.finditer(r"<<-?\s*['\"]?(\w+)['\"]?", c):
+        end = re.search(r"^\s*%s\s*$" % re.escape(m.group(1)), c[m.end():], re.M)
+        stop = m.end() + (end.start() if end else len(c))
+        c = c[:m.end()] + re.sub(r"[^\n]", " ", c[m.end():stop]) + c[stop:]
+    return c
 
 # A dry run is a read: it tells you what *would* leave, and nothing does.
 DRY = re.compile(r"--dry-run\b|--dry_run\b", re.I)
@@ -83,10 +110,34 @@ def last_owner_instruction(transcript, limit=240):
     forward. **If this function ever grows a branch that lets something through, that branch is the
     bug.**
 
-    Tool results arrive as `user` entries too, so an entry carrying a `tool_result` block is
-    machinery talking to machinery and is skipped; so is a `<system-reminder>`, which is the
-    harness speaking rather than the owner.
+    **Most of what arrives as a `user` entry is not the owner**, and an adversarial lens proved
+    the first version of this wrong on a real transcript (2026-09-18). Four shapes, each handled:
+    a **tool result**, which arrives as a `user` entry; a `<system-reminder>`, **possibly
+    unterminated or nested**; a `<task-notification>`, *a background agent's return value routed
+    back as a user turn*; and the harness's **conversation-continuation summary**, tens of
+    thousands of characters that are not a turn at all. An entry carrying BOTH text and a tool
+    result keeps its text — discarding it made the gate quote an older message as *what you last
+    asked for*, and a stale instruction reads exactly like a current one.
+
+    **Whatever survives is still untrusted text**, shown between guillemets under a line saying it
+    is not consent. An instruction inside it is a thing the human reads, and the human was going to
+    decide anyway.
     """
+    def _strip(t):
+        """Drop the harness's own blocks by counting depth rather than matching pairs — a regex
+        leaks what sits between a nested inner close and the outer one, and the two malformed
+        shapes fall out for free: an unterminated block leaves the counter above zero and its tail
+        goes, an orphan closing tag at depth zero removes only itself."""
+        out, depth, last = [], 0, 0
+        for m in re.finditer(r"</?(?:system-reminder|task-notification)>", t):
+            if depth == 0:
+                out.append(t[last:m.start()])
+            depth = max(0, depth - 1) if m.group(0).startswith("</") else depth + 1
+            last = m.end()
+        if depth == 0:
+            out.append(t[last:])
+        return " ".join(out)
+
     text = ""
     try:
         with open(transcript, encoding="utf-8", errors="replace") as f:
@@ -104,15 +155,17 @@ def last_owner_instruction(transcript, limit=240):
                 if isinstance(content, str):
                     chunks = [content]
                 elif isinstance(content, list):
-                    if any(isinstance(b, dict) and b.get("type") == "tool_result" for b in content):
-                        continue
                     chunks = [b.get("text", "") for b in content
                               if isinstance(b, dict) and b.get("type") == "text"]
+                    if not chunks:
+                        continue        # a tool result alone is not the owner speaking
                 else:
                     continue
-                said = "\n".join(c for c in chunks if c).strip()
-                said = re.sub(r"<system-reminder>.*?</system-reminder>", " ", said, flags=re.S)
+                said = _strip("\n".join(c for c in chunks if c).strip())
                 said = " ".join(said.split())
+                if said.startswith(("This session is being continued", "Caveat: The messages below",
+                                    "[harness:")):
+                    continue            # the harness summarising, not a turn
                 if said:
                     text = said
     except Exception:
@@ -140,7 +193,7 @@ def main():
     cmd = str((payload.get("tool_input") or {}).get("command") or "")
     if not cmd or DRY.search(cmd):
         out()
-    m = OUTWARD.search(cmd)
+    m = OUTWARD.search(shell_only(cmd))
     if not m:
         out()
 
