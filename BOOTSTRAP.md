@@ -334,6 +334,14 @@ from this file, the docs and `--help`/`--debug` win.
 
 ## 12. External services — connect-or-create, access, secrets
 
+**[STACKS.md](STACKS.md) is the FIRST stop, and a web search is the second** — every row there
+carries a licensing or fallback decision somebody already paid for, which a search cannot return
+because a search returns what is popular this month. The order: **read the row · then search for
+what the row does not cover · then hand-wire.** The same order holds for *references* as for
+tools — a look, a brand, a landing page start at the galleries section, not at a blank prompt.
+Nothing on the shelf is binding: it is the first place to look, and a row wrong for this company
+is said so and passed.
+
 Inventory first ("what already exists?"), then per service:
 - **Exists → connect** (GitHub repo → `project resource add`; Figma file → link +
   token; PostHog project → API key). **Missing → create it**, then connect. Same rule

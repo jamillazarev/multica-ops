@@ -528,10 +528,19 @@ inventory** — four operations, each with a gate, all recorded in `_ops/TOOLING
 
 **Import — a third-party skill is untrusted code *and* untrusted instructions.** Its text
 enters an agent's context and becomes something that agent believes. So:
-1. **Screen it** (STACKS → screening imported tooling): destructive commands, exfiltration of
-   `.ssh`/`.aws`/`.env`, unexpected endpoints, over-broad tool grants, injection text,
-   MCP config. Scanners pattern-match, so read the findings — a flagged password-manager
-   integration is usually fine, and a clean report is not a guarantee.
+1. **Screen it with a named command** — `skillspector scan <path|repo|url|zip>`
+   ([SkillSpector](https://github.com/NVIDIA/skillspector), Apache-2.0, read 2026-09-18): 71
+   patterns over 17 categories — destructive commands, exfiltration of `.ssh`/`.aws`/`.env`,
+   unexpected endpoints, over-broad tool grants, injection text, **MCP least privilege and MCP
+   tool poisoning** — with AST analysis and taint tracking rather than pattern matching alone,
+   and an optional model pass on top. **Its own dataset is why this step exists**: of 31,132
+   skills analysed, **26.1% carried a vulnerability and 5.2% showed likely malicious intent**.
+   Read the findings — a flagged password-manager integration is usually fine, and a clean
+   report is not a guarantee.
+   **The same command runs over the skills this company writes for itself**, before they are
+   committed: a file you wrote cannot be malicious and can easily be over-granted, injectable or
+   leaky, and the difference is only what a finding means — a defect to fix, not a supplier to
+   refuse.
 2. **Read what it actually instructs.** Anything telling an agent to ignore its guide,
    contact an address, or widen its own access is a rejection, not a finding to weigh.
 3. **Run it through the optimizer, then trim** (below) — an imported skill is compressed by

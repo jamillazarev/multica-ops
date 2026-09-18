@@ -5,6 +5,27 @@ also the migration map `/multica-ops:upgrade` reads.
 
 ## 0.4.18 — 2026-09-11
 
+**The shelf is the first stop, and screening got a named command.** Anything to be connected,
+chosen or recommended starts at [STACKS.md](STACKS.md) **before** a search — written into
+BOOTSTRAP §12 and the router — because a row carries a licensing or fallback decision somebody
+already paid for, and a search returns what is popular this month. And the import gate now names
+what to run: **`skillspector scan <path|repo|url|zip>`**
+([SkillSpector](https://github.com/NVIDIA/skillspector), Apache-2.0, NVIDIA) — 71 patterns over 17
+categories including **MCP least privilege and MCP tool poisoning**, AST analysis and taint
+tracking, an optional model pass. **Its dataset is the argument for the gate**: of 31,132 skills
+analysed, **26.1% carried a vulnerability and 5.2% showed likely malicious intent**. **The same
+command runs over the skills a company writes for itself** — a file you wrote cannot be malicious
+and can easily be over-granted or leaky. Nothing enforces it: the scanner is a third-party install,
+and nothing is installed without the owner's word.
+
+**The shelf itself gained the checked rows** — `urlwatch`, Firehose and Huginn beside
+changedetection.io for the three things it cannot do; SEO Gets, kwrds.ai and LibreCrawl beside
+OpenSEO, **whose repository this file could not identify on 2026-09-10 and which is
+`every-app/open-seo`**, MIT, self-hostable against your own DataForSEO key; Bifrost beside LiteLLM.
+**Two licence claims were wrong and are corrected**: LiteLLM is MIT *except* `enterprise/`, and
+AFFiNE governs its backend separately from its editor — both read from the repositories rather than
+the marketing.
+
 **Gemini CLI is gone, and so are the two files that existed for it.** That runtime was retired
 **2026-06-18** and replaced by **Antigravity CLI** — `agy`, a different binary. This repository was
 still shipping `gemini-extension.json` and `GEMINI.md`, sweeping the first for version parity and
