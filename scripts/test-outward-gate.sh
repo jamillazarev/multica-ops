@@ -48,6 +48,26 @@ silent "a build"     "s-b5" "npm run build"
 silent "a test run"  "s-b6" "pytest -q"
 silent "the word push in prose" "s-b7" "echo 'remember to push later'"
 
+# ── a SENTENCE about publishing is not publishing ────────────────────────────────
+# Measured 2026-09-18, twice in one session: a comment being written into a file said the verb
+# mid-sentence and the gate refused it as if it were the act — the second time, on the comment
+# explaining this very repair. The only way past a gate that reads prose is to reword the prose,
+# which is the failure this repository names as *satisfied by vocabulary*, arriving at the one
+# gate that must not be word-gameable. A command starts a command; a word after a word is prose.
+silent "the verb mid-sentence"      "s-b8"  "python3 - <<'PY'
+open('x','w').write('a vercel deploy is an outward act')
+PY"
+silent "prose in a comment"         "s-b9"  "printf '%s' '# this is what a git push costs' > note.md"
+silent "an argument, not a command" "s-b10" "grep -r 'npm publish' docs/"
+silent "a path that reads like it"  "s-b11" "cat notes/about-git-push.md"
+
+# ── and a wrapper is still the act, because the verb still starts a command ───────
+speaks "inside a quoted -c"     "s-b12" "bash -c \"git push origin main\""
+speaks "after a semicolon"      "s-b13" "cd /tmp; git push"
+speaks "inside a subshell"      "s-b14" "(cd repo && git push)"
+speaks "on its own line"        "s-b15" "cd repo
+git push origin main"
+
 # ── a dry run is a read: nothing leaves ──────────────────────────────────────────
 silent "git push --dry-run" "s-c1" "git push --dry-run origin main"
 

@@ -5,6 +5,21 @@ also the migration map `/multica-ops:upgrade` reads.
 
 ## 0.4.18 — 2026-09-11
 
+**The outward gate refused a sentence about publishing.** It matched its verbs **anywhere in the
+command string**, so a comment being written into a file was stopped as if it were the act —
+measured 2026-09-18, twice in one session, the second time on the comment explaining the repair.
+The only route past a gate that reads prose is to reword the prose, which is the
+*satisfied-by-vocabulary* failure arriving at the one gate that must not be word-gameable. **A
+command starts a command; a word after another word is prose**: the verb is anchored at a command
+position now — the beginning, a newline, after `;` `&&` `||` `|`, inside a subshell — **and a quote
+counts only after something that runs a shell**, because any quote would refuse a search for the
+phrase, and a search is a read. Read against the sibling's copy, which had been anchored since it
+was written, each found a hole in the other: this one had no anchor, and that one was blind to a
+newline, a pipe, a subshell and a wrapper's quoted argument. Seven new assertions,
+`test-outward-gate.sh` **36/36**. **The refusal gained a third door** — *if this is a sentence about
+the act and not the act, say so to the owner* — because a message offering only *the owner runs it*
+or *turn the gate off* has no answer for a false positive.
+
 **A dependency now says what the service ships and when it should leave.** From one observation on
 a live project: *the advisor chose a service and never checked whether it had an API, a CLI or an
 MCP* — and the cause was that the project had no register at all, so the question had no row to be

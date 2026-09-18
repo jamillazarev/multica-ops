@@ -36,15 +36,33 @@ import os
 import re
 import sys
 
-# Outward: it leaves this machine and someone else can see it. `git push` is the measured case;
-# the rest are the same act wearing other clothes. Kept deliberately short — a long list is a
-# list nobody audits, and a miss here is a rule that was already prose-only anyway.
+# Outward: it leaves this machine and someone else can see it. The measured case is the one every
+# run reached for; the rest are the same act wearing other clothes. Kept deliberately short — a
+# long list is a list nobody audits, and a miss here is a rule that was already prose-only anyway.
+#
+# **A command starts a command; a word after another word is prose.** This matched the verb
+# anywhere in the string, so writing a SENTENCE about publishing into a file was refused as if it
+# were the act — measured 2026-09-18, twice in one session, the second time on the comment
+# explaining this very repair. The constrained party's only way past a gate that reads prose is to
+# reword the prose, which is the *satisfied-by-vocabulary* failure the corpus names, arriving at
+# the one gate that must not be word-gameable. So the verb must sit where a command can start: the
+# beginning, a newline, after `;` `&&` `||` `|`, or inside `(`…`)` or `$(`…`)`. **The sibling's own
+# gate has anchored this way since it was written and this copy had not**, which is the divergence
+# a shared rule in two files always eventually produces.
+#
+# **A quote is a command start only after something that runs a shell.** Treating any quote as one
+# caught the wrapper `sh -c "…"` and also caught `grep 'npm publish' docs/` — a READ, which is
+# never outward, refused by the gate that exists for publishing (caught by this suite the moment
+# the case was written). So the second alternative is explicit: a shell-runner, then its quoted
+# argument. The wrapper built by substitution still passes, and that is named rather than chased.
+CMD_START = (r"(?:(?:^|[\n;&|(){}`]|\$\()\s*"
+             r"|\b(?:bash|sh|zsh|dash|eval|xargs)\b[^\n]{0,40}?[\"']\s*)")
 OUTWARD = re.compile(
-    r"\bgit\s+push\b"
-    r"|\bgh\s+(?:release\s+create|pr\s+create)\b"
-    r"|\bnpm\s+publish\b"
-    r"|\b(?:vercel|netlify|fly|wrangler)\s+deploy\b"
-    r"|\bdocker\s+push\b",
+    CMD_START + r"(git\s+push"
+    r"|gh\s+(?:release\s+create|pr\s+create)"
+    r"|npm\s+publish"
+    r"|(?:vercel|netlify|fly|wrangler)\s+deploy"
+    r"|docker\s+push)\b",
     re.I)
 
 # A dry run is a read: it tells you what *would* leave, and nothing does.
@@ -75,7 +93,7 @@ def main():
     if not m:
         out()
 
-    act = m.group(0)
+    act = m.group(1)
     sys.stderr.write(
         f"`{act}` is an outward act — it leaves this machine and someone else can see it, "
         f"which is one of the four kinds that are the owner's to authorise (spend · outward · "
@@ -86,7 +104,11 @@ def main():
         f"**Running it again will not work, and that is deliberate** — a gate the constrained "
         f"party can retry past is not a gate. The two real doors: the owner runs the command "
         f"themselves, or the owner turns this gate off on purpose with "
-        f"`MOPS_OUTWARD_GATE=off`.\n")
+        f"`MOPS_OUTWARD_GATE=off`.\n\n"
+        f"**And if this is not the act but a sentence about it** — the phrase written into a file, "
+        f"a comment, a message — say that to the owner and let them look. **Do not reword it to get "
+        f"past**: a gate you can word your way around is not a gate, and this one asks for a person "
+        f"either way.\n")
     sys.exit(2)
 
 
