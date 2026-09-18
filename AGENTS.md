@@ -301,6 +301,12 @@ A version bump is not just a changelog entry. Before you tag:
    a modified tracked file is flagged as **AT RISK** rather than broken (a fast-forward that does
    not touch it still succeeds), and the remedy is a command you can paste. It shipped with no test
    at all, under a commit titled *a route nobody verifies is a route nobody has*.
+   **And the skills this toolkit ships** — `skillspector scan ./skills --recursive` before a tag
+   ([SkillSpector](https://github.com/NVIDIA/skillspector), Apache-2.0, NVIDIA, a third-party
+   install and therefore never wired into preflight, which runs offline). We screen what we import
+   and ship nineteen skills of our own; the rule that says *imported* is the one everybody reads as
+   *all*. `--no-llm` reports itself as a partial scan, so a clean static run is evidence about
+   patterns and not about intent.
    **And the company guard** — `bash scripts/test-company-guard.sh`: the four dependency-manifest shapes, the version bump that is not a new dependency, the word boundary that must not let a decision saying `update` satisfy a dependency called `date`, the register rung refusing and accepting `we had none`, and the guard noticing it is older than the guide it ships beside. It shipped with none of these — 101 lines of gate that `grep -rl` found named only in prose, which is why it is named here. **And so is the map generator** — `bash scripts/test-map-blocks.sh` — where
    the assertion that matters is that `scripts/map-blocks.py` rewrites *only* between its
    markers: a generator that reformats a document it does not own is one nobody dares run. A new capability usually needs a new check, and

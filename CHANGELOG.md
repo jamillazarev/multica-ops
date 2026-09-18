@@ -5,6 +5,21 @@ also the migration map `/multica-ops:upgrade` reads.
 
 ## 0.4.18 — 2026-09-11
 
+**A dependency now says what the service ships and when it should leave.** From one observation on
+a live project: *the advisor chose a service and never checked whether it had an API, a CLI or an
+MCP* — and the cause was that the project had no register at all, so the question had no row to be
+asked in. A register row carries **what the service ships** (MCP · CLI · SDK · agent skill, where
+`checked <date> · none found` is an answer and a blank is not, because a blank cannot be told apart
+from nobody having looked) and **gone when** — the observable condition that retires it, since a
+dependency with no removal condition never leaves. The *why* was never the missing half; that is
+already asked when the dependency arrives.
+
+**Nine scheduling links, and they are three needs.** Did it run (**Healthchecks** — the only one
+that catches a cron that silently stops) · what runs it (Cronicle · cronmaster · cronboard ·
+cron-job.org, each with the licence that decides it) · inside the app (gocron · node-cron ·
+pg_cron · `schedule`, last pushed 2024-05-25). The rung above all of them: **ask the host first.**
+**DataForSEO** named as the per-call layer that makes the tool in front of it replaceable.
+
 **The shelf is the first stop, and screening got a named command.** Anything to be connected,
 chosen or recommended starts at [STACKS.md](STACKS.md) **before** a search — written into
 BOOTSTRAP §12 and the router — because a row carries a licensing or fallback decision somebody

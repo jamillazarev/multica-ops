@@ -1489,6 +1489,17 @@ says why:
 | an MCP server | the agent's `mcp_config` (REFERENCE.md), set through the CLI — never a file in the repository, since its values are where the credentials live | why · what it replaces · which agents carry it |
 | a runtime, a CLI tool or a system package — python, node, ffmpeg | `mise.toml` at the repository's root: `[tools]`, and `[bootstrap.packages]` with a line per OS | why · what it replaces |
 
+**And two things every row answers that nobody asks unprompted.** *Wired how* also names **what
+the service ships and which of it you took** — an MCP server, a CLI, an SDK, an agent skill — each
+being work this company does not have to write; **`checked <date> · none found` is a complete
+answer and a blank is not**, because a blank cannot be told apart from nobody having looked. That
+is not hypothetical: on a live project an auth service was chosen and **nothing ever asked whether
+it had an API, a CLI or an MCP**, because the project had no register to ask in (2026-09-16). The
+second is **gone when** — the observable condition that retires the row (*when the platform ships
+it · when the free tier stops covering us · when the feature it serves is cut*), because **a
+dependency with no removal condition never leaves**, and *when we don't need it* is not something
+anybody can observe. The reason it arrived is asked when it arrives; this is the other end.
+
 **Never a second list.** A version lives in `mise.toml` and nowhere else, the row's *Wired how*
 names the file, and the company guard's §19 holds the two to each other — every entry a row,
 every row an entry. An MCP row names the agents instead, and the health sweep probes them.
