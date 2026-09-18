@@ -33,6 +33,22 @@ reg() {
 }
 row() { printf '| %s | a reason | we had none | MIT · read 2026-09-11 | none | %s | 2026-09-11 |' "$1" "$2"; }
 
+# **And the register as this repository's own template ships it.** The column was widened to
+# *Wired how · what it ships* while the check still matched its header by equality, so a project
+# that copied the template and registered correctly was told it had no row. The sibling's copy of
+# the same rule was repaired and this one was not — which is what a shared rule living in two files
+# does when only one is touched (an adversarial lens, 2026-09-18). The fixture below is the
+# template's own header, so the two cannot drift apart again unnoticed.
+reg_shipped() {
+  { printf '# Tooling\n\n%s\n' \
+      "| Tool | What it's for | **Replaces** | Access & where the secret lives | Wired how · **what it ships** | **Gone when** | Checked |"
+    printf '|---|---|---|---|---|---|---|\n'
+    for r in "$@"; do printf '%s\n' "$r"; done; } > _ops/TOOLING.md
+}
+row_shipped() {
+  printf '| %s | a reason | we had none | none | %s · CLI only — checked 2026-09-18 | we stop shipping it | 2026-09-18 |' "$1" "$2"
+}
+
 run() { git add -A; OUT=$(bash _ops/preflight.sh 2>&1); RC=$?; }
 said() { [ "$(printf '%s' "$OUT" | grep -c -- "$1")" -gt 0 ]; }   # grep -c: no pipe can eat it
 
@@ -76,6 +92,14 @@ suite() {
   reg "$(row python '`mise.toml`')" "$(row node '`mise.toml`')" "$(row ck '`mise.toml`')" "$(row ffmpeg '`mise.toml`')" \
       "$(row sentry '`mcp_config` on the web agent')"
   run; [ "$RC" = 0 ] && ok || bad "[$1] a row wired by an agent's mcp_config was refused: $OUT"
+
+  # the shipped header finds the same column — and the column still does its work under it
+  printf 'tools.python = "3.12"\n' > mise.toml
+  reg_shipped "$(row_shipped python '`mise.toml`')"
+  run; [ "$RC" = 0 ] && ok || bad "[$1] the header this repository's own template ships was not found: $OUT"
+  printf 'tools.jq = "1.7"\n' >> mise.toml
+  run; [ "$RC" = 1 ] && said '`jq`' && ok || bad "[$1] under the shipped header, a tool with no row passed: $OUT"
+
   git rm -q --cached mise.toml; rm -f mise.toml; printf '# Tooling\n' > _ops/TOOLING.md; git add -A
   git commit -qm clean-mise >/dev/null 2>&1 || true
 }

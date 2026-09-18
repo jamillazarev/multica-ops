@@ -71,8 +71,12 @@ import sys
 # the same *prose is not an act* defect, arriving back through the newline anchor that repaired it.
 CMD_START = (r"(?:(?:^|[\n;&|(){}`]|\$\()\s*"
              r"|\b(?:bash|sh|zsh|dash|eval|xargs)\b[^\n]*?[\"']\s*)")
-WRAP = (r"(?:(?:env\s+\w+=\S*|sudo|nohup|time|command|exec|eval"
-        r"|nice(?:\s+-n\s*-?\d+)?)\s+)*")
+# **A wrapper word takes flags, and a flag takes its own argument.** `env -i`, `sudo -u root`,
+# `command -p`, `time -p`, `nice --adjustment=10`, `exec -a name` — eight shapes, all reproduced
+# 2026-09-18, all walking the verb past the anchor. The run between a wrapper and the verb is any
+# tokens at all now, bounded: widening towards loud, and the verb still has to appear as its own
+# two words, so a filename carrying it is untouched.
+WRAP = r"(?:(?:env|sudo|nohup|time|command|exec|eval|nice)\s+(?:\S+\s+){0,4})*"
 OUTWARD = re.compile(
     CMD_START + WRAP + r"(git\s+push"
     r"|gh\s+(?:release\s+create|pr\s+create)"
@@ -84,11 +88,21 @@ OUTWARD = re.compile(
 
 
 def shell_only(cmd):
-    """The command with its line continuations folded and its heredoc bodies blanked."""
+    """The command with its line continuations folded and its heredoc bodies blanked.
+
+    **Both ends of the body must be visible, or nothing is blanked.** Blanking to the end of the
+    string whenever the terminator was missing became three ways to publish unseen, each reproduced
+    2026-09-18: `cat <<EOF; git push` with no terminator anywhere — bash runs the push once the
+    heredoc hits end-of-input · a literal `a<<b` inside a quoted message, read as an opener · and
+    `<<<`, a here-STRING, matched from its second `<`. Failing towards loud is the only safe
+    direction here.
+    """
     c = re.sub(r"\\\n", " ", cmd)
-    for m in re.finditer(r"<<-?\s*['\"]?(\w+)['\"]?", c):
+    for m in re.finditer(r"(?:^|[\s;&|(])(?<!<)<<-?(?!<)\s*['\"]?(\w+)['\"]?", c):
         end = re.search(r"^\s*%s\s*$" % re.escape(m.group(1)), c[m.end():], re.M)
-        stop = m.end() + (end.start() if end else len(c))
+        if not end:
+            continue                            # no terminator in sight: blank nothing
+        stop = m.end() + end.start()
         c = c[:m.end()] + re.sub(r"[^\n]", " ", c[m.end():stop]) + c[stop:]
     return c
 
@@ -128,13 +142,22 @@ def last_owner_instruction(transcript, limit=240):
         leaks what sits between a nested inner close and the outer one, and the two malformed
         shapes fall out for free: an unterminated block leaves the counter above zero and its tail
         goes, an orphan closing tag at depth zero removes only itself."""
-        out, depth, last = [], 0, 0
-        for m in re.finditer(r"</?(?:system-reminder|task-notification)>", t):
-            if depth == 0:
+        # **A stack of names, not a counter** — a counter let a `</task-notification>` close a
+        # `<system-reminder>`, handing anything that can inject tag-shaped text exact control over
+        # what the refusal shows and hides (reproduced 2026-09-18).
+        out, stack, last = [], [], 0
+        for m in re.finditer(r"</?(system-reminder|task-notification)>", t):
+            closing, name = m.group(0).startswith("</"), m.group(1)
+            if not stack:
                 out.append(t[last:m.start()])
-            depth = max(0, depth - 1) if m.group(0).startswith("</") else depth + 1
+            if closing:
+                if name in stack:
+                    while stack and stack.pop() != name:
+                        pass
+            else:
+                stack.append(name)
             last = m.end()
-        if depth == 0:
+        if not stack:
             out.append(t[last:])
         return " ".join(out)
 
@@ -152,7 +175,8 @@ def last_owner_instruction(transcript, limit=240):
                 if e.get("type") != "user":
                     continue
                 content = (e.get("message") or {}).get("content")
-                if isinstance(content, str):
+                bare = isinstance(content, str)
+                if bare:
                     chunks = [content]
                 elif isinstance(content, list):
                     chunks = [b.get("text", "") for b in content
@@ -163,9 +187,14 @@ def last_owner_instruction(transcript, limit=240):
                     continue
                 said = _strip("\n".join(c for c in chunks if c).strip())
                 said = " ".join(said.split())
-                if said.startswith(("This session is being continued", "Caveat: The messages below",
-                                    "[harness:")):
-                    continue            # the harness summarising, not a turn
+                # **Two signals, because one was spoofable**: a real instruction merely opening
+                # with the harness's own words was dropped whole, and the refusal then quoted a
+                # SUPERSEDED message as what you last asked for. The summaries arrive as a bare
+                # string and are long; a person's turn arrives as text blocks.
+                if (bare and len(said) > 2000
+                        and said.startswith(("This session is being continued",
+                                             "Caveat: The messages below", "[harness:"))):
+                    continue
                 if said:
                     text = said
     except Exception:

@@ -105,6 +105,23 @@ speaks "kamal deploy"     "s-j2" "kamal deploy"
 speaks "make deploy"      "s-j3" "make deploy"
 speaks "npm run deploy"   "s-j4" "npm run build && npm run deploy"
 
+# ── the blanker's three, and the wrappers' eight ─────────────────────────────────
+# All reproduced by an adversarial lens, 2026-09-18. A blanker that cannot see both ends of a
+# heredoc body blanks nothing; a wrapper word takes flags, and a flag takes its own argument.
+speaks "heredoc, no terminator" "s-k1" "cat <<EOF; git push origin main"
+speaks "<< inside a message"    "s-k2" "git commit -m \"a<<b is not a heredoc\" && git push origin main"
+speaks "a here-string"          "s-k3" "cat <<< \"some text\" && git push origin main"
+speaks "env, no assignment"     "s-k4" "env git push origin main"
+speaks "env -i"                 "s-k5" "env -i git push origin main"
+speaks "sudo -u root"           "s-k6" "sudo -u root git push origin main"
+speaks "command -p"             "s-k7" "command -p git push origin main"
+speaks "time -p"                "s-k8" "time -p git push origin main"
+speaks "nice --adjustment=10"   "s-k9" "nice --adjustment=10 git push origin main"
+speaks "exec -a name"           "s-k10" "exec -a myname git push origin main"
+silent "a real heredoc body"    "s-k11" "cat > docs/how.md <<'EOF'
+git push origin main
+EOF"
+
 # ── a dry run is a read: nothing leaves ──────────────────────────────────────────
 silent "git push --dry-run" "s-c1" "git push --dry-run origin main"
 

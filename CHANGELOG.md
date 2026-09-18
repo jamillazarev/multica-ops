@@ -32,10 +32,44 @@ harness's reminders arrive as `user` entries too and are skipped. The reader als
 actually is: a **tool result**, an unterminated or nested `<system-reminder>`, a
 **`<task-notification>`** carrying a background agent's return value, and the harness's
 conversation-continuation summary all arrive as one — and the first version skipped only the first.
-Blocks are stripped by depth now, and an entry carrying both text and a tool result keeps its text,
-because discarding it quoted an *older* message as what you last asked for. **The refusal gained a third door** — *if this is a sentence about
+Blocks stopped being stripped by pairs, and an entry carrying both text and a tool result keeps its
+text, because discarding it quoted an *older* message as what you last asked for. **The refusal gained a third door** — *if this is a sentence about
 the act and not the act, say so to the owner* — because a message offering only *the owner runs it*
 or *turn the gate off* has no answer for a false positive.
+
+**Then a sixth round went at that repair, and found five more — three of them holes the repair
+itself had opened.** All reproduced end to end, none argued from the source. **The heredoc blanker
+hid three real publishes**: it blanked to the end of the string whenever the terminator was
+missing, so `cat <<EOF; git push origin main` — which bash runs the moment the heredoc reaches end
+of input — had the publish erased out from under the pattern; likewise a literal `a<<b` inside a
+quoted commit message, and `<<<`, a here-**string**, matched from its second `<`. **A blanker that
+cannot see both ends of the body blanks nothing.** **A wrapper word takes flags**, and only
+`nice -n` had been allowed for: `env -i` · `sudo -u root` · `command -p` · `time -p` ·
+`nice --adjustment=10` · `exec -a name`, eight shapes walking the verb past the new anchor — and
+listing the option *shapes* was not enough either, because a flag that takes its own argument
+leaves a bare word behind it, so the run between a wrapper and the verb is any tokens at all now,
+bounded. **The quote had two ways to be steered**: blocks counted by depth let a
+`</task-notification>` close a `<system-reminder>`, handing whatever can inject tag-shaped text
+control over what the owner sees — a stack of names now — and the harness's continuation summary
+was skipped on its opening words alone, so a real instruction that merely began with them was
+dropped and a *superseded* message was quoted as current, which is worse than quoting nothing.
+`test-outward-gate.sh` **72/72**, a case per reproduced shape. **The round itself has not reported
+clean**: one lens of four reported, one died on the weekly limit and two were never dispatched once
+the budget was gone — everything above is the adversarial lens's, and the re-round over the repair
+it caused is owed.
+
+**And this release's own register template broke this release's own guard — here and not next
+door.** The widened header *Wired how · what it ships* was matched by equality, so a project that
+copied the new template and registered its entry correctly was told *"`mise.toml` declares X and
+`_ops/TOOLING.md` has no row for it"* — **a guard refusing exactly what its own shipped template
+produces.** The repair had been made in the sibling copy of the same rule and never crossed to this
+one, which is what a shared rule living in two files does when only one is touched; and **the suite
+could not catch it, because its fixture still built the narrow header the template stopped
+shipping** — a check testing a shape its own product no longer has. The header is matched exactly
+first and then by a prefix that ends at a non-letter (`Wired how much budget` must not win the
+column), and the fixture is the template's own header, in both directions: the honest row passes
+under it and a tool with no row is still refused — the two cases §19's suite gained, counted below
+where that section states its size.
 
 **A dependency now says what the service ships and when it should leave.** From one observation on
 a live project: *the advisor chose a service and never checked whether it had an API, a CLI or an
@@ -116,7 +150,7 @@ machine with other work on it. The joining audit now carries what a runtime's ma
 the dry runs, `mise trust` first: measured on mise 2026.9.5, a `mise.toml` with
 `[bootstrap.packages]` is not read at all until trusted. Ported from `opsinist` — the sibling
 methodology, which keeps a project's work in files — where the same section also guards a committed
-`.mcp.json`. `scripts/test-native-register.sh` **17/17**, run twice —
+`.mcp.json`. `scripts/test-native-register.sh` **21/21**, run twice —
 the second time on the system `python3` — 3.9 on a Mac without Homebrew, older than `tomllib`, which is 3.11+ —
 with every key read as a path, so `[tools]` then `python`, a bare `tools.python` and
 `[tools.python]` are one declaration.

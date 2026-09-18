@@ -906,7 +906,16 @@ for line in reg.splitlines():
     cells = [c.strip() for c in line.strip().strip("|").split("|")]
     if col is None:
         heads = [norm(c) for c in cells]
-        col = heads.index("wiredhow") if "wiredhow" in heads else -1
+        # **This repository's own template stopped matching this check** the day the column was
+        # widened to *Wired how · what it ships* — an exact match found nothing, so a correctly
+        # registered entry was reported as having no row. The sibling's copy was repaired and this
+        # one was not, which is what a shared rule in two files does when only one is touched;
+        # found by an adversarial lens, 2026-09-18. Exact match first, then a prefix that ends at a
+        # separator — `Wired how much budget` must not win the column.
+        col = next((i for i, h in enumerate(heads) if h == "wiredhow"), -1)
+        if col < 0:
+            col = next((i for i, h in enumerate(heads)
+                        if h.startswith("wiredhow") and not h[8:9].isalpha()), -1)
         continue
     if col < 0 or col >= len(cells) or set(line.replace("|", "").strip()) <= set("-: "):
         continue
