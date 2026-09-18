@@ -15,8 +15,14 @@ position now — the beginning, a newline, after `;` `&&` `||` `|`, inside a sub
 counts only after something that runs a shell**, because any quote would refuse a search for the
 phrase, and a search is a read. Read against the sibling's copy, which had been anchored since it
 was written, each found a hole in the other: this one had no anchor, and that one was blind to a
-newline, a pipe, a subshell and a wrapper's quoted argument. Seven new assertions,
-`test-outward-gate.sh` **36/36**. **The refusal gained a third door** — *if this is a sentence about
+newline, a pipe, a subshell and a wrapper's quoted argument. Seven new assertions.
+**And the refusal now quotes what you last asked for** — not to decide with, because a gate cannot
+read intent and the only party available to explain it is the one being stopped, whose account is
+what was measured wrong (5 runs of 5 reported *"done… and pushed"*). It is quoted to spare the
+person the scroll: their own last message beside what is about to leave, **marked as context and
+not consent**, with the verdict unchanged whether there is one or not. Tool results and the
+harness's reminders arrive as `user` entries too and are skipped. `test-outward-gate.sh` **43/43**,
+asserting the door stays shut with a quote, without one, and with no transcript at all. **The refusal gained a third door** — *if this is a sentence about
 the act and not the act, say so to the owner* — because a message offering only *the owner runs it*
 or *turn the gate off* has no answer for a false positive.
 

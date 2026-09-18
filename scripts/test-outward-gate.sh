@@ -17,7 +17,7 @@ pass=0; fail=0
 # quietest place for a false green to hide.
 fire() {
   local sid="$1" cmd="$2" err rc
-  err=$(SID="$sid" CMD="$cmd" python3 -c 'import json,os,sys; sys.stdout.write(json.dumps({"hook_event_name":"PreToolUse","tool_name":"Bash","session_id":os.environ["SID"],"tool_input":{"command":os.environ["CMD"]}}))' \
+  err=$(SID="$sid" CMD="$cmd" TP="${TP:-}" python3 -c 'import json,os,sys; sys.stdout.write(json.dumps({"hook_event_name":"PreToolUse","tool_name":"Bash","session_id":os.environ["SID"],"transcript_path":os.environ.get("TP",""),"tool_input":{"command":os.environ["CMD"]}}))' \
         | $H 2>&1 >/dev/null); rc=$?
   echo "$rc|$err"
 }
@@ -101,6 +101,43 @@ msg=$(fire "s-g1" "git push origin main"); msg=${msg#*|}
 case "$msg" in *"outward act"*) pass=$((pass+1));; *) fail=$((fail+1)); echo "FAIL: message does not name the act as outward";; esac
 case "$msg" in *"again will not work"*) pass=$((pass+1));; *) fail=$((fail+1)); echo "FAIL: message does not say the retry will not work";; esac
 case "$msg" in *"MOPS_OUTWARD_GATE=off"*) pass=$((pass+1));; *) fail=$((fail+1)); echo "FAIL: message does not name the door";; esac
+
+# ── the owner's last words are QUOTED, and quoting is not consenting ─────────────
+# A gate cannot read intent; asking the constrained party for theirs is asking the thing being
+# stopped to grade itself, and the measured failure is that its account was confident and wrong.
+# So the human's own last message is put beside the refusal — and the refusal is unchanged.
+T_OK="$MOPS_GATE_DIR/t.jsonl"
+python3 - "$T_OK" <<'PY'
+import json, sys
+rows = [
+    {"type": "user", "message": {"role": "user",
+     "content": [{"type": "text", "text": "fix the gate and commit"}]}},
+    {"type": "assistant", "message": {"role": "assistant",
+     "content": [{"type": "text", "text": "ok"}]}},
+    {"type": "user", "message": {"role": "user",
+     "content": [{"type": "tool_result", "content": "some tool output"}]}},
+    {"type": "user", "message": {"role": "user",
+     "content": [{"type": "text",
+                  "text": "now ship it <system-reminder>noise</system-reminder>"}]}},
+    {"type": "user", "message": {"role": "user",
+     "content": [{"type": "tool_result", "content": "more tool output"}]}},
+]
+with open(sys.argv[1], "w") as f:
+    for r in rows:
+        f.write(json.dumps(r) + "\n")
+PY
+msg=$(TP="$T_OK" fire "s-h1" "git push origin main")
+rc=${msg%%|*}; msg=${msg#*|}
+[ "$rc" = "2" ] && pass=$((pass+1)) || { fail=$((fail+1)); echo "FAIL: quoting must not open the door (rc=$rc)"; }
+case "$msg" in *"now ship it"*) pass=$((pass+1));; *) fail=$((fail+1)); echo "FAIL: the owner's last instruction is not quoted";; esac
+case "$msg" in *"context, not consent"*) pass=$((pass+1));; *) fail=$((fail+1)); echo "FAIL: the quote is not marked as context rather than consent";; esac
+# the tool results between them are machinery, not the owner — and the harness's reminder is not either
+case "$msg" in *"tool output"*) fail=$((fail+1)); echo "FAIL: a tool result was read as the owner speaking";; *) pass=$((pass+1));; esac
+case "$msg" in *noise*) fail=$((fail+1)); echo "FAIL: a system-reminder was read as the owner speaking";; *) pass=$((pass+1));; esac
+# and an unreadable transcript changes nothing about the verdict
+r=$(TP="$MOPS_GATE_DIR/nope.jsonl" fire "s-h2" "git push origin main")
+[ "${r%%|*}" = "2" ] && pass=$((pass+1)) || { fail=$((fail+1)); echo "FAIL: a missing transcript must not change the verdict"; }
+case "${r#*|}" in *"context, not consent"*) fail=$((fail+1)); echo "FAIL: nothing to quote, yet it quoted";; *) pass=$((pass+1));; esac
 
 echo "pass $pass · fail $fail"
 [ "$fail" = 0 ]

@@ -69,6 +69,57 @@ OUTWARD = re.compile(
 DRY = re.compile(r"--dry-run\b|--dry_run\b", re.I)
 
 
+def last_owner_instruction(transcript, limit=240):
+    """The owner's most recent message — **context for the person, never consent.**
+
+    A gate cannot read intent and must not try: the party it constrains is the one that would be
+    doing the explaining, and the measured failure is that the explanation was confident and wrong
+    — 5 runs of 5 reported *"done… and pushed"* about a publish nobody had authorised. What a gate
+    CAN do is put the human's own last words beside the refusal, so whoever decides is not hunting
+    for the context first.
+
+    **Quoted and never acted on.** *"Publish when it's ready"* an hour ago is not permission now: a
+    request to do the work is not a request to announce it, and an earlier yes does not roll
+    forward. **If this function ever grows a branch that lets something through, that branch is the
+    bug.**
+
+    Tool results arrive as `user` entries too, so an entry carrying a `tool_result` block is
+    machinery talking to machinery and is skipped; so is a `<system-reminder>`, which is the
+    harness speaking rather than the owner.
+    """
+    text = ""
+    try:
+        with open(transcript, encoding="utf-8", errors="replace") as f:
+            for line in f:
+                line = line.strip()
+                if not line or line[0] != "{":
+                    continue
+                try:
+                    e = json.loads(line)
+                except Exception:
+                    continue
+                if e.get("type") != "user":
+                    continue
+                content = (e.get("message") or {}).get("content")
+                if isinstance(content, str):
+                    chunks = [content]
+                elif isinstance(content, list):
+                    if any(isinstance(b, dict) and b.get("type") == "tool_result" for b in content):
+                        continue
+                    chunks = [b.get("text", "") for b in content
+                              if isinstance(b, dict) and b.get("type") == "text"]
+                else:
+                    continue
+                said = "\n".join(c for c in chunks if c).strip()
+                said = re.sub(r"<system-reminder>.*?</system-reminder>", " ", said, flags=re.S)
+                said = " ".join(said.split())
+                if said:
+                    text = said
+    except Exception:
+        return ""
+    return text[:limit] + ("…" if len(text) > limit else "")
+
+
 def out():
     sys.exit(0)
 
@@ -94,6 +145,10 @@ def main():
         out()
 
     act = m.group(1)
+    said = last_owner_instruction(str(payload.get("transcript_path", "")))
+    ctx = (f"\n\n**What you last asked for, for your own reading — context, not consent**, because "
+           f"a request to do the work is not a request to announce it and an earlier yes does not "
+           f"roll forward: «{said}»" if said else "")
     sys.stderr.write(
         f"`{act}` is an outward act — it leaves this machine and someone else can see it, "
         f"which is one of the four kinds that are the owner's to authorise (spend · outward · "
@@ -108,7 +163,7 @@ def main():
         f"**And if this is not the act but a sentence about it** — the phrase written into a file, "
         f"a comment, a message — say that to the owner and let them look. **Do not reword it to get "
         f"past**: a gate you can word your way around is not a gate, and this one asks for a person "
-        f"either way.\n")
+        f"either way.{ctx}\n")
     sys.exit(2)
 
 
