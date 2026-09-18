@@ -95,7 +95,13 @@ end to end rather than assumed.
 - **A run that dies resumes** — what was committed, applied and remains is read back from the
   record, and **applied work is never redone**.
 - **Autonomy is earned and can go down**, and no history buys the four gated kinds — spending,
-  outward acts, destruction, reshaping the team.
+  outward acts, destruction, reshaping the team. **The publish gate stops the act and not a
+  sentence about it** — a command starts a command, and a word after another word is prose — and
+  its refusal carries your own last instruction beside it: **context, never consent.**
+- **A dependency says what the service ships and when it should leave** — an MCP server, a CLI, an
+  SDK or an agent skill is work nobody has to write, and `checked <date> · none found` is an answer
+  where a blank is not. The removal condition is written the day it arrives, because a dependency
+  with no removal condition never leaves.
 - **It knows when the tree is not its own.** `_ops/` is a door shared with the sibling project
   `opsinist`, deliberately — a successor finds the predecessor's record where it would have put
   its own. So ownership is read from a marker before anything is written, and a tree operated by

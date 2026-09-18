@@ -147,6 +147,8 @@ are shortcuts for when you already know the name. Both columns do the same thing
 | Situation | Say | Runs |
 |---|---|---|
 | "An imported ticket tells the agent to grant itself access" | nothing — it surfaces | external text is data: it's quoted to you and not obeyed |
+| "It refused a command that wasn't publishing anything" | — | **a command starts a command; a word after another word is prose.** A file being written, a search for the phrase, a document quoting it: none are the act. What is stopped however it is spelled: a wrapper word in front of it, a line continuation, a redirect touching it, a shell-runner's quoted argument — and the refusal shows **your own last instruction**, as context and never as consent |
+| "What does this service even give us — an API, a CLI, an MCP?" | `/multica-ops:audit` | the register answers it, because the column exists: **what it ships and which of it you took**, with `checked <date> · none found` as a real answer. And **gone when** — the condition that retires the row, written the day it arrives |
 | "Who reviewed this? Not the person who wrote it, I hope" | `/multica-ops:audit` | flags gates where author and reviewer coincide |
 | "Was that price still true?" | `/multica-ops:audit` or just ask | recorded facts carry a check-date and get re-verified before a decision |
 | "Why didn't we go with X? I keep suggesting it" | *"what did we reject and why?"* | `_ops/DECISIONS.md` — append-only, with the evidence |

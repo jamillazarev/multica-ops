@@ -1524,6 +1524,11 @@ was last seen succeeding on, and its row.
 flowchart LR
   N["mise.toml —<br/>what, and which version"] <-->|"company guard §19: every entry<br/>a row, every row an entry"| R["_ops/TOOLING.md —<br/>why, and what it replaces"]
   A["an agent's mcp_config —<br/>the MCP servers it carries"] -->|"named in its row;<br/>probed by /health"| R
+  R --> S{"what does the service<br/>itself ship?"}
+  S -->|"MCP · CLI · SDK · skill"| T["take it — work<br/>nobody has to write"]
+  S -->|"`checked date · none found`"| D["an answer; a blank is not"]
+  R --> G{"gone when?"}
+  G -.->|"blank"| NV(("it never leaves"))
   N --> J{"a runtime picks the work up:<br/>what is missing there?"}
   J -->|"nothing"| OK(["works"])
   J -->|"something"| L["one line on the joining audit:<br/>trust · missing · --dry-run"]
