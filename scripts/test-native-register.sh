@@ -100,6 +100,16 @@ suite() {
   printf 'tools.jq = "1.7"\n' >> mise.toml
   run; [ "$RC" = 1 ] && said '`jq`' && ok || bad "[$1] under the shipped header, a tool with no row passed: $OUT"
 
+  # a column a project adds before the real one must not win it (2026-09-18, 2026-09-23)
+  printf 'tools.python = "3.12"\n' > mise.toml
+  for decoy in "Wired how much budget" "Wired How-To"; do
+    { printf '# Tooling\n\n| Tool | %s | What it'"'"'s for | **Replaces** | Access & where the secret lives | Wired how · **what it ships** | **Gone when** | Checked |\n' "$decoy"
+      printf '|---|---|---|---|---|---|---|---|\n'
+      printf '| python | n/a | a reason | we had none | none | `mise.toml` · CLI only | we stop shipping it | 2026-09-18 |\n'
+    } > _ops/TOOLING.md
+    run; [ "$RC" = 0 ] && ok || bad "[$1] the decoy column \`$decoy\` won the lookup: $OUT"
+  done
+
   git rm -q --cached mise.toml; rm -f mise.toml; printf '# Tooling\n' > _ops/TOOLING.md; git add -A
   git commit -qm clean-mise >/dev/null 2>&1 || true
 }

@@ -906,16 +906,20 @@ for line in reg.splitlines():
     cells = [c.strip() for c in line.strip().strip("|").split("|")]
     if col is None:
         heads = [norm(c) for c in cells]
-        # **This repository's own template stopped matching this check** the day the column was
-        # widened to *Wired how · what it ships* — an exact match found nothing, so a correctly
-        # registered entry was reported as having no row. The sibling's copy was repaired and this
-        # one was not, which is what a shared rule in two files does when only one is touched;
-        # found by an adversarial lens, 2026-09-18. Exact match first, then a prefix that ends at a
-        # separator — `Wired how much budget` must not win the column.
-        col = next((i for i, h in enumerate(heads) if h == "wiredhow"), -1)
+        # **The column is the one the template ships, matched exactly — never guessed.** Equality
+        # on the bare *Wired how* stopped finding it the day the template widened it to *Wired how ·
+        # what it ships*, so every project that copied the new template was told a correct row was
+        # missing (an adversarial lens, 2026-09-18). A prefix match repaired that and then chose a
+        # decoy column placed first: `Wired how much budget` on 2026-09-18, and a project's own
+        # `Wired How-To` notes column on 2026-09-23 once the prefix was bounded at a letter — a
+        # guess about a column can always be out-guessed. So the known shipped headers, old and new,
+        # are matched exactly; a prefix is accepted only when exactly ONE header carries it, and two
+        # candidates with neither of them known reads as no column, which is the loud side.
+        col = next((i for i, h in enumerate(heads) if h in ("wiredhow", "wiredhow·whatitships")), -1)
         if col < 0:
-            col = next((i for i, h in enumerate(heads)
-                        if h.startswith("wiredhow") and not h[8:9].isalpha()), -1)
+            cand = [i for i, h in enumerate(heads)
+                    if h.startswith("wiredhow") and not h[8:9].isalpha()]
+            col = cand[0] if len(cand) == 1 else -1
         continue
     if col < 0 or col >= len(cells) or set(line.replace("|", "").strip()) <= set("-: "):
         continue

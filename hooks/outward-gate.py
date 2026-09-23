@@ -71,12 +71,16 @@ import sys
 # the same *prose is not an act* defect, arriving back through the newline anchor that repaired it.
 CMD_START = (r"(?:(?:^|[\n;&|(){}`]|\$\()\s*"
              r"|\b(?:bash|sh|zsh|dash|eval|xargs)\b[^\n]*?[\"']\s*)")
-# **A wrapper word takes flags, and a flag takes its own argument.** `env -i`, `sudo -u root`,
-# `command -p`, `time -p`, `nice --adjustment=10`, `exec -a name` — eight shapes, all reproduced
-# 2026-09-18, all walking the verb past the anchor. The run between a wrapper and the verb is any
-# tokens at all now, bounded: widening towards loud, and the verb still has to appear as its own
-# two words, so a filename carrying it is untouched.
-WRAP = r"(?:(?:env|sudo|nohup|time|command|exec|eval|nice)\s+(?:\S+\s+){0,4})*"
+# **A wrapper word takes flags, a flag takes its own argument, and there can be any number of
+# them.** Eight shapes carried the verb past the anchor on 2026-09-18 — `env` with no assignment,
+# `env -i`, `env --`, `sudo -u root`, `command -p`, `time -p`, `nice --adjustment=10`,
+# `exec -a name` — and listing the option SHAPES was not enough, because a flag with its own
+# argument leaves a bare word before the verb. The run that replaced it was capped at four tokens,
+# and on 2026-09-23 `env A=1 B=2 C=3 D=4 E=5 F=6 git push` walked past the cap: a bound on the
+# UNSAFE side of an anchor is a hole with a number on it. **Any run of tokens, on the same line.**
+# The cost is named: a wrapper followed later on its line by a quoted mention of the verb is
+# refused, which is the loud side, and the refusal's third door is there for exactly that.
+WRAP = r"(?:(?:env|sudo|nohup|time|command|exec|eval|nice)[ \t]+(?:\S+[ \t]+)*)?"
 OUTWARD = re.compile(
     CMD_START + WRAP + r"(git\s+push"
     r"|gh\s+(?:release\s+create|pr\s+create)"
@@ -87,23 +91,61 @@ OUTWARD = re.compile(
     re.I)
 
 
-def shell_only(cmd):
-    """The command with its line continuations folded and its heredoc bodies blanked.
+def _opener_is_code(c, at):
+    """Whether a `<<` at `at` sits outside quotes and comments on its own line.
 
-    **Both ends of the body must be visible, or nothing is blanked.** Blanking to the end of the
-    string whenever the terminator was missing became three ways to publish unseen, each reproduced
-    2026-09-18: `cat <<EOF; git push` with no terminator anywhere — bash runs the push once the
-    heredoc hits end-of-input · a literal `a<<b` inside a quoted message, read as an opener · and
-    `<<<`, a here-STRING, matched from its second `<`. Failing towards loud is the only safe
-    direction here.
+    A line-local scanner, not a parser: single quotes, double quotes with their backslash escape,
+    a backslash outside quotes, and a `#` that starts a word. **What it does not read is named,
+    not chased** — a quote opened on an EARLIER line, `$'…'`, an arithmetic `$((a<<b))`. Each takes
+    a command written to deceive the gate; this gate stops the ordinary spelling of an outward act
+    and every variation a working agent produces, and it does not claim to parse bash.
     """
-    c = re.sub(r"\\\n", " ", cmd)
-    for m in re.finditer(r"(?:^|[\s;&|(])(?<!<)<<-?(?!<)\s*['\"]?(\w+)['\"]?", c):
-        end = re.search(r"^\s*%s\s*$" % re.escape(m.group(1)), c[m.end():], re.M)
+    q, i = None, c.rfind("\n", 0, at) + 1
+    while i < at:
+        ch = c[i]
+        if q is None:
+            if ch == "\\":
+                i += 2
+                continue
+            if ch in "'\"":
+                q = ch
+            elif ch == "#" and (i == 0 or c[i - 1] in " \t\n;&|("):
+                return False                    # a comment runs to the end of the line
+        elif q == '"' and ch == "\\":
+            i += 2
+            continue
+        elif ch == q:
+            q = None
+        i += 1
+    return q is None
+
+
+def shell_only(cmd):
+    """The command as a shell would run it: continuations folded, heredoc BODIES blanked.
+
+    A heredoc body is data fed to another program, so a document carrying the verb at the start of
+    a line is not a publish. **The body starts on the line AFTER the opener** — the rest of the
+    opener's own line is still shell, and `cat > f <<EOF && git push` publishes. Blanking from just
+    after the delimiter hid exactly that (found 2026-09-23, reproduced end to end). **Both ends must
+    be visible or nothing is blanked**: a missing terminator blanked to the end of the string and
+    became three ways to publish unseen (2026-09-18). **An opener must be code** — not inside a
+    quote, not in a comment, not inside a body already blanked — or a `<<X` in a commit message,
+    with a lone `X` two lines down, hides whatever sits between. `(?<!<)<<(?!<)` keeps `<<<`, a
+    here-STRING, out; no separator is required before it, because `cat<<EOF` is a heredoc too.
+    Every failure of this function is meant to fall on the loud side: a body left visible.
+    """
+    c = re.sub(r"\\\n", " ", cmd)                    # a continuation is one command
+    for m in re.finditer(r"(?<!<)<<-?(?!<)[ \t]*\\?(['\"]?)(\w+)\1", c):
+        if c[m.start():m.end()] != m.group(0) or not _opener_is_code(c, m.start()):
+            continue                     # inside a body already blanked, a quote, or a comment
+        nl = c.find("\n", m.end())
+        if nl < 0:
+            continue                     # no body at all
+        end = re.search(r"^[ \t]*%s[ \t]*$" % re.escape(m.group(2)), c[nl + 1:], re.M)
         if not end:
-            continue                            # no terminator in sight: blank nothing
-        stop = m.end() + end.start()
-        c = c[:m.end()] + re.sub(r"[^\n]", " ", c[m.end():stop]) + c[stop:]
+            continue                     # no terminator in sight: blank nothing
+        stop = nl + 1 + end.start()
+        c = c[:nl + 1] + re.sub(r"[^\n]", " ", c[nl + 1:stop]) + c[stop:]
     return c
 
 # A dry run is a read: it tells you what *would* leave, and nothing does.
@@ -142,18 +184,18 @@ def last_owner_instruction(transcript, limit=240):
         regex leaks what sits between a nested inner close and the outer one, and a plain depth
         counter let a `</task-notification>` close a `<system-reminder>`, handing anything that can
         inject tag-shaped text control over what the refusal shows and hides (reproduced
-        2026-09-18). A closing tag closes only a block of its own name: an unterminated block
-        leaves the stack non-empty and its tail goes, an orphan closing tag removes only itself,
-        and a mismatched one is ignored."""
+        2026-09-18). A closing tag closes only the innermost block, and only by its name — a crossed
+        close (`<a> <b> </a> … </b>`) popped through `<b>` and put what sat inside it on show,
+        reproduced 2026-09-23. An unterminated block leaves the stack non-empty and its tail
+        goes; an orphan, mismatched or crossed closing tag is ignored."""
         out, stack, last = [], [], 0
         for m in re.finditer(r"</?(system-reminder|task-notification)>", t):
             closing, name = m.group(0).startswith("</"), m.group(1)
             if not stack:
                 out.append(t[last:m.start()])
             if closing:
-                if name in stack:
-                    while stack and stack.pop() != name:
-                        pass
+                if stack and stack[-1] == name:
+                    stack.pop()                 # only the innermost block, and only by its name
             else:
                 stack.append(name)
             last = m.end()

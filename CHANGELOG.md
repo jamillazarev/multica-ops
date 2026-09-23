@@ -44,8 +44,9 @@ missing, so `cat <<EOF; git push origin main` — which bash runs the moment the
 of input — had the publish erased out from under the pattern; likewise a literal `a<<b` inside a
 quoted commit message, and `<<<`, a here-**string**, matched from its second `<`. **A blanker that
 cannot see both ends of the body blanks nothing.** **A wrapper word takes flags**, and only
-`nice -n` had been allowed for: `env -i` · `sudo -u root` · `command -p` · `time -p` ·
-`nice --adjustment=10` · `exec -a name`, eight shapes walking the verb past the new anchor — and
+`nice -n` had been allowed for: `env` with no assignment · `env -i` · `env --` · `sudo -u root` ·
+`command -p` · `time -p` · `nice --adjustment=10` · `exec -a name`, eight shapes walking the verb
+past the new anchor — and
 listing the option *shapes* was not enough either, because a flag that takes its own argument
 leaves a bare word behind it, so the run between a wrapper and the verb is any tokens at all now,
 bounded. **The quote had two ways to be steered**: blocks counted by depth let a
@@ -53,8 +54,8 @@ bounded. **The quote had two ways to be steered**: blocks counted by depth let a
 control over what the owner sees — a stack of names now — and the harness's continuation summary
 was skipped on its opening words alone, so a real instruction that merely began with them was
 dropped and a *superseded* message was quoted as current, which is worse than quoting nothing.
-`test-outward-gate.sh` **72/72**, a case per reproduced shape. **The round itself has not reported
-clean**: one lens of four reported, one died on the weekly limit and two were never dispatched once
+Eleven cases, one per reproduced *command* shape — the two quote shapes went without one until the
+eighth round. **The round itself has not reported clean**: one lens of four reported, one died on the weekly limit and two were never dispatched once
 the budget was gone — everything above is the adversarial lens's, and the re-round over the repair
 it caused is owed. **The seventh round went at that repair and all four of its lenses died on the
 monthly spend limit**; two had found something first, both real: the repair left a docstring
@@ -62,6 +63,26 @@ describing the depth counter it replaced, directly above the stack of names that
 the "real heredoc body" case it added was byte-identical to one already in the suite. The docstring
 describes the stack now, and the duplicate became the tab-indented `<<-` shape this suite had never
 had. Four `not completed` — the round is owed again.
+
+**The eighth round finished whole, and the sixth round's repair failed four more ways.** The
+wrapper run had been capped at four tokens, and `env A=1 B=2 C=3 D=4 E=5 F=6 git push` walked past
+it — **a bound on the unsafe side of an anchor is a hole with a number on it**; any run of tokens
+now, on the same line, at the named cost that a wrapper followed later on its line by a quoted
+mention of the verb is refused. A **crossed** close, `<a> <b> </a> … </b>`, put a hidden block's
+text on show as what you last asked for; a closing tag closes only the innermost block now, by its
+name. `cat<<EOF`, with no space, was not read as a heredoc. And a project's own `Wired How-To`
+column, placed first, won the register lookup — so the shipped headers are matched exactly, and a
+prefix only when a single header carries it. **Repairing the heredoc case turned up a worse hole
+no lens had named**: the body was blanked from right after the delimiter, where bash starts it on
+the *next line*, so `cat > f.md <<EOF && git add f.md && git push` had its publish erased — an
+ordinary way to write a file and publish it. A `<<X` inside a message, a comment or an earlier body
+counted as an opener too. The body starts on the next line now, and an opener must be code, read
+by a small line-local scanner that names what it does not read rather than claiming to parse bash.
+The round's other lenses corrected this entry's own record: *"eight shapes"* beside a list of six,
+now all eight with `env --` tested; *"a case per reproduced shape"*, false for the two quote shapes,
+which have cases now. Every case for this round's own shapes fails against the unrepaired code;
+`test-outward-gate.sh` **84/84**. A round that reports findings is not the clean one — the ninth
+goes over this repair.
 
 **And this release's own register template broke this release's own guard — here and not next
 door.** The widened header *Wired how · what it ships* was matched by equality, so a project that
@@ -155,7 +176,7 @@ machine with other work on it. The joining audit now carries what a runtime's ma
 the dry runs, `mise trust` first: measured on mise 2026.9.5, a `mise.toml` with
 `[bootstrap.packages]` is not read at all until trusted. Ported from `opsinist` — the sibling
 methodology, which keeps a project's work in files — where the same section also guards a committed
-`.mcp.json`. `scripts/test-native-register.sh` **21/21**, run twice —
+`.mcp.json`. `scripts/test-native-register.sh` **25/25**, run twice —
 the second time on the system `python3` — 3.9 on a Mac without Homebrew, older than `tomllib`, which is 3.11+ —
 with every key read as a path, so `[tools]` then `python`, a bare `tools.python` and
 `[tools.python]` are one declaration.
