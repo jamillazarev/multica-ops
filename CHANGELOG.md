@@ -33,7 +33,7 @@ actually is: a **tool result**, an unterminated or nested `<system-reminder>`, a
 **`<task-notification>`** carrying a background agent's return value, and the harness's
 conversation-continuation summary all arrive as one — and the first version skipped only the first.
 Blocks stopped being stripped by pairs, and an entry carrying both text and a tool result keeps its
-text, because discarding it quoted an *older* message as what you last asked for. **The refusal gained a third door** — *if this is a sentence about
+text, because discarding it quoted an *older* message as what you last asked for. **The refusal gained a closing line** — *if this is a sentence about
 the act and not the act, say so to the owner* — because a message offering only *the owner runs it*
 or *turn the gate off* has no answer for a false positive.
 
@@ -84,19 +84,36 @@ which have cases now. Every case for this round's own shapes fails against the u
 
 **The ninth round finished whole too, and broke the eighth round's scanner.** A `<<X` inside
 `$'…'` or an arithmetic `$((…))` was still read as an opener and hid the push on the next line —
-confirmed in real bash against a stub `git` — though both were named in the scanner's docstring,
-beside a promise that every failure fell on the loud side: **a limit named beside a false
-guarantee is not a limit named.** A scan per opener to the end of the string also took 14 s on
-358 KB of unterminated openers. The blanker is one pass now, keeping the state bash keeps — the
-three quotings, arithmetic, comments — and reading each body the way bash does, from the line
-after the command to a line that *is* its word; the same 358 KB takes 0.05 s, and what it still
-does not track (a quote nested in `$(…)` or backticks inside a double-quoted string) is named with
-the direction it can fail in, which is either. The register reads only the headers the template
+confirmed in real bash against a stub `git` on 2026-09-23 — though both were named in the scanner's
+docstring, beside a promise that every failure fell on the loud side: **a limit named beside a
+false guarantee is not a limit named.** A scan per opener to the end of the string also took 14 s
+on 358 KB of unterminated openers, the same day. The blanker is one pass now, keeping the state
+bash keeps — the three quotings, arithmetic, comments — and reading each body the way bash does,
+from the line after the command to a line that *is* its word; the same 358 KB takes 0.05 s, and
+what it still did not track (a quote nested in `$(…)` or backticks inside a double-quoted string)
+was named with the direction it can fail in, which is either. The register reads only the headers the template
 ships, since a lone `Wired How-To` notes column had been read as the wiring, and a refusal caused
 by a near miss names it. **And this gate never stopped a project's own deploy script**
 (`./scripts/deploy`) while its twin always had, with nothing written down — crossed the loud way,
 with a case. Each of the quote skip's two signals now has a case failing against the mutant that
-drops it. `test-outward-gate.sh` **93/93**; the tenth round goes over this repair.
+drops it. The tenth round went over this repair.
+
+**The tenth round found a hole older than this release, and the limit the ninth named proved
+dangerous.** `--dry-run` anywhere in a command exempted all of it — `echo testing --dry-run`, then
+a real `git push` on the next line, went through, and so did a comment naming the flag. **A dry run
+now excuses only its own act**, up to the next `;` `&` `|` or newline. A double quote inside `$(…)`
+within a double-quoted string closed the outer string, and a `<<X` still inside it blanked the next
+line — a real publish hidden, confirmed in real bash against a stub `git` on 2026-09-24. Inside a
+double-quoted string, `$(…)`, a backtick pair and `${…}` each open a context of their own now, on a
+stack; and a `'` inside `"${…}"` is a quote, as bash 3.2 — the one macOS ships — reads it. The deploy
+catch-all this gate took on in the ninth round refused `predeploy` and `./scripts/predeploy`, which
+publish nothing; `deploy` must now be the whole name or follow a `/` `-` `_` `.`, never `pre-`. The
+register's near-miss hint is judged per table, since an unrelated table with an exact header had
+silenced it. **Thirty commands were run in real bash against stubs and fed to both gates: no command
+bash publishes with passes either**, and the two both refuse without bash publishing are ones bash
+rejects as a syntax error. That was a scratch measurement; a suite whose oracle is bash is owed.
+Every case for a shape this round reproduced fails against the ninth round's code.
+`test-outward-gate.sh` **103/103**; the eleventh round goes over this repair.
 
 **And this release's own register template broke this release's own guard — here and not next
 door.** The widened header *Wired how · what it ships* was matched by equality, so a project that
@@ -190,7 +207,7 @@ machine with other work on it. The joining audit now carries what a runtime's ma
 the dry runs, `mise trust` first: measured on mise 2026.9.5, a `mise.toml` with
 `[bootstrap.packages]` is not read at all until trusted. Ported from `opsinist` — the sibling
 methodology, which keeps a project's work in files — where the same section also guards a committed
-`.mcp.json`. `scripts/test-native-register.sh` **27/27**, run twice —
+`.mcp.json`. `scripts/test-native-register.sh` **29/29**, run twice —
 the second time on the system `python3` — 3.9 on a Mac without Homebrew, older than `tomllib`, which is 3.11+ —
 with every key read as a path, so `[tools]` then `python`, a bare `tools.python` and
 `[tools.python]` are one declaration.

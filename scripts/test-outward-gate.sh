@@ -180,6 +180,31 @@ B
 git push origin main"
 # a project's own deploy script — the catch-all the other copy always had and this one never did
 speaks "a deploy script"              "s-m6" "./scripts/deploy --prod"
+
+# **Round ten: a dry run covers its own act only, and a substitution inside "…" has its own
+# quoting.** `--dry-run` anywhere in the command exempted all of it — an echo of the flag, or a
+# comment naming it, let a real push through on the next line (2026-09-24). A double quote inside
+# `$(…)`, a backtick pair or `${…}` within a double-quoted string closed the outer string early, and
+# a `<<X` still inside it hid the next line (2026-09-24, real bash against a stub `git`). And the
+# deploy catch-all refused `predeploy`, a local check that publishes nothing.
+speaks "--dry-run echoed, then a push"  "s-n1" "echo testing --dry-run
+git push origin main"
+speaks "--dry-run in a comment"         "s-n2" "# preview with --dry-run first
+git push origin main"
+speaks "one act dry, the next real"     "s-n3" "git push --dry-run origin main && npm publish"
+silent "npm publish --dry-run"          "s-n4" "npm publish --dry-run"
+speaks "a quote in \$(…) inside \"…\""    "s-n5" "echo \"text \$(echo \"inner<<EOF\") more\"
+git push origin main
+EOF"
+speaks "a quote in backticks in \"…\""  "s-n6" "echo \"text \`echo \"inner<<EOF\"\` more\"
+git push origin main
+EOF"
+speaks "a quote in \${…} inside \"…\""    "s-n7" "echo \"\${X:-\"a<<EOF\"}\"
+git push origin main
+EOF"
+speaks "terraform-deploy"               "s-n8" "terraform-deploy apply"
+silent "./scripts/predeploy"            "s-n9" "./scripts/predeploy"
+silent "predeploy"                      "s-n10" "predeploy"
 _big=$(python3 -c 'print("".join("word%d <<X%d\n" % (k, k) for k in range(20000)) + "echo done")')
 _t0=$(date +%s)
 silent "20000 unterminated openers"   "s-m7" "$_big"

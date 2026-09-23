@@ -899,7 +899,7 @@ def norm(s):
 reg = staged("_ops/TOOLING.md") or ""
 rows = {"mise.toml": set()}
 col = None
-known, near = False, []          # a shipped header seen · headers that only start the same
+near = []          # headers that only start like the column, in tables where none is read
 for line in reg.splitlines():
     if not line.lstrip().startswith("|"):
         col = None
@@ -922,8 +922,6 @@ for line in reg.splitlines():
         col = next((i for i, h in enumerate(heads) if h in ("wiredhow", "wiredhow·whatitships")), -1)
         if col < 0:
             near += [c for c, h in zip(cells, heads) if h.startswith("wiredhow")]
-        else:
-            known = True
         continue
     if col < 0 or col >= len(cells) or set(line.replace("|", "").strip()) <= set("-: "):
         continue
@@ -1016,8 +1014,10 @@ def names(key):
     return parts
 
 # A near miss is said by name: a refusal whose column was never read looks exactly like a row
-# nobody wrote, and the reader would go looking for the wrong fault.
-HINT = ("" if known or not near else
+# nobody wrote, and the reader would go looking for the wrong fault. **Per table, never per file**:
+# a flag for the whole file let an unrelated table with an exact header silence the hint for the
+# register it was written for (an adversarial lens, 2026-09-24).
+HINT = ("" if not near else
         " The column headed `%s` is not one this check reads — only *Wired how* and *Wired how · "
         "what it ships* are — so rename the one the wiring is written in." % near[0])
 

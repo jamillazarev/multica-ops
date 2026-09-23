@@ -115,6 +115,13 @@ suite() {
     printf '| python | a reason | we had none | none | see the wiki: mise.toml setup | never | 2026-09-23 |\n'
   } > _ops/TOOLING.md
   run; [ "$RC" = 1 ] && said 'Wired How-To' && ok || bad "[$1] a lone near-miss column was read as the wiring, or refused unnamed: $OUT"
+  # …and the hint is per table: an unrelated table with an exact header above does not silence it
+  { printf '# Other\n\n| Tool | Wired how |\n|---|---|\n| unrelated | none |\n\n'
+    printf '# Tooling\n\n| Tool | What it'"'"'s for | Replaces | Access | Wired How-To | Gone when | Checked |\n'
+    printf '|---|---|---|---|---|---|---|\n'
+    printf '| python | a reason | we had none | none | see the wiki: mise.toml setup | never | 2026-09-24 |\n'
+  } > _ops/TOOLING.md
+  run; [ "$RC" = 1 ] && said 'Wired How-To' && ok || bad "[$1] an unrelated table with an exact header silenced the near-miss hint: $OUT"
 
   git rm -q --cached mise.toml; rm -f mise.toml; printf '# Tooling\n' > _ops/TOOLING.md; git add -A
   git commit -qm clean-mise >/dev/null 2>&1 || true

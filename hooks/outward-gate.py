@@ -45,7 +45,9 @@ import sys
 # divergence that is not deliberate and written down is just a divergence.** The alignment missed
 # one: the other copy has always ended its list with a catch-all for a project's own deploy
 # script — `./scripts/deploy`, `terraform-deploy` — and this one never had it. Found by a
-# contradiction lens on 2026-09-23 and crossed the loud way.
+# contradiction lens on 2026-09-23 and crossed the loud way; the next day an adversarial lens found
+# it refusing `predeploy` and `./scripts/predeploy`, local checks that publish nothing, so `deploy`
+# must now be the whole name or follow a `/` `-` `_` `.`, and never `pre-`.
 #
 # **A command starts a command; a word after another word is prose.** This matched the verb
 # anywhere in the string, so writing a SENTENCE about publishing into a file was refused as if it
@@ -92,12 +94,12 @@ OUTWARD = re.compile(
     r"|(?:flyctl|fly|vercel|netlify|wrangler|kamal|cap)\s+deploy"
     r"|(?:npm|yarn|pnpm)\s+run\s+deploy|(?:make|just)\s+deploy"
     r"|docker\s+push"
-    r"|[\w./-]*deploy)(?=[\s;&|)<>\"'`]|$)",
+    r"|(?:[\w./-]*[/_.-])?(?<!pre[-_])deploy)(?=[\s;&|)<>\"'`]|$)",
     re.I)
 
 
-_SPECIAL = re.compile(r"[\n\\#$()'\"<]")
-_QUOTED = {"'": re.compile(r"'"), '"': re.compile(r'[\\"]'), "$'": re.compile(r"[\\']")}
+_SPECIAL = re.compile(r"[\n\\#$()'\"<`{}]")
+_QUOTED = {"'": re.compile(r"'"), '"': re.compile(r'[\\"$`]'), "$'": re.compile(r"[\\']")}
 _OPENER = re.compile(r"<<(-?)[ \t]*\\?(['\"]?)(\w+)\2")
 
 
@@ -108,37 +110,65 @@ def shell_only(cmd):
     a line is not a publish. **Every regex over the raw string was out-guessed within a round**: a
     missing terminator blanked to the end of the string (2026-09-18); a body blanked from right
     after the delimiter hid `cat > f <<EOF && git push`, because bash starts the body on the NEXT
-    line (2026-09-23); and a `<<X` inside `$'…'` or `$((…))` was taken for an opener and hid the push
-    on the line after it (2026-09-23). So this is one pass, left to right, **keeping the state bash
-    keeps** — outside quotes or inside `'…'`, `"…"`, `$'…'`; inside an arithmetic `((…))`; in a `#`
-    comment — and a `<<` opens a heredoc only where bash would read one. The bodies are read the way
-    bash reads them: after the newline that ends the command, every heredoc of that line in order,
-    each to a line that IS its word (after leading tabs, for `<<-`). **No terminator, and nothing
-    more is blanked**: bash would read the rest as body and run none of it, so leaving it visible
-    costs a false refusal at worst. An unclosed quote stops the pass the same way.
+    line (2026-09-23); a `<<X` inside `$'…'` or `$((…))` was taken for an opener and hid the push
+    on the line after it (2026-09-23); and a double quote inside `$(…)` within a double-quoted
+    string closed the outer string early, so a `<<X` still inside it was read as code (2026-09-24).
+    Each of the last three was confirmed in real bash against a stub `git`.
 
-    **What it does not track is named, and it can err either way**: a quote nested inside `$(…)` or
-    backticks within a double-quoted string puts it out of step with bash. One pass also keeps it
-    linear — a scan per opener took 13 s on a 358 KB command of unterminated openers (2026-09-23).
+    So this is one pass, left to right, **keeping the state bash keeps**: outside quotes or inside
+    `'…'`, `"…"` or `$'…'`; inside arithmetic `((…))`; in a `#` comment; and, inside a double-quoted
+    string, inside a `$(…)`, a backtick pair or a `${…}`, each with its own quoting, on a stack. A
+    `<<` opens a heredoc only where bash would read one — never in a quote, a comment, arithmetic or
+    a `${…}`, and `<<<` is a here-STRING, not an opener. Bodies are read the way bash reads them:
+    after the newline that ends the command, every heredoc of that line in order, each to a line
+    that IS its word (after leading tabs, for `<<-`). **No terminator, or an unclosed quote, and
+    nothing more is blanked**: bash would run none of the rest, so leaving it visible costs a false
+    refusal at worst. One pass keeps it linear — a scan per opener took 13 s on a 358 KB command of
+    unterminated openers (2026-09-23), and this takes a tenth of a second.
+
+    **What it does not track can hide a publish, and is named for that reason**: a `case` pattern's
+    unmatched `)` inside a command substitution within a double-quoted string closes the
+    substitution early, and so would any other construct whose bracket bash balances by grammar
+    rather than by count. Nothing an agent writes by accident has been found in that shape; the
+    ones that were found are closed above.
     """
     c = re.sub(r"\\\n", " ", cmd)                    # a continuation is one command
-    out, n, i, q, arith, pending = list(c), len(c), 0, None, 0, []
+    out, n, i = list(c), len(c), 0
+    q, arith, depth, ctx, pending, stack = None, 0, 0, "code", [], []
     while i < n:
-        if q is not None:                            # inside a quote: its end, or an escape
-            s = _QUOTED[q].search(c, i)
+        if q is not None:                            # inside a quote: its end, an escape, or a
+            s = _QUOTED[q].search(c, i)              # substitution opening inside "…"
             if not s:
                 break                                # never closed: bash runs none of it
-            i = s.start()
-            if c[i] == "\\":
+            i, ch = s.start(), s.group()
+            if ch == "\\":
                 i += 2
+                continue
+            if ch == "`":
+                opened = ("code", "`", 1)
+            elif ch == "$" and c.startswith("$(", i) and not c.startswith("$((", i):
+                opened = ("code", ")", 2)
+            elif ch == "$" and c.startswith("${", i):
+                opened = ("param", "}", 2)
+            elif ch == "$":
+                i += 1
+                continue
             else:
                 q, i = None, i + 1
+                continue
+            stack.append((q, arith, depth, ctx, opened[1]))
+            q, arith, depth, ctx, i = None, 0, 0, opened[0], i + opened[2]
             continue
         s = _SPECIAL.search(c, i)
         if not s:
             break
         i, ch = s.start(), s.group()
-        if ch == "\n":
+        if ch == ")" and arith and c.startswith("))", i):
+            arith, i = arith - 1, i + 2
+        elif stack and ch == stack[-1][4] and depth == 0:
+            q, arith, depth, ctx, _ = stack.pop()    # back inside the string it opened in
+            i += 1
+        elif ch == "\n":
             i += 1
             for dash, word in pending:               # each body, in the order its opener came
                 j = i
@@ -157,44 +187,52 @@ def shell_only(cmd):
             pending = []
         elif ch == "\\":
             i += 2
-        elif ch == "#":
-            if i == 0 or c[i - 1] in " \t\n;&|(":
-                e = c.find("\n", i)                  # a comment runs to its newline
-                i = n if e < 0 else e
-            else:
-                i += 1
-        elif ch == "$":
-            if c.startswith("$'", i):
-                q, i = "$'", i + 2
-            elif c.startswith("$((", i):
-                arith, i = arith + 1, i + 3
-            else:
-                i += 1
-        elif ch == "(":
-            if c.startswith("((", i):
-                arith, i = arith + 1, i + 2
-            else:
-                i += 1
-        elif ch == ")":
-            if arith and c.startswith("))", i):
-                arith, i = arith - 1, i + 2
-            else:
-                i += 1
+        elif ch == "#" and ctx == "code" and (i == 0 or c[i - 1] in " \t\n;&|("):
+            e = c.find("\n", i)                      # a comment runs to its newline
+            i = n if e < 0 else e
+        elif ch == "$" and c.startswith("$'", i):
+            q, i = "$'", i + 2
+        elif ch == "$" and c.startswith("$((", i):
+            arith, i = arith + 1, i + 3
+        elif ch == "(" and ctx == "code" and c.startswith("((", i):
+            arith, i = arith + 1, i + 2
+        elif ch == "(" and ctx == "code":
+            depth, i = depth + 1, i + 1
+        elif ch == ")" and ctx == "code" and depth:
+            depth, i = depth - 1, i + 1
+        elif ch == "{" and ctx == "param":
+            depth, i = depth + 1, i + 1
+        elif ch == "}" and ctx == "param" and depth:
+            depth, i = depth - 1, i + 1
         elif ch in "'\"":
-            q, i = ch, i + 1
-        elif c.startswith("<<<", i):                 # a here-STRING, not a heredoc
-            i += 3
-        else:
-            m = None if arith else _OPENER.match(c, i)
+            q, i = ch, i + 1                         # bash 3.2 reads `'` in "${…}" as a quote too
+        elif ch == "<" and c.startswith("<<<", i):
+            i += 3                                   # a here-STRING, not a heredoc
+        elif ch == "<" and ctx == "code" and not arith:
+            m = _OPENER.match(c, i)
             if m:
                 pending.append((m.group(1), m.group(3)))
                 i = m.end()
             else:
                 i += 1
+        else:
+            i += 1
     return "".join(out)
 
-# A dry run is a read: it tells you what *would* leave, and nothing does.
+# **A dry run is a read — of its OWN act, and of nothing else on the line.** Both spellings,
+# case-blind. It used to exempt the whole command: `echo testing --dry-run`, then a real
+# `git push` on the next line, went through both gates — and so did a comment that merely
+# mentioned the flag (an adversarial lens, 2026-09-24). So every outward act is found, and each is
+# excused only by a `--dry-run` in its own simple command, up to the next `;` `&` `|` or newline.
 DRY = re.compile(r"--dry-run\b|--dry_run\b", re.I)
+
+
+def first_act(c):
+    """The first outward act in `c` that is not a dry run of itself, or None."""
+    for m in OUTWARD.finditer(c):
+        if not DRY.search(re.split(r"[\n;&|]", c[m.end():], 1)[0]):
+            return m
+    return None
 
 
 def last_owner_instruction(transcript, limit=240):
@@ -307,9 +345,9 @@ def main():
         out()
 
     cmd = str((payload.get("tool_input") or {}).get("command") or "")
-    if not cmd or DRY.search(cmd):
+    if not cmd:
         out()
-    m = OUTWARD.search(shell_only(cmd))
+    m = first_act(shell_only(cmd))
     if not m:
         out()
 
