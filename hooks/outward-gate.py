@@ -138,13 +138,13 @@ def last_owner_instruction(transcript, limit=240):
     decide anyway.
     """
     def _strip(t):
-        """Drop the harness's own blocks by counting depth rather than matching pairs — a regex
-        leaks what sits between a nested inner close and the outer one, and the two malformed
-        shapes fall out for free: an unterminated block leaves the counter above zero and its tail
-        goes, an orphan closing tag at depth zero removes only itself."""
-        # **A stack of names, not a counter** — a counter let a `</task-notification>` close a
-        # `<system-reminder>`, handing anything that can inject tag-shaped text exact control over
-        # what the refusal shows and hides (reproduced 2026-09-18).
+        """Drop the harness's own blocks with a stack of tag NAMES, never by matching pairs — a
+        regex leaks what sits between a nested inner close and the outer one, and a plain depth
+        counter let a `</task-notification>` close a `<system-reminder>`, handing anything that can
+        inject tag-shaped text control over what the refusal shows and hides (reproduced
+        2026-09-18). A closing tag closes only a block of its own name: an unterminated block
+        leaves the stack non-empty and its tail goes, an orphan closing tag removes only itself,
+        and a mismatched one is ignored."""
         out, stack, last = [], [], 0
         for m in re.finditer(r"</?(system-reminder|task-notification)>", t):
             closing, name = m.group(0).startswith("</"), m.group(1)

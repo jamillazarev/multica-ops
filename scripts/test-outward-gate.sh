@@ -118,9 +118,10 @@ speaks "command -p"             "s-k7" "command -p git push origin main"
 speaks "time -p"                "s-k8" "time -p git push origin main"
 speaks "nice --adjustment=10"   "s-k9" "nice --adjustment=10 git push origin main"
 speaks "exec -a name"           "s-k10" "exec -a myname git push origin main"
-silent "a real heredoc body"    "s-k11" "cat > docs/how.md <<'EOF'
-git push origin main
-EOF"
+# a `<<-` heredoc, its terminator tab-indented and still there — the plain terminated case is s-i12
+silent "a tab-indented <<-"     "s-k11" "cat > d.md <<-EOF
+	git push origin main
+	EOF"
 
 # ── a dry run is a read: nothing leaves ──────────────────────────────────────────
 silent "git push --dry-run" "s-c1" "git push --dry-run origin main"

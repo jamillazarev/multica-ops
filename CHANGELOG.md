@@ -56,7 +56,12 @@ dropped and a *superseded* message was quoted as current, which is worse than qu
 `test-outward-gate.sh` **72/72**, a case per reproduced shape. **The round itself has not reported
 clean**: one lens of four reported, one died on the weekly limit and two were never dispatched once
 the budget was gone — everything above is the adversarial lens's, and the re-round over the repair
-it caused is owed.
+it caused is owed. **The seventh round went at that repair and all four of its lenses died on the
+monthly spend limit**; two had found something first, both real: the repair left a docstring
+describing the depth counter it replaced, directly above the stack of names that replaced it, and
+the "real heredoc body" case it added was byte-identical to one already in the suite. The docstring
+describes the stack now, and the duplicate became the tab-indented `<<-` shape this suite had never
+had. Four `not completed` — the round is owed again.
 
 **And this release's own register template broke this release's own guard — here and not next
 door.** The widened header *Wired how · what it ships* was matched by equality, so a project that
