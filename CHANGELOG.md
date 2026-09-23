@@ -80,9 +80,23 @@ counted as an opener too. The body starts on the next line now, and an opener mu
 by a small line-local scanner that names what it does not read rather than claiming to parse bash.
 The round's other lenses corrected this entry's own record: *"eight shapes"* beside a list of six,
 now all eight with `env --` tested; *"a case per reproduced shape"*, false for the two quote shapes,
-which have cases now. Every case for this round's own shapes fails against the unrepaired code;
-`test-outward-gate.sh` **84/84**. A round that reports findings is not the clean one — the ninth
-goes over this repair.
+which have cases now. Every case for this round's own shapes fails against the unrepaired code.
+
+**The ninth round finished whole too, and broke the eighth round's scanner.** A `<<X` inside
+`$'…'` or an arithmetic `$((…))` was still read as an opener and hid the push on the next line —
+confirmed in real bash against a stub `git` — though both were named in the scanner's docstring,
+beside a promise that every failure fell on the loud side: **a limit named beside a false
+guarantee is not a limit named.** A scan per opener to the end of the string also took 14 s on
+358 KB of unterminated openers. The blanker is one pass now, keeping the state bash keeps — the
+three quotings, arithmetic, comments — and reading each body the way bash does, from the line
+after the command to a line that *is* its word; the same 358 KB takes 0.05 s, and what it still
+does not track (a quote nested in `$(…)` or backticks inside a double-quoted string) is named with
+the direction it can fail in, which is either. The register reads only the headers the template
+ships, since a lone `Wired How-To` notes column had been read as the wiring, and a refusal caused
+by a near miss names it. **And this gate never stopped a project's own deploy script**
+(`./scripts/deploy`) while its twin always had, with nothing written down — crossed the loud way,
+with a case. Each of the quote skip's two signals now has a case failing against the mutant that
+drops it. `test-outward-gate.sh` **93/93**; the tenth round goes over this repair.
 
 **And this release's own register template broke this release's own guard — here and not next
 door.** The widened header *Wired how · what it ships* was matched by equality, so a project that
@@ -176,7 +190,7 @@ machine with other work on it. The joining audit now carries what a runtime's ma
 the dry runs, `mise trust` first: measured on mise 2026.9.5, a `mise.toml` with
 `[bootstrap.packages]` is not read at all until trusted. Ported from `opsinist` — the sibling
 methodology, which keeps a project's work in files — where the same section also guards a committed
-`.mcp.json`. `scripts/test-native-register.sh` **25/25**, run twice —
+`.mcp.json`. `scripts/test-native-register.sh` **27/27**, run twice —
 the second time on the system `python3` — 3.9 on a Mac without Homebrew, older than `tomllib`, which is 3.11+ —
 with every key read as a path, so `[tools]` then `python`, a bare `tools.python` and
 `[tools.python]` are one declaration.

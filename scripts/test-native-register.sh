@@ -109,6 +109,12 @@ suite() {
     } > _ops/TOOLING.md
     run; [ "$RC" = 0 ] && ok || bad "[$1] the decoy column \`$decoy\` won the lookup: $OUT"
   done
+  # …and a header that only starts like the column is not the column, even alone (2026-09-23)
+  { printf '# Tooling\n\n| Tool | What it'"'"'s for | Replaces | Access | Wired How-To | Gone when | Checked |\n'
+    printf '|---|---|---|---|---|---|---|\n'
+    printf '| python | a reason | we had none | none | see the wiki: mise.toml setup | never | 2026-09-23 |\n'
+  } > _ops/TOOLING.md
+  run; [ "$RC" = 1 ] && said 'Wired How-To' && ok || bad "[$1] a lone near-miss column was read as the wiring, or refused unnamed: $OUT"
 
   git rm -q --cached mise.toml; rm -f mise.toml; printf '# Tooling\n' > _ops/TOOLING.md; git add -A
   git commit -qm clean-mise >/dev/null 2>&1 || true

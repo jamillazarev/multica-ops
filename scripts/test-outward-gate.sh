@@ -127,9 +127,6 @@ silent "a tab-indented <<-"     "s-k11" "cat > d.md <<-EOF
 # All reproduced 2026-09-23. `env --` is the eighth wrapper shape, never a case until now.
 speaks "env --"                    "s-l1" "env -- git push origin main"
 speaks "env, six assignments"      "s-l2" "env A=1 B=2 C=3 D=4 E=5 F=6 git push origin main"
-speaks "rest of the opener line"   "s-l3" "cat <<EOF; git push origin main
-hello
-EOF"
 speaks "heredoc and push, one line" "s-l4" "cat > f.md <<EOF && git add f.md && git push origin main
 body
 EOF"
@@ -152,6 +149,42 @@ EOF"
 silent "<<\\EOF"                   "s-l9" "cat <<\EOF > r.md
 git push origin main
 EOF"
+
+# **Round nine: the blanker reads bash's own state now, in one pass.** A `<<X` inside `$'…'` or an
+# arithmetic `$((…))` was taken for an opener and hid the push on the next line — reproduced in
+# real bash against a stub `git`, 2026-09-23. A quote opened on an earlier line, and a terminator
+# that is not the whole line, were the same failure by other routes. And a scan per opener to the
+# end of the string took 13 s on 358 KB of unterminated openers: the bound below separates linear
+# from quadratic by two orders of magnitude, so it measures the shape and not the machine.
+speaks "\$'…' is not an opener"     "s-m1" "echo \$'a\\'<<EOF'
+git push origin main
+EOF"
+speaks "\$((…)) is not an opener"    "s-m2" "echo \$((1<<EOF))
+git push origin main
+EOF"
+speaks "a quote from an earlier line" "s-m3" "git commit -m \"first line
+ <<X\"
+git push origin main
+X"
+speaks "a terminator is the whole line" "s-m4" "cat <<EOF
+  EOF
+cat <<Y
+EOF
+git push origin main
+Y"
+speaks "two bodies, then a push"      "s-m5" "cat <<A <<B
+x
+A
+y
+B
+git push origin main"
+# a project's own deploy script — the catch-all the other copy always had and this one never did
+speaks "a deploy script"              "s-m6" "./scripts/deploy --prod"
+_big=$(python3 -c 'print("".join("word%d <<X%d\n" % (k, k) for k in range(20000)) + "echo done")')
+_t0=$(date +%s)
+silent "20000 unterminated openers"   "s-m7" "$_big"
+_dt=$(( $(date +%s) - _t0 ))
+[ "$_dt" -le 5 ] && pass=$((pass+1)) || { fail=$((fail+1)); echo "FAIL: 20000 unterminated openers took ${_dt}s — the blanker went quadratic again"; }
 
 # ── a dry run is a read: nothing leaves ──────────────────────────────────────────
 silent "git push --dry-run" "s-c1" "git push --dry-run origin main"
@@ -252,6 +285,28 @@ m=$(TP="$MOPS_GATE_DIR/words.jsonl" fire "s-h4" "git push origin main"); m=${m#*
 case "$m" in *"go ahead"*) pass=$((pass+1));; *) fail=$((fail+1)); echo "FAIL: a real turn opening with the harness's words was dropped";; esac
 m=$(TP="$MOPS_GATE_DIR/summary.jsonl" fire "s-h5" "git push origin main"); m=${m#*|}
 case "$m" in *"the real ask"*) pass=$((pass+1));; *) fail=$((fail+1)); echo "FAIL: the harness's own summary was quoted as the owner";; esac
+# **Each of the skip's two signals has a case of its own.** Reverting to the single signal failed
+# one case above, and dropping either half alone failed none — so neither half was measured
+# (a contradiction lens, 2026-09-23). A short bare-string turn and a long text-block turn, each
+# opening with the harness's words, are both a person speaking.
+python3 - "$MOPS_GATE_DIR/bare.jsonl" "$MOPS_GATE_DIR/long.jsonl" <<'PY'
+import json, sys
+def u(c): return {"type": "user", "message": {"role": "user", "content": c}}
+sets = {
+    sys.argv[1]: [u([{"type": "text", "text": "hold everything"}]),
+                  u("This session is being continued: go ahead, short and bare")],
+    sys.argv[2]: [u([{"type": "text", "text": "hold everything"}]),
+                  u([{"type": "text", "text": "This session is being continued: go ahead, long " + "y" * 2500}])],
+}
+for path, rows in sets.items():
+    with open(path, "w") as f:
+        for r in rows:
+            f.write(json.dumps(r) + "\n")
+PY
+m=$(TP="$MOPS_GATE_DIR/bare.jsonl" fire "s-h6" "git push origin main"); m=${m#*|}
+case "$m" in *"short and bare"*) pass=$((pass+1));; *) fail=$((fail+1)); echo "FAIL: a short bare-string turn opening with the harness's words was dropped";; esac
+m=$(TP="$MOPS_GATE_DIR/long.jsonl" fire "s-h7" "git push origin main"); m=${m#*|}
+case "$m" in *"go ahead, long"*) pass=$((pass+1));; *) fail=$((fail+1)); echo "FAIL: a long text-block turn opening with the harness's words was dropped";; esac
 
 echo "pass $pass · fail $fail"
 [ "$fail" = 0 ]
