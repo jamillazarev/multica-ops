@@ -316,18 +316,32 @@ It reads only what comes before the comment now, with a mutant whose test fails 
 code. The comment refusal said a value *loses everything after its `#`*; it now says the rest of that
 line goes, since a value continued on the next line keeps the continuation. The
 cold-read and deletion lenses found words: which way a mutant's test fails, a
-metaphor for what took the space before a `#`, and a line comment that repeated the docstring. The
+metaphor for what took the space before a `#`, and a code comment that repeated the docstring. The
 twenty-second round went over this repair.
 
 **The twenty-second round found two more tabs the check passed.** A tab after a key's `:` and a
 tab indenting a wrapped line are both rejected by PyYAML, and the check saw neither — the key's
 pattern took the first as its separator, and the wrapped line's indent was stripped before the tab
-rule read it. Both are read now, each with a mutant whose test fails against the old code. The
+rule read it. Both are read now, each with a mutant whose test fails against the old code, and
+thirty-four shapes written to files agree with PyYAML, the same exception aside. The
 contradiction lens found the twenty-four shapes above said to agree with PyYAML when one of them,
 blanks after `---`, is refused on purpose; the sentence now says so. The cold-read and deletion
 lenses found words: two lenses left unnamed, an *it says so* that reached further than the refusal
-does, and a second line comment repeating the docstring. The twenty-third round goes over this
+does, and a second code comment repeating the docstring. The twenty-third round went over this
 repair.
+
+**The twenty-third round found one more tab.** A tab opening a line of a block, flow or nested value
+passed, because the check read nothing of those values past the key's line — while its docstring
+said they were *left to the parser*, and nothing in preflight is one. PyYAML rejects that tab and
+accepts one inside quotes or after a block's own indent, so that is the rule now, and the docstring
+says those values otherwise go unchecked here. Forty-five shapes written to files agree with
+PyYAML, the same exception aside. Every tab test here now asserts the refusal's own words, after
+the other copy's test for a tab after a key's `:` was found asserting an exit status another check
+produced on its own. The tab refusal and the others each name their own remedy now, where one
+sentence had joined *use spaces* and *quote the value*. The deletion lens found nothing; the
+contradiction lens read the twenty-four shapes of one probe and the thirty-four of a later one as
+one claim, and the paragraph above now states the later count; the cold-read found *line comment*
+read as a YAML comment. The twenty-fourth round goes over this repair.
 
 **And this release's own register template broke this release's own guard — here and not next
 door.** The widened header *Wired how · what it ships* was matched by equality, so a project that

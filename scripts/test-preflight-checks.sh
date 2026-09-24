@@ -55,20 +55,25 @@ grep -q "as a comment" "$T/out" && ok || bad "a value that is only a comment was
 undo
 perl -pi -e 's/^description: .*$/description: One\tjob/' "$T/c/skills/quick/SKILL.md"
 run && bad "a plain value holding a tab passed" || ok
-grep -q "is not valid YAML" "$T/out" && ok || bad "a tab in a plain value was refused for some other reason"
+grep -q "holds a tab" "$T/out" && ok || bad "a tab in a plain value was refused for some other reason"
 undo
 perl -pi -e 's/^description: .*$/description: One job # a\tb/' "$T/c/skills/quick/SKILL.md"
 run; grep -q "as a comment" "$T/out" && ok || bad "a tab inside a comment was not read as part of the comment"
-grep -q "is not valid YAML" "$T/out" && bad "a tab inside a comment was refused as a tab in the value" || ok
+grep -q "holds a tab" "$T/out" && bad "a tab inside a comment was refused as a tab in the value" || ok
 undo
-# …a tab after the key's `:` and a tab indenting a wrapped line are refused too — PyYAML rejects both
+# …a tab after the key's `:`, indenting a wrapped line, or opening a line of a block value is
+# refused too — PyYAML rejects all three
 perl -pi -e 's/^description: /description:\t/' "$T/c/skills/quick/SKILL.md"
 run && bad "a tab after the key's colon passed" || ok
-grep -q "is not valid YAML" "$T/out" && ok || bad "a tab after the key's colon was refused for some other reason"
+grep -q "holds a tab" "$T/out" && ok || bad "a tab after the key's colon was refused for some other reason"
 undo
 perl -pi -e 's/^description: .*$/description: One job\n\tand its steps/' "$T/c/skills/quick/SKILL.md"
 run && bad "a wrapped line indented with a tab passed" || ok
-grep -q "is not valid YAML" "$T/out" && ok || bad "a tab-indented wrapped line was refused for some other reason"
+grep -q "holds a tab" "$T/out" && ok || bad "a tab-indented wrapped line was refused for some other reason"
+undo
+perl -pi -e 's/^description: .*$/description: |\n\tOne job/' "$T/c/skills/quick/SKILL.md"
+run && bad "a block value indented with a tab passed" || ok
+grep -q "holds a tab" "$T/out" && ok || bad "a tab-indented block value was not refused as a tab"
 undo
 perl -0pi -e 's/\A(---\n.*?\n---)\n.*\z/$1/s' "$T/c/skills/quick/SKILL.md"
 [ "$(tail -c 4 "$T/c/skills/quick/SKILL.md")" = "$(printf '\n---')" ] && ok \
