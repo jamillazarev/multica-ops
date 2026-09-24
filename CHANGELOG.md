@@ -357,12 +357,11 @@ wording to fix, shapes only deliberate disguise produces, or the publish gate re
 that would not have run anyway.
 
 **The twenty-fifth round found one more tab shape, and that the net under the limits was only half
-visible.** A tab after spaces in the indent of a flow or nested value's line passes, while inside a
-block scalar the same tab is content and valid; it joins the docstring's known limits by the same
-decision as the three before it. **The contradiction lens then ran the scan before a tag on the
+visible.** A fourth tab shape that passes joins the docstring's known limits, by the same decision
+as the three before it. **The contradiction lens then ran the scan before a tag on the
 limits themselves**, and its printed summary said *successful*, no findings, for frontmatter PyYAML
 rejects: SkillSpector records such a manifest only in its JSON report, as a `manifest_parse_error`
-under `analysis_completeness`. So the net was real and nobody reading the summary would have seen
+in that skill's own `analysis_completeness`. So the net was real and nobody reading the summary would have seen
 it. The scan before a tag is now read as JSON ([AGENTS.md](AGENTS.md) says what to look for),
 measured on both corpora — no parse error in either — and on the three passing shapes, each
 reported. **The same scan read the upgrade skill's *Update skills safely* as a skill that modifies
@@ -374,6 +373,14 @@ found the tab refusal not naming indented lines, the stopping rule named without
 *a quoted value that closed on its own line* readable two ways; the contradiction lens found
 *eighty lines up* true of neither line it could mean. All are repaired; by the stopping rule and the
 decision on the heuristic, the round is clean.
+
+**The twenty-sixth round found only words, and by the stopping rule it is clean.** The new JSON rule
+said *under `analysis_completeness`*, and a `--recursive` report has two keys of that name: the
+report's own stays clean while the error sits in each skill's; the rule now names the path and gives
+a check to paste — `grep -c manifest_parse_error` must print `0`. The paragraph on the first scan
+over these skills said *the scan reports clean* while it had left the upgrade skill's finding
+standing, so no rescan in between would have come back clean; it now says so. And the paragraph
+above re-described the fourth limit beside the docstring that holds it; that is cut.
 
 **And this release's own register template broke this release's own guard — here and not next
 door.** The widened header *Wired how · what it ships* was matched by equality, so a project that
@@ -421,7 +428,9 @@ skill whose job is upgrading skills trips *Rogue Agent / Self-Modification*, whi
 being right about the shape and wrong about the intent. The other was a line in the core reading
 *"never refuse a doable action over the wrong seat"*, flagged **anti-refusal** — and that sentence
 was about *which seat does the work*, which a model reading it out of context could take for
-something else. It says so now, and says gates are untouched by it; the scan reports clean.
+something else. It says so now, and says gates are untouched by it. The first was left standing
+as a false positive, so the scan did not report clean — the twenty-fifth round's paragraph above
+has the line reworded and the scan without a finding.
 **A scan that changes the corpus rather than only measuring it** is the argument for running it.
 
 **The shelf itself gained the checked rows** — `urlwatch`, Firehose and Huginn beside

@@ -316,9 +316,12 @@ A version bump is not just a changelog entry. Before you tag:
    and ship nineteen skills of our own; the rule that says *imported* is the one everybody reads as
    *all*. `--no-llm` reports itself as a partial scan, so a clean static run is evidence about
    patterns and not about intent. **Read it as JSON** (`--format json --output <file>`): a skill
-   whose frontmatter a strict parser rejects shows only there, as a `manifest_parse_error` under
-   `analysis_completeness`, while the printed summary says *successful* with no findings (measured
-   2026-09-24). Any such entry stops the tag — it is where the shapes preflight's frontmatter check
+   whose frontmatter a strict parser rejects shows only there, as a `manifest_parse_error` in that
+   skill's own `analysis_completeness.ledger_exceptions` — in a `--recursive` report,
+   `skills[].analysis_completeness`, while the report's top-level `analysis_completeness` stays
+   clean — and the printed summary says *successful* with no findings (measured 2026-09-24).
+   `grep -c manifest_parse_error <file>` must print `0`; anything else stops the tag, and the
+   failing skill's `skill.source` names it. It is where the shapes preflight's frontmatter check
    names as its limits are caught.
    **And the company guard** — `bash scripts/test-company-guard.sh`: the four dependency-manifest shapes, the version bump that is not a new dependency, the word boundary that must not let a decision saying `update` satisfy a dependency called `date`, the register rung refusing and accepting `we had none`, and the guard noticing it is older than the guide it ships beside. It shipped with none of these — 101 lines of gate that `grep -rl` found named only in prose, which is why it is named here. **And so is the map generator** — `bash scripts/test-map-blocks.sh` — where
    the assertion that matters is that `scripts/map-blocks.py` rewrites *only* between its
