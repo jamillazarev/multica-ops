@@ -322,10 +322,13 @@ def frontmatter_faults(p):
     rest of the line. It reads top-level keys only, plain (letters, digits, `_`, `-`) or quoted,
     which is every key a skill's frontmatter has; a nested or dotted key goes unread. Beyond that
     tab, quoted scalars, block scalars and flow collections go unchecked here — only a strict parser
-    reads them whole. Known limits, measured against PyYAML on 2026-09-24 and left to the strict
-    scan before a tag: a tab opening the line after a quoted value that closed on its own line, and
-    a tab inside a flow value written on the key's line, both pass; a line inside a quoted value
-    spanning lines that reads like a key and a tab is refused although it is valid. A byte-order
+    reads them whole. Known limits, measured against PyYAML on 2026-09-24: three tabs pass — one
+    opening a line after a quoted value has closed, on its key's line or a later one; one inside a
+    flow value written on the key's line; and one after spaces in the indent of a flow or nested
+    value's line (inside a block scalar that tab is content, and valid). The scan before a tag
+    reports each as a `manifest_parse_error` in its JSON, not in the summary it prints. And a line
+    inside a quoted value spanning lines that reads like a key and a tab is refused although it is
+    valid, which is loud. A byte-order
     mark is read past (text mode already reads Windows line endings as plain newlines), the closing
     `---` may end the file, a file whose frontmatter it cannot find is refused rather than passed,
     and a file that is not UTF-8 raises, which the caller fails closed on."""
@@ -354,8 +357,8 @@ def frontmatter_faults(p):
         head = body[:cut.start()] if cut else body
         if "\t" in lead + head:
             faults.append(f"{p}: frontmatter `{key}` is not valid YAML — it holds a tab after the ':', "
-                          f"in a plain value or in an indent, where PyYAML allows only spaces; use "
-                          f"spaces")
+                          f"in a plain value, or opening one of its indented lines, where PyYAML "
+                          f"allows only spaces; use spaces")
         elif ": " in head or head.endswith(":") or head[:1] in ("@", "`"):
             faults.append(f"{p}: frontmatter `{key}` is not valid YAML — a plain value holding ': ', "
                           f"ending in ':', or opening with '@' or a backtick; quote it")
