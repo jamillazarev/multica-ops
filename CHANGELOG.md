@@ -3,7 +3,7 @@
 Newest first. Each entry leads with what you can now do, not with which files moved. This is
 also the migration map `/multica-ops:upgrade` reads.
 
-## 0.4.18 — 2026-09-11
+## 0.4.18 — 2026-09-25
 
 **If you rely on the publish gate, this is what changed for you** — the rest of this entry is the
 record of how it got here, round by round.
