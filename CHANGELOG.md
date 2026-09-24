@@ -5,6 +5,23 @@ also the migration map `/multica-ops:upgrade` reads.
 
 ## 0.4.18 — 2026-09-11
 
+**If you rely on the publish gate, this is what changed for you** — the rest of this entry is the
+record of how it got here, fifteen review rounds long, and nothing below changes these three lists.
+- **Refused now, where it went through before:** a publish whose tool carries global options or a
+  path (`git -C <dir> push`, `git -c k=v push`, `gh -R o/r release create`, `npm --prefix x
+  publish`, `docker --context x push`, `/usr/bin/git push`); a tool or a verb quoted whole
+  (`"git" push`, `git "push"`); a wrapper with flags (`sudo -u root …`, `env -i …`, `nice
+  --adjustment=10 …`); a line continuation; a heredoc on the same line as the publish (`cat > f <<EOF
+  && git push`); a `--dry-run` that belongs to another command, sits in a comment, is glued to another
+  word, says `=false`, or stands outside the substitution that runs the act; and a project's own
+  deploy script, `./scripts/deploy`, which this gate never stopped until this release.
+- **Let through now, where it was refused before:** a sentence about publishing written into a file
+  or a heredoc; a search for the phrase; a real dry run, wherever the flag stands in the act's own
+  command; a local script named `predeploy`.
+- **Not read, by design:** a verb assembled from parts (`pu'sh'`), a variable or an interpreter
+  carrying it. When the gate mistakes a sentence for the act, its refusal's closing line says what to
+  do: tell the owner, and never reword to get past.
+
 **The outward gate refused a sentence about publishing.** It matched its verbs **anywhere in the
 command string**, so a comment being written into a file was stopped as if it were the act —
 measured 2026-09-18, twice in one session, the second time on the comment explaining the repair.
@@ -196,12 +213,27 @@ draft opened a hole the suite caught at once**: a window that starts at the act 
 backtick that closes `` `git push` --dry-run `` from one that opens another pair, so it read past it
 and excused the push. Reading from the start is what fixed that too. The suite gained both shapes, a
 guard for the escape branch nothing had exercised, and a second mutant that now breaks the one rule
-the window depends on — stopping where the substitution holding the act closes. **One finding was
+the window depends on — stopping where the substitution holding the act closes. **For a user**:
+a quoted tool name is refused now, and a real dry run with a dated release note no longer is. **One finding was
 declined**: a verb split by quotes, `git pu'sh'`, is not read. That spelling is a decision to hide
 the act, and the gate's own comment now says so beside the other shapes it does not claim to parse.
 The other lenses: a list that folded the window's fix under a cause it did not share, a stale
-comment still describing the old window, and one more *is allowed now* in the gate's own comments. `test-outward-gate.sh` **103/103**, `test-gate-vs-bash.sh` **64/64**; the fifteenth round
-goes over this repair.
+comment still describing the old window, and one more *is allowed now* in the gate's own comments. The fifteenth round went over this repair.
+
+**The fifteenth round found both halves of the last repair incomplete, in forms an agent writes.**
+Only the tool's name had been allowed its quotes, so the verb quoted whole — `git "push"`,
+`npm 'publish'`, `gh "release" create` — still went through; every word of an act may be quoted whole
+now. And the window's reader knew `$(…)` and backticks but read arithmetic and process substitution
+as bare parentheses, so `branch$((1+1)) --dry-run` and `<(echo hi) --dry-run` were refused as
+publishes; `$((…))`, `<(…)` and `>(…)` are pairs on its stack now, each closed by its own
+parenthesis. The other lenses: this entry buried what a user needs under the rounds — the block at
+its top answers that — its docstring's "the start of the command" read as the previous separator
+when it means the whole text, the fourteenth round's paragraph never said what a user would notice,
+the two gates listed their alternatives in different orders for no reason, and two cases took one
+branch. **For a user**: a publish whose verb is quoted is refused now, and a real dry run with
+arithmetic or process substitution before the flag no longer is. Every case for this round's shapes
+fails against the fourteenth round's gate (three holes, two false refusals). `test-outward-gate.sh` **103/103**,
+`test-gate-vs-bash.sh` **68/68**; the sixteenth round goes over this repair.
 
 **And this release's own register template broke this release's own guard — here and not next
 door.** The widened header *Wired how · what it ships* was matched by equality, so a project that

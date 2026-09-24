@@ -100,20 +100,31 @@ WRAP = r"(?:(?:env|sudo|nohup|time|command|exec|eval|nice)[ \t]+(?:\S+[ \t]+)*)?
 # publish`, `gh -R pr-team/r release create`, `git -c "user.name=x y" push` and a quoted path with
 # a space in it all passed while this read `\S` and `\b` (an adversarial lens, 2026-09-24). A
 # path, or a bare name, may open a quote the name closes — `"git" push`, 2026-09-24 — which is
-# what the optional quote after each name is for. **What is not read, by design**: a verb the
-# shell assembles from parts — `pu'sh'`, `$v` — is a decision to hide the act, and this gate
-# does not claim to parse bash against the one it constrains.
+# what the optional quote after each name is for — and every word of the act may be quoted whole,
+# `git "push"`, since quoting each word is an ordinary habit (2026-09-24). **What is not read, by
+# design**: a verb the shell assembles from parts — `pu'sh'`, `$v` — is a decision to hide the
+# act, and this gate does not claim to parse bash against the one it constrains.
 WORD = r"""(?:[^\s"'\\]|\\.|"(?:[^"\\]|\\.)*"|'[^']*')"""
-OPTS = (r"(?:\s+-" + WORD + r"*(?:\s+(?!(?:push|publish|release|pr|run|deploy)(?:\s|$))(?!-)"
+OPTS = (r"(?:\s+-" + WORD + r"*(?:\s+(?![\"']?(?:push|publish|release|pr|run|deploy)[\"']?(?:\s|$))(?!-)"
       + WORD + r"+)?)*")
 QUOTE = r"""["']?"""
+
+
+def say(*words):
+    """The act's words, each one of which may be quoted whole."""
+    return "".join(r"\s+" + QUOTE + w + QUOTE for w in words)
+
+
+# the same alternatives, in the same order, as the other copy of this gate
 OUTWARD = re.compile(
-    CMD_START + WRAP + r"((?:[\"'][^\"'\n]*/|[\"']|[\w.~/-]*/)?(?:git" + QUOTE + OPTS + r"\s+push"
-    r"|gh" + QUOTE + OPTS + r"\s+(?:release\s+create|pr\s+create)"
-    r"|npm" + QUOTE + OPTS + r"\s+publish"
-    r"|(?:flyctl|fly|vercel|netlify|wrangler|kamal|cap)" + QUOTE + OPTS + r"\s+deploy"
-    r"|(?:npm|yarn|pnpm)" + QUOTE + OPTS + r"\s+run\s+deploy|(?:make|just)" + QUOTE + OPTS +
-    r"\s+deploy|docker" + QUOTE + OPTS + r"\s+push)"
+    CMD_START + WRAP + r"((?:[\"'][^\"'\n]*/|[\"']|[\w.~/-]*/)?(?:"
+    r"git" + QUOTE + OPTS + say("push") +
+    r"|gh" + QUOTE + OPTS + r"(?:" + say("release", "create") + r"|" + say("pr", "create") + r")"
+    r"|npm" + QUOTE + OPTS + say("publish") +
+    r"|docker" + QUOTE + OPTS + say("push") +
+    r"|(?:npm|yarn|pnpm)" + QUOTE + OPTS + say("run", "deploy") +
+    r"|(?:make|just)" + QUOTE + OPTS + say("deploy") +
+    r"|(?:flyctl|fly|vercel|netlify|wrangler|kamal|cap)" + QUOTE + OPTS + say("deploy") + r")"
     r"|(?:[\w./-]*[/_.-])?(?<!pre[-_])deploy)(?=[\s;&|)<>\"'`]|$)",
     re.I)
 
@@ -246,13 +257,16 @@ def shell_only(cmd):
 
 
 def command_end(c, i):
-    """Where the simple command holding the act at `i` ends — read from the START of the command,
-    because a window that starts at the act cannot tell an opening backtick from a closing one.
+    """Where the simple command holding the act at `i` ends — read from index 0 of the whole text
+    the hook received, NOT from the previous separator, because a window that starts anywhere after
+    the outermost context cannot tell an opening backtick from a closing one.
 
     Bash's own state is kept on the way: quotes, a backslash escaping the next character outside
-    single quotes, and every `$(…)` or backtick pair on a stack with its own quoting. The command
-    holding the act ends at the first `\n ; & | )` outside quotes at the act's own depth, or where
-    the substitution holding the act closes. A bare character split stopped at a `)` inside a quoted
+    single quotes, and every `$(…)`, `$((…))`, `<(…)`, `>(…)` or backtick pair on a stack with its
+    own quoting. The act's *depth* is how many of those are open where it starts; the command holding
+    it ends at the first `\n ; & | )` outside quotes at that depth, or where the pair holding the act
+    closes. Arithmetic and process substitution were read as bare parentheses until 2026-09-24, so
+    `branch$((1+1)) --dry-run` was refused as a publish. A bare character split stopped at a `)` inside a quoted
     release note; a flat quote flag was fooled by `"… $(date "+%Y (UTC)") …"`; and a window started
     at the act read the backtick that closed `` `git push` --dry-run `` as opening another pair —
     three misreadings on 2026-09-24, two loud and one a hole."""
@@ -268,26 +282,35 @@ def command_end(c, i):
         if ch == "\\":
             k += 2
             continue
-        opens = c.startswith("$(", k) and not c.startswith("$((", k)
+        if c.startswith("$((", k):
+            opener = ("))", 3)                       # arithmetic, closed by its own doubled paren
+        elif c.startswith("$(", k) or (q is None and c.startswith(("<(", ">("), k)):
+            opener = (")", 2)                        # a command or process substitution
+        elif ch == "`":
+            opener = ("`", 1)
+        else:
+            opener = None
         if q == '"':
             if ch == '"':
                 q = None
-            elif opens or ch == "`":
-                stack.append((q, ")" if opens else "`"))
+            elif opener:
+                stack.append((q, opener[0]))
                 q = None
-                k += 1 if ch == "`" else 2
+                k += opener[1]
                 continue
             k += 1
             continue
-        if stack and ch == stack[-1][1]:
+        if stack and c.startswith(stack[-1][1], k):
             if depth is not None and len(stack) == depth:
-                return k                             # the substitution holding the act closes
+                return k                             # the pair holding the act closes
+            k += len(stack[-1][1])
             q = stack.pop()[0]
-        elif ch in "'\"":
+            continue
+        if ch in "'\"":
             q = ch
-        elif opens or ch == "`":
-            stack.append((None, ")" if opens else "`"))
-            k += 1 if ch == "`" else 2
+        elif opener:
+            stack.append((None, opener[0]))
+            k += opener[1]
             continue
         elif depth is not None and len(stack) == depth and ch in "\n;&|)":
             return k
