@@ -22,6 +22,15 @@ perl -pi -e 's/^description: "(.*)"$/description: $1/' "$T/c/skills/quick/SKILL.
 run && bad "a skill description holding ': ' unquoted passed" || ok
 grep -q "is not valid YAML" "$T/out" && ok || bad "the YAML refusal does not say what is wrong"
 undo
+# …a value wrapped onto a second line is read too, and a file that is not UTF-8 fails closed —
+# the first draft read the checker's output and never its exit status
+perl -0pi -e 's/^description: "(.*?)"\n/description: One job\n  with steps: $1\n/m' "$T/c/skills/quick/SKILL.md"
+run && bad "a wrapped plain value holding ': ' passed" || ok
+undo
+printf '\n\377\n' >> "$T/c/skills/quick/SKILL.md"
+run && bad "a skill file that is not UTF-8 passed — the check failed open" || ok
+grep -q "failed to run" "$T/out" && ok || bad "a crashed frontmatter check did not say so"
+undo
 
 # §9b · a typo'd date is reported AND does not kill the loop for the stale row beside it
 printf '\n| tf-a | checked 2026-06-31 |\n| tf-b | checked 2024-01-01 |\n' >> "$T/c/STACKS.md"

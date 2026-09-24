@@ -269,7 +269,7 @@ def command_end(c, i):
     a stack with its own quoting — a grouping pair because `$((1 + (2*3)))` closed the arithmetic
     one parenthesis early and refused a real dry run (2026-09-24). The act's *depth* is how many of those are open where it starts; the command holding
     it ends at the first `\n ; & | )` outside quotes at that depth, or where the pair holding the act
-    closes. Arithmetic and process substitution were read as bare parentheses until 2026-09-24, so
+    closes. Arithmetic and process substitution were read as ordinary parentheses until 2026-09-24, so
     `branch$((1+1)) --dry-run` was refused as a publish. A bare character split stopped at a `)` inside a quoted
     release note; a flat quote flag was fooled by `"… $(date "+%Y (UTC)") …"`; and a window started
     at the act read the backtick that closed `` `git push` --dry-run `` as opening another pair —

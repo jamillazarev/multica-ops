@@ -305,20 +305,46 @@ sv=$(grep -m1 '^version:' skills/mops/SKILL.md | awk '{print $2}')
 # mapping inside a mapping to YAML; six descriptions here were written that way and SkillSpector's
 # strict parser rejected such a manifest in the pre-tag scan of 2026-09-24. One runtime reading it
 # leniently is no promise about the next.
+# **It fails closed**: a crash inside the check is a failure, not an empty report — the first draft
+# fed the checker's output through a here-string and never read its exit status, so a skill file
+# that was not UTF-8 stopped the scan silently and every skill after it went unchecked
+# (an adversarial lens, 2026-09-24). The other copy of this check had failed closed from the start.
+# (a temp file, not `$(…)`: bash 3.2 misreads quotes and backticks in a heredoc inside `$(…)`)
+_yf=$(mktemp)
+python3 - > "$_yf" <<'PY' || say_fail "the frontmatter check itself failed to run — its error is above; nothing after it was checked"
+import pathlib, re, sys
+def frontmatter_faults(p):
+    """Plain frontmatter values a strict YAML parser rejects — a heuristic, stated as one: it reads
+    `: `, a `#` after a space or a tab, a trailing `:`, a plain value opening with `@` or a
+    backtick, and the continuation lines of a plain value; it leaves quoted, block and flow values
+    to the parser. A file that is not UTF-8 raises, and the caller fails closed on it."""
+    fm = re.match(r"---\n(.*?)\n---\n", p.read_text(encoding="utf-8"), re.S)
+    faults, plain, key = [], False, None
+    for line in (fm.group(1).split("\n") if fm else []):
+        kv = re.match(r"""^([\w-]+|"[^"]*"|'[^']*'):(?:[ \t]+(.*))?$""", line)
+        if kv:
+            key, v = kv.group(1), kv.group(2) or ""
+            plain = bool(v) and v[:1] not in "\"'|>[{"
+            body = v if plain else ""
+        elif plain and line[:1] in " \t":
+            body = line.strip()                  # a plain value wrapped onto the next line
+        else:
+            plain, body = False, ""
+        if body and (": " in body or re.search(r"[ \t]#", body) or body.endswith(":")
+                     or body[:1] in "@`"):
+            faults.append(f"{p}: frontmatter `{key}` is not valid YAML — a plain value holding ': ' "
+                          f"or ' #', ending in ':', or opening with '@' or a backtick; quote it")
+    return faults
+
+
+for p in sorted(pathlib.Path("skills").glob("*/SKILL.md")):
+    for f in frontmatter_faults(p):
+        print(f)
+PY
 while IFS= read -r _yl; do
   [ -n "$_yl" ] && say_fail "$_yl"
-done <<< "$(python3 - <<'PY'
-import pathlib, re
-for p in sorted(pathlib.Path("skills").glob("*/SKILL.md")):
-    fm = re.match(r"---\n(.*?)\n---\n", p.read_text(encoding="utf-8"), re.S)
-    for line in (fm.group(1).split("\n") if fm else []):
-        kv = re.match(r"^([\w-]+):[ \t]+(.*)$", line)
-        v = kv.group(2) if kv else ""
-        if kv and v[:1] not in "\"'|>" and (": " in v or " #" in v or v.endswith(":")):
-            print(f"{p}: frontmatter `{kv.group(1)}` is not valid YAML — a plain value holding "
-                  f"': ' or ' #'; quote it")
-PY
-)"
+done < "$_yf"
+rm -f "$_yf"
 swept=0
 while IFS= read -r m; do
   mv_=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get("version",""))' "$m" 2>/dev/null)
