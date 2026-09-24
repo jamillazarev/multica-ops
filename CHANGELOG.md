@@ -303,20 +303,31 @@ refused now, and text after a comment's `#` no longer counts as the value's. A t
 value, which PyYAML rejects, is refused as not valid YAML. Blanks after a `---` line are still
 refused, since what the runtimes' own loaders make of them is unmeasured, and the refusal now says
 the line must be exactly `---`. Twenty-four shapes, written to files and read back, now agree with
-PyYAML. The contradiction lens found nothing; the cold-read and deletion lenses found words — a
+PyYAML, except the blanks after `---` refused on purpose. The contradiction lens found nothing; the cold-read and deletion lenses found words — a
 correction above that named its subject and not its fact, a count whose referent came a sentence
 late, and a docstring aside that repeated the refusal. The twenty-first round
 went over this repair.
 
-**The twenty-first round found one false refusal, and two of its lenses found it independently.**
+**The twenty-first round found one false refusal, and its adversarial and contradiction lenses
+found it independently.**
 The tab rule read the whole value, so a tab inside a trailing comment, which YAML drops with the
 comment, was refused as a tab in the value — and the twenty-four shapes above had not included one.
 It reads only what comes before the comment now, with a mutant whose test fails against the old
-code. The comment refusal said a value *loses everything after its `#`*, when what goes is the rest
-of that line — a value continued on the next line keeps the continuation — and it says so now. The
+code. The comment refusal said a value *loses everything after its `#`*; it now says the rest of that
+line goes, since a value continued on the next line keeps the continuation. The
 cold-read and deletion lenses found words: which way a mutant's test fails, a
 metaphor for what took the space before a `#`, and a line comment that repeated the docstring. The
-twenty-second round goes over this repair.
+twenty-second round went over this repair.
+
+**The twenty-second round found two more tabs the check passed.** A tab after a key's `:` and a
+tab indenting a wrapped line are both rejected by PyYAML, and the check saw neither — the key's
+pattern took the first as its separator, and the wrapped line's indent was stripped before the tab
+rule read it. Both are read now, each with a mutant whose test fails against the old code. The
+contradiction lens found the twenty-four shapes above said to agree with PyYAML when one of them,
+blanks after `---`, is refused on purpose; the sentence now says so. The cold-read and deletion
+lenses found words: two lenses left unnamed, an *it says so* that reached further than the refusal
+does, and a second line comment repeating the docstring. The twenty-third round goes over this
+repair.
 
 **And this release's own register template broke this release's own guard — here and not next
 door.** The widened header *Wired how · what it ships* was matched by equality, so a project that

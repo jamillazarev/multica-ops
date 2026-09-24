@@ -315,35 +315,38 @@ python3 - > "$_yf" <<'PY' || say_fail "the frontmatter check itself failed to ru
 import pathlib, re, sys
 def frontmatter_faults(p):
     """Plain frontmatter values a strict YAML parser rejects or cuts short — a heuristic, stated as
-    one. It refuses `: `, a trailing `:`, a tab, and a value opening with `@` or a backtick, which a
-    strict parser rejects (PyYAML, for the tab), and a `#` that opens a value or follows a space,
-    which YAML reads as a comment that drops the rest of the value — on the key's line and on any
-    line the value is wrapped onto. It reads top-level keys only, plain (letters, digits, `_`, `-`)
-    or quoted, which is every key a skill's frontmatter has; a nested or dotted key goes unread.
-    Quoted scalars, block scalars and flow collections are left to the parser. A byte-order mark is
-    read past (text mode already reads Windows line endings as plain newlines), the closing `---`
-    may end the file, a file whose frontmatter it cannot find is refused rather than passed, and a
-    file that is not UTF-8 raises, which the caller fails closed on."""
+    one. It refuses `: `, a trailing `:` and a value opening with `@` or a backtick, which a strict
+    parser rejects; a tab after the key's `:`, in a plain value or in the indent of a line the value
+    is wrapped onto, which PyYAML rejects; and a `#` that opens a value or follows a space, which
+    YAML reads as a comment that drops the rest of the line. It reads top-level keys only, plain
+    (letters, digits, `_`, `-`) or quoted, which is every key a skill's frontmatter has; a nested or
+    dotted key goes unread. Quoted scalars, block scalars and flow collections are left to the
+    parser. A byte-order mark is read past (text mode already reads Windows line endings as plain
+    newlines), the closing `---` may end the file, a file whose frontmatter it cannot find is
+    refused rather than passed, and a file that is not UTF-8 raises, which the caller fails closed
+    on."""
     fm = re.match(r"---\n(.*?)\n---(?:\n|\Z)", p.read_text(encoding="utf-8-sig"), re.S)
     if not fm:
         return [f"{p}: no frontmatter this check can read — the file must open with a line that is "
                 f"exactly `---`, and the frontmatter close with another"]
     faults, plain, key = [], False, None
     for line in fm.group(1).split("\n"):
-        kv = re.match(r"""^([\w-]+|"[^"]*"|'[^']*'):(?:[ \t]+(.*))?$""", line)
+        kv = re.match(r"""^([\w-]+|"[^"]*"|'[^']*'):(?:([ \t]+)(.*))?$""", line)
         if kv:
-            key, v = kv.group(1), kv.group(2) or ""
+            key, lead, v = kv.group(1), kv.group(2) or "", kv.group(3) or ""
             plain = bool(v) and v[:1] not in "\"'|>[{"
             body = v if plain else ""
         elif plain and line[:1] in " \t":
-            body = line.strip()                  # a plain value wrapped onto the next line
+            body = line.lstrip()
+            lead = line[:len(line) - len(body)]
         else:
-            plain, body = False, ""
+            plain, lead, body = False, "", ""
         cut = re.search(r"(?:^| )#", body)
         head = body[:cut.start()] if cut else body
-        if "\t" in head or ": " in head or head.endswith(":") or head[:1] in ("@", "`"):
-            faults.append(f"{p}: frontmatter `{key}` is not valid YAML — a plain value holding ': ' "
-                          f"or a tab, ending in ':', or opening with '@' or a backtick; quote it")
+        if "\t" in lead + head or ": " in head or head.endswith(":") or head[:1] in ("@", "`"):
+            faults.append(f"{p}: frontmatter `{key}` is not valid YAML — a tab, or a plain value "
+                          f"holding ': ', ending in ':', or opening with '@' or a backtick; use "
+                          f"spaces, and quote the value")
         elif cut:
             faults.append(f"{p}: frontmatter `{key}` loses the rest of its line after the '#' — YAML "
                           f"reads a '#' that opens a value or follows a space as a comment; quote it")
