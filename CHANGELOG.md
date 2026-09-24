@@ -170,8 +170,8 @@ y" push`, and a tool path quoted for the same reason, `"./my tools/git" push`. A
 was still cut by a bare character split, so a `)` inside a quoted release note stopped it before a
 real `--dry-run` — a false refusal. **Three of the four had one cause, a pattern reading `\S` for a
 shell word**: a word is read the way a shell reads one now, quoted parts and escapes included; an
-argument is refused as a subcommand only when it IS the whole word; a path may be quoted; and the
-window ends at the first `\n ; & | )` or backtick *outside* quotes. The suite had passed all four,
+argument is refused as a subcommand only when it IS the whole word; and a path may be quoted. The
+fourth needed its own repair: the window ends at the first `\n ; & | )` or backtick *outside* quotes. The suite had passed all four,
 because none of its cases used an argument like that — so each is a case now, and adding the path
 case turned up one more thing the suite could not see: a script refused by the sandbox is reported
 by bash as a *bad interpreter*, not as the refusal the suite looked for. Both wordings count now.
@@ -184,8 +184,24 @@ options the oracle reads; one case repeated another's branch and became a long o
 argument; a comment repeated the paragraph above it; and a comment in this suite said the gate
 reads no transcript, where it does read one — for the owner's quote, never for the verdict. Every
 case for this round's shapes fails against the twelfth round's gate, and the second mutant now
-breaks the window where it is cut. `test-outward-gate.sh` **103/103**, `test-gate-vs-bash.sh`
-**59/59**; the fourteenth round goes over this repair.
+breaks the window where it is cut. The fourteenth round went over this repair.
+
+**The fourteenth round found the same shape of defect one level down.** A bare tool name in quotes
+— `"git" push` — passed, because the quoted form was only allowed for a path; a name may open a
+quote now, and the one after it closes. And the dry-run window's own reader, `command_end`, kept a
+single quote flag, so a release note built with `$(date "+%Y-%m-%d (UTC)")` fooled it into ending
+the window early and refusing a real dry run. It was rewritten to read from the start of the
+command, keeping every substitution on a stack with its own quoting, and **the rewrite's first
+draft opened a hole the suite caught at once**: a window that starts at the act cannot tell the
+backtick that closes `` `git push` --dry-run `` from one that opens another pair, so it read past it
+and excused the push. Reading from the start is what fixed that too. The suite gained both shapes, a
+guard for the escape branch nothing had exercised, and a second mutant that now breaks the one rule
+the window depends on — stopping where the substitution holding the act closes. **One finding was
+declined**: a verb split by quotes, `git pu'sh'`, is not read. That spelling is a decision to hide
+the act, and the gate's own comment now says so beside the other shapes it does not claim to parse.
+The other lenses: a list that folded the window's fix under a cause it did not share, a stale
+comment still describing the old window, and one more *is allowed now* in the gate's own comments. `test-outward-gate.sh` **103/103**, `test-gate-vs-bash.sh` **64/64**; the fifteenth round
+goes over this repair.
 
 **And this release's own register template broke this release's own guard — here and not next
 door.** The widened header *Wired how · what it ships* was matched by equality, so a project that

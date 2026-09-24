@@ -12,9 +12,8 @@
 # have published is LOUD, and fails the suite — except for a case whose reason starts with
 # `SYNTAX:`, which marks a command bash itself rejects, where a refusal costs nothing. **Adding a
 # case** is one line in CASES: the command, and in a few words what it probes (with `SYNTAX:` in
-# front if bash rejects it) — and, if it uses a global option that takes an argument and is not
-# yet in TAKES_ARG, an entry there too, or the oracle misreads which word is the subcommand and
-# says so in the wrong direction. **A real outward tool named by its path** — `/usr/bin/git …` — cannot be
+# front if bash rejects it) — and see TAKES_ARG if it uses a global option that takes an argument.
+# **A real outward tool named by its path** — `/usr/bin/git …` — cannot be
 # stubbed, so the sandbox refuses to execute it and the refusal counts as the act having been
 # tried: only commands that ARE outward acts belong in a case that names a tool by its path.
 #
@@ -30,7 +29,8 @@
 # run the suite on macOS; CI already does.
 #
 # Two code mutants must each open a HOLE, or the suite has no teeth: a terminator matched anywhere
-# in a line rather than as the whole line, and a dry-run window that runs past a `)`.
+# in a line rather than as the whole line, and a dry-run window that runs past the substitution
+# holding the act.
 set -u
 cd "$(dirname "$0")/.." || exit 1
 exec python3 - <<'PY'
@@ -42,7 +42,7 @@ STUBBED = ["git", "gh", "npm", "npx", "yarn", "pnpm", "docker", "podman", "verce
            "netlify", "wrangler", "kamal", "cap", "make", "just", "terraform", "kubectl", "helm",
            "curl", "wget", "ssh", "scp", "rsync", "sudo"]
 SAFE = ["cat", "echo", "printf", "env", "mkdir", "sh", "bash", "python3", "true", "false", "sed",
-        "grep", "tee"]
+        "grep", "tee", "date"]
 SCRIPTS = ["deploy", "predeploy", "pre-deploy"]
 # which of each tool's global options take an argument — the oracle's only model of a CLI, and
 # the place a case using another such option must add it
@@ -89,6 +89,12 @@ CASES = [
     ('git -c user.name="x y" push origin main', "a value quoted inside the word"),
     ('"./my tools/git" push origin main', "a quoted tool path with a space"),
     ('gh release create v1 -n "notes (x) y" --dry-run', "a real dry run after a quoted parenthesis"),
+    ('"git" push origin main', "a bare tool name in double quotes"),
+    ("'git' push origin main", "a bare tool name in single quotes"),
+    ('gh release create v1 -n "Released $(date "+%Y-%m-%d (UTC)")" --dry-run',
+     "a real dry run after quotes nested inside $(…)"),
+    ('git push origin "$(echo "a;b")" --dry-run', "a separator inside nested quotes, then a real dry run"),
+    ("gh release create v1 -n notes\\) --dry-run", "an escaped parenthesis, then a real dry run"),
     ('echo "text $(echo "inner<<EOF") more"\n' + V + "\nEOF", "a quote in $(…) inside \"…\""),
     ('echo "text `echo "inner<<EOF"` more"\n' + V + "\nEOF", "a quote in backticks inside \"…\""),
     ('echo "${X:-"a<<EOF"}"\n' + V + "\nEOF", "a quote in ${…} inside \"…\""),
@@ -275,8 +281,8 @@ for cmd, why, pub in truth:
 MUTANTS = [
     ("a terminator matched anywhere in a line",
      'if (line.lstrip("\\t") if dash else line) == word:', "if word in line:"),
-    ("a dry-run window that runs past a `)`",
-     'elif ch in "\\n;&|)`":', 'elif ch in "\\n;&|`":'),
+    ("a dry-run window that runs past the substitution holding the act",
+     "if depth is not None and len(stack) == depth:", "if False:"),
 ]
 src = open(GATE).read()
 for name, a, b in MUTANTS:
