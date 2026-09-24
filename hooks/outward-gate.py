@@ -95,14 +95,21 @@ WRAP = r"(?:(?:env|sudo|nohup|time|command|exec|eval|nice)[ \t]+(?:\S+[ \t]+)*)?
 # 2026-09-24, the absolute path by an adversarial lens and the options by checking what else that
 # shape covered. Any run of option tokens is allowed between the two now, each with at most one
 # argument that is not itself a subcommand, and any path before the name.
-OPTS = r"(?:\s+-\S+(?:\s+(?!(?:push|publish|release|pr|run|deploy)\b)[^\s\-]\S*)?)*"
+# **A word is read the way a shell reads one** — quoted parts may hold spaces — **and an argument
+# that merely STARTS with a subcommand word is still an argument.** `npm --prefix publish-tools
+# publish`, `gh -R pr-team/r release create`, `git -c "user.name=x y" push` and a quoted path with
+# a space in it all passed while this read `\S` and `\b` (an adversarial lens, 2026-09-24).
+WORD = r"""(?:[^\s"'\\]|\\.|"(?:[^"\\]|\\.)*"|'[^']*')"""
+OPTS = (r"(?:\s+-" + WORD + r"*(?:\s+(?!(?:push|publish|release|pr|run|deploy)(?:\s|$))(?!-)"
+      + WORD + r"+)?)*")
+QUOTE = r"""["']?"""
 OUTWARD = re.compile(
-    CMD_START + WRAP + r"((?:[\w.~/-]*/)?(?:git" + OPTS + r"\s+push"
-    r"|gh" + OPTS + r"\s+(?:release\s+create|pr\s+create)"
-    r"|npm" + OPTS + r"\s+publish"
-    r"|(?:flyctl|fly|vercel|netlify|wrangler|kamal|cap)" + OPTS + r"\s+deploy"
-    r"|(?:npm|yarn|pnpm)" + OPTS + r"\s+run\s+deploy|(?:make|just)" + OPTS + r"\s+deploy"
-    r"|docker" + OPTS + r"\s+push)"
+    CMD_START + WRAP + r"((?:[\"'][^\"'\n]*/|[\w.~/-]*/)?(?:git" + QUOTE + OPTS + r"\s+push"
+    r"|gh" + QUOTE + OPTS + r"\s+(?:release\s+create|pr\s+create)"
+    r"|npm" + QUOTE + OPTS + r"\s+publish"
+    r"|(?:flyctl|fly|vercel|netlify|wrangler|kamal|cap)" + QUOTE + OPTS + r"\s+deploy"
+    r"|(?:npm|yarn|pnpm)" + QUOTE + OPTS + r"\s+run\s+deploy|(?:make|just)" + QUOTE + OPTS +
+    r"\s+deploy|docker" + QUOTE + OPTS + r"\s+push)"
     r"|(?:[\w./-]*[/_.-])?(?<!pre[-_])deploy)(?=[\s;&|)<>\"'`]|$)",
     re.I)
 
@@ -233,6 +240,30 @@ def shell_only(cmd):
             i += 1
     return "".join(out)
 
+
+def command_end(c, i):
+    """Where the simple command starting at `i` ends: the first `\n ; & | )` or backtick OUTSIDE
+    quotes. A dry-run window cut by a bare character split stopped at a `)` inside a quoted release
+    note and missed the real `--dry-run` after it (2026-09-24) — loud, but wrong."""
+    q = None
+    while i < len(c):
+        ch = c[i]
+        if q:
+            if ch == "\\" and q == '"':
+                i += 2
+                continue
+            if ch == q:
+                q = None
+        elif ch == "\\":
+            i += 2
+            continue
+        elif ch in "'\"":
+            q = ch
+        elif ch in "\n;&|)`":
+            return i
+        i += 1
+    return len(c)
+
 # **A dry run is a read — of its OWN act, and of nothing else on the line.** Both spellings,
 # case-blind. It used to exempt the whole command: `echo testing --dry-run`, then a real
 # `git push` on the next line, went through both gates — and so did a comment that merely
@@ -254,13 +285,13 @@ def is_dry(words):
     try:
         return any(DRY.fullmatch(w) for w in shlex.split(words))
     except ValueError:
-        return False                                 # will not split: not excused
+        return False
 
 
 def first_act(c):
     """The first outward act in `c` that is not a dry run of itself, or None."""
     for m in OUTWARD.finditer(c):
-        if not is_dry(re.split(r"[\n;&|)`]", c[m.start(1):], 1)[0]):
+        if not is_dry(c[m.start(1):command_end(c, m.start(1))]):
             return m
     return None
 

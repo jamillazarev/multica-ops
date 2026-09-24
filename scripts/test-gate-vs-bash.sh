@@ -12,7 +12,9 @@
 # have published is LOUD, and fails the suite — except for a case whose reason starts with
 # `SYNTAX:`, which marks a command bash itself rejects, where a refusal costs nothing. **Adding a
 # case** is one line in CASES: the command, and in a few words what it probes (with `SYNTAX:` in
-# front if bash rejects it). **A real outward tool named by its path** — `/usr/bin/git …` — cannot be
+# front if bash rejects it) — and, if it uses a global option that takes an argument and is not
+# yet in TAKES_ARG, an entry there too, or the oracle misreads which word is the subcommand and
+# says so in the wrong direction. **A real outward tool named by its path** — `/usr/bin/git …` — cannot be
 # stubbed, so the sandbox refuses to execute it and the refusal counts as the act having been
 # tried: only commands that ARE outward acts belong in a case that names a tool by its path.
 #
@@ -51,8 +53,10 @@ TAKES_ARG = {"git": {"-C", "-c", "--git-dir", "--work-tree", "--namespace"},
              "podman": {"--connection", "--url"}, "make": {"-C", "-f", "--directory", "--file"},
              "just": {"-f", "--justfile", "-d", "--working-directory"}}
 DRY = re.compile(r"--dry[-_]run(?:=(?:true|1|yes))?", re.I)
-DENIED = re.compile(r"(?:^|[\s/])(%s): Operation not permitted" % "|".join(map(re.escape, STUBBED)),
-                    re.M)
+# bash words a refused execution two ways: `…/git: Operation not permitted` for a binary, and
+# `…/git: /bin/sh: bad interpreter: Operation not permitted` for a script — both are the act tried
+DENIED = re.compile(r"(?:^|[\s/])(%s): (?:\S+: bad interpreter: )?Operation not permitted"
+                    % "|".join(map(re.escape, STUBBED)), re.M)
 V = "git push origin main"
 
 CASES = [
@@ -70,7 +74,7 @@ CASES = [
     ("npm publish --dry-run=true", "a dry-run flag that says yes"),
     ("git push origin mainX--dry-run", "a dry-run flag glued to another word"),
     ("git -C . push origin main", "a global option before the subcommand"),
-    ("git -c user.name=x push origin main", "a config option before the subcommand"),
+    ("git --work-tree . push origin main", "a long option with a separate argument"),
     ("git --git-dir=.git push origin main", "a --opt=value before the subcommand"),
     ("git -C . push --dry-run origin main", "a global option, and a real dry run"),
     ("gh -R o/r release create v1", "gh with a repository option"),
@@ -78,6 +82,13 @@ CASES = [
     ("docker --context x push img", "docker with a context option"),
     ("make -C . deploy", "make with a directory option"),
     ("/usr/bin/git push origin main", "a real tool named by its path"),
+    ("npm --prefix publish-tools publish", "an option argument starting with a subcommand word"),
+    ("gh -R pr-team/repo release create v1", "the same, for gh"),
+    ("npm --prefix run-scripts run deploy", "the same, before run deploy"),
+    ('git -c "user.name=x y" push origin main', "a quoted option value with a space"),
+    ('git -c user.name="x y" push origin main', "a value quoted inside the word"),
+    ('"./my tools/git" push origin main', "a quoted tool path with a space"),
+    ('gh release create v1 -n "notes (x) y" --dry-run', "a real dry run after a quoted parenthesis"),
     ('echo "text $(echo "inner<<EOF") more"\n' + V + "\nEOF", "a quote in $(…) inside \"…\""),
     ('echo "text `echo "inner<<EOF"` more"\n' + V + "\nEOF", "a quote in backticks inside \"…\""),
     ('echo "${X:-"a<<EOF"}"\n' + V + "\nEOF", "a quote in ${…} inside \"…\""),
@@ -165,6 +176,9 @@ for t in SAFE:
         os.symlink(real, os.path.join(safe, t))
 for name in SCRIPTS:
     write_exe(os.path.join(box, "scripts", name), "script-" + name)
+# a tool under a path with a space in it: the sandbox refuses to execute it, which is the point
+os.makedirs(os.path.join(box, "my tools"))
+write_exe(os.path.join(box, "my tools", "git"), "git")
 
 
 def sandboxed(cmd):
@@ -232,7 +246,8 @@ def published(cmd):
     return False
 
 
-# this gate reads nothing but the payload: no repository, no transcript, no state between calls
+# this gate's verdict needs nothing but the command — no repository, no state between calls; the
+# transcript feeds only the owner's quote in the refusal, which this suite does not read
 
 
 def refuses(gate, cmd):
@@ -261,7 +276,7 @@ MUTANTS = [
     ("a terminator matched anywhere in a line",
      'if (line.lstrip("\\t") if dash else line) == word:', "if word in line:"),
     ("a dry-run window that runs past a `)`",
-     're.split(r"[\\n;&|)`]"', 're.split(r"[\\n;&|]"'),
+     'elif ch in "\\n;&|)`":', 'elif ch in "\\n;&|`":'),
 ]
 src = open(GATE).read()
 for name, a, b in MUTANTS:

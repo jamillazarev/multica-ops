@@ -126,7 +126,7 @@ backtick, and only the bare flag or `=true` · `=1` · `=yes` excuses anything. 
 read from what the stubs were asked to do, and the gate must agree — with two code mutants it must
 catch (a terminator matched anywhere in a line; a dry-run scope that runs past a `)`). Against the
 tenth round's gate it reports exactly this round's four holes — the trailing comment, the flag
-outside `$(…)`, the same outside a backtick pair, and `--dry-run=false`. It is closed three ways, and why it
+outside `$(…)`, the same outside a backtick pair, and `--dry-run=false`. It was closed three ways — a fourth came the next round — and why it
 has to be is the next paragraph. The second `predeploy` case became `./scripts/pre-deploy`, the only
 one that reaches the `pre-` rule. The twelfth round went over this repair.
 
@@ -147,8 +147,9 @@ written.** `git -C . push`, `git -c k=v push`, `git --git-dir=.git push`, `gh -R
 create`, `npm --prefix x publish` and `docker --context x push` all passed, because the pattern wanted
 the subcommand straight after the tool's name; so did `/usr/bin/git push`, a tool named by its path
 (an adversarial lens found the path, and checking what else that shape covered found the options).
-Any run of option tokens between the tool and its subcommand is allowed now, each with at most one
-argument that is not itself a subcommand, and any path before the name. **And the dry-run flag had
+**The gate now reads any run of option tokens between the tool and its subcommand, and any path
+before the name, as the same act, and refuses it** — so a command of those shapes that went through
+before is stopped now. **And the dry-run flag had
 no left edge**: `git push origin mainX--dry-run` was excused, the flag found glued to another word —
 so the words are split the way a shell splits them, and only a whole word counts, the act's own
 options included. **The suite had a blind spot of its own**: a real tool named by its path could
@@ -158,8 +159,33 @@ named like an outward tool outside the stub directory, by any path, a canary pro
 case runs, and a refused execution counts as the act having been tried. Against the eleventh round's
 gate the suite reports nine holes, all this round's. A dead scaffold went too: this suite, and a
 comment in `test-outward-gate.sh`, set up per-session state for a gate that has kept none since it
-stopped stopping only once. `test-outward-gate.sh` **103/103**, `test-gate-vs-bash.sh` **52/52**; the
-thirteenth round goes over this repair.
+stopped stopping only once. The thirteenth round went over this repair.
+
+**The thirteenth round lost all four lenses to the session limit in their first calls, was run
+again, and its adversarial lens found the option reading approximate in four ways.** An argument
+that merely *starts* with a subcommand word — `npm --prefix publish-tools publish`,
+`gh -R pr-team/repo release create`, `npm --prefix run-scripts run deploy` — ended the option run
+early and hid the act; so did an option value quoted because it holds a space, `git -c "user.name=x
+y" push`, and a tool path quoted for the same reason, `"./my tools/git" push`. And the dry-run window
+was still cut by a bare character split, so a `)` inside a quoted release note stopped it before a
+real `--dry-run` — a false refusal. **Three of the four had one cause, a pattern reading `\S` for a
+shell word**: a word is read the way a shell reads one now, quoted parts and escapes included; an
+argument is refused as a subcommand only when it IS the whole word; a path may be quoted; and the
+window ends at the first `\n ; & | )` or backtick *outside* quotes. The suite had passed all four,
+because none of its cases used an argument like that — so each is a case now, and adding the path
+case turned up one more thing the suite could not see: a script refused by the sandbox is reported
+by bash as a *bad interpreter*, not as the refusal the suite looked for. Both wordings count now.
+
+The other lenses found the record behind the code again: the round-eleven paragraph still called
+the suite *closed three ways* after the next round added a fourth; a sentence said a run of options
+*is allowed now* where the gate now **refuses** such a command, which is the one thing a reader
+upgrading needs to hear; the suite's *adding a case is one line* omitted the model of each tool's
+options the oracle reads; one case repeated another's branch and became a long option with its own
+argument; a comment repeated the paragraph above it; and a comment in this suite said the gate
+reads no transcript, where it does read one — for the owner's quote, never for the verdict. Every
+case for this round's shapes fails against the twelfth round's gate, and the second mutant now
+breaks the window where it is cut. `test-outward-gate.sh` **103/103**, `test-gate-vs-bash.sh`
+**59/59**; the fourteenth round goes over this repair.
 
 **And this release's own register template broke this release's own guard — here and not next
 door.** The widened header *Wired how · what it ships* was matched by equality, so a project that
