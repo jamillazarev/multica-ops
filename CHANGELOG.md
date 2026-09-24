@@ -6,7 +6,7 @@ also the migration map `/multica-ops:upgrade` reads.
 ## 0.4.18 — 2026-09-11
 
 **If you rely on the publish gate, this is what changed for you** — the rest of this entry is the
-record of how it got here, fifteen review rounds long, and nothing below changes these three lists.
+record of how it got here, round by round.
 - **Refused now, where it went through before:** a publish whose tool carries global options or a
   path (`git -C <dir> push`, `git -c k=v push`, `gh -R o/r release create`, `npm --prefix x
   publish`, `docker --context x push`, `/usr/bin/git push`); a tool or a verb quoted whole
@@ -18,9 +18,11 @@ record of how it got here, fifteen review rounds long, and nothing below changes
 - **Let through now, where it was refused before:** a sentence about publishing written into a file
   or a heredoc; a search for the phrase; a real dry run, wherever the flag stands in the act's own
   command; a local script named `predeploy`.
-- **Not read, by design:** a verb assembled from parts (`pu'sh'`), a variable or an interpreter
-  carrying it. When the gate mistakes a sentence for the act, its refusal's closing line says what to
-  do: tell the owner, and never reword to get past.
+- **By design:** a verb assembled from parts (`pu'sh'`), a variable or an interpreter carrying it
+  is not read; an option whose argument is one of the act's own words (`npm --workspace publish
+  install`) is read as the act and refused. When the gate mistakes a sentence for the act, the agent
+  it stopped is told, in the refusal's closing line, to say so to you — never to reword the command
+  to get past it.
 
 **The outward gate refused a sentence about publishing.** It matched its verbs **anywhere in the
 command string**, so a comment being written into a file was stopped as if it were the act —
@@ -213,8 +215,7 @@ draft opened a hole the suite caught at once**: a window that starts at the act 
 backtick that closes `` `git push` --dry-run `` from one that opens another pair, so it read past it
 and excused the push. Reading from the start is what fixed that too. The suite gained both shapes, a
 guard for the escape branch nothing had exercised, and a second mutant that now breaks the one rule
-the window depends on — stopping where the substitution holding the act closes. **For a user**:
-a quoted tool name is refused now, and a real dry run with a dated release note no longer is. **One finding was
+the window depends on — stopping where the substitution holding the act closes. **One finding was
 declined**: a verb split by quotes, `git pu'sh'`, is not read. That spelling is a decision to hide
 the act, and the gate's own comment now says so beside the other shapes it does not claim to parse.
 The other lenses: a list that folded the window's fix under a cause it did not share, a stale
@@ -230,10 +231,24 @@ parenthesis. The other lenses: this entry buried what a user needs under the rou
 its top answers that — its docstring's "the start of the command" read as the previous separator
 when it means the whole text, the fourteenth round's paragraph never said what a user would notice,
 the two gates listed their alternatives in different orders for no reason, and two cases took one
-branch. **For a user**: a publish whose verb is quoted is refused now, and a real dry run with
-arithmetic or process substitution before the flag no longer is. Every case for this round's shapes
-fails against the fourteenth round's gate (three holes, two false refusals). `test-outward-gate.sh` **103/103**,
-`test-gate-vs-bash.sh` **68/68**; the sixteenth round goes over this repair.
+branch. Every case for this round's shapes
+fails against the fourteenth round's gate (three holes, two false refusals). The sixteenth round went over this repair.
+
+**The sixteenth round found no hole.** Its adversarial lens classed every finding it could reproduce
+as a shape an agent writes by accident, and all four were refusals of commands that publish nothing.
+One was a real command: grouping inside arithmetic, `$((1 + (2*3)))`, closed the arithmetic one
+parenthesis early and refused a real dry run after it — a bare pair is a pair on the window's stack
+now. **Three were declined**, each with its reason: `npm --workspace "publish" install` reads as the
+act because a pattern cannot know which options take an argument, so it takes the reading that stops,
+and that limit is now written beside the gate's other ones and in the block above; `git 'push origin
+main'` and `git" push"` are commands bash runs to an error — no such subcommand, no such program —
+and refusing a command that cannot run costs nothing. The other lenses found the round's own prose:
+the block above claimed that nothing below it changed its lists, which only reading all of it could
+confirm, and ended by telling *you* to tell the owner; the window's docstring introduced "the
+outermost context" to explain "the start of the command"; the two *for a user* lines this round
+added below repeated the block; one gate said its alternatives mirror the other's and the other did
+not say so back; and a case's name did not say why it was kept. `test-outward-gate.sh` **103/103**,
+`test-gate-vs-bash.sh` **69/69**; the seventeenth round goes over this repair.
 
 **And this release's own register template broke this release's own guard — here and not next
 door.** The widened header *Wired how · what it ships* was matched by equality, so a project that

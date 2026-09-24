@@ -103,7 +103,10 @@ WRAP = r"(?:(?:env|sudo|nohup|time|command|exec|eval|nice)[ \t]+(?:\S+[ \t]+)*)?
 # what the optional quote after each name is for — and every word of the act may be quoted whole,
 # `git "push"`, since quoting each word is an ordinary habit (2026-09-24). **What is not read, by
 # design**: a verb the shell assembles from parts — `pu'sh'`, `$v` — is a decision to hide the
-# act, and this gate does not claim to parse bash against the one it constrains.
+# act, and this gate does not claim to parse bash against the one it constrains. **And an
+# option whose argument IS one of the act's words** — `npm --workspace publish install` — is
+# read as the act and refused: a pattern cannot know which options take an argument, so of the
+# two readings it takes the one that stops (2026-09-24, declined as a defect, kept as a limit).
 WORD = r"""(?:[^\s"'\\]|\\.|"(?:[^"\\]|\\.)*"|'[^']*')"""
 OPTS = (r"(?:\s+-" + WORD + r"*(?:\s+(?![\"']?(?:push|publish|release|pr|run|deploy)[\"']?(?:\s|$))(?!-)"
       + WORD + r"+)?)*")
@@ -258,12 +261,13 @@ def shell_only(cmd):
 
 def command_end(c, i):
     """Where the simple command holding the act at `i` ends — read from index 0 of the whole text
-    the hook received, NOT from the previous separator, because a window that starts anywhere after
-    the outermost context cannot tell an opening backtick from a closing one.
+    the hook received, NOT from the previous separator, because a window that starts where a pair
+    may already be open cannot tell an opening backtick from a closing one.
 
     Bash's own state is kept on the way: quotes, a backslash escaping the next character outside
-    single quotes, and every `$(…)`, `$((…))`, `<(…)`, `>(…)` or backtick pair on a stack with its
-    own quoting. The act's *depth* is how many of those are open where it starts; the command holding
+    single quotes, and every `$(…)`, `$((…))`, `<(…)`, `>(…)`, backtick pair or bare `(…)` on a
+    stack with its own quoting — a bare pair because `$((1 + (2*3)))` closed the arithmetic one
+    parenthesis early and refused a real dry run (2026-09-24). The act's *depth* is how many of those are open where it starts; the command holding
     it ends at the first `\n ; & | )` outside quotes at that depth, or where the pair holding the act
     closes. Arithmetic and process substitution were read as bare parentheses until 2026-09-24, so
     `branch$((1+1)) --dry-run` was refused as a publish. A bare character split stopped at a `)` inside a quoted
@@ -288,6 +292,8 @@ def command_end(c, i):
             opener = (")", 2)                        # a command or process substitution
         elif ch == "`":
             opener = ("`", 1)
+        elif q is None and ch == "(":
+            opener = (")", 1)                        # a subshell, or grouping inside arithmetic
         else:
             opener = None
         if q == '"':
