@@ -323,7 +323,7 @@ twenty-second round went over this repair.
 tab indenting a wrapped line are both rejected by PyYAML, and the check saw neither — the key's
 pattern took the first as its separator, and the wrapped line's indent was stripped before the tab
 rule read it. Both are read now, each with a mutant whose test fails against the old code, and
-thirty-four shapes written to files agree with PyYAML, the same exception aside. The
+thirty-four shapes written to files agree with PyYAML, blanks after `---` aside. The
 contradiction lens found the twenty-four shapes above said to agree with PyYAML when one of them,
 blanks after `---`, is refused on purpose; the sentence now says so. The cold-read and deletion
 lenses found words: two lenses left unnamed, an *it says so* that reached further than the refusal
@@ -335,13 +335,26 @@ passed, because the check read nothing of those values past the key's line — w
 said they were *left to the parser*, and nothing in preflight is one. PyYAML rejects that tab and
 accepts one inside quotes or after a block's own indent, so that is the rule now, and the docstring
 says those values otherwise go unchecked here. Forty-five shapes written to files agree with
-PyYAML, the same exception aside. Every tab test here now asserts the refusal's own words, after
-the other copy's test for a tab after a key's `:` was found asserting an exit status another check
+PyYAML, blanks after `---` aside. Every tab test here now asserts the refusal's own words, after
+the other repository's test for a tab after a key's `:` was found asserting an exit status another check
 produced on its own. The tab refusal and the others each name their own remedy now, where one
 sentence had joined *use spaces* and *quote the value*. The deletion lens found nothing; the
 contradiction lens read the twenty-four shapes of one probe and the thirty-four of a later one as
 one claim, and the paragraph above now states the later count; the cold-read found *line comment*
-read as a YAML comment. The twenty-fourth round goes over this repair.
+read as a YAML comment. The twenty-fourth round went over this repair.
+
+**The twenty-fourth round found three more tab shapes, and the chase stops there by the owner's
+decision.** A tab opening the line after a quoted value that closed on its own line, and a tab
+inside a flow value written on the key's line, both passed; a line inside a quoted value spanning
+lines that reads like a key and a tab was refused although PyYAML reads it. Six rounds running had
+each found one to three shapes like these, and a heuristic with no parser behind it will go on
+finding them, so the three are written into the docstring as known limits rather than chased: a
+strict parser catches them, and the scan before a tag is one. The deletion and contradiction
+lenses found nothing; the cold-read found words — a tab refusal whose *there* named no place, a
+docstring clause that bound to the last of three places, *the same exception* with its
+exception paragraphs above, and *the other copy* with its copy defined eighty lines up. The twenty-fifth round goes over this repair, and by the stopping
+rule the owner approved on 2026-09-24 it reports clean if it finds only reading fixes, shapes that
+take deliberate disguise, or refusals of commands that would not run.
 
 **And this release's own register template broke this release's own guard — here and not next
 door.** The widened header *Wired how · what it ships* was matched by equality, so a project that

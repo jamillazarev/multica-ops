@@ -317,15 +317,18 @@ def frontmatter_faults(p):
     """Plain frontmatter values a strict YAML parser rejects or cuts short — a heuristic, stated as
     one. It refuses `: `, a trailing `:` and a value opening with `@` or a backtick, which a strict
     parser rejects; a tab after the key's `:`, in a plain value or its wrapped lines' indent, or
-    opening a line of a block, flow or nested value, which PyYAML rejects; and a `#` that opens a
-    value or follows a space, which YAML reads as a comment that drops the rest of the line. It
-    reads top-level keys only, plain (letters, digits, `_`, `-`) or quoted, which is every key a
-    skill's frontmatter has; a nested or dotted key goes unread. Beyond that tab, quoted scalars,
-    block scalars and flow collections go unchecked here — only a strict parser reads them whole.
-    A byte-order mark is read past (text mode already reads Windows line endings as plain
-    newlines), the closing `---` may end the file, a file whose frontmatter it cannot find is
-    refused rather than passed, and a file that is not UTF-8 raises, which the caller fails closed
-    on."""
+    opening a line of a block, flow or nested value — PyYAML rejects it in each of those places;
+    and a `#` that opens a value or follows a space, which YAML reads as a comment that drops the
+    rest of the line. It reads top-level keys only, plain (letters, digits, `_`, `-`) or quoted,
+    which is every key a skill's frontmatter has; a nested or dotted key goes unread. Beyond that
+    tab, quoted scalars, block scalars and flow collections go unchecked here — only a strict parser
+    reads them whole. Known limits, measured against PyYAML on 2026-09-24 and left to the strict
+    scan before a tag: a tab opening the line after a quoted value that closed on its own line, and
+    a tab inside a flow value written on the key's line, both pass; a line inside a quoted value
+    spanning lines that reads like a key and a tab is refused although it is valid. A byte-order
+    mark is read past (text mode already reads Windows line endings as plain newlines), the closing
+    `---` may end the file, a file whose frontmatter it cannot find is refused rather than passed,
+    and a file that is not UTF-8 raises, which the caller fails closed on."""
     fm = re.match(r"---\n(.*?)\n---(?:\n|\Z)", p.read_text(encoding="utf-8-sig"), re.S)
     if not fm:
         return [f"{p}: no frontmatter this check can read — the file must open with a line that is "
@@ -350,8 +353,9 @@ def frontmatter_faults(p):
         cut = re.search(r"(?:^| )#", body)
         head = body[:cut.start()] if cut else body
         if "\t" in lead + head:
-            faults.append(f"{p}: frontmatter `{key}` is not valid YAML — it holds a tab, which PyYAML "
-                          f"rejects there; use spaces")
+            faults.append(f"{p}: frontmatter `{key}` is not valid YAML — it holds a tab after the ':', "
+                          f"in a plain value or in an indent, where PyYAML allows only spaces; use "
+                          f"spaces")
         elif ": " in head or head.endswith(":") or head[:1] in ("@", "`"):
             faults.append(f"{p}: frontmatter `{key}` is not valid YAML — a plain value holding ': ', "
                           f"ending in ':', or opening with '@' or a backtick; quote it")
