@@ -269,12 +269,12 @@ while the other copy, one process guarded by `|| FAIL=1`, failed closed on the s
 one check, opposite on a crash. Both fail closed now, on one function written identically into
 both. And the heuristic was narrower and wider than strict YAML at once — it missed a tab before
 `#`, a plain value wrapped onto a second line, a quoted key, and a value opening with `@` or a
-backtick; and it refused a flow collection, which strict YAML reads. It is still a heuristic, and it says so
-in its docstring, since the Python that runs preflight has no YAML parser to ask; the pre-tag scan
-is the strict one. The refusal now names every shape it refuses. The other lenses: *bare* still
+backtick; and it refused a flow collection, which strict YAML reads. It is still a heuristic, and
+it says so in its docstring, since the Python that runs preflight has no YAML parser to ask; the
+pre-tag scan is the strict one. The refusal now names every shape it refuses. The other lenses: *bare* still
 named a kind of parenthesis in the window's docstring after this entry said it no longer did, and a
-sentence above placed the stop for a sentence about publishing more precisely than the refusal
-does. The nineteenth round went over this repair.
+sentence above put the stop for a sentence about publishing at the refusal's close, when the
+owner's quoted instruction can follow it. The nineteenth round went over this repair.
 
 **The nineteenth round found one hole, and a claim wider than the check.** Its adversarial lens
 reported that a skill file with Windows line endings passed unread; it did not — Python's text mode
@@ -282,16 +282,31 @@ had been reading those as plain newlines all along, and the mutant written for t
 by passing against the old code. The hole was one step over: a file opening with a byte-order mark
 never matched the frontmatter pattern, so the check read nothing in it and passed it, whatever its
 values held. The mark is read past now, and a file whose frontmatter the check cannot find is
-refused instead of passed. A `#` after a space was refused as
-*not valid YAML*, when YAML reads it as a comment and drops the rest of the value; it is still
-refused, since a description cut short is the defect, and the refusal now says what YAML does. A
-nested or dotted key goes unread — no skill here has one — and the docstring now says so instead of
-claiming every value. Each of the three has its mutant. The other lenses found only words: a tab
+refused instead of passed. A `#` after a space was refused as *not valid YAML*, when YAML reads it
+as a comment and drops the rest of the value; it is still refused, since a description cut short
+is the defect, and the refusal now says what YAML does. The mark, the missing frontmatter and the
+`#` each have a mutant, and each mutant fails against the old code. A nested or dotted key goes
+unread — no skill here has one — and the docstring now says so instead of claiming every value.
+The other lenses found only words: a tab
 the refusal did not name, a line of the refusal still called its *closing* line in the gate's
 comment and in this entry, *bare* still in the window's docstring, a sentence above crediting this
 entry with a word it never used, a list above that read as one case or as two, and the comment on
 the temp file blaming quotes, when what bash 3.2 misreads inside `$(…)` is an unpaired backtick.
-The twentieth round goes over this repair.
+The twentieth round went over this repair.
+
+**The twentieth round found two misses on ordinary files, both in what the round before had
+added.** The refusal of a file with no findable frontmatter also refused a skill file ending at its
+closing `---` with no newline after it, which YAML reads; the closing line may end the file now.
+And a value that is nothing but a comment — `description: #TODO` — loses the whole value and was
+not refused, because the space before its `#` had gone with the key; a `#` that opens a value is
+refused now, and text after a comment's `#` no longer counts as the value's. A tab inside a plain
+value, which PyYAML rejects, is refused as not valid YAML. Blanks after a `---` line are still
+refused, since what the runtimes' own loaders make of them is unmeasured, and the refusal now says
+the line must be exactly `---`. Twenty-four shapes, written to files and read back, now agree with
+PyYAML. The contradiction lens found nothing; the cold-read and deletion lenses found words — a
+correction above that named its subject and not its fact, a count whose referent came a sentence
+late, and a docstring aside that repeated the refusal. The twenty-first round
+goes over this repair.
 
 **And this release's own register template broke this release's own guard — here and not next
 door.** The widened header *Wired how · what it ships* was matched by equality, so a project that

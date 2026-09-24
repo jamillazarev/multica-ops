@@ -47,6 +47,21 @@ perl -pi -e 's/^description: .*$/description: One job # and the rest is lost/' "
 run && bad "a plain value cut short by ' #' passed" || ok
 grep -q "as a comment" "$T/out" && ok || bad "the ' #' refusal does not say what YAML does with it"
 undo
+# …a value that is only a comment loses all of it, a tab is refused, and a closing `---` that ends
+# the file is read rather than refused
+perl -pi -e 's/^description: .*$/description: #TODO fill this in/' "$T/c/skills/quick/SKILL.md"
+run && bad "a value that is only a comment passed" || ok
+grep -q "as a comment" "$T/out" && ok || bad "a value that is only a comment was refused for some other reason"
+undo
+perl -pi -e 's/^description: .*$/description: One\tjob/' "$T/c/skills/quick/SKILL.md"
+run && bad "a plain value holding a tab passed" || ok
+grep -q "is not valid YAML" "$T/out" && ok || bad "a tab in a plain value was refused for some other reason"
+undo
+perl -0pi -e 's/\A(---\n.*?\n---)\n.*\z/$1/s' "$T/c/skills/quick/SKILL.md"
+[ "$(tail -c 4 "$T/c/skills/quick/SKILL.md")" = "$(printf '\n---')" ] && ok \
+  || bad "the fixture ending at its closing --- was not built"
+run; grep -q "no frontmatter this check can read" "$T/out" && bad "a closing --- that ends the file was refused" || ok
+undo
 
 # §9b · a typo'd date is reported AND does not kill the loop for the stale row beside it
 printf '\n| tf-a | checked 2026-06-31 |\n| tf-b | checked 2024-01-01 |\n' >> "$T/c/STACKS.md"
