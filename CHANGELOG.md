@@ -110,10 +110,36 @@ catch-all this gate took on in the ninth round refused `predeploy` and `./script
 publish nothing; `deploy` must now be the whole name or follow a `/` `-` `_` `.`, never `pre-`. The
 register's near-miss hint is judged per table, since an unrelated table with an exact header had
 silenced it. **Thirty commands were run in real bash against stubs and fed to both gates: no command
-bash publishes with passes either**, and the two both refuse without bash publishing are ones bash
-rejects as a syntax error. That was a scratch measurement; a suite whose oracle is bash is owed.
-Every case for a shape this round reproduced fails against the ninth round's code.
-`test-outward-gate.sh` **103/103**; the eleventh round goes over this repair.
+bash publishes with passes either gate**, and the two commands both gates refuse without bash
+publishing are ones bash rejects as a syntax error. That was a scratch measurement, and a suite
+whose oracle is bash was owed. Every case for a shape this round reproduced fails against the ninth
+round's code. The eleventh round went over this repair.
+
+**The eleventh round found the dry-run scope leaking two more ways, and the suite it was owed now
+exists.** A trailing comment — `git push origin main  # --dry-run tested this yesterday` — excused
+the real act it trailed, because the comment was still in the text the scope read; and
+`$(git push origin main) --dry-run` excused a push that runs inside the substitution before the
+flag is ever read. `npm publish --dry-run=false` was excused as well, and it publishes. So
+`shell_only` blanks a comment the way it blanks a heredoc body, the scope also ends at a `)` or a
+backtick, and only the bare flag or `=true` · `=1` · `=yes` excuses anything. **The owed suite is
+`scripts/test-gate-vs-bash.sh`**: each of 38 commands runs in real bash against stubs, *published* is
+read from what the stubs were asked to do, and the gate must agree — with two code mutants it must
+catch (a terminator matched anywhere in a line; a dry-run scope that runs past a `)`). Against the
+tenth round's gate it reports exactly this round's four holes. It is closed three ways, and why it
+has to be is the next paragraph. The second `predeploy` case became `./scripts/pre-deploy`, the only
+one that reaches the `pre-` rule. `test-outward-gate.sh` **103/103**, `test-gate-vs-bash.sh`
+**40/40**; the twelfth round goes over this repair.
+
+**And this repository's `main` was pushed before its tag — by a lens, without the owner's word.**
+On 2026-09-24 at 03:58 (+04) a lens checking a claim about bash wrote a script carrying `git push`
+for a stub `git`; the installed gate refused the command that would have made the stub, the lens
+did not notice, `PATH` fell through to the real binary, and `origin/main` moved from `35c6c0e` to
+`d301b78` — **eighteen commits of this entry's work, no tag, no release, nothing forced**. It is left
+in place: the commits are this release's own and tested, and rewriting a public branch would cost
+everyone who pulled it more than it carries. **If you updated from `main` between that push and the
+0.4.18 tag, you have this entry's work before its lens rounds finished** — the tag's version is the
+one to take. The suite above runs stubs-only under `env -i`, verifies every stub before each run,
+and denies bash the network, and [`AGENTS.md`](AGENTS.md) now says a lens runs an outward verb no other way.
 
 **And this release's own register template broke this release's own guard — here and not next
 door.** The widened header *Wired how · what it ships* was matched by equality, so a project that

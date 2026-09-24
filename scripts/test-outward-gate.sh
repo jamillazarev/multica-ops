@@ -204,7 +204,7 @@ git push origin main
 EOF"
 speaks "terraform-deploy"               "s-n8" "terraform-deploy apply"
 silent "./scripts/predeploy"            "s-n9" "./scripts/predeploy"
-silent "predeploy"                      "s-n10" "predeploy"
+silent "./scripts/pre-deploy"           "s-n10" "./scripts/pre-deploy"
 _big=$(python3 -c 'print("".join("word%d <<X%d\n" % (k, k) for k in range(20000)) + "echo done")')
 _t0=$(date +%s)
 silent "20000 unterminated openers"   "s-m7" "$_big"

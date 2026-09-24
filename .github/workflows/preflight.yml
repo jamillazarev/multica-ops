@@ -37,6 +37,8 @@ jobs:
         run: bash scripts/test-map-blocks.sh
       - name: outward-gate suite
         run: bash scripts/test-outward-gate.sh
+      - name: the outward gate against bash itself — stubs only, no network
+        run: bash scripts/test-gate-vs-bash.sh
       - name: rule-home suite
         run: bash scripts/test-rule-home.sh
       - name: dispatch-nudge suite

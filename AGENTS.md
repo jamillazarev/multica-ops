@@ -280,6 +280,14 @@ A version bump is not just a changelog entry. Before you tag:
    somebody forgot to act on. **And the re-round reads the repair**, with the range reachable for
    context: nine round attempts across two releases, five lost whole to the session limit, and the
    sharpest finding of each re-round sat in the latest repair commit.
+   **A lens never runs an outward act — not against a stub, not to prove a hole — except through
+   `scripts/test-gate-vs-bash.sh`**, which puts only stubs and harmless tools on `PATH`, checks every
+   stub before each run and denies bash the network. Measured 2026-09-24, and it published this
+   repository: a lens wrote a script carrying `git push` for a stub `git`, the installed gate refused
+   the command that would have made the stub, `PATH` fell through to the real binary, and `main`
+   took eighteen commits of an untagged release. **A gate reads commands, not the scripts they run**,
+   and `lens.sh`'s read-only mode stops file edits, not a shell — a new shape to test goes into that
+   suite's cases, where it runs closed.
 
 3. **Keep the guards current — they rot too.** **The shipped hooks are tested by mutation** —
    `bash scripts/test-migration-hook.sh` — each rule shown speaking on the mutant and silent on
