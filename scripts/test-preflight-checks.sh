@@ -26,10 +26,26 @@ undo
 # the first draft read the checker's output and never its exit status
 perl -0pi -e 's/^description: "(.*?)"\n/description: One job\n  with steps: $1\n/m' "$T/c/skills/quick/SKILL.md"
 run && bad "a wrapped plain value holding ': ' passed" || ok
+grep -q "is not valid YAML" "$T/out" && ok || bad "a wrapped value was refused for some other reason"
 undo
 printf '\n\377\n' >> "$T/c/skills/quick/SKILL.md"
 run && bad "a skill file that is not UTF-8 passed — the check failed open" || ok
 grep -q "failed to run" "$T/out" && ok || bad "a crashed frontmatter check did not say so"
+undo
+# …a byte-order mark is read past instead of hiding the file, a file whose frontmatter cannot be
+# found is refused, and a `#` after a space is refused for what it does — YAML cuts the value there
+perl -pi -e 's/^description: "(.*)"$/description: $1/; s/\A/\xef\xbb\xbf/ if $. == 1' "$T/c/skills/quick/SKILL.md"
+run && bad "a skill file opening with a byte-order mark and holding ': ' unquoted passed" || ok
+grep -q "is not valid YAML" "$T/out" && ok || bad "a byte-order-marked skill file was refused for some other reason"
+undo
+perl -0pi -e 's/\A---\n//' "$T/c/skills/quick/SKILL.md"
+run && bad "a skill file whose frontmatter the check cannot find passed" || ok
+grep -q "no frontmatter this check can read" "$T/out" && ok \
+  || bad "a file with no readable frontmatter was refused for some other reason"
+undo
+perl -pi -e 's/^description: .*$/description: One job # and the rest is lost/' "$T/c/skills/quick/SKILL.md"
+run && bad "a plain value cut short by ' #' passed" || ok
+grep -q "as a comment" "$T/out" && ok || bad "the ' #' refusal does not say what YAML does with it"
 undo
 
 # §9b · a typo'd date is reported AND does not kill the loop for the stale row beside it

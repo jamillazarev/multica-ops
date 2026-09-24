@@ -53,7 +53,7 @@ actually is: a **tool result**, an unterminated or nested `<system-reminder>`, a
 **`<task-notification>`** carrying a background agent's return value, and the harness's
 conversation-continuation summary all arrive as one — and the first version skipped only the first.
 Blocks stopped being stripped by pairs, and an entry carrying both text and a tool result keeps its
-text, because discarding it quoted an *older* message as what you last asked for. **The refusal gained a closing line** — *if this is a sentence about
+text, because discarding it quoted an *older* message as what you last asked for. **The refusal gained a line** — *if this is a sentence about
 the act and not the act, say so to the owner* — because a message offering only *the owner runs it*
 or *turn the gate off* has no answer for a false positive.
 
@@ -259,22 +259,39 @@ under the wrong item, and *bare* used for two different parentheses — are repa
 descriptions were not valid YAML.** A plain value holding `: ` is a mapping inside a mapping to a
 strict parser, and SkillSpector's parser rejects such a manifest outright. The six are quoted, all nineteen
 parse strictly, `agy plugin validate` still reads all nineteen, and preflight now refuses a plain
-frontmatter value a strict parser rejects, with its mutant in `test-preflight-checks.sh`. The
+frontmatter value a strict parser rejects or cuts short, with its mutant in `test-preflight-checks.sh`. The
 eighteenth round went over this repair.
 
-**The eighteenth round found the new check weaker than the repair it guards.** This repository's copy fed its checker's output through a here-string and never read its exit status, so
+**The eighteenth round found the new check weaker than the repair it guards.** This
+repository's copy fed its checker's output through a here-string and never read its exit status, so
 a skill file that was not UTF-8 stopped the scan silently and every skill after it went unchecked —
 while the other copy, one process guarded by `|| FAIL=1`, failed closed on the same file: two copies of
 one check, opposite on a crash. Both fail closed now, on one function written identically into
 both. And the heuristic was narrower and wider than strict YAML at once — it missed a tab before
-`#`, a plain value wrapped onto a second line, a quoted key and a value opening with `@` or a
-backtick, and refused a flow collection strict YAML reads. It is still a heuristic, and it says so
+`#`, a plain value wrapped onto a second line, a quoted key, and a value opening with `@` or a
+backtick; and it refused a flow collection, which strict YAML reads. It is still a heuristic, and it says so
 in its docstring, since the Python that runs preflight has no YAML parser to ask; the pre-tag scan
-is the strict one. The refusal now names every shape it refuses. The other lenses: *bare* was
-still in the window's docstring after this entry said it was gone; SkillSpector's own word for the
-skill it could not parse is *partial*, not *uninspected*; and the stop for a sentence about
-publishing sits in the refusal, not always at its close, because the owner's quoted instruction can
-follow it. The nineteenth round goes over this repair.
+is the strict one. The refusal now names every shape it refuses. The other lenses: *bare* still
+named a kind of parenthesis in the window's docstring after this entry said it no longer did, and a
+sentence above placed the stop for a sentence about publishing more precisely than the refusal
+does. The nineteenth round went over this repair.
+
+**The nineteenth round found one hole, and a claim wider than the check.** Its adversarial lens
+reported that a skill file with Windows line endings passed unread; it did not — Python's text mode
+had been reading those as plain newlines all along, and the mutant written for the finding said so
+by passing against the old code. The hole was one step over: a file opening with a byte-order mark
+never matched the frontmatter pattern, so the check read nothing in it and passed it, whatever its
+values held. The mark is read past now, and a file whose frontmatter the check cannot find is
+refused instead of passed. A `#` after a space was refused as
+*not valid YAML*, when YAML reads it as a comment and drops the rest of the value; it is still
+refused, since a description cut short is the defect, and the refusal now says what YAML does. A
+nested or dotted key goes unread — no skill here has one — and the docstring now says so instead of
+claiming every value. Each of the three has its mutant. The other lenses found only words: a tab
+the refusal did not name, a line of the refusal still called its *closing* line in the gate's
+comment and in this entry, *bare* still in the window's docstring, a sentence above crediting this
+entry with a word it never used, a list above that read as one case or as two, and the comment on
+the temp file blaming quotes, when what bash 3.2 misreads inside `$(…)` is an unpaired backtick.
+The twentieth round goes over this repair.
 
 **And this release's own register template broke this release's own guard — here and not next
 door.** The widened header *Wired how · what it ships* was matched by equality, so a project that

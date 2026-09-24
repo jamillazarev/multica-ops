@@ -85,7 +85,7 @@ CMD_START = (r"(?:(?:^|[\n;&|(){}`]|\$\()\s*"
 # and on 2026-09-23 `env A=1 B=2 C=3 D=4 E=5 F=6 git push` walked past the cap: a bound on the
 # UNSAFE side of an anchor is a hole with a number on it. **Any run of tokens, on the same line.**
 # The cost is named: a wrapper followed later on its line by a quoted mention of the verb is
-# refused, which is the loud side, and the refusal's closing line — *if this is a sentence
+# refused, which is the loud side, and a line of the refusal — *if this is a sentence
 # about the act, say so to the owner* — is there for exactly that.
 WRAP = r"(?:(?:env|sudo|nohup|time|command|exec|eval|nice)[ \t]+(?:\S+[ \t]+)*)?"
 # **A tool takes global options before its subcommand, and can be named by its path.**
@@ -270,7 +270,7 @@ def command_end(c, i):
     one parenthesis early and refused a real dry run (2026-09-24). The act's *depth* is how many of those are open where it starts; the command holding
     it ends at the first `\n ; & | )` outside quotes at that depth, or where the pair holding the act
     closes. Arithmetic and process substitution were read as ordinary parentheses until 2026-09-24, so
-    `branch$((1+1)) --dry-run` was refused as a publish. A bare character split stopped at a `)` inside a quoted
+    `branch$((1+1)) --dry-run` was refused as a publish. A character-by-character split stopped at a `)` inside a quoted
     release note; a flat quote flag was fooled by `"… $(date "+%Y (UTC)") …"`; and a window started
     at the act read the backtick that closed `` `git push` --dry-run `` as opening another pair —
     three misreadings on 2026-09-24, two loud and one a hole."""
