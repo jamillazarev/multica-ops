@@ -34,6 +34,7 @@ headless run). The earlier note next door said they did not; it does not hold he
 import json
 import os
 import re
+import shlex
 import sys
 
 # Outward: it leaves this machine and someone else can see it. The measured case is the one every
@@ -87,13 +88,21 @@ CMD_START = (r"(?:(?:^|[\n;&|(){}`]|\$\()\s*"
 # refused, which is the loud side, and the refusal's closing line — *if this is a sentence
 # about the act, say so to the owner* — is there for exactly that.
 WRAP = r"(?:(?:env|sudo|nohup|time|command|exec|eval|nice)[ \t]+(?:\S+[ \t]+)*)?"
+# **A tool takes global options before its subcommand, and can be named by its path.**
+# `git -C . push`, `git -c k=v push`, `gh -R o/r release create`, `npm --prefix x publish`,
+# `docker --context x push` and `/usr/bin/git push` all went through both gates from the day
+# they were written, because the pattern wanted the subcommand straight after the name — found on
+# 2026-09-24, the absolute path by an adversarial lens and the options by checking what else that
+# shape covered. Any run of option tokens is allowed between the two now, each with at most one
+# argument that is not itself a subcommand, and any path before the name.
+OPTS = r"(?:\s+-\S+(?:\s+(?!(?:push|publish|release|pr|run|deploy)\b)[^\s\-]\S*)?)*"
 OUTWARD = re.compile(
-    CMD_START + WRAP + r"(git\s+push"
-    r"|gh\s+(?:release\s+create|pr\s+create)"
-    r"|npm\s+publish"
-    r"|(?:flyctl|fly|vercel|netlify|wrangler|kamal|cap)\s+deploy"
-    r"|(?:npm|yarn|pnpm)\s+run\s+deploy|(?:make|just)\s+deploy"
-    r"|docker\s+push"
+    CMD_START + WRAP + r"((?:[\w.~/-]*/)?(?:git" + OPTS + r"\s+push"
+    r"|gh" + OPTS + r"\s+(?:release\s+create|pr\s+create)"
+    r"|npm" + OPTS + r"\s+publish"
+    r"|(?:flyctl|fly|vercel|netlify|wrangler|kamal|cap)" + OPTS + r"\s+deploy"
+    r"|(?:npm|yarn|pnpm)" + OPTS + r"\s+run\s+deploy|(?:make|just)" + OPTS + r"\s+deploy"
+    r"|docker" + OPTS + r"\s+push)"
     r"|(?:[\w./-]*[/_.-])?(?<!pre[-_])deploy)(?=[\s;&|)<>\"'`]|$)",
     re.I)
 
@@ -233,13 +242,25 @@ def shell_only(cmd):
 # is ever read. **And the flag has to mean dry**: `npm publish --dry-run=false` publishes, so only
 # the bare flag or `=true` · `=1` · `=yes` excuses anything (both 2026-09-24). A comment is gone
 # before this reads the line: `shell_only` blanks it.
-DRY = re.compile(r"--dry[-_]run(?:=(?:true|1|yes))?(?=[\s\"']|$)", re.I)
+# **And the flag has to be a word of that command.** `git push origin mainX--dry-run` was
+# excused because the pattern found the flag glued to another word (2026-09-24), so the command is
+# split the way a shell splits it and only a whole word counts — the act's own options included,
+# since `npm --dry-run publish` is a dry run too. A command that will not split is not excused.
+DRY = re.compile(r"--dry[-_]run(?:=(?:true|1|yes))?", re.I)
+
+
+def is_dry(words):
+    """Whether a whole shell word of `words` is a dry-run flag that means dry."""
+    try:
+        return any(DRY.fullmatch(w) for w in shlex.split(words))
+    except ValueError:
+        return False                                 # will not split: not excused
 
 
 def first_act(c):
     """The first outward act in `c` that is not a dry run of itself, or None."""
     for m in OUTWARD.finditer(c):
-        if not DRY.search(re.split(r"[\n;&|)`]", c[m.end():], 1)[0]):
+        if not is_dry(re.split(r"[\n;&|)`]", c[m.start(1):], 1)[0]):
             return m
     return None
 

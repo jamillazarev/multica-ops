@@ -282,7 +282,8 @@ A version bump is not just a changelog entry. Before you tag:
    sharpest finding of each re-round sat in the latest repair commit.
    **A lens never runs an outward act — not against a stub, not to prove a hole — except through
    `scripts/test-gate-vs-bash.sh`**, which puts only stubs and harmless tools on `PATH`, checks every
-   stub before each run and denies bash the network. Measured 2026-09-24, and it published this
+   stub before each run, denies bash the network, and refuses to execute a real outward tool by
+   any path. Measured 2026-09-24, and it published this
    repository: a lens wrote a script carrying `git push` for a stub `git`, the installed gate refused
    the command that would have made the stub, `PATH` fell through to the real binary, and `main`
    took eighteen commits of an untagged release. **A gate reads commands, not the scripts they run**,

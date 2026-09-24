@@ -6,17 +6,26 @@
 # gate's heredoc blanker was out-guessed five times by commands where that expectation and bash
 # disagreed — each found by a lens reading the code, none by a suite. Here the oracle is bash: each
 # command runs in /bin/bash against stubs, *published* is read from what the stubs were asked to
-# do, and the gate's verdict must agree. A publish the gate lets through is a HOLE; a refusal where
-# nothing would have published is LOUD, and only the commands listed as bash syntax errors may be.
+# do, and the gate's verdict must agree.
 #
-# **It cannot publish, by construction, three ways over** — measured necessary on 2026-09-24, when
+# **Reading a result.** A publish the gate lets through is a HOLE. A refusal where nothing would
+# have published is LOUD, and fails the suite — except for a case whose reason starts with
+# `SYNTAX:`, which marks a command bash itself rejects, where a refusal costs nothing. **Adding a
+# case** is one line in CASES: the command, and in a few words what it probes (with `SYNTAX:` in
+# front if bash rejects it). **A real outward tool named by its path** — `/usr/bin/git …` — cannot be
+# stubbed, so the sandbox refuses to execute it and the refusal counts as the act having been
+# tried: only commands that ARE outward acts belong in a case that names a tool by its path.
+#
+# **It cannot publish, by construction, four ways over** — measured necessary on 2026-09-24, when
 # a lens testing this very gate with a stub `git` pushed a real branch: the installed gate refused
 # the command that made the stub, the lens did not notice, and PATH fell through to the real git.
 # So (1) PATH holds the stubs and an allowlist of harmless tools and nothing else, under `env -i`;
-# (2) every stub is checked present before each run, and a missing one stops the suite; (3) bash
-# runs under `sandbox-exec` with the network denied, so even a real binary would reach nothing.
-# **Without `sandbox-exec` it does not run bash at all**, and reports that as a failure rather than
-# a pass — a suite that skips itself green is the false clean this repository keeps paying for.
+# (2) every stub is checked present before each run; (3) bash runs under `sandbox-exec` with the
+# network denied; and (4) the same sandbox refuses to EXECUTE any binary named like an outward
+# tool outside the stub directory, by any path. A canary proves (4) before any case runs.
+# **Without `sandbox-exec` it runs no bash at all, and reports that as a failure** — a suite that
+# skips itself green is the false clean this repository keeps paying for. On a machine without it,
+# run the suite on macOS; CI already does.
 #
 # Two code mutants must each open a HOLE, or the suite has no teeth: a terminator matched anywhere
 # in a line rather than as the whole line, and a dry-run window that runs past a `)`.
@@ -27,21 +36,25 @@ import json, os, re, shutil, subprocess, sys, tempfile
 
 GATE = os.path.abspath("hooks/outward-gate.py")
 SBX = "/usr/bin/sandbox-exec"
-PROFILE = "(version 1)(allow default)(deny network*)"
 STUBBED = ["git", "gh", "npm", "npx", "yarn", "pnpm", "docker", "podman", "vercel", "flyctl", "fly",
            "netlify", "wrangler", "kamal", "cap", "make", "just", "terraform", "kubectl", "helm",
            "curl", "wget", "ssh", "scp", "rsync", "sudo"]
 SAFE = ["cat", "echo", "printf", "env", "mkdir", "sh", "bash", "python3", "true", "false", "sed",
         "grep", "tee"]
 SCRIPTS = ["deploy", "predeploy", "pre-deploy"]
-ACTS = ("git push", "npm publish", "yarn publish", "pnpm publish", "docker push", "podman push",
-        "gh release create", "gh pr create", "npm run deploy", "yarn run deploy", "pnpm run deploy",
-        "make deploy", "just deploy", "vercel deploy", "flyctl deploy", "fly deploy",
-        "netlify deploy", "wrangler deploy", "kamal deploy", "cap deploy", "script deploy")
-DRY = re.compile(r"--dry[-_]run(?:=(?:true|1|yes))?$", re.I)
+# which of each tool's global options take an argument — the oracle's only model of a CLI, and
+# the place a case using another such option must add it
+TAKES_ARG = {"git": {"-C", "-c", "--git-dir", "--work-tree", "--namespace"},
+             "gh": {"-R", "--repo"}, "npm": {"--prefix", "-w", "--workspace"},
+             "yarn": {"--cwd"}, "pnpm": {"-C", "--dir", "--filter"},
+             "docker": {"--context", "-c", "-H", "--host", "--config", "-l", "--log-level"},
+             "podman": {"--connection", "--url"}, "make": {"-C", "-f", "--directory", "--file"},
+             "just": {"-f", "--justfile", "-d", "--working-directory"}}
+DRY = re.compile(r"--dry[-_]run(?:=(?:true|1|yes))?", re.I)
+DENIED = re.compile(r"(?:^|[\s/])(%s): Operation not permitted" % "|".join(map(re.escape, STUBBED)),
+                    re.M)
 V = "git push origin main"
 
-# (command, why) — the commands bash itself rejects are the only ones allowed to be LOUD
 CASES = [
     (V, "the plain act"),
     ("echo testing --dry-run\n" + V, "a dry-run flag echoed on another line"),
@@ -52,8 +65,19 @@ CASES = [
     ("git push --dry-run origin main && npm publish", "one act dry, the next real"),
     ("git push --dry-run origin main", "a real dry run"),
     ("npm publish --dry-run", "a real dry run, npm"),
+    ("npm --dry-run publish", "a dry-run flag before the subcommand"),
     ("npm publish --dry-run=false", "a dry-run flag that says no"),
     ("npm publish --dry-run=true", "a dry-run flag that says yes"),
+    ("git push origin mainX--dry-run", "a dry-run flag glued to another word"),
+    ("git -C . push origin main", "a global option before the subcommand"),
+    ("git -c user.name=x push origin main", "a config option before the subcommand"),
+    ("git --git-dir=.git push origin main", "a --opt=value before the subcommand"),
+    ("git -C . push --dry-run origin main", "a global option, and a real dry run"),
+    ("gh -R o/r release create v1", "gh with a repository option"),
+    ("npm --prefix x publish", "npm with a prefix option"),
+    ("docker --context x push img", "docker with a context option"),
+    ("make -C . deploy", "make with a directory option"),
+    ("/usr/bin/git push origin main", "a real tool named by its path"),
     ('echo "text $(echo "inner<<EOF") more"\n' + V + "\nEOF", "a quote in $(…) inside \"…\""),
     ('echo "text `echo "inner<<EOF"` more"\n' + V + "\nEOF", "a quote in backticks inside \"…\""),
     ('echo "${X:-"a<<EOF"}"\n' + V + "\nEOF", "a quote in ${…} inside \"…\""),
@@ -93,17 +117,25 @@ def bad(msg):
     print("FAIL: " + msg)
 
 
+def finish(code=None):
+    print("gate-vs-bash: %d passed, %d failed" % (passed, failed))
+    sys.exit(code if code is not None else (1 if failed else 0))
+
+
 if not os.access(SBX, os.X_OK):
     bad("no sandbox-exec on this machine — this suite never runs bash with the network reachable, "
         "so it ran nothing; run it on macOS")
-    print("gate-vs-bash: %d passed, %d failed" % (passed, failed))
-    sys.exit(1)
+    finish(1)
 
-tmp = tempfile.mkdtemp(prefix="gate-vs-bash-")
+# the real path: the sandbox matches paths after symlinks, and /var is one on macOS
+tmp = os.path.realpath(tempfile.mkdtemp(prefix="gate-vs-bash-"))
 box, stubs, safe = (os.path.join(tmp, d) for d in ("box", "stubs", "safe"))
 log = os.path.join(tmp, "calls.log")
 for d in (box, stubs, safe, os.path.join(box, "scripts")):
     os.makedirs(d)
+PROFILE = ('(version 1)(allow default)(deny network*)'
+           '(deny process-exec (regex #"/(%s)$"))(allow process-exec (subpath "%s"))'
+           % ("|".join(map(re.escape, STUBBED)), stubs))
 
 
 def outside_any_repo(path):
@@ -117,20 +149,28 @@ def outside_any_repo(path):
         p = up
 
 
-def write_exe(path, body):
+def write_exe(path, name):
+    # one line per call: the name, then every argument tab-separated, so quoting survives the log
     with open(path, "w") as f:
-        f.write("#!/bin/sh\n" + body + "\n")
+        f.write('#!/bin/sh\n{ printf "%%s" "%s"; for a in "$@"; do printf "\\t%%s" "$a"; done; '
+                'printf "\\n"; } >> "%s"\n' % (name, log))
     os.chmod(path, 0o755)
 
 
 for t in STUBBED:
-    write_exe(os.path.join(stubs, t), 'printf "%%s\\n" "%s $*" >> "%s"' % (t, log))
+    write_exe(os.path.join(stubs, t), t)
 for t in SAFE:
     real = shutil.which(t)
     if real:
         os.symlink(real, os.path.join(safe, t))
 for name in SCRIPTS:
-    write_exe(os.path.join(box, "scripts", name), 'printf "%%s\\n" "script %s $*" >> "%s"' % (name, log))
+    write_exe(os.path.join(box, "scripts", name), "script-" + name)
+
+
+def sandboxed(cmd):
+    env = ["/usr/bin/env", "-i", "PATH=%s:%s" % (stubs, safe), "HOME=" + box, "LC_ALL=C"]
+    return subprocess.run(["/usr/bin/sandbox-exec", "-p", PROFILE] + env + ["/bin/bash", "-c", cmd],
+                          cwd=box, capture_output=True, text=True, timeout=15)
 
 
 def fail_closed():
@@ -139,43 +179,66 @@ def fail_closed():
     if missing or not outside_any_repo(box) or not os.access(SBX, os.X_OK):
         bad("the harness is not closed (missing stubs %s, or inside a repository) — stopped before "
             "running bash" % missing)
-        print("gate-vs-bash: %d passed, %d failed" % (passed, failed))
-        sys.exit(1)
+        finish(1)
+
+
+# the canary: a real outward binary, by its own path, must not execute inside the sandbox
+fail_closed()
+_real = next((shutil.which(t) for t in STUBBED if shutil.which(t)), None)
+if _real:
+    r = sandboxed("%s --version" % _real)
+    if not DENIED.search(r.stderr):
+        bad("the sandbox let %s execute — stopped before running any case" % _real)
+        finish(1)
+    passed += 1
+
+
+def is_act(tool, args):
+    """What the stub was asked to do, read as the tool would read it."""
+    if tool.startswith("script-"):
+        return tool == "script-deploy"
+    i, takes = 0, TAKES_ARG.get(tool, set())
+    while i < len(args) and args[i].startswith("-"):
+        i += 2 if args[i] in takes else 1
+    rest = args[i:]
+    first, two = rest[:1], rest[:2]
+    return ((tool == "git" and first == ["push"])
+            or (tool == "gh" and two in (["release", "create"], ["pr", "create"]))
+            or (tool in ("npm", "yarn", "pnpm") and (first == ["publish"] or two == ["run", "deploy"]))
+            or (tool in ("docker", "podman") and first == ["push"])
+            or (tool in ("make", "just") and "deploy" in rest)
+            or (tool in ("vercel", "flyctl", "fly", "netlify", "wrangler", "kamal", "cap")
+                and first == ["deploy"]))
 
 
 def published(cmd):
     fail_closed()
     if os.path.exists(log):
         os.remove(log)
-    env = ["/usr/bin/env", "-i", "PATH=%s:%s" % (stubs, safe), "HOME=" + box, "LC_ALL=C"]
     try:
-        subprocess.run([SBX, "-p", PROFILE] + env + ["/bin/bash", "-c", cmd], cwd=box,
-                       capture_output=True, timeout=15)
+        r = sandboxed(cmd)
     except subprocess.TimeoutExpired:
         return None
+    if DENIED.search(r.stderr):
+        return True                              # a real outward tool was reached for, by its path
     try:
         calls = open(log).read().splitlines()
     except FileNotFoundError:
         return False
     for c in calls:
-        if c.startswith(ACTS) and not any(DRY.match(w) for w in c.split()):
+        tool, *args = c.split("\t")
+        if is_act(tool, args) and not any(DRY.fullmatch(a) for a in args):
             return True
     return False
 
 
-# the gate keeps once-per-session markers in a state directory: this run gets its own, and every
-# call its own session, so no verdict is a marker left by the call before it
-state = os.path.join(tmp, "state")
-os.makedirs(state)
-calls = [0]
+# this gate reads nothing but the payload: no repository, no transcript, no state between calls
 
 
 def refuses(gate, cmd):
-    calls[0] += 1
-    p = {"hook_event_name": "PreToolUse", "tool_name": "Bash", "session_id": "gvb-%d" % calls[0],
+    p = {"hook_event_name": "PreToolUse", "tool_name": "Bash", "session_id": "s",
          "transcript_path": "", "tool_input": {"command": cmd}}
-    r = subprocess.run([sys.executable, gate], input=json.dumps(p), capture_output=True, text=True,
-                       env=dict(os.environ, MOPS_GATE_DIR=state))
+    r = subprocess.run([sys.executable, gate], input=json.dumps(p), capture_output=True, text=True)
     return r.returncode == 2
 
 
@@ -216,6 +279,5 @@ for name, a, b in MUTANTS:
         bad("the mutant survived — %s — no case tells it from the gate" % name)
 
 shutil.rmtree(tmp, ignore_errors=True)
-print("gate-vs-bash: %d passed, %d failed" % (passed, failed))
-sys.exit(1 if failed else 0)
+finish()
 PY

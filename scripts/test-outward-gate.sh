@@ -4,9 +4,9 @@
 set -uo pipefail
 cd "$(dirname "$0")/.." || exit 1
 H="python3 $PWD/hooks/outward-gate.py"
-# A state directory of this run's own: the once-per-session markers must not survive from the
-# last invocation, or every "speaks" assertion quietly goes silent the second time you run the
-# suite — a test that passes less the more it runs.
+# A scratch directory of this run's own, for the transcripts the quote cases write. It once held
+# the gate's once-per-session markers too, when the gate stopped only once; the gate stops every
+# time now and keeps no state (its docstring says why), so nothing here isolates a verdict.
 export MOPS_GATE_DIR=$(mktemp -d)
 trap 'rm -rf "$MOPS_GATE_DIR"' EXIT
 pass=0; fail=0

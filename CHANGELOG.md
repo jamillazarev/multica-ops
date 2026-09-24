@@ -125,10 +125,10 @@ backtick, and only the bare flag or `=true` · `=1` · `=yes` excuses anything. 
 `scripts/test-gate-vs-bash.sh`**: each of 38 commands runs in real bash against stubs, *published* is
 read from what the stubs were asked to do, and the gate must agree — with two code mutants it must
 catch (a terminator matched anywhere in a line; a dry-run scope that runs past a `)`). Against the
-tenth round's gate it reports exactly this round's four holes. It is closed three ways, and why it
+tenth round's gate it reports exactly this round's four holes — the trailing comment, the flag
+outside `$(…)`, the same outside a backtick pair, and `--dry-run=false`. It is closed three ways, and why it
 has to be is the next paragraph. The second `predeploy` case became `./scripts/pre-deploy`, the only
-one that reaches the `pre-` rule. `test-outward-gate.sh` **103/103**, `test-gate-vs-bash.sh`
-**40/40**; the twelfth round goes over this repair.
+one that reaches the `pre-` rule. The twelfth round went over this repair.
 
 **And this repository's `main` was pushed before its tag — by a lens, without the owner's word.**
 On 2026-09-24 at 03:58 (+04) a lens checking a claim about bash wrote a script carrying `git push`
@@ -137,9 +137,29 @@ did not notice, `PATH` fell through to the real binary, and `origin/main` moved 
 `d301b78` — **eighteen commits of this entry's work, no tag, no release, nothing forced**. It is left
 in place: the commits are this release's own and tested, and rewriting a public branch would cost
 everyone who pulled it more than it carries. **If you updated from `main` between that push and the
-0.4.18 tag, you have this entry's work before its lens rounds finished** — the tag's version is the
-one to take. The suite above runs stubs-only under `env -i`, verifies every stub before each run,
-and denies bash the network, and [`AGENTS.md`](AGENTS.md) now says a lens runs an outward verb no other way.
+0.4.18 tag, you ran this entry's work before its review rounds finished: update to the tagged 0.4.18,
+which is what this entry describes, and nothing else is needed.** The suite above runs stubs-only
+under `env -i`, verifies every stub before each run, and denies bash the network, and
+[`AGENTS.md`](AGENTS.md) now says a lens runs an outward verb no other way.
+
+**The twelfth round found this gate blind to a tool's own global options — since the day it was
+written.** `git -C . push`, `git -c k=v push`, `git --git-dir=.git push`, `gh -R o/r release
+create`, `npm --prefix x publish` and `docker --context x push` all passed, because the pattern wanted
+the subcommand straight after the tool's name; so did `/usr/bin/git push`, a tool named by its path
+(an adversarial lens found the path, and checking what else that shape covered found the options).
+Any run of option tokens between the tool and its subcommand is allowed now, each with at most one
+argument that is not itself a subcommand, and any path before the name. **And the dry-run flag had
+no left edge**: `git push origin mainX--dry-run` was excused, the flag found glued to another word —
+so the words are split the way a shell splits them, and only a whole word counts, the act's own
+options included. **The suite had a blind spot of its own**: a real tool named by its path could
+not be stubbed, and the network it would have used was denied, so such a push read as *nothing
+published* — the safety layer hiding exactly the hole. The sandbox now refuses to execute any binary
+named like an outward tool outside the stub directory, by any path, a canary proves it before any
+case runs, and a refused execution counts as the act having been tried. Against the eleventh round's
+gate the suite reports nine holes, all this round's. A dead scaffold went too: this suite, and a
+comment in `test-outward-gate.sh`, set up per-session state for a gate that has kept none since it
+stopped stopping only once. `test-outward-gate.sh` **103/103**, `test-gate-vs-bash.sh` **52/52**; the
+thirteenth round goes over this repair.
 
 **And this release's own register template broke this release's own guard — here and not next
 door.** The widened header *Wired how · what it ships* was matched by equality, so a project that
