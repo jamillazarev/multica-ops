@@ -1,5 +1,5 @@
 ---
-description: The console read: what needs you and what happened, with ages and what the wait costs.
+description: "The console read: what needs you and what happened, with ages and what the wait costs."
 ---
 
 Load and follow the **multica-ops** skill (`../mops/SKILL.md`), executing

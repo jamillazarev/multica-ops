@@ -20,9 +20,10 @@ record of how it got here, round by round.
   command; a local script named `predeploy`.
 - **By design:** a verb assembled from parts (`pu'sh'`), a variable or an interpreter carrying it
   is not read; an option whose argument is one of the act's own words (`npm --workspace publish
-  install`) is read as the act and refused. When the gate mistakes a sentence for the act, the agent
-  it stopped is told, in the refusal's closing line, to say so to you — never to reword the command
-  to get past it.
+  install`) is read as the act and refused.
+- **If the gate stops a sentence about publishing** — text it took for the act — the agent it
+  stopped is told, in the refusal's closing line, to say so to you, never to reword the command to
+  get past it.
 
 **The outward gate refused a sentence about publishing.** It matched its verbs **anywhere in the
 command string**, so a comment being written into a file was stopped as if it were the act —
@@ -248,7 +249,18 @@ confirm, and ended by telling *you* to tell the owner; the window's docstring in
 outermost context" to explain "the start of the command"; the two *for a user* lines this round
 added below repeated the block; one gate said its alternatives mirror the other's and the other did
 not say so back; and a case's name did not say why it was kept. `test-outward-gate.sh` **103/103**,
-`test-gate-vs-bash.sh` **69/69**; the seventeenth round goes over this repair.
+`test-gate-vs-bash.sh` **69/69**; the seventeenth round went over this repair.
+
+**The seventeenth round found nothing in the code**: its adversarial, deletion and contradiction
+lenses reported empty, and its cold-read's two reading stumbles — a sentence in the block above
+under the wrong item, and *bare* used for two different parentheses — are repaired.
+
+**The pre-tag scan found what seventeen lens rounds had not: six of this repository's skill
+descriptions were not valid YAML.** A plain value holding `: ` is a mapping inside a mapping to a
+strict parser, and SkillSpector's rejects such a manifest outright. The six are quoted, all nineteen
+parse strictly, `agy plugin validate` still reads all nineteen, and preflight now refuses a plain
+frontmatter value holding `: ` or ` #`, with its mutant in `test-preflight-checks.sh`. The eighteenth
+round goes over this repair.
 
 **And this release's own register template broke this release's own guard — here and not next
 door.** The widened header *Wired how · what it ships* was matched by equality, so a project that

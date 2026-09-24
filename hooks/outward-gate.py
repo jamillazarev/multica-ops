@@ -265,9 +265,9 @@ def command_end(c, i):
     may already be open cannot tell an opening backtick from a closing one.
 
     Bash's own state is kept on the way: quotes, a backslash escaping the next character outside
-    single quotes, and every `$(…)`, `$((…))`, `<(…)`, `>(…)`, backtick pair or bare `(…)` on a
-    stack with its own quoting — a bare pair because `$((1 + (2*3)))` closed the arithmetic one
-    parenthesis early and refused a real dry run (2026-09-24). The act's *depth* is how many of those are open where it starts; the command holding
+    single quotes, and every `$(…)`, `$((…))`, `<(…)`, `>(…)`, backtick pair or grouping `(…)` on
+    a stack with its own quoting — a grouping pair because `$((1 + (2*3)))` closed the arithmetic
+    one parenthesis early and refused a real dry run (2026-09-24). The act's *depth* is how many of those are open where it starts; the command holding
     it ends at the first `\n ; & | )` outside quotes at that depth, or where the pair holding the act
     closes. Arithmetic and process substitution were read as bare parentheses until 2026-09-24, so
     `branch$((1+1)) --dry-run` was refused as a publish. A bare character split stopped at a `)` inside a quoted

@@ -1,5 +1,5 @@
 ---
-description: One job, no company: three questions, one or two agents, build then review.
+description: "One job, no company: three questions, one or two agents, build then review."
 ---
 
 Load and follow the **multica-ops** skill (`../mops/SKILL.md`), going straight into the **quick-job

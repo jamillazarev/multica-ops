@@ -1,5 +1,5 @@
 ---
-description: Health and opportunities: what burns tokens, what stalls, what drifted, and what the ledger counts as waste.
+description: "Health and opportunities: what burns tokens, what stalls, what drifted, and what the ledger counts as waste."
 ---
 
 Load and follow the **multica-ops** skill (`../mops/SKILL.md`), executing

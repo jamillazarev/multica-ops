@@ -1,5 +1,5 @@
 ---
-description: A question, not a build: answered as an advisor, with nothing created in your workspace.
+description: "A question, not a build: answered as an advisor, with nothing created in your workspace."
 ---
 
 Load and follow the **multica-ops** skill (`../mops/SKILL.md`), executing its `/multica-ops:consult` flow

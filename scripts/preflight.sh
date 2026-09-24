@@ -301,6 +301,24 @@ done
 # lands, without anyone editing this.
 sv=$(grep -m1 '^version:' skills/mops/SKILL.md | awk '{print $2}')
 [ -n "$sv" ] || say_fail "skills/mops/SKILL.md has no version: frontmatter line"
+# **Every skill's frontmatter must be YAML a strict parser reads.** A plain value holding `: ` is a
+# mapping inside a mapping to YAML; six descriptions here were written that way and SkillSpector's
+# strict parser rejected such a manifest in the pre-tag scan of 2026-09-24. One runtime reading it
+# leniently is no promise about the next.
+while IFS= read -r _yl; do
+  [ -n "$_yl" ] && say_fail "$_yl"
+done <<< "$(python3 - <<'PY'
+import pathlib, re
+for p in sorted(pathlib.Path("skills").glob("*/SKILL.md")):
+    fm = re.match(r"---\n(.*?)\n---\n", p.read_text(encoding="utf-8"), re.S)
+    for line in (fm.group(1).split("\n") if fm else []):
+        kv = re.match(r"^([\w-]+):[ \t]+(.*)$", line)
+        v = kv.group(2) if kv else ""
+        if kv and v[:1] not in "\"'|>" and (": " in v or " #" in v or v.endswith(":")):
+            print(f"{p}: frontmatter `{kv.group(1)}` is not valid YAML — a plain value holding "
+                  f"': ' or ' #'; quote it")
+PY
+)"
 swept=0
 while IFS= read -r m; do
   mv_=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get("version",""))' "$m" 2>/dev/null)

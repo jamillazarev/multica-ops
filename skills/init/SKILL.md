@@ -1,5 +1,5 @@
 ---
-description: Stand a company up from zero: day zero checks, a progressive interview, then the team.
+description: "Stand a company up from zero: day zero checks, a progressive interview, then the team."
 ---
 
 Load and follow the **multica-ops** skill (`../mops/SKILL.md`), executing

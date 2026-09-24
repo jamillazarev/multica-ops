@@ -1,5 +1,5 @@
 ---
-description: The go-live step, whatever live means here: gates green, release notes, tag, announce, ledger.
+description: "The go-live step, whatever live means here: gates green, release notes, tag, announce, ledger."
 ---
 
 Load and follow the **multica-ops** skill (`../mops/SKILL.md`), executing

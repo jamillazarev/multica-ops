@@ -17,6 +17,12 @@ ok(){ pass=$((pass+1)); }; bad(){ fail=$((fail+1)); echo "  ✗ $1"; }
 # the twin: an untouched clone passes (warnings allowed, exit 0 required)
 run && ok || bad "the untouched twin failed preflight"
 
+# a skill's frontmatter a strict YAML parser rejects is refused, and the refusal says what to do
+perl -pi -e 's/^description: "(.*)"$/description: $1/' "$T/c/skills/quick/SKILL.md"
+run && bad "a skill description holding ': ' unquoted passed" || ok
+grep -q "is not valid YAML" "$T/out" && ok || bad "the YAML refusal does not say what is wrong"
+undo
+
 # §9b · a typo'd date is reported AND does not kill the loop for the stale row beside it
 printf '\n| tf-a | checked 2026-06-31 |\n| tf-b | checked 2024-01-01 |\n' >> "$T/c/STACKS.md"
 run; grep -q "is not a date" "$T/out" && ok || bad "a typo'd date went unreported"
