@@ -339,14 +339,14 @@ def frontmatter_faults(p):
             body = line.strip()                  # a plain value wrapped onto the next line
         else:
             plain, body = False, ""
-        cut = re.search(r"(?:^| )#", body)       # where YAML starts reading a comment
+        cut = re.search(r"(?:^| )#", body)
         head = body[:cut.start()] if cut else body
-        if "\t" in body or ": " in head or head.endswith(":") or head[:1] in ("@", "`"):
+        if "\t" in head or ": " in head or head.endswith(":") or head[:1] in ("@", "`"):
             faults.append(f"{p}: frontmatter `{key}` is not valid YAML — a plain value holding ': ' "
                           f"or a tab, ending in ':', or opening with '@' or a backtick; quote it")
         elif cut:
-            faults.append(f"{p}: frontmatter `{key}` loses everything after its '#' — YAML reads a "
-                          f"'#' that opens a value or follows a space as a comment; quote it")
+            faults.append(f"{p}: frontmatter `{key}` loses the rest of its line after the '#' — YAML "
+                          f"reads a '#' that opens a value or follows a space as a comment; quote it")
     return faults
 
 

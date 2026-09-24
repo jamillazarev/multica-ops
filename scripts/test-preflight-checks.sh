@@ -57,6 +57,10 @@ perl -pi -e 's/^description: .*$/description: One\tjob/' "$T/c/skills/quick/SKIL
 run && bad "a plain value holding a tab passed" || ok
 grep -q "is not valid YAML" "$T/out" && ok || bad "a tab in a plain value was refused for some other reason"
 undo
+perl -pi -e 's/^description: .*$/description: One job # a\tb/' "$T/c/skills/quick/SKILL.md"
+run; grep -q "as a comment" "$T/out" && ok || bad "a tab inside a comment was not read as part of the comment"
+grep -q "is not valid YAML" "$T/out" && bad "a tab inside a comment was refused as a tab in the value" || ok
+undo
 perl -0pi -e 's/\A(---\n.*?\n---)\n.*\z/$1/s' "$T/c/skills/quick/SKILL.md"
 [ "$(tail -c 4 "$T/c/skills/quick/SKILL.md")" = "$(printf '\n---')" ] && ok \
   || bad "the fixture ending at its closing --- was not built"

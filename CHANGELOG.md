@@ -285,7 +285,7 @@ values held. The mark is read past now, and a file whose frontmatter the check c
 refused instead of passed. A `#` after a space was refused as *not valid YAML*, when YAML reads it
 as a comment and drops the rest of the value; it is still refused, since a description cut short
 is the defect, and the refusal now says what YAML does. The mark, the missing frontmatter and the
-`#` each have a mutant, and each mutant fails against the old code. A nested or dotted key goes
+`#` each have a mutant, and each one's test fails when run against the old code. A nested or dotted key goes
 unread — no skill here has one — and the docstring now says so instead of claiming every value.
 The other lenses found only words: a tab
 the refusal did not name, a line of the refusal still called its *closing* line in the gate's
@@ -298,7 +298,7 @@ The twentieth round went over this repair.
 added.** The refusal of a file with no findable frontmatter also refused a skill file ending at its
 closing `---` with no newline after it, which YAML reads; the closing line may end the file now.
 And a value that is nothing but a comment — `description: #TODO` — loses the whole value and was
-not refused, because the space before its `#` had gone with the key; a `#` that opens a value is
+not refused, because the key's pattern had already taken the space before its `#`; a `#` that opens a value is
 refused now, and text after a comment's `#` no longer counts as the value's. A tab inside a plain
 value, which PyYAML rejects, is refused as not valid YAML. Blanks after a `---` line are still
 refused, since what the runtimes' own loaders make of them is unmeasured, and the refusal now says
@@ -306,7 +306,17 @@ the line must be exactly `---`. Twenty-four shapes, written to files and read ba
 PyYAML. The contradiction lens found nothing; the cold-read and deletion lenses found words — a
 correction above that named its subject and not its fact, a count whose referent came a sentence
 late, and a docstring aside that repeated the refusal. The twenty-first round
-goes over this repair.
+went over this repair.
+
+**The twenty-first round found one false refusal, and two of its lenses found it independently.**
+The tab rule read the whole value, so a tab inside a trailing comment, which YAML drops with the
+comment, was refused as a tab in the value — and the twenty-four shapes above had not included one.
+It reads only what comes before the comment now, with a mutant whose test fails against the old
+code. The comment refusal said a value *loses everything after its `#`*, when what goes is the rest
+of that line — a value continued on the next line keeps the continuation — and it says so now. The
+cold-read and deletion lenses found words: which way a mutant's test fails, a
+metaphor for what took the space before a `#`, and a line comment that repeated the docstring. The
+twenty-second round goes over this repair.
 
 **And this release's own register template broke this release's own guard — here and not next
 door.** The widened header *Wired how · what it ships* was matched by equality, so a project that
