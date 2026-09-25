@@ -117,7 +117,7 @@ being stopped, and a gate that read meaning could be argued out of it by the tex
 flowchart TD
   C["a Bash command"] --> B["heredoc bodies and comments blanked ·<br/>line continuations folded"]
   B --> P{"a publish verb at a command position?<br/>the start · a newline · ; && || | ·<br/>inside ( ) · $( ) · backticks —<br/>past wrappers (env · sudo · timeout …),<br/>a tool's global options, a path"}
-  B -.->|"a separator inside a quote that grep,<br/>echo or a commit message holds —<br/>and nothing in the command runs text"| S(["a character of a string"])
+  B -.->|"a separator inside a quote that grep,<br/>echo or a commit message holds —<br/>and nothing in the command runs text"| S(["a character of a string — allowed"])
   P -->|"after a word, inside a sentence"| R(["prose — allowed"])
   P -->|"inside a quote"| Q{"a quote after something<br/>that runs a shell?<br/>bash -c · sh -c · eval · xargs"}
   Q -->|"no — grep 'npm publish'"| R

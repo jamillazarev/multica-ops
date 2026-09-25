@@ -55,6 +55,13 @@ Suites: a-suite **9** · b-suite **12**, all zero-fail.'
 mk ops; grow; entry "$HONEST"; run "$S"
 [ "$RC" = 0 ] && said "matches v0.1.0..the working tree" && ok || bad "the honest line was refused (rc=$RC): $(head -3 "$T/report")"
 
+# — a bold number after the facts, in the same sentence, is not a fact
+mk ops; grow; entry '**Trio:** one diagram · two situations · `facts.md` **3**, held by suite **9**.'; run "$S"
+[ "$RC" = 0 ] && ok || bad "a suite size after the facts was read as a fact (rc=$RC): $(head -2 "$T/report")"
+mk ops; grow; printf '\n4. **Four** fact.\n' >> facts.md
+entry '**Trio:** one diagram · two situations · `facts.md` **3** and **4**.'; run "$S"
+[ "$RC" = 0 ] && ok || bad "two facts joined by *and* were not both read (rc=$RC): $(head -2 "$T/report")"
+
 # — a wrong count, each kind
 mk ops; grow; entry '**Trio:** two diagrams · two situations · `facts.md` **3**.'; run "$S"
 [ "$RC" = 1 ] && said "says diagrams 2" && said "added 1" && ok || bad "a wrong diagram count passed (rc=$RC)"
@@ -122,8 +129,8 @@ unread_ops()   { mk ops; grow; entry '**Trio:** one diagram · `facts.md` **3**.
 hyphen_ops()   { mk ops; for i in $(seq 1 21); do printf '| row %s | x | y |\n' "$i" >> use-cases.md; done
                  printf '\n3. **Three** fact.\n' >> facts.md
                  entry '**Trio:** no diagram · twenty-one situations · `facts.md` **3**.'; }
-mutant "the facts clause read to the paragraph's end" \
-  'clause = re.split(r"\.\s| · |\.$", f.group(1))[0]' 'clause = f.group(1)' honest_ops 1
+mutant "the facts read past their own run" \
+  'run.group(0) if run else ""' 'f.group(1)' honest_ops 1
 mutant "a table's header counted as a situation" \
   'if re.match(r"^\|\s*:?-", nxt):          # a header row' 'if False:' honest_ops 1
 mutant "the changelog's own diagrams counted" \

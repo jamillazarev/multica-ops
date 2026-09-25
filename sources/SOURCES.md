@@ -223,7 +223,7 @@ reminded of is a deletion). Both run each release (AGENTS.md → Cutting a relea
 - **Distillate:** Checking that a cited source exists says nothing about whether the sentence carrying it says what the source says. The pack reads each claim against the passage it cites and classes it as supported, overstated, unsupported, or unverifiable when the passage cannot be reached. **Its authors report** that an independent audit after publication found **21 of 68 real issues that three rounds of integrity checks had missed** — the lesson of a review that reports clean, measured in another field. Not re-measured here.
 - **Check-date:** 2026-09-25
 - **Reads against:** `none found`
-- **Cited-by:** STACKS.md#evidence-sources-a-claim-can-actually-rest-on (sha:cb95deb9, checked 2026-09-25)
+- **Cited-by:** STACKS.md#evidence-sources-a-claim-can-actually-rest-on (sha:b15d7112, checked 2026-09-25)
 
 ---
 
@@ -237,7 +237,7 @@ reminded of is a deletion). Both run each release (AGENTS.md → Cutting a relea
 - **Distillate:** Six free scholarly APIs report a failure as success. PMC returns a well-formed article with no body when the publisher forbids redistribution; arXiv returns one entry titled `Error` for a malformed parameter and quietly widens an unknown field prefix to all fields; Europe PMC puts its error code inside a 200 body; bioRxiv accepts an out-of-step pagination cursor and returns the wrong thirty records; Figshare's `GET` search ignores its query; OpenCitations answers a DOI that does not exist with a count of zero. **So the body is read before the answer is believed** — and the zero is the dangerous one, being a plausible fact about a real paper. Not re-measured here.
 - **Check-date:** 2026-09-25
 - **Reads against:** `none found`
-- **Cited-by:** STACKS.md#evidence-sources-a-claim-can-actually-rest-on (sha:cb95deb9, checked 2026-09-25)
+- **Cited-by:** STACKS.md#evidence-sources-a-claim-can-actually-rest-on (sha:b15d7112, checked 2026-09-25)
 
 ### skillspector-json · SkillSpector — a rejected manifest shows only in the JSON
 - **Citation:** NVIDIA, *SkillSpector*, the `scan` command's JSON report (`--format json --output <file>`), run on this repository's skills 2026-09-24.

@@ -5,8 +5,8 @@
     python3 scripts/check-trio.py 0.2.19     # a released entry, against the tag before its own
 
 Every entry ends with a `**Trio:**` paragraph naming the diagrams, situations and facts the
-release added. 0.2.19 shipped saying eight diagrams, twenty-one situations and facts 262–277,
-and had added ten, thirty-four and 249–251 with 262–282: the lens rounds read each repair's diff
+release added. 0.2.19's Trio line said diagrams 8 · situations 21 · facts 262–277, over a range that
+added 10 · 24 · 262–282: the lens rounds read each repair's diff
 and nothing read the entry against the release as a whole (found by the owner, 2026-09-25).
 
 What is measured, between the tag before the entry and the entry's own tag (or the working
@@ -20,6 +20,10 @@ The claim is read from the Trio paragraph: a number word or digits before *diagr
 after `facts.md` — or a number word before *register entr(y|ies)*. **A kind the paragraph does not
 mention is not compared** — a Trio line is prose, and a phrasing this cannot read is reported as
 unread rather than guessed. Exit 1 on a mismatch, 2 when there is nothing to compare.
+
+**Named limits**: the counts are NET, so a diagram or a situation removed elsewhere in the same
+release lowers them — the line then states the net, or names the removal; and a number word is
+read as the house writes it, `twenty-four` with its hyphen (`twenty four` reads as four).
 """
 import re
 import subprocess
@@ -138,11 +142,12 @@ def counts(t):
         c["situations"] = number(s.group(1))
     f = re.search(r"facts\.md`?\s*(.*)", t)
     if f:
-        # the clause ends at the sentence or the next item — 0.2.17's Trio line is followed on the
-        # next line by suite sizes in bold, and reading on took them for fact numbers
-        clause = re.split(r"\.\s| · |\.$", f.group(1))[0]
+        # the facts are the RUN of bold numbers right after it, joined by commas or *and*, and
+        # nothing after: 0.2.17's Trio line is followed by suite sizes in bold, and a trailing
+        # *held by suite **9*** in the same sentence was read as a fact (a lens, 2026-09-25)
+        run = re.match(r"(?:\s*(?:,|and)?\s*\*\*\d+(?:\s*[–-]\s*\d+)?\*\*)+", f.group(1))
         nums = set()
-        for a, b in re.findall(r"\*\*(\d+)(?:\s*[–-]\s*(\d+))?\*\*", clause):
+        for a, b in re.findall(r"\*\*(\d+)(?:\s*[–-]\s*(\d+))?\*\*", run.group(0) if run else ""):
             nums.update(str(i) for i in range(int(a), int(b or a) + 1))
         if nums:
             c["facts"] = nums
@@ -192,7 +197,9 @@ def main():
     for b in bad:
         print(b)
     for u in unread:
-        print(f"{version}: the release added {u} and the Trio line says nothing this can read about them")
+        print(f"{version}: the release added {u} and the Trio line says nothing this can read about them — "
+              f"write a number word or digits before *diagrams* · *situations* · *register entries*, "
+              f"or bold numbers after `facts.md`")
     # the entry being written must say it in words this reads; a released one is only reported
     if bad or (unread and here is None):
         return 1

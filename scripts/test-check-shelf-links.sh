@@ -69,6 +69,8 @@ refuse "a name after a slash" '| **New** | Foo/Gizmo (the pair) | a tool | ✅ |
   '| **New** | Foo/Gizmo (the pair) · [Gizmo](https://gizmo.example) | a tool | ✅ |'
 refuse "a name before a colon" '| **New** | **Thingy**: its built-ins | a tool | ✅ |' Thingy \
   '| **New** | **[Thingy](https://thingy.example)**: its built-ins | a tool | ✅ |'
+refuse "a name before a plain hyphen" '| **New** | **Doohickey** - a free tool with a generous tier | a tool | ✅ |' Doohickey \
+  '| **New** | **[Doohickey](https://doohickey.example)** - a free tool with a generous tier | a tool | ✅ |'
 
 # — the line number points at the row
 honest; printf '%s\n' '| **New** | **Widget** (MIT) | a tool | ✅ |' >> shelf.md; run
