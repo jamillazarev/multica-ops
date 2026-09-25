@@ -23,7 +23,9 @@ unread rather than guessed. Exit 1 on a mismatch, 2 when there is nothing to com
 
 **Named limits**: the counts are NET, so a diagram or a situation removed elsewhere in the same
 release lowers them — the line then states the net, or names the removal; and a number word is
-read as the house writes it, `twenty-four` with its hyphen (`twenty four` reads as four).
+read as the house writes it, `twenty-four` with its hyphen (`twenty four` reads as four); and a
+bare bold number joined to the facts by `·` or `;` is read as a fact, so the next item names its
+word the way the house does (`suite **9**`, never `· **9**`).
 """
 import re
 import subprocess
