@@ -121,6 +121,20 @@ CASES = [
     ("./scripts/pre-deploy", "a local check named pre-deploy"),
     ('git commit -m "how `' + V + '` works"', "backticks in a message run"),
     ('git commit -m "describe how to git push later"', "a plain message"),
+    # 2026-09-25 — a separator inside a quote a reader holds is a character of a string, not a command
+    # start; the owner's own search was refused for it. The shapes after them keep publishing.
+    ('grep -n "outward\\|' + V + '" notes.md', "a | inside a grep pattern"),
+    ('grep -E "a|' + V + '" notes.md', "an alternation inside a grep -E pattern"),
+    ('git commit -m "fix; ' + V + ' later"', "a ; inside a commit message"),
+    ('git commit -m "first line\n' + V + '"', "a newline inside a commit message"),
+    ("printf '%s' 'x | " + V + "'", "a | inside printf's single quotes"),
+    ('echo "a; ' + V + '" | bash', "a reader's quote piped into a shell"),
+    ('echo "a; ' + V + '" | "sh"', "the same, the shell's name quoted"),
+    ('echo "$(echo; ' + V + ')"', "a substitution inside double quotes runs"),
+    ('grep -c x "$(' + V + ')"', "a substitution inside a reader's quote runs"),
+    ('python3 -c "import os; os.system(\'' + V + '\')"', "an interpreter's quoted program"),
+    ('printf "%s" "a; ' + V + '" > x.sh; sh x.sh', "a file written, then run by sh"),
+    ('echo "a\n' + V + '" > x.sh\nsh x.sh', "the same, across two lines"),
     ("(cd . && git push)", "a subshell"),
     ('bash -c "' + V + '"', "a shell-runner's quote"),
     ("env A=1 B=2 C=3 D=4 E=5 F=6 " + V, "six assignments"),
@@ -288,6 +302,10 @@ MUTANTS = [
      'if (line.lstrip("\\t") if dash else line) == word:', "if word in line:"),
     ("a dry-run window that runs past the substitution holding the act",
      "if depth is not None and len(stack) == depth:", "if False:"),
+    ("a reader's quote read as data while the command runs text",
+     "        if qs[p] < 0 or not _reader_held(c, qs, qs[p]):", "        if False:"),
+    ("a quoted shell name not read as a shell",
+     "/\\\"'])((?:ba|z|da|k)?sh", "/])((?:ba|z|da|k)?sh"),
 ]
 src = open(GATE).read()
 for name, a, b in MUTANTS:

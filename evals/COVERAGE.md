@@ -10,7 +10,9 @@
 
 ## Validators that ship
 
+- `scripts/check-shelf-links.py` — Every project on the shelf carries a link — the owner's rule, 2026-09-25
 - `scripts/check-structure.py` — Structural integrity of the docs. Every check here exists because the defect it
+- `scripts/check-trio.py` — The Trio line of a release entry says what the release added — this measures whether it did
 - `scripts/coverage-map.py` — Regenerate the coverage map: what holds each rule, and what exercises each holder
 - `scripts/deps-report.py` — What the project depends on, why, and how much each available update matters
 - `scripts/eval-fixture.py` — Build and tear down a scenario's workspace state in the TEST workspace
@@ -34,10 +36,13 @@
 ## Tests that exercise the holders
 
 - `scripts/test-check-releases.sh` — `check-releases.sh` exercised on its mutants and its honest twins
+- `scripts/test-check-shelf-links.sh` — check-shelf-links.py — every project on the shelf carries a link — shown on a throwaway shelf
+- `scripts/test-check-trio.sh` — check-trio.py — an entry's Trio line against what the release added — shown on a throwaway
 - `scripts/test-company-guard.sh` — The company docs guard — `templates/company-preflight.sh` — exercised on its mutants and twins
 - `scripts/test-deps-report.sh` — deps-report.py — the updates sorted by what they ask of the owner, and the why of each thing the
 - `scripts/test-dispatch-nudge.sh` — Mutation tests for hooks/dispatch-nudge.py. Four behaviours, each shown and each shown absent:
 - `scripts/test-find-installs.sh` — `find-installs.sh` exercised on its mutants and its honest twins
+- `scripts/test-gate-vs-bash.sh` — The publish gate held against bash itself, not against what its author expects bash to do
 - `scripts/test-link-ids.sh` — link-ids.py — ported from opsinist with its suite — an id or a path named in passing becomes a link — shown on a throwaway project that
 - `scripts/test-link-names.sh` — link-names.py — ported from opsinist, with this repository's one-level rule — a backticked name of a file in this tree becomes a link — shown on a throwaway
 - `scripts/test-map-blocks.sh` — Tests for scripts/map-blocks.py. The load-bearing assertion is that a generator rewrites ONLY
@@ -85,11 +90,15 @@
 | 28 | A rule written the afternoon something broke | yes | — | **no** |
 | 29 | The answer will not hold still | yes | — | **no** |
 | 30 | The same server, and four agents that need it | — | — | **no** |
+| 31 | A stranger's document with a line nobody can see | — | — | **no** |
+| 32 | A citation count for a paper that does not exist | — | — | **no** |
+| 33 | Notes from a call, into a record an agent keeps | — | — | **no** |
+| 34 | Sign-in, and which kind first | — | — | **no** |
 
-**21 of 30** carry a repository fixture, **11** a workspace builder, and **26** have been measured at least once. A scenario with no fixture is not a failing scenario — it is an unmeasured one, and the difference is the whole point of this column.
+**21 of 34** carry a repository fixture, **11** a workspace builder, and **26** have been measured at least once. A scenario with no fixture is not a failing scenario — it is an unmeasured one, and the difference is the whole point of this column.
 
 ## Behavioural scenarios
 
-- **30 scenarios** in the rubric (`evals/README.md`)
+- **34 scenarios** in the rubric (`evals/README.md`)
 - **8 recorded runs**: `0.1.0` · `0.2.0` · `0.2.1` · `0.3.0` · `0.4.0` · `0.4.1` · `0.4.6` · `0.4.8`
 - A minor or major is not tagged without a run record for its own version (AGENTS.md → *Cutting a release*); `not run` is listed rather than omitted.

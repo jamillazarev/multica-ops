@@ -515,6 +515,17 @@ if [ -f scripts/link-names.py ]; then
   fi
 fi
 
+# 4e · every project on the shelf carries a link — the owner's rule, 2026-09-25, held by the
+#      same script as the sibling's §7c, byte for byte. It reads the head of each entry in a
+#      shelf column of STACKS.md, because a shelf's bold is mostly licences and emphasis; what
+#      it cannot see is named in its docstring. First honest run: 43 heads, every one real.
+if [ -f scripts/check-shelf-links.py ]; then
+  _sl=$(python3 scripts/check-shelf-links.py 2>&1); _slc=$?
+  if [ "$_slc" -ne 0 ]; then
+    while IFS= read -r l; do say_fail "$l"; done <<< "$_sl"
+  fi
+fi
+
 # 4b · an external URL carrying a literal `(` is stored percent-encoded, or the link checker
 # reads it truncated and reports a live page as rot. Measured next door as issue #1: four
 # "dead" links that all answered 200, one of them a URL cut at its own parenthesis. The
@@ -675,6 +686,18 @@ if git rev-parse --verify HEAD >/dev/null 2>&1; then
       case "$work_ver" in
         *.0) [ -f "evals/runs/${work_ver}.md" ] || say_warn "no evals/runs/${work_ver}.md — a minor/major is not tagged without a run record (evals/runs/TEMPLATE.md)";;
       esac
+      # 5j-bis · the entry's Trio line is measured against the release it describes — the same
+      #          script as the sibling's §1b-ter, byte for byte. 0.4.18 shipped saying five
+      #          situations and had added seven (found 2026-09-25). No Trio line yet warns, since the
+      #          entry is written last; one that disagrees, or that this cannot read, fails.
+      if [ -f scripts/check-trio.py ]; then
+        _tr=$(python3 scripts/check-trio.py 2>&1); _trc=$?
+        if [ "$_trc" = 2 ] || [ "$(printf '%s\n' "$_tr" | grep -c 'has no \*\*Trio:\*\* line')" -gt 0 ]; then
+          say_warn "$(printf '%s\n' "$_tr" | tail -1)"
+        elif [ "$_trc" != 0 ]; then
+          while IFS= read -r l; do say_fail "$l"; done <<< "$_tr"
+        fi
+      fi
     fi
   fi
 fi

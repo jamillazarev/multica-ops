@@ -60,6 +60,15 @@ PY"
 silent "prose in a comment"         "s-b9"  "printf '%s' '# this is what a git push costs' > note.md"
 silent "an argument, not a command" "s-b10" "grep -r 'npm publish' docs/"
 silent "a path that reads like it"  "s-b11" "cat notes/about-git-push.md"
+# 2026-09-25 — a separator inside a quote a reader holds is a character: the owner's own search was
+# refused, its `|` read as a pipe. A runner of a quoted string anywhere keeps the old reading.
+silent "a | in a grep pattern"       "s-b11a" 'grep -n -i "outward\|publish gate\|git push" PLAYBOOKS.md FLOWS.md'
+silent "a ; in a commit message"     "s-b11b" 'git commit -m "docs: when to git push; and when not"'
+speaks "ssh runs its quoted command" "s-b11c" 'ssh host "cd repo; git push origin main"'
+speaks "su -c runs its quoted command" "s-b11d" 'su -c "cd repo; git push" me'
+speaks "a quote piped into at"       "s-b11e" 'echo "cd repo; git push" | at now'
+speaks "timeout is a wrapper"        "s-b11f" "timeout 60 git push origin main"
+speaks "doas is a wrapper"           "s-b11g" "doas git push origin main"
 
 # ── and a wrapper is still the act, because the verb still starts a command ───────
 speaks "inside a quoted -c"     "s-b12" "bash -c \"git push origin main\""

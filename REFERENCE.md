@@ -965,7 +965,7 @@ possible move and looks identical to diligence in a transcript.
 
 This map makes multica-ops a **complete CLI-competence layer**: an agent loading the
 skill knows not just the method but **every command that exists**. It's the full surface
-of `multica` **v0.4.32** <!-- cli-pin -->, regenerated from `--help` and verified 2026-08-23 — but it lists *what exists*, not exact flags, since the CLI
+of `multica` **v0.5.3** <!-- cli-pin -->, regenerated from `--help` and verified 2026-09-25 — but it lists *what exists*, not exact flags, since the CLI
 evolves, so **always confirm with `multica <group> <cmd> --help`** and consult
 https://multica.ai/docs. **Precedence: live `--help` wins over this map** — on any
 mismatch trust the CLI, and regenerate this section when the skill is upgraded
@@ -976,7 +976,7 @@ or explain any of the below directly, no methodology assumed.
 - `agent` — archive · avatar · **copy** · create · env · get · list · **mcp** (add/disable/enable/list/remove) · restore · skills · tasks · update
 - `squad` — activity · create · delete · get · list · member · update
 - `project` — create · delete · get · list · resource (add/list/remove/update) · status · update
-- `issue` — assign · cancel-task · children · comment (add/delete/list/resolve/unresolve) · create · get · label · list · metadata · property · pull-requests · reorder · rerun · run-messages · runs · search · status · subscriber (add/list/remove) · **timeline** · update · usage
+- `issue` — assign · cancel-task · children · comment (add/delete/list/resolve/unresolve) · create · get · label · list · metadata · property · pull-requests · reorder · rerun · run-messages · runs · search · status · subscriber (add/list/remove) · **timeline** · update · usage · **wakeup** (create/disable/events/get/list/update)
 - `label` — create · delete · get · list · update
 - `property` — archive · create · get · list · unarchive · update (workspace custom issue properties)
 - `repo` — add · checkout · list · remove
@@ -994,7 +994,23 @@ or explain any of the below directly, no methodology assumed.
 > reader who wrote `multica plugin install` into a runbook needs to find out from this page why
 > it stopped working. **`workspace mcp` and `agent mcp` arrived in the same window** — see §3's
 > marked correction, which this pin's warning is what surfaced.
-- `autopilot` — create · delete · get · list · runs · trigger · trigger-add · trigger-delete · trigger-rotate-url · trigger-update · update
+- `autopilot` — create · delete · get · list · runs · trigger · trigger-add · trigger-delete · **trigger-list** · trigger-rotate-url · trigger-update · update
+
+> [!NOTE]
+> **`issue wakeup` arrived by 0.5.3 — read from `--help` on 2026-09-25, never run.** A wakeup starts
+> an ordinary run on **one issue**, for one agent, on an event or a time: `--kind at` (`--at` an
+> RFC3339 moment or `--after 10m`) is one-shot, `every` and `cron` are continuous, and `event` takes
+> the types `issue wakeup events` lists — a task queued, started, completed, failed or cancelled; a
+> status, assignee or label change; a comment created or resolved; a reaction; an attachment —
+> filtered by task, or by who made the change. *"To wait for a person to comment"* is the CLI's own
+> example: `--event comment.created --filter-actor-type member --filter-actor-id <user>`. Its own
+> limits, as it states them: the current issue only, no cross-issue subscriptions, and loop
+> protection within one rule, **not across rules** — two continuous comment subscriptions can wake
+> each other forever. **What it would change is named where it would change it**
+> (PLAYBOOKS → *Recover after a session limit*); **nothing here relies on it until a probe in a test
+> workspace has watched it fire**, which is the owner's to authorise. `autopilot trigger-list`
+> arrived beside it — the ids `trigger-update`, `trigger-delete` and `trigger-rotate-url` need,
+> which used to be read out of `autopilot get`.
 - `workspace` — create · get · list · **mcp** (add/list/remove/update) · member (invite/list) · switch · update
 - `attachment` — download · upload
 - `chat` — history · thread (**read-only**; scoped to the agent's own current thread)

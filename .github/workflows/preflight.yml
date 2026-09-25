@@ -58,6 +58,10 @@ jobs:
         run: bash scripts/test-link-names.sh
       - name: a project's mentions become links — never its declarations
         run: bash scripts/test-link-ids.sh
+      - name: every project on the shelf carries a link — and the shapes it must pass
+        run: bash scripts/test-check-shelf-links.sh
+      - name: an entry's Trio line against what the release added
+        run: bash scripts/test-check-trio.sh
 
       # `find-installs.sh` decides whether an install's documented update route can actually be
       # walked, and it shipped with no test — under a commit titled "a route nobody verifies is a

@@ -3,6 +3,101 @@
 Newest first. Each entry leads with what you can now do, not with which files moved. This is
 also the migration map `/multica-ops:upgrade` reads.
 
+## 0.4.19 — 2026-09-25
+
+**Every project on the shelf carries a link now, and a check refuses one that does not.** The
+owner's rule, said on 2026-09-25: a reader who meets a name on `STACKS.md` has to be able to open
+it. A shelf's bold is mostly licences and emphasis, so `scripts/check-shelf-links.py` — the
+sibling's script, byte for byte — reads what a project IS here: the head of each entry in a shelf
+column, a link in that entry or a link to the same name elsewhere on the shelf, and a short,
+reasoned list of methods and measures that are not projects. Its first honest run found
+**forty-three names without a link** — SwiftUI, Vitest, Unity, Google Search Console among them —
+and **linking one corrected its row**: PACT had been listed as *the callable layer* of the agent
+web, and its source says Private Access Control Tokens, a site vouching for an agent anonymously.
+Preflight §4e runs it; `test-check-shelf-links.sh` holds it, **17/17**, five code mutants. What it
+cannot see — a name inside a sentence, a name in lowercase, an entry already holding one link — is
+named in its docstring.
+
+**Two hundred links read, and the shelf says what came of each.** Nineteen new rows, dozens
+extended, and **a declined section where every project is a link under the reason it earns no
+row** — nothing went into the skill itself. **Rows the shelf already trusted misstated a licence**,
+and say it now: Twenty and Chatwoot keep enterprise parts under a closed licence, Dub has a
+proprietary `ee/`, a Strapi cloud account voids its MIT terms, Lago was called the cleanest when
+Kill Bill is Apache-2.0 throughout, and Cachet calls itself open source over a licence that is not.
+**The reading's own lesson**: a star count on a young repository is not evidence — a security skill
+at 21k stars on 76 watchers, eight days after 7.2k — and a push date is not a commit date.
+
+**The ideas worth more than their tools went into the rule each belongs to:**
+- **A document from outside is read as its rendering, never its bytes** (`SECURITY.md` →
+  *Attachments*) — hidden text is an injection channel; Dangerzone is on the shelf for a company
+  that receives documents all day.
+- **A scan is read as JSON, never as its summary** (`SECURITY.md` → *Third-party skills*) — the
+  lesson this repository's own release ritual learned on 2026-09-24, now told to every company that
+  screens its skills.
+- **A confidence score has no rung** (`PATTERNS.md` §6) — an agent keeping a record writes what it
+  observed, and weak evidence goes to a person as a suggestion.
+- **A free scholarly API can fail with 200, and a citation that resolves is not one that supports**
+  (`STACKS.md` → *Evidence*, and three new register entries) — the body is read before the answer is
+  believed, and each claim is read against the passage it cites.
+- **Sign-in starts at passkeys** (*Security defaults*), and **a workflow engine is ranked by what it
+  costs to leave** — a flow that is a file in the repository beats one kept in a dashboard.
+
+**The publish gate lets a search through at last, and closed a wrapper it had missed.**
+`grep -n "outward\|…" PLAYBOOKS.md` was refused on 2026-09-25 — the `|` of the regular expression
+read as a pipe, the verb after it as a command — and a commit message holding `;` or a newline before
+the verb was refused the same way. **The repair is narrow on purpose**, because the same misreading
+had been catching real acts by accident (`echo "a; …" | bash`, an interpreter's `-c` program, a file
+written and then run by `sh`): a separator inside a quote is a character only where a reading
+command holds the quote — grep, rg, echo, printf, a git message — **and** nothing in the command can
+run text. **And `timeout 60 …` had been walking past both gates**; `timeout` and `doas` are wrappers
+now. Same change, same cases, in both copies: `test-outward-gate.sh` **110/110**, and
+`test-gate-vs-bash.sh` **83/83** against bash itself, with two new mutants that each open a hole.
+- **Let through now:** a search whose pattern holds `|` or `;` before the verb; a commit message
+  holding either, or a newline, before it.
+- **Refused now:** a publish behind `timeout` or `doas`.
+- **Unchanged, on purpose:** any quote in a command that also names a shell, `eval`, `xargs`,
+  `ssh`, `su`, an interpreter, `awk`, `sed`, `find` or a scheduler.
+
+**A release's Trio line is measured against the release now.** 0.4.18's line said situations 5
+over a range that added 7, and nothing compared the two until the owner asked.
+`scripts/check-trio.py` counts what the diff since the last tag added — mermaid blocks, USE-CASES
+rows, register entries — and **preflight §5j-bis fails a line that disagrees, or that it cannot
+read**. A released entry is frozen, so a marked correction of its Trio line is what the script reads
+instead — **0.4.18 carries one now**, re-published beside it. `test-check-trio.sh` **19/19**, six
+code mutants. **The diagram 0.4.18's publish gate owed is paid here**: how the gate reads a command,
+in `SECURITY.md`.
+
+**Pinned to Multica CLI 0.5.3, and the one new capability is named, not relied on.** The surface
+check found two subcommands the pin did not know — `autopilot trigger-list`, which lists the ids the
+other trigger commands need, and **`issue wakeup`**, which starts an ordinary run on one issue on an
+event or at a time: a comment, a status change, a task that completed or failed, or a one-shot
+moment. REFERENCE §10 carries both, re-pinned from `--help` on 2026-09-25, and PLAYBOOKS →
+*Recover after a session limit* names what the one-shot wake would remove — the annual date a
+scheduled resumer leaves behind. **Read from `--help` and never run**, so nothing here relies on it
+until a probe in a test workspace has watched it fire, which is the owner's to authorise. Two README
+claims dated against older CLIs were re-checked against 0.5.3 and re-dated.
+
+**What to do — one re-copy, and it changes no rule.** Re-copy the company guard —
+`cp <skill>/templates/company-preflight.sh scripts/preflight.sh` in the company repository — whose
+sections are unchanged and whose stamp moves with the version, so it stops warning that it is
+stale. If the company's `_ops/TOOLING.md` records Twenty, Chatwoot, Dub, Strapi or Cachet as plainly
+open source, re-read that row against `STACKS.md`. And if the company screens its skills with
+SkillSpector, read the JSON: `grep -c manifest_parse_error` must print `0`.
+A CLI older than 0.5.3 loses nothing: no rule reads the two new subcommands.
+
+Eval state: **not run.** The forms are measured by their suites — shelf links **17**, trio **19**,
+the gate **110** and **83** against bash — and **a suite measures a form while an eval measures a
+run**. Four behaviours this entry adds that no scenario covers: whether an agent reads the body of a
+200 before quoting it, whether it opens a stranger's document as its rendering, whether it writes an
+observation rather than a score into a record it keeps, and whether it offers passkeys first. Named
+here rather than left to a reader's assumption.
+
+**Trio:** three diagrams — `SECURITY.md` one, `AGENTS.md` two — seven situations in USE-CASES, and
+three register entries for the claims about the outside world. **The two checks this repository
+runs on itself owe no situation**: no company meets them — this repository's developer does, in
+`CLAUDE.md` — so the Trio check carries its diagram and the shelf check needs no picture of *a name
+has a link*.
+
 ## 0.4.18 — 2026-09-25
 
 **If you rely on the publish gate, this is what changed for you** — the rest of this entry is the
@@ -599,6 +694,11 @@ the claims about the outside world. **The ported half owes no new diagram** and 
 the sibling's §27 carried over with its measurement, `graph-check.py` is its script, and the eleven
 rules are rules — each naming where it was read and on what date, which is what a port owes instead
 of a picture.
+
+> **Correction, 2026-09-25 — the Trio line undercounts its own release.** The range from `v0.4.17` to
+> `v0.4.18` added seven situations in USE-CASES, not five; the two diagrams and three register entries
+> are right. Measured by `scripts/check-trio.py`, which 0.4.19 adds for exactly this. **And the diagram
+> this release's publish gate owed shipped in 0.4.19** — how the gate reads a command, in `SECURITY.md`.
 
 ## 0.4.17 — 2026-09-11
 

@@ -109,6 +109,25 @@ and a gate whose evidence the constrained party can author is not a gate.** When
 as a real commit hook, three runs bought their way past it by writing the approval line it asked
 for.
 
+**The publish gate reads syntax, never intent** — `hooks/outward-gate.py`, held against bash
+itself by `scripts/test-gate-vs-bash.sh`. Asking *what did they mean* would mean asking the party
+being stopped, and a gate that read meaning could be argued out of it by the text it reads:
+
+```mermaid
+flowchart TD
+  C["a Bash command"] --> B["heredoc bodies and comments blanked ·<br/>line continuations folded"]
+  B --> P{"a publish verb at a command position?<br/>the start · a newline · ; && || | ·<br/>inside ( ) · $( ) · backticks —<br/>past wrappers (env · sudo · timeout …),<br/>a tool's global options, a path"}
+  B -.->|"a separator inside a quote that grep,<br/>echo or a commit message holds —<br/>and nothing in the command runs text"| S(["a character of a string"])
+  P -->|"after a word, inside a sentence"| R(["prose — allowed"])
+  P -->|"inside a quote"| Q{"a quote after something<br/>that runs a shell?<br/>bash -c · sh -c · eval · xargs"}
+  Q -->|"no — grep 'npm publish'"| R
+  Q -->|"yes"| A["an outward act"]
+  P -->|"yes"| A
+  A --> D{"a whole-word --dry-run that means dry,<br/>in the act's OWN simple command?"}
+  D -->|"yes"| R2(["a read — allowed"])
+  D -->|"no — a neighbour's flag, a comment,<br/>=false, $(git push) --dry-run"| X(("refused — the owner's last words<br/>beside it, as context, not consent"))
+```
+
 ## External text is data, not instructions
 
 Everything an agent reads from outside — a web page, an imported ticket, a comment another agent
@@ -130,6 +149,12 @@ weight · provenance · what it executes) and **re-screened on every upgrade**, 
 screened once is not screened forever. A ready-made agent found in a marketplace is treated as a
 parts bin: methods and references are taken, **foreign instructions never land verbatim in a
 config** — the same rule as an imported ticket.
+
+**A scan is read as JSON, never as its summary.** A skill whose frontmatter a strict parser
+rejects is skipped, and SkillSpector's printed summary still says *successful* with no findings —
+the only trace is a `manifest_parse_error` in that skill's `analysis_completeness`
+(`--format json --output <file>`; measured 2026-09-24). `grep -c manifest_parse_error <file>`
+printing anything but `0` means a skill went unread, and the screen is not finished.
 
 ## Credentials
 
@@ -163,6 +188,17 @@ is the code in the file itself: **an HTML file that arrived from anywhere else r
 JavaScript the moment a person opens the issue**.
 Combined with the absence of any type filter, that is the one attachment case where *"just attach
 it and look"* is not a neutral act.
+
+**A document from outside is read as its rendering, never its bytes.** A client's `.docx`, a CV,
+a paper pulled for research is untrusted twice over: the parser that opens it is an attack
+surface, and **its hidden text is an injection channel** — white text, a zero-size font, an
+off-page object, metadata an agent reads and a person never sees. So an agent works from **what a
+person would see**. **[Dangerzone](https://github.com/freedomofpress/dangerzone)** (AGPL-3.0, read 2026-09-25) renders the document to
+pixels in a sandbox with no network and rebuilds it, and is on the shelf for a company that
+routinely receives documents from strangers (`STACKS.md` → *Opening a document from a stranger*);
+it needs a container runtime, so installing it is the owner's word. **Rendering removes the
+hidden text and nothing else** — an instruction printed in plain sight survives it and is data
+like any other external text.
 
 ## Supply chain
 

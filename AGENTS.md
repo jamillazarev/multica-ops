@@ -342,7 +342,34 @@ A version bump is not just a changelog entry. Before you tag:
    user.
 5. **`bash scripts/preflight.sh`, `python3 scripts/verify.py --live`, and `python3 scripts/fetch-source.py --verify` then `--verify-citations` green** (warnings named) — the last two walk [`sources/SOURCES.md`](sources/SOURCES.md) in both directions: the register's live URLs are re-checked, and every `cited-by` is re-checked against the line it points at, since a rewrite moves the claim without touching the register.
 6. **Changelog** leads with the capability or the consequence, not the archaeology of how a
-   defect was found (that goes in the commit message).
+   defect was found (that goes in the commit message) — and ends with a `**Trio:**` line saying
+   what the release added, in words `scripts/check-trio.py` can read and measure.
+
+**Two of those checks read what a summary hides, drawn** — the skill scan of item 3 and the
+changelog's `**Trio:**` line, which `scripts/check-trio.py` measures against the range since the
+last tag (preflight §5j-bis):
+
+```mermaid
+flowchart LR
+  F["a skill's frontmatter"] --> P{"preflight —<br/>a strict reading"}
+  P -->|"a tab · a plain value holding ': ' ·<br/>' #' eating the rest of a line"| X(("refused on the commit,<br/>naming the skill"))
+  P -->|"passes, and so do the<br/>four shapes it names as limits"| S["before the tag:<br/>skillspector scan --format json"]
+  S --> J{"grep -c manifest_parse_error"}
+  J -->|"0"| T(["the tag may be cut"])
+  J -->|"1 or more"| W(("the tag waits —<br/>skills[].skill.source names it"))
+  S -.->|"the printed summary"| L["says 'successful' either way —<br/>so it is never what is read"]
+```
+
+```mermaid
+flowchart LR
+  E["the entry's Trio line"] --> R["read: diagrams ·<br/>situations · register entries"]
+  G["last tag .. the tree"] --> M["measured: mermaid blocks ·<br/>USE-CASES rows · new entries"]
+  R --> C{"the same?"}
+  M --> C
+  C -->|"yes"| OK(["§5j-bis passes"])
+  C -->|"no — or a kind the release added<br/>and the line does not name"| X(("§5j-bis fails,<br/>naming both numbers"))
+  E -.->|"no Trio line yet"| W["a warning — the entry<br/>is the last thing written"]
+```
 
 **Then the cut itself, in order — the last two steps were live misses on an earlier release:**
 

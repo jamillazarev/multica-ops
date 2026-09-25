@@ -87,7 +87,7 @@ CMD_START = (r"(?:(?:^|[\n;&|(){}`]|\$\()\s*"
 # The cost is named: a wrapper followed later on its line by a quoted mention of the verb is
 # refused, which is the loud side, and a line of the refusal — *if this is a sentence
 # about the act, say so to the owner* — is there for exactly that.
-WRAP = r"(?:(?:env|sudo|nohup|time|command|exec|eval|nice)[ \t]+(?:\S+[ \t]+)*)?"
+WRAP = r"(?:(?:env|sudo|doas|nohup|time|timeout|command|exec|eval|nice)[ \t]+(?:\S+[ \t]+)*)?"
 # **A tool takes global options before its subcommand, and can be named by its path.**
 # `git -C . push`, `git -c k=v push`, `gh -R o/r release create`, `npm --prefix x publish`,
 # `docker --context x push` and `/usr/bin/git push` all went through both gates from the day
@@ -137,8 +137,12 @@ _QUOTED = {"'": re.compile(r"'"), '"': re.compile(r'[\\"$`]'), "$'": re.compile(
 _OPENER = re.compile(r"<<(-?)[ \t]*\\?(['\"]?)(\w+)\2")
 
 
-def shell_only(cmd):
-    """The command as a shell would run it: continuations folded, heredoc BODIES blanked.
+def shell_scan(cmd):
+    """The command as a shell would run it: continuations folded, heredoc BODIES blanked — and,
+    beside it, where the quote holding each character opened (-1 outside a quote, and inside a
+    `$(…)` or a backtick pair, which run even within `"…"`), so a separator can be told from a
+    character of a quoted string (`quoted_data`, 2026-09-25).
+
 
     A heredoc body is data fed to another program, so a document carrying the verb at the start of
     a line is not a publish. **Every regex over the raw string was out-guessed within a round**: a
@@ -170,14 +174,17 @@ def shell_only(cmd):
     """
     c = re.sub(r"\\\n", " ", cmd)                    # a continuation is one command
     out, n, i = list(c), len(c), 0
+    qs, qa = [-1] * n, -1                         # where each quoted character's quote opened
     q, arith, depth, ctx, pending, stack = None, 0, 0, "code", [], []
     while i < n:
         if q is not None:                            # inside a quote: its end, an escape, or a
             s = _QUOTED[q].search(c, i)              # substitution opening inside "…"
             if not s:
                 break                                # never closed: bash runs none of it
+            qs[i:s.start()] = [qa] * (s.start() - i)
             i, ch = s.start(), s.group()
             if ch == "\\":
+                qs[i:i + 2] = [qa] * len(qs[i:i + 2])
                 i += 2
                 continue
             if ch == "`":
@@ -187,13 +194,14 @@ def shell_only(cmd):
             elif ch == "$" and c.startswith("${", i):
                 opened = ("param", "}", 2)
             elif ch == "$":
+                qs[i] = qa
                 i += 1
                 continue
             else:
                 q, i = None, i + 1
                 continue
-            stack.append((q, arith, depth, ctx, opened[1]))
-            q, arith, depth, ctx, i = None, 0, 0, opened[0], i + opened[2]
+            stack.append((q, qa, arith, depth, ctx, opened[1]))
+            q, qa, arith, depth, ctx, i = None, -1, 0, 0, opened[0], i + opened[2]
             continue
         s = _SPECIAL.search(c, i)
         if not s:
@@ -201,8 +209,8 @@ def shell_only(cmd):
         i, ch = s.start(), s.group()
         if ch == ")" and arith and c.startswith("))", i):
             arith, i = arith - 1, i + 2
-        elif stack and ch == stack[-1][4] and depth == 0:
-            q, arith, depth, ctx, _ = stack.pop()    # back inside the string it opened in
+        elif stack and ch == stack[-1][5] and depth == 0:
+            q, qa, arith, depth, ctx, _ = stack.pop()    # back inside the string it opened in
             i += 1
         elif ch == "\n":
             i += 1
@@ -214,7 +222,7 @@ def shell_only(cmd):
                     if (line.lstrip("\t") if dash else line) == word:
                         break
                     if e < 0:
-                        return "".join(out)          # no terminator: the rest stays visible
+                        return "".join(out), qs      # no terminator: the rest stays visible
                     j = e + 1
                 for k in range(i, j):
                     if out[k] != "\n":
@@ -230,7 +238,7 @@ def shell_only(cmd):
                 out[k] = " "
             i = e
         elif ch == "$" and c.startswith("$'", i):
-            q, i = "$'", i + 2
+            q, qa, i = "$'", i, i + 2
         elif ch == "$" and c.startswith("$((", i):
             arith, i = arith + 1, i + 3
         elif ch == "(" and ctx == "code" and c.startswith("((", i):
@@ -244,7 +252,7 @@ def shell_only(cmd):
         elif ch == "}" and ctx == "param" and depth:
             depth, i = depth - 1, i + 1
         elif ch in "'\"":
-            q, i = ch, i + 1                         # bash 3.2 reads `'` in "${…}" as a quote too
+            q, qa, i = ch, i, i + 1                         # bash 3.2 reads `'` in "${…}" as a quote too
         elif ch == "<" and c.startswith("<<<", i):
             i += 3                                   # a here-STRING, not a heredoc
         elif ch == "<" and ctx == "code" and not arith:
@@ -256,7 +264,53 @@ def shell_only(cmd):
                 i += 1
         else:
             i += 1
-    return "".join(out)
+    return "".join(out), qs
+
+
+def shell_only(cmd):
+    return shell_scan(cmd)[0]
+
+
+# **A separator inside a quote is a character of a string — where a reading command holds the
+# quote and nothing in the command can run text.** `grep -n "outward\|git push" f` was refused as
+# a publish on 2026-09-25: the `|` of the regex read as a pipe and the verb after it as a command,
+# and a commit message holding `; git push` or a newline was refused the same way. The owner asked
+# for it fixed the same day. **Narrow on purpose**, because the same quotes were catching real acts
+# by accident: `echo "a; git push" | bash`, `python3 -c "os.system('git push')"`, `su -c "…"`,
+# a file written and then run by `sh`. So a quote is data only when (1) the simple command holding
+# it starts with a reader — grep, rg, ag, ack, echo, printf, or git commit · log · grep · show ·
+# tag · notes — and (2) nothing in the command, outside such a quote, is a word that runs text: a
+# shell, `eval`, `source` or `.`, `exec`, `xargs`, `ssh`, `su`, `sudo`, `watch`, `tmux`, `screen`,
+# `parallel`, an interpreter, `awk`, `sed`, `find`, or a scheduler taking a pipe. Anything else
+# keeps the old reading, which is the loud side. `$(…)` and backticks inside `"…"` run, so the
+# scanner never marks them quoted.
+_READERS = re.compile(r"[ \t]*(?:[\w.~/-]*/)?(?:grep|egrep|fgrep|rg|ag|ack|echo|printf"
+                      r"|git(?:[ \t]+-C[ \t]+\S+)?[ \t]+(?:commit|log|grep|show|tag|notes))(?=[ \t]|$)")
+_RUNS_TEXT = re.compile(
+    r"(?:^|[\s;&|(){}`/\"'])((?:ba|z|da|k)?sh|fish|pwsh|eval|source|exec|xargs|ssh|su|sudo|watch|tmux"
+    r"|screen|parallel|python[0-9.]*|perl|ruby|node|deno|bun|php|osascript|awk|gawk|sed|find)"
+    r"(?=[\s;&|)}`\"']|$)"
+    r"|(?:^|[;&|(`\n])[ \t]*(at|batch|crontab|\.)(?=[ \t])")
+
+
+def _reader_held(c, qs, start):
+    """Whether the simple command holding the quote that opens at `start` begins with a reader."""
+    j = start - 1
+    while j >= 0 and not (qs[j] < 0 and c[j] in "\n;&|(){}`"):
+        j -= 1
+    return bool(_READERS.match(c, j + 1))
+
+
+def quoted_data(c, qs, at):
+    """Whether position `at` is a character of a quoted string nothing will run (see above)."""
+    start = qs[at] if 0 <= at < len(qs) else -1
+    if start < 0 or not _reader_held(c, qs, start):
+        return False
+    for m in _RUNS_TEXT.finditer(c):
+        p = m.start(1) if m.group(1) else m.start(2)
+        if qs[p] < 0 or not _reader_held(c, qs, qs[p]):
+            return False                     # something in this command can run text
+    return True
 
 
 def command_end(c, i):
@@ -347,9 +401,11 @@ def is_dry(words):
         return False
 
 
-def first_act(c):
+def first_act(c, qs=None):
     """The first outward act in `c` that is not a dry run of itself, or None."""
     for m in OUTWARD.finditer(c):
+        if qs is not None and quoted_data(c, qs, m.start()):
+            continue
         if not is_dry(c[m.start(1):command_end(c, m.start(1))]):
             return m
     return None
@@ -467,7 +523,7 @@ def main():
     cmd = str((payload.get("tool_input") or {}).get("command") or "")
     if not cmd:
         out()
-    m = first_act(shell_only(cmd))
+    m = first_act(*shell_scan(cmd))
     if not m:
         out()
 

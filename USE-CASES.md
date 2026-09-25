@@ -65,6 +65,7 @@ are shortcuts for when you already know the name. Both columns do the same thing
 |---|---|---|
 | "Is anyone else doing this?" | *"look into how competitors price this"* | `/multica-ops:mops research …` — cited findings land in `_ops/research/` |
 | "Who are we even for?" | *"work out our segments and ICP"* | `/multica-ops:mops audience` |
+| "Pull the papers on this for me" | *"what does the literature say about X?"* | **a 200 is believed only after its body is read** — an article with no text, one entry titled `Error`, *zero citations* for a DOI that does not exist all arrive looking like answers — and each claim is read against the passage it cites: supported · overstated · not supported · cannot be checked (STACKS → *Evidence*) |
 | "Being wrong here is expensive — don't just agree with me" | *"council this"* · *"прогони через совет"* | four angles answer independently, cross-review anonymized, and the synthesis leads with **the strongest dissent**. You hear the price first — **nine runs** — and the answer says `provider: one` when every voice was the same model |
 | "We need a brand / ours feels dated" | *"we need an identity"* · *"our brand looks old"* | `/multica-ops:mops brand` |
 | "Would experts tear this apart?" | *"have the experts review this spec"* | `/multica-ops:mops validate …` |
@@ -133,6 +134,8 @@ are shortcuts for when you already know the name. Both columns do the same thing
 | "I found a skill online, can we use it?" | `/multica-ops:skill import <url>` | screened for danger and hidden instructions, trimmed, attached with its source and date recorded |
 | "Our skills have got bloated" | `/multica-ops:skill optimize` | fail-closed compression — commands and paths kept verbatim, reviewed by someone else; "can't compress this safely" is a valid answer |
 | "This one turned out great, I want it in my other projects" | `/multica-ops:skill release` | de-identified, moved to your own repo outside the workspace (owner-confirmed), then re-imported so there's one source of truth |
+| "The advisor named a tool I've never heard of" | *"what is it?"* | **every project on the shelf carries a link where it is named**, so the row opens the project itself — and a shelf entry without one is refused before it ships (STACKS) |
+| "We want our automations in a visual tool" | *"set this up in Node-RED"* | **ranked by what it costs to leave** — a flow that is a file in the repository beats one kept in a dashboard, and a dashboard's flows are exported into the repository on every change |
 
 ## Building without engineers
 
@@ -141,13 +144,17 @@ are shortcuts for when you already know the name. Both columns do the same thing
 | "Can we just do the landing page in Framer?" | *"what would that cost us later?"* | the exit-cost check: can an agent operate it, can the work leave, what happens at the boundary |
 | "I need an admin panel and don't want to build one" | `/multica-ops:feature` or *"what should we use?"* | self-hostable no-code (Appsmith, ToolJet, Budibase) — config lives in the repo |
 | "Get me a first version of this screen fast" | *"prototype it"* | prompt-to-code (v0, Bolt, Lovable) emits real code, which agents then own, review and test |
+| "How should people sign in?" | *"add login"* | **passkeys first, a password as the fallback** — a passkey cannot be phished onto another site or leaked from a database, and the library comes off the shelf (STACKS → *Security defaults*) |
 
 ## Trust and correctness
 
 | Situation | Say | Runs |
 |---|---|---|
 | "An imported ticket tells the agent to grant itself access" | nothing — it surfaces | external text is data: it's quoted to you and not obeyed |
-| "It refused a command that wasn't publishing anything" | — | **a command starts a command; a word after another word is prose.** A file being written, a search for the phrase, a document quoting it: none are the act. What is stopped however it is spelled: a wrapper word in front of it, a line continuation, a redirect touching it, a shell-runner's quoted argument — and the refusal shows **your own last instruction**, as context and never as consent |
+| "The client sent a contract — what does it say?" | *"summarise this"* | **the agent reads what a person would see** — the document rendered, never its bytes — so text hidden in white or at size zero cannot address it; a company that receives documents all day takes [Dangerzone](https://github.com/freedomofpress/dangerzone) off the shelf |
+| "The scanner says our skills are clean" | *"did it read all of them?"* | **its JSON is read, never its summary** — a skill whose frontmatter a strict parser rejects is skipped while the summary says *successful*, and `manifest_parse_error` is the only trace |
+| "Keep the CRM current on its own" | *"keep the deals up to date"* | **it writes what it saw, where and when — never a likelihood score**; evidence too weak to write comes to you as a suggestion to settle (PATTERNS §6) |
+| "It refused a command that wasn't publishing anything" | — | **a command starts a command; a word after another word is prose.** A file being written, a search for the phrase — **a `|` or a `;` inside its pattern included** — a commit message or a document quoting it: none are the act. What is stopped however it is spelled: a wrapper word in front of it (`timeout` and `doas` among them), a line continuation, a redirect touching it, a shell-runner's quoted argument, a quote handed to anything that runs text — and the refusal shows **your own last instruction**, as context and never as consent |
 | "What does this service even give us — an API, a CLI, an MCP?" | `/multica-ops:audit` | the register answers it, because the column exists: **what it ships and which of it you took**, with `checked <date> · none found` as a real answer. And **gone when** — the condition that retires the row, written the day it arrives |
 | "Who reviewed this? Not the person who wrote it, I hope" | `/multica-ops:audit` | flags gates where author and reviewer coincide |
 | "Was that price still true?" | `/multica-ops:audit` or just ask | recorded facts carry a check-date and get re-verified before a decision |

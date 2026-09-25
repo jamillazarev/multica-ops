@@ -29,6 +29,10 @@ workspace under migration, so there is no `UPGRADES.md` and none is owed.
    is the explanation (we draw in mermaid), a **situation** in [USE-CASES.md](USE-CASES.md),
    and a **fact** in [sources/SOURCES.md](sources/SOURCES.md) when the claim is about the
    outside world. A wording-only change owes none of these — say so rather than inventing one.
+   **The entry's `**Trio:**` line is measured, not trusted**: `scripts/check-trio.py` counts what the
+   range since the last tag added — mermaid blocks, USE-CASES rows, register entries — and preflight
+   §5j-bis fails a line that disagrees or that it cannot read. 0.4.18's line said situations 5 over a
+   range that added 7, and nothing compared the two until the owner asked (2026-09-25).
 4. **Checks**, exit codes captured *first* — `cmd > /tmp/out 2>&1; rc=$?` — then read the tail:
    `bash scripts/preflight.sh` · `python3 scripts/verify.py --live` ·
    `python3 scripts/fetch-source.py --verify` then `--verify-citations` ·
@@ -37,6 +41,7 @@ workspace under migration, so there is no `UPGRADES.md` and none is owed.
    `test-rule-home.sh` · `test-map-blocks.sh` · `test-dispatch-nudge.sh` ·
    `test-preflight-checks.sh` · `test-native-register.sh` · `test-recheck-trigger.sh` ·
    `test-link-names.sh` · `test-link-ids.sh` · `test-deps-report.sh` · `test-check-releases.sh` ·
+   `test-check-shelf-links.sh` · `test-check-trio.sh` ·
    `test-verify-reads.sh`. Each one's load-bearing assertion is about what
    its holder *refuses*, so a suite left out of this list is a guard nobody re-checks.
    Green is evidence about the corpus, never about behaviour — behaviour is the eval suite's

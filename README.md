@@ -78,7 +78,8 @@ end to end rather than assumed.
   stated rule.
 - **Every claim carries how it is known** — measured · cited · recalled · a judgement call, or
   `unknown` — and the rung travels with the claim, so nobody promotes another's guess into a
-  fact by quoting it.
+  fact by quoting it. **A record an agent keeps holds what it observed, never a confidence score**,
+  and a document from a stranger is read as a person would see it — never its hidden text.
 - **Every decision runs one loop** — frame it, **search rather than recall**, compare, choose
   and say why, then check it survives being wrong. Prioritisation, tool choice, the role-builder
   and process discovery are all that same loop.
@@ -96,7 +97,8 @@ end to end rather than assumed.
   record, and **applied work is never redone**.
 - **Autonomy is earned and can go down**, and no history buys the four gated kinds — spending,
   outward acts, destruction, reshaping the team. **The publish gate stops the act and not a
-  sentence about it** — a command starts a command, and a word after another word is prose — and
+  sentence about it** — a command starts a command, a word after another word is prose, and a
+  search whose pattern holds a `|` is still a search — and
   its refusal carries your own last instruction beside it: **context, never consent.**
 - **A dependency says what the service ships and when it should leave** — an MCP server, a CLI, an
   SDK or an agent skill is work nobody has to write, and `checked <date> · none found` is an answer
@@ -126,12 +128,12 @@ Stated rather than wished away — every number carries where it came from:
 |---|---|---|
 | **6 tasks per agent · 20 per daemon** | the tighter one wins; fan-out past it just queues | measured |
 | **a `local_directory` serialises** | one task at a time, forever, however wide you decompose | cited (REFERENCE §object model) |
-| **`workspace delete` is not in the CLI** | Mops cannot remove a workspace it created, and says so | measured, CLI v0.4.26 (2026-08-15) |
+| **`workspace delete` is not in the CLI** | Mops cannot remove a workspace it created, and says so | measured, CLI v0.4.26 (2026-08-15); still absent at v0.5.3 (2026-09-25) |
 | **autopilot failures are silent** | no auto-retry, no inbox post — run them in `create_issue` mode and subscribe the owner | measured |
 | **start dates are enforced by the team** | nothing on the platform stops an agent beginning early | cited |
 | **some rules are `prose-only`** | nothing enforces them; they are listed by name rather than believed in | measured |
 
-**30 stratified eval scenarios** — from a job too small to deserve a company to an import
+**34 stratified eval scenarios** — from a job too small to deserve a company to an import
 carrying a hidden instruction — judge the **end state, not the route**, with a player that never
 saw the rubric and a judge that did not write the transcript. Each release records its run in
 `evals/runs/<version>.md` with `not run` listed rather than omitted, and **a minor or major is
@@ -207,12 +209,12 @@ does ask for is named in **[SECURITY.md](SECURITY.md)**.
 | [BOOTSTRAP.md](BOOTSTRAP.md) | zero-to-team CLI recipes, capacity levers, real-hours traps |
 | [ROLES.md](ROLES.md) | role catalog with curated skill packs + the generic role-builder |
 | [PLAYBOOKS.md](PLAYBOOKS.md) | daily operations, copy-paste ready |
-| [STACKS.md](STACKS.md) | services, libraries, testing, security, evidence and reference shelves |
+| [STACKS.md](STACKS.md) | services, libraries, testing, security, evidence and reference shelves — every project a link, and what was read and declined under its reason |
 | [MODULES.md](MODULES.md) | opt-in: design work · design system · brand · persona theatre · tracker bridge · HQ |
 | [REFERENCE.md](REFERENCE.md) | object model, anti-patterns, **CLI surface (§10)**, **frameworks (§11)** |
 | [WORKFLOW.md](WORKFLOW.md) | Mermaid diagrams of the whole process |
 | [CHANGELOG.md](CHANGELOG.md) | versioned history — the migration map `/multica-ops:upgrade` reads |
-| [evals/](evals/) | the 30 scenarios, plus `runs/` — the recorded verdicts per release |
+| [evals/](evals/) | the 34 scenarios, plus `runs/` — the recorded verdicts per release |
 | [templates/](templates/) · [scripts/](scripts/) | guide · roadmap · brand · component docs · decisions · architecture · tooling · team · **a docs guard for the companies Mops builds** · ops helpers · resumable backlog import |
 
 Everything but [`skills/mops/SKILL.md`](skills/mops/SKILL.md) loads **only when its trigger fires**.
@@ -238,6 +240,6 @@ Forward-only: what shipped lives in the body of this file and in the
 
 Works against **Multica cloud or a self-hosted server** — execution is local either way, so only
 backups and upgrades change hands. Verified with `multica` CLI v0.4.12; the surface claims were
-re-checked against v0.4.26 on 2026-08-15 (REFERENCE §10 carries the pin and the caveat). Code is
+re-checked against v0.4.26 on 2026-08-15 and against v0.5.3 on 2026-09-25 (REFERENCE §10 carries the pin and the caveat). Code is
 **[Apache-2.0](LICENSE)**; the names "Mops" / "multica-ops" and the avatar are reserved — see
 **[TRADEMARKS.md](TRADEMARKS.md)**.

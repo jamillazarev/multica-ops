@@ -334,7 +334,7 @@ from this file, the docs and `--help`/`--debug` win.
 
 ## 12. External services — connect-or-create, access, secrets
 
-**[STACKS.md](STACKS.md) is the FIRST stop, and a web search is the second** — every row there
+**`STACKS.md` is the FIRST stop, and a web search is the second** — every row there
 carries a licensing or fallback decision somebody already paid for, which a search cannot return
 because a search returns what is popular this month. The order: **read the row · then search for
 what the row does not cover · then hand-wire.** The same order holds for *references* as for
@@ -516,7 +516,7 @@ stage finished" (that is @mentions and barriers). Offer at setup, default "later
    *guide* skill, not this one — multica-ops is Mops's brain), so Mops in Multica *is* the
    same Mops:
    - **Install idempotently, never blindly.** First `multica skill list` — if `multica-ops`
-     isn't there, `multica skill import --url github.com/jamillazarev/multica-ops/tree/v0.4.18/skills/mops`. If it
+     isn't there, `multica skill import --url github.com/jamillazarev/multica-ops/tree/v0.4.19/skills/mops`. If it
      **already exists** (re-run, or a teammate imported it), **compare versions**: same →
      skip; older → refresh through `/multica-ops:upgrade` (backup current to `_ops/skill-backups/` →
      `import --on-conflict overwrite`), **never a second copy**. (`import` supports

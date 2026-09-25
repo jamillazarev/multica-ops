@@ -169,7 +169,7 @@ reminded of is a deletion). Both run each release (AGENTS.md → Cutting a relea
 - **Distillate:** A **cascade** that queries cheaper models first and escalates only on low confidence can **match the best single model's accuracy at up to −98% cost**. The evidence for cheap-first-then-escalate routing at decomposition.
 - **Check-date:** 2026-07-27
 - **Reads against:** `not checked`
-- **Cited-by:** ROLES.md#grades-fit-check-and-the-talent-pool (sha:99e0c8c2, checked 2026-08-07)
+- **Cited-by:** ROLES.md#grades-fit-check-and-the-talent-pool (sha:45943d7c, checked 2026-09-25)
 
 ### routerbench · Hu et al., RouterBench
 - **Citation:** Hu, Q.J., et al. "RouterBench: A Benchmark for Multi-LLM Routing Systems." arXiv:2403.12031 (2024).
@@ -179,7 +179,7 @@ reminded of is a deletion). Both run each release (AGENTS.md → Cutting a relea
 - **Distillate:** Cascades beat both any individual LLM and a zero-cost router **only when the verifier is good** — judge error **≤0.1**, deteriorating past **0.2**. The load-bearing caveat: cheap-first routing is **conditional on a good verifier**. In the skill, the **review gates are that verifier**, so the condition is already met — the caveat reads as a strength, not a risk.
 - **Check-date:** 2026-07-27
 - **Reads against:** `not checked`
-- **Cited-by:** ROLES.md#grades-fit-check-and-the-talent-pool (sha:99e0c8c2, checked 2026-08-07)
+- **Cited-by:** ROLES.md#grades-fit-check-and-the-talent-pool (sha:45943d7c, checked 2026-09-25)
 
 ## Repository context files
 
@@ -213,11 +213,41 @@ reminded of is a deletion). Both run each release (AGENTS.md → Cutting a relea
 - **Distillate:** The external rubrics the design lens points at — **not** evidence claims about the world. Nielsen's 10 usability heuristics (the usability lens), WCAG (accessibility), and the cognitive-walkthrough method (first-use flows). Referenced as standards a reviewer applies, never copied into the skill.
 - **Check-date:** 2026-07-27
 - **Reads against:** `not checked`
-- **Cited-by:** REFERENCE.md#1-objects (sha:1711aabc, checked 2026-08-07)
+- **Cited-by:** REFERENCE.md#11-frameworks-picked-per-task-never-one-size (sha:387ae162, checked 2026-09-25)
+
+### claim-audit · academic-research-skills — a citation that resolves is not one that supports
+- **Citation:** Imbad0202, *academic-research-skills* — its claim-level citation audit and the post-publication audit report in `examples/showcase/` (README read 2026-09-25).
+- **Live:** https://github.com/Imbad0202/academic-research-skills
+- **Archive:** archive: pending  (run: fetch-source.py --archive https://github.com/Imbad0202/academic-research-skills)
+- **Licence:** **CC BY-NC 4.0** — non-commercial, so the method is taken and none of the text or code; this company runs commercial work
+- **Distillate:** Checking that a cited source exists says nothing about whether the sentence carrying it says what the source says. The pack reads each claim against the passage it cites and classes it as supported, overstated, unsupported, or unverifiable when the passage cannot be reached. **Its authors report** that an independent audit after publication found **21 of 68 real issues that three rounds of integrity checks had missed** — the lesson of a review that reports clean, measured in another field. Not re-measured here.
+- **Check-date:** 2026-09-25
+- **Reads against:** `none found`
+- **Cited-by:** STACKS.md#evidence-sources-a-claim-can-actually-rest-on (sha:cb95deb9, checked 2026-09-25)
 
 ---
 
 ## What the tools print — read in their own sources
+
+### paper-lookup-200 · K-Dense, `paper-lookup` — scholarly APIs that answer a failure with HTTP 200
+- **Citation:** K-Dense-AI, *scientific-agent-skills*, `skills/paper-lookup/SKILL.md` (main branch, read 2026-09-25).
+- **Live:** https://github.com/K-Dense-AI/scientific-agent-skills/blob/main/skills/paper-lookup/SKILL.md
+- **Archive:** archive: pending  (run: fetch-source.py --archive https://github.com/K-Dense-AI/scientific-agent-skills/blob/main/skills/paper-lookup/SKILL.md)
+- **Licence:** MIT — a copy may be carried; only our distillate is held
+- **Distillate:** Six free scholarly APIs report a failure as success. PMC returns a well-formed article with no body when the publisher forbids redistribution; arXiv returns one entry titled `Error` for a malformed parameter and quietly widens an unknown field prefix to all fields; Europe PMC puts its error code inside a 200 body; bioRxiv accepts an out-of-step pagination cursor and returns the wrong thirty records; Figshare's `GET` search ignores its query; OpenCitations answers a DOI that does not exist with a count of zero. **So the body is read before the answer is believed** — and the zero is the dangerous one, being a plausible fact about a real paper. Not re-measured here.
+- **Check-date:** 2026-09-25
+- **Reads against:** `none found`
+- **Cited-by:** STACKS.md#evidence-sources-a-claim-can-actually-rest-on (sha:cb95deb9, checked 2026-09-25)
+
+### skillspector-json · SkillSpector — a rejected manifest shows only in the JSON
+- **Citation:** NVIDIA, *SkillSpector*, the `scan` command's JSON report (`--format json --output <file>`), run on this repository's skills 2026-09-24.
+- **Live:** https://github.com/NVIDIA/skillspector
+- **Archive:** archive: pending  (run: fetch-source.py --archive https://github.com/NVIDIA/skillspector)
+- **Licence:** Apache-2.0 — a copy may be carried; only our distillate is held
+- **Distillate:** A skill whose frontmatter a strict YAML parser rejects is skipped, and **the printed summary still says the scan succeeded with no findings**. The only trace is a `manifest_parse_error` in that skill's `analysis_completeness.ledger_exceptions` — in a `--recursive` report under `skills[]`, while the report's own top-level `analysis_completeness` stays clean. Measured on this repository and its sibling's thirteen descriptions holding a plain value with `: ` inside it; the repair reads the JSON, where `grep -c manifest_parse_error` must print `0`.
+- **Check-date:** 2026-09-24
+- **Reads against:** `none found`
+- **Cited-by:** AGENTS.md#cutting-a-release (sha:1f6daa8d, checked 2026-09-25), SECURITY.md#third-party-skills (sha:643fb065, checked 2026-09-25)
 
 ### mise-outdated · mise, `outdated` — what its JSON means, and what makes it refuse a file
 - **Citation:** jdx/mise, `src/toolset/outdated_info.rs` (main branch, read 2026-09-11), and the `mise outdated`, `mise ls` and `mise bootstrap` help of mise 2026.9.5.
@@ -227,7 +257,7 @@ reminded of is a deletion). Both run each release (AGENTS.md → Cutting a relea
 - **Distillate:** `mise outdated --json` is an object keyed by tool — `requested`, `current` (null when not installed), `bump`, `latest`, and `release_url` (omitted when the backend publishes none). **`latest` means the newest version inside the pin without `--bump`, and the newest at all with it**; `bump` is the new pin at the old pin's precision (`22` becomes `24`). **A tool whose lookup fails is dropped from the JSON with only a warning on stderr**, so an offline run and a current one both print `{}`. The short `-l` is deprecated and becomes `--local` in 2027.8.5. Measured on 2026.9.5: a `mise.toml` with `[tools]` alone is read on any machine, while one carrying `[bootstrap.packages]` is refused by every command until `mise trust`.
 - **Check-date:** 2026-09-11
 - **Reads against:** `npm-outdated` — they agree, and that is the finding: npm's *wanted* is mise's *latest* without --bump, npm's *latest* is mise's with it, so one report can sort both by the same line
-- **Cited-by:** PLAYBOOKS.md#when-something-it-needs-has-a-newer-version (sha:e94db945, checked 2026-09-11), PLAYBOOKS.md#what-the-project-needs-from-the-machine (sha:91f89498, checked 2026-09-11)
+- **Cited-by:** PLAYBOOKS.md#when-something-it-needs-has-a-newer-version (sha:53fbb8b2, checked 2026-09-25), PLAYBOOKS.md#what-the-project-needs-from-the-machine (sha:0d4ca08d, checked 2026-09-25)
 
 ### npm-outdated · npm, `npm outdated` — an update inside the range, and a move beyond it
 - **Citation:** npm CLI documentation, *npm-outdated*, and `lib/commands/outdated.js`, npm/cli `latest` branch, read 2026-09-11.
@@ -237,7 +267,7 @@ reminded of is a deletion). Both run each release (AGENTS.md → Cutting a relea
 - **Distillate:** `wanted` is the newest version that satisfies the range in `package.json`; `latest` is the version tagged latest in the registry, and npm's own output colours the first *update now* and the second *proceed with caution*. With `--json` the answer is an object keyed by package name whose value becomes an **array** when one name is outdated in two places; `current` is absent when the package is not installed; the command exits 1 whenever anything is outdated, so its exit code says nothing about whether it answered.
 - **Check-date:** 2026-09-11
 - **Reads against:** `mise-outdated` — the same line drawn for runtimes and tools: they agree, which is what lets the pin, not the numbering, decide what is routine
-- **Cited-by:** PLAYBOOKS.md#when-something-it-needs-has-a-newer-version (sha:e94db945, checked 2026-09-11)
+- **Cited-by:** PLAYBOOKS.md#when-something-it-needs-has-a-newer-version (sha:53fbb8b2, checked 2026-09-25)
 
 ### pep-594 · Python 3.13 removed nineteen standard-library modules
 - **Citation:** Python Software Foundation, *What's New In Python 3.13*, "Important removals"; PEP 594, "Removing dead batteries from the standard library".
@@ -247,4 +277,4 @@ reminded of is a deletion). Both run each release (AGENTS.md → Cutting a relea
 - **Distillate:** 3.13 removed the nineteen "dead batteries" deprecated in 3.11 — aifc, audioop, cgi, cgitb, chunk, crypt, imghdr, mailcap, msilib, nis, nntplib, ossaudiodev, pipes, sndhdr, spwd, sunau, telnetlib, uu and xdrlib — and the 2to3 tool with lib2to3. A minor version number that breaks any code importing one of them: the reason the line between a routine update and a decision is the project's own pin, not the version's numbering.
 - **Check-date:** 2026-09-11
 - **Reads against:** `none found`
-- **Cited-by:** PLAYBOOKS.md#when-something-it-needs-has-a-newer-version (sha:e94db945, checked 2026-09-11)
+- **Cited-by:** PLAYBOOKS.md#when-something-it-needs-has-a-newer-version (sha:53fbb8b2, checked 2026-09-25)

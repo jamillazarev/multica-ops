@@ -55,7 +55,10 @@ named separately.
 
 **6 · The rung travels with the claim.** Claims carry **measured › cited › recalled ›
 judgement call** (or `unknown`), and a lower rung never borrows a higher one's authority —
-including across a handoff: quoting does not promote.
+including across a handoff: quoting does not promote. **A confidence score has no rung**: an agent
+keeping a record writes what it observed, where and when — never *0.8 likely* — and evidence too
+weak to write goes to a person as a suggestion (read 2026-09-25 in
+[trycompai/crm](https://github.com/trycompai/crm), MIT; the rule was taken, the CRM was not).
 *Applies to:* issue bodies · research findings · ICE scores · expert verdicts · the two
 audience pyramids (a live reaction › a twin's › a validated's › a proto's — never pooled
 with each other or with token counts).

@@ -188,6 +188,15 @@ Three measured constraints shape that (2026-08-01):
   keep reporting one (BOOTSTRAP §13), so check `enabled` and `status` before telling the owner
   their team comes back at 07:20.
 
+**CLI 0.5.3 has a one-shot wake that would remove the second constraint — unmeasured.**
+`multica issue wakeup create <issue-id> --kind at --at <RFC3339> --agent-id <agent> --instruction-file
+<runbook>` starts one run, for one agent, on one issue, once: no annual date to delete afterwards
+(REFERENCE §10). Read from `--help` on 2026-09-25 and **never run** — whether it fires while the
+agent's runtime is still at its limit, whether a run it starts retries, and whether one wake per
+issue is cheaper than one resumer for all of them are all open. **Until a probe in a test workspace
+answers them, the autopilot above is the measured route**, and the probe is the owner's to
+authorise.
+
 ## Three rules about records that a platform does not give you
 
 **Ported 2026-09-18, read out of working harnesses rather than invented.** The platform owns task
@@ -1254,7 +1263,7 @@ conventions its owner never chose.
 
 ## Resident Mops — install / refresh
 
-`multica skill list` → absent: `skill import --url github.com/jamillazarev/multica-ops/tree/v0.4.18/skills/mops`;
+`multica skill list` → absent: `skill import --url github.com/jamillazarev/multica-ops/tree/v0.4.19/skills/mops`;
 present: compare versions — same → skip, older → the Skill-upgrade recipe above. Never a
 second copy. Then `agent create` (name **Mops**) → `agent skills` attach (+ find-skills)
 → `agent avatar` per chosen library (Mops in Multica keeps `assets/mops-avatar.png`) → subtitle "Executive Advisor · resident" → rights
