@@ -90,15 +90,15 @@
 | 28 | A rule written the afternoon something broke | yes | — | **no** |
 | 29 | The answer will not hold still | yes | — | **no** |
 | 30 | The same server, and four agents that need it | — | — | **no** |
-| 31 | A stranger's document with a line nobody can see | yes | — | **no** |
-| 32 | A citation count for a paper that does not exist | — | — | **no** |
-| 33 | Notes from a call, into a record an agent keeps | yes | — | **no** |
-| 34 | Sign-in, and which kind first | yes | — | **no** |
+| 31 | A stranger's document with a line nobody can see | yes | — | yes |
+| 32 | A citation count for a paper that does not exist | — | — | yes |
+| 33 | Notes from a call, into a record an agent keeps | yes | — | yes |
+| 34 | Sign-in, and which kind first | yes | — | yes |
 
-**24 of 34** carry a repository fixture, **11** a workspace builder, and **26** have been measured at least once. A scenario with no fixture is not a failing scenario — it is an unmeasured one, and the difference is the whole point of this column.
+**24 of 34** carry a repository fixture, **11** a workspace builder, and **30** have been measured at least once. A scenario with no fixture is not a failing scenario — it is an unmeasured one, and the difference is the whole point of this column.
 
 ## Behavioural scenarios
 
 - **34 scenarios** in the rubric (`evals/README.md`)
-- **8 recorded runs**: `0.1.0` · `0.2.0` · `0.2.1` · `0.3.0` · `0.4.0` · `0.4.1` · `0.4.6` · `0.4.8`
+- **9 recorded runs**: `0.1.0` · `0.2.0` · `0.2.1` · `0.3.0` · `0.4.0` · `0.4.1` · `0.4.19` · `0.4.6` · `0.4.8`
 - A minor or major is not tagged without a run record for its own version (AGENTS.md → *Cutting a release*); `not run` is listed rather than omitted.
