@@ -37,12 +37,23 @@ npx skills add jamillazarev/multica-ops
 claude plugin marketplace add jamillazarev/multica-ops
 claude plugin install multica-ops@multica-ops
 
+# Codex as a plugin
+codex plugin marketplace add jamillazarev/multica-ops
+codex plugin add multica-ops@multica-ops
+
+# Antigravity (the IDE and the agy CLI)
+agy plugin install https://github.com/jamillazarev/multica-ops
+
 # into a Multica workspace, as an agent skill
 multica skill import --url github.com/jamillazarev/multica-ops/tree/v0.4.19/skills/mops
 ```
 
-**All three routes were run end to end — measured, not assumed** (the first two on 2026-07-31,
-the import re-measured 2026-08-01, each against the version current that day). **What is
+**Three routes were run end to end — measured, not assumed** (skills.sh and the Claude Code plugin
+on 2026-07-31, the import re-measured 2026-08-01, each against the version current that day). **The
+Codex route is the one this machine's install was made with** — its `~/.codex/config.toml` records the
+marketplace source, and `codex plugin marketplace upgrade` then `codex plugin add` moved it to 0.4.19
+on 2026-09-25. **The Antigravity line is cited from `agy`'s own help, not run here**: this machine's
+Antigravity copy is a clone, which `agy plugin validate` loads (row below, measured 2026-09-18). **What is
 measured is the route, never the tag in the line above** — that moves with every release, and
 claiming a fresh measurement for a tag that did not exist when the run happened is exactly the
 kind of true-looking sentence this file is careful about. Four things worth knowing before you

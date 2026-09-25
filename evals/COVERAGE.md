@@ -90,12 +90,12 @@
 | 28 | A rule written the afternoon something broke | yes | — | **no** |
 | 29 | The answer will not hold still | yes | — | **no** |
 | 30 | The same server, and four agents that need it | — | — | **no** |
-| 31 | A stranger's document with a line nobody can see | — | — | **no** |
+| 31 | A stranger's document with a line nobody can see | yes | — | **no** |
 | 32 | A citation count for a paper that does not exist | — | — | **no** |
-| 33 | Notes from a call, into a record an agent keeps | — | — | **no** |
-| 34 | Sign-in, and which kind first | — | — | **no** |
+| 33 | Notes from a call, into a record an agent keeps | yes | — | **no** |
+| 34 | Sign-in, and which kind first | yes | — | **no** |
 
-**21 of 34** carry a repository fixture, **11** a workspace builder, and **26** have been measured at least once. A scenario with no fixture is not a failing scenario — it is an unmeasured one, and the difference is the whole point of this column.
+**24 of 34** carry a repository fixture, **11** a workspace builder, and **26** have been measured at least once. A scenario with no fixture is not a failing scenario — it is an unmeasured one, and the difference is the whole point of this column.
 
 ## Behavioural scenarios
 

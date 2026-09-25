@@ -29,9 +29,22 @@ diff and delete, **including the parts it admits nothing enforces**.
 
 ## One minute in
 
+Pick the lines for the agent you already use — the same repository installs into each:
+
 ```sh
+# Claude Code — a plugin, with slash commands
 claude plugin marketplace add jamillazarev/multica-ops
 claude plugin install multica-ops@multica-ops
+
+# Codex — a plugin
+codex plugin marketplace add jamillazarev/multica-ops
+codex plugin add multica-ops@multica-ops
+
+# Antigravity — the IDE and the agy CLI
+agy plugin install https://github.com/jamillazarev/multica-ops
+
+# anything that reads Agent Skills — Cursor, Windsurf, Copilot, OpenCode…
+npx skills add jamillazarev/multica-ops
 ```
 
 Then say what you need — no command required, any language. Mops runs day zero itself
@@ -51,9 +64,8 @@ with the fixes, and takes the right entrance:
 actually expert in. Everything else has a default good enough to leave alone, and **"defaults"**
 takes all of them at once.
 
-Every other install route — skills.sh for any harness, Codex, Antigravity (`agy`), and
-importing the skill into a Multica workspace — is in **[INSTALL.md](INSTALL.md)**, each measured
-end to end rather than assumed.
+Importing the skill into a Multica workspace itself, and how far each route above was measured —
+the date and what was run, or that it was not — is in **[INSTALL.md](INSTALL.md)**.
 
 ---
 
