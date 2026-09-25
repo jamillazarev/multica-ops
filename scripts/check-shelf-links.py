@@ -9,7 +9,8 @@ those columns are read — they are where a project is put on the shelf; the oth
 
 In each such cell the entries are split on the house separators, links become a placeholder,
 parenthetical notes are dropped, and each entry's HEAD is taken: the text before its first
-dash with a space each side (` — `, ` – `, ` - `) or colon (`: `, or one inside bold), split again on `/`. A head that reads as a name — capitalised, at most four
+dash with a space each side (` — `, ` – `, ` - `) or colon (`: `, or at a bold boundary —
+`**Label**: text` and `**Label:** text` both), split again on `/`. A head that reads as a name — capitalised, at most four
 words, no function word, not a licence id, not a code span — must be a link in that entry, or
 the text of a link elsewhere on the shelf (a cross-reference to an entry that carries one).
 

@@ -139,6 +139,7 @@ CASES = [
     ('echo "a; ' + V + '" | tcsh', "the same, tcsh"),
     ('echo "a; ' + V + '" | ksh', "the same, ksh"),
     ('grep -n "notes; ' + V + '" notes.md && true nu busybox', "a word that names no shell here"),
+    ('echo nu && grep "' + V + '" notes.md', "a runner's word earlier, then a reader's quote"),
     ('csh -c "' + V + '"', "csh's own quoted command"),
     ('nice grep "a|' + V + '" notes.md', "a wrapper in front of a reader"),
     ('env LC_ALL=C grep "a|' + V + '" notes.md', "an assignment in front of a reader"),

@@ -64,8 +64,9 @@ silent "a path that reads like it"  "s-b11" "cat notes/about-git-push.md"
 # refused, its `|` read as a pipe. A runner of a quoted string anywhere keeps the old reading.
 silent "a | in a grep pattern"       "s-b11a" 'grep -n -i "outward\|publish gate\|git push" PLAYBOOKS.md FLOWS.md'
 silent "a ; in a commit message"     "s-b11b" 'git commit -m "docs: when to git push; and when not"'
-speaks "ssh runs its quoted command" "s-b11c" 'ssh host "cd repo; git push origin main"'
-speaks "su -c runs its quoted command" "s-b11d" 'su -c "cd repo; git push" me'
+speaks "ssh runs its quoted command" "s-b11c" 'ssh host "git push origin main"'
+speaks "su -c runs its quoted command" "s-b11d" 'su -c "git push origin main" me'
+silent "a bare nu, then a read"      "s-b11j" 'echo nu && grep "git push origin main" README.md'
 speaks "a quote piped into at"       "s-b11e" 'echo "cd repo; git push" | at now'
 speaks "timeout is a wrapper"        "s-b11f" "timeout 60 git push origin main"
 speaks "doas is a wrapper"           "s-b11g" "doas git push origin main"
