@@ -69,6 +69,7 @@ speaks "su -c runs its quoted command" "s-b11d" 'su -c "cd repo; git push" me'
 speaks "a quote piped into at"       "s-b11e" 'echo "cd repo; git push" | at now'
 speaks "timeout is a wrapper"        "s-b11f" "timeout 60 git push origin main"
 speaks "doas is a wrapper"           "s-b11g" "doas git push origin main"
+speaks "yash runs its quoted command" "s-b11h" 'yash -c "git push origin main"'
 
 # ── and a wrapper is still the act, because the verb still starts a command ───────
 speaks "inside a quoted -c"     "s-b12" "bash -c \"git push origin main\""

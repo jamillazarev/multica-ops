@@ -50,13 +50,13 @@ had been catching real acts by accident (`echo "a; …" | bash`, an interpreter'
 written and then run by `sh`): a separator inside a quote is a character only where a reading
 command holds the quote — grep, rg, echo, printf, a git message — **and** nothing in the command can
 run text. **And `timeout 60 …` had been walking past both gates**; `timeout` and `doas` are wrappers
-now. Same change, same cases, in both copies: `test-outward-gate.sh` **110/110**, and
-`test-gate-vs-bash.sh` **88/88** against bash itself, with two new mutants that each open a hole.
+now. Same change, same cases, in both copies: `test-outward-gate.sh` **111/111**, and
+`test-gate-vs-bash.sh` **90/90** against bash itself, with two new mutants that each open a hole.
 - **Let through now:** a search whose pattern holds `|` or `;` before the verb; a commit message
   holding either, or a newline, before it; the same search behind a wrapper (`nice`, `env X=1`,
   `timeout 5`).
 - **Refused now:** a publish behind `timeout` or `doas`; a quoted command run by a shell the list did
-  not name — `csh -c "…"`, `tcsh`, `ksh`, `ash`, `mksh`.
+  not name — `csh -c "…"`, `tcsh`, `ksh`, `ash`, `mksh`, `yash`.
 - **Unchanged, on purpose:** any quote in a command that also names a shell, `eval`, `xargs`,
   `ssh`, `su`, an interpreter, `awk`, `sed`, `find` or a scheduler.
 
@@ -65,7 +65,7 @@ over a range that added 7, and nothing compared the two until the owner asked.
 `scripts/check-trio.py` counts what the diff since the last tag added — mermaid blocks, USE-CASES
 rows, register entries — and **preflight §5j-bis fails a line that disagrees, or that it cannot
 read**. A released entry is frozen, so a marked correction of its Trio line is what the script reads
-instead — **0.4.18 carries one now**, with that release's GitHub notes reissued to match it. `test-check-trio.sh` **21/21**, six
+instead — **0.4.18 carries one now**, with that release's GitHub notes reissued to match it. `test-check-trio.sh` **24/24**, six
 code mutants. **The diagram 0.4.18's publish gate owed is paid here**: how the gate reads a command,
 in `SECURITY.md`.
 
@@ -87,8 +87,8 @@ open source, re-read that row against `STACKS.md`. And if the company screens it
 SkillSpector, read the JSON: `grep -c manifest_parse_error` must print `0`.
 A CLI older than 0.5.3 loses nothing: no rule reads the two new subcommands.
 
-Eval state: **not run.** The forms are measured by their suites — shelf links **19**, trio **21**,
-the gate **110** and **88** against bash — and **a suite measures a form while an eval measures a
+Eval state: **not run.** The forms are measured by their suites — shelf links **19**, trio **24**,
+the gate **111** and **90** against bash — and **a suite measures a form while an eval measures a
 run**. Four behaviours this entry adds that no scenario covers: whether an agent reads the body of a
 200 before quoting it, whether it opens a stranger's document as its rendering, whether it writes an
 observation rather than a score into a record it keeps, and whether it offers passkeys first. Named

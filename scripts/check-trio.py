@@ -5,9 +5,9 @@
     python3 scripts/check-trio.py 0.2.19     # a released entry, against the tag before its own
 
 Every entry ends with a `**Trio:**` paragraph naming the diagrams, situations and facts the
-release added. 0.2.19's Trio line said diagrams 8 · situations 21 · facts 262–277, over a range that
-added 10 · 24 · 262–282: the lens rounds read each repair's diff
-and nothing read the entry against the release as a whole (found by the owner, 2026-09-25).
+release added. 0.2.19 here and 0.4.18 in the sibling each shipped a Trio line that undercounted
+its own release — the numbers are in each entry's marked correction: the lens rounds read each
+repair's diff and nothing read the entry against the release as a whole (the owner, 2026-09-25).
 
 What is measured, between the tag before the entry and the entry's own tag (or the working
 tree for the unreleased one):
@@ -142,10 +142,11 @@ def counts(t):
         c["situations"] = number(s.group(1))
     f = re.search(r"facts\.md`?\s*(.*)", t)
     if f:
-        # the facts are the RUN of bold numbers right after it, joined by commas or *and*, and
+        # the facts are the RUN of bold numbers right after it — joined by a comma, *and*, `·`, `;`
+        # or `&`, an Oxford comma included (a lens failed `**3** · **4**`, 2026-09-25) — and
         # nothing after: 0.2.17's Trio line is followed by suite sizes in bold, and a trailing
         # *held by suite **9*** in the same sentence was read as a fact (a lens, 2026-09-25)
-        run = re.match(r"(?:\s*(?:,|and)?\s*\*\*\d+(?:\s*[–-]\s*\d+)?\*\*)+", f.group(1))
+        run = re.match(r"(?:\s*(?:,\s*and|,|and|·|;|&)?\s*\*\*\d+(?:\s*[–-]\s*\d+)?\*\*)+", f.group(1))
         nums = set()
         for a, b in re.findall(r"\*\*(\d+)(?:\s*[–-]\s*(\d+))?\*\*", run.group(0) if run else ""):
             nums.update(str(i) for i in range(int(a), int(b or a) + 1))

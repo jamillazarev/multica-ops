@@ -62,6 +62,16 @@ mk ops; grow; printf '\n4. **Four** fact.\n' >> facts.md
 entry '**Trio:** one diagram · two situations · `facts.md` **3** and **4**.'; run "$S"
 [ "$RC" = 0 ] && ok || bad "two facts joined by *and* were not both read (rc=$RC): $(head -2 "$T/report")"
 
+# — facts joined the house's way, and with an Oxford comma; and one claimed past a · is still read
+mk ops; grow; printf '\n4. **Four** fact.\n' >> facts.md
+entry '**Trio:** one diagram · two situations · `facts.md` **3** · **4**.'; run "$S"
+[ "$RC" = 0 ] && ok || bad "facts joined by · were not both read (rc=$RC): $(head -2 "$T/report")"
+mk ops; grow; printf '\n4. **Four** fact.\n\n5. **Five** fact.\n' >> facts.md
+entry '**Trio:** one diagram · two situations · `facts.md` **3**, **4**, and **5**.'; run "$S"
+[ "$RC" = 0 ] && ok || bad "an Oxford-comma list was not read whole (rc=$RC): $(head -2 "$T/report")"
+mk ops; grow; entry '**Trio:** one diagram · two situations · `facts.md` **3** · **4**.'; run "$S"
+[ "$RC" = 1 ] && said "says facts 3–4" && ok || bad "a fact claimed past a · was dropped, not compared (rc=$RC)"
+
 # — a wrong count, each kind
 mk ops; grow; entry '**Trio:** two diagrams · two situations · `facts.md` **3**.'; run "$S"
 [ "$RC" = 1 ] && said "says diagrams 2" && said "added 1" && ok || bad "a wrong diagram count passed (rc=$RC)"

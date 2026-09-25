@@ -41,7 +41,7 @@ SBX = "/usr/bin/sandbox-exec"
 STUBBED = ["git", "gh", "npm", "npx", "yarn", "pnpm", "docker", "podman", "vercel", "flyctl", "fly",
            "netlify", "wrangler", "kamal", "cap", "make", "just", "terraform", "kubectl", "helm",
            "curl", "wget", "ssh", "scp", "rsync", "sudo"]
-SAFE = ["cat", "echo", "printf", "env", "mkdir", "sh", "bash", "csh", "tcsh", "nice", "python3",
+SAFE = ["cat", "echo", "printf", "env", "mkdir", "sh", "bash", "csh", "tcsh", "ksh", "nice", "python3",
         "true", "false", "sed", "grep", "tee", "date"]
 SCRIPTS = ["deploy", "predeploy", "pre-deploy"]
 # which of each tool's global options take an argument — the oracle's only model of a CLI, and
@@ -137,6 +137,8 @@ CASES = [
     ('echo "a\n' + V + '" > x.sh\nsh x.sh', "the same, across two lines"),
     ('echo "a; ' + V + '" | csh', "a reader's quote piped into csh"),
     ('echo "a; ' + V + '" | tcsh', "the same, tcsh"),
+    ('echo "a; ' + V + '" | ksh', "the same, ksh"),
+    ('grep -n "notes; ' + V + '" notes.md && true nu busybox', "a word that names no shell here"),
     ('csh -c "' + V + '"', "csh's own quoted command"),
     ('nice grep "a|' + V + '" notes.md', "a wrapper in front of a reader"),
     ('env LC_ALL=C grep "a|' + V + '" notes.md', "an assignment in front of a reader"),
@@ -310,7 +312,7 @@ MUTANTS = [
     ("a reader's quote read as data while the command runs text",
      "        if qs[p] < 0 or not _reader_held(c, qs, qs[p]):", "        if False:"),
     ("a quoted shell name not read as a shell",
-     "/\\\"'])((?:ba|z|da|k|c|tc|a|mk|pdk|y)?sh", "/])((?:ba|z|da|k|c|tc|a|mk|pdk|y)?sh"),
+     "/\\\"'])(", "/])("),
 ]
 src = open(GATE).read()
 for name, a, b in MUTANTS:

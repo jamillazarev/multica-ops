@@ -76,7 +76,7 @@ import sys
 # another program, and a document that carries the verb at the start of a line is not a publish —
 # the same *prose is not an act* defect, arriving back through the newline anchor that repaired it.
 CMD_START = (r"(?:(?:^|[\n;&|(){}`]|\$\()\s*"
-             r"|\b(?:(?:ba|z|da|k|c|tc|a|mk|pdk|y)?sh|ksh93|fish|pwsh|nu|elvish|xonsh|busybox|eval|xargs)\b[^\n]*?[\"']\s*)")
+             r"|\b(?:(?:ba|z|da|k|c|tc|a|mk|pdk|ya)?sh|ksh93|fish|pwsh|elvish|xonsh|eval|xargs)\b[^\n]*?[\"']\s*)")
 # **A wrapper word takes flags, a flag takes its own argument, and there can be any number of
 # them.** Eight shapes carried the verb past the anchor on 2026-09-18 — `env` with no assignment,
 # `env -i`, `env --`, `sudo -u root`, `command -p`, `time -p`, `nice --adjustment=10`,
@@ -281,9 +281,12 @@ def shell_only(cmd):
 # it starts with a reader — grep, rg, ag, ack, echo, printf, or git commit · log · grep · show ·
 # tag · notes, behind any wrapper (`nice`, `env X=1`, `timeout 5`) — and (2) nothing in the command, outside such a quote, is a word that runs text: a
 # shell, `eval`, `source` or `.`, `exec`, `xargs`, `ssh`, `su`, `sudo`, `watch`, `tmux`, `screen`,
-# `parallel`, an interpreter, `awk`, `sed`, `find`, or a scheduler taking a pipe — and every shell
-# by name, `csh` and `tcsh` included: both ship with macOS, and a reader's quote piped into either
-# published while this list named five (an adversarial lens, 2026-09-25). Anything else
+# `parallel`, an interpreter, `awk`, `sed`, `find`, or a scheduler taking a pipe — and the shells
+# by name: bash · sh · zsh · dash · ksh · ksh93 · csh · tcsh · ash · mksh · pdksh · yash · fish ·
+# pwsh · elvish · xonsh. `csh` and `tcsh` ship with macOS, and a reader's quote piped into either
+# published while this list named five (an adversarial lens, 2026-09-25). **Not read, and named
+# for it**: `nu`, a two-letter word too common to refuse on, and `busybox`, whose shells are read
+# by their own name (`busybox sh`). Anything else
 # keeps the old reading, which is the loud side. `$(…)` and backticks inside `"…"` run, so the
 # scanner never marks them quoted.
 _READERS = re.compile(r"[ \t]*(?:(?:env|sudo|doas|nohup|time|timeout|command|nice|ionice|stdbuf)"
@@ -291,7 +294,7 @@ _READERS = re.compile(r"[ \t]*(?:(?:env|sudo|doas|nohup|time|timeout|command|nic
                       r"(?:[\w.~/-]*/)?(?:grep|egrep|fgrep|rg|ag|ack|echo|printf"
                       r"|git(?:[ \t]+-C[ \t]+\S+)?[ \t]+(?:commit|log|grep|show|tag|notes))(?=[ \t]|$)")
 _RUNS_TEXT = re.compile(
-    r"(?:^|[\s;&|(){}`/\"'])((?:ba|z|da|k|c|tc|a|mk|pdk|y)?sh|ksh93|fish|pwsh|nu|elvish|xonsh|busybox|eval|source|exec|xargs|ssh|su|sudo|watch|tmux"
+    r"(?:^|[\s;&|(){}`/\"'])((?:ba|z|da|k|c|tc|a|mk|pdk|ya)?sh|ksh93|fish|pwsh|elvish|xonsh|eval|source|exec|xargs|ssh|su|sudo|doas|watch|tmux"
     r"|screen|parallel|python[0-9.]*|perl|ruby|node|deno|bun|php|osascript|awk|gawk|sed|find)"
     r"(?=[\s;&|)}`\"']|$)"
     r"|(?:^|[;&|(`\n])[ \t]*(at|batch|crontab|\.)(?=[ \t])")
