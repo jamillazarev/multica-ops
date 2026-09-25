@@ -295,6 +295,11 @@ def shell_only(cmd):
 # 2026-09-25) — an act inside a quote a reader holds, where nothing runs text, is text. Anything else
 # keeps the old reading, which is the loud side. `$(…)` and backticks inside `"…"` run, so the
 # scanner never marks them quoted.
+# **Named limits, from the lenses of 2026-09-25.** A command made of another program's OUTPUT —
+# `$(echo "…")`, or the same in backticks — is not read: it is the class of a verb assembled from
+# parts, a decision to hide the act. And a runner word anywhere on a line arms the runner branch
+# into any later quote on it, so `echo ssh "…"` is refused though nothing runs — the loud side,
+# kept, because judging one simple command at a time would reopen a file written, then run.
 _READERS = re.compile(r"[ \t]*(?:(?:env|sudo|doas|nohup|time|timeout|command|nice|ionice|stdbuf)"
                       r"(?:[ \t]+(?:-\S+(?:[ \t]+[^-\s]\S*)?|\w+=\S*|\d\S*))*[ \t]+)*"
                       r"(?:[\w.~/-]*/)?(?:grep|egrep|fgrep|rg|ag|ack|echo|printf"
